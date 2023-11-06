@@ -26,18 +26,18 @@ import BoardList from "./components/users/BoardList";
 import BoardDetail from "./components/users/BoardDetail";
 import BoardWrite from "./components/users/BoardWrite";
 import BoardUpdate from "./components/users/BoardUpdate";
-
-// Review
+import Info from "./components/users/Info";
 import Review from './components/users/Review'
 
 // Manager
-import DashBoard from "./components/managers/DashBoard";
-import Manager from "./components/managers/Manager";
+import ManagerDashBoard from "./components/managers/ManagerDashBoard";
+import ManagerReservation from "./components/managers/ManagerReservation";
+import ManagerReview from "./components/managers/ManagerReview";
+import ManagerMyPlace from "./components/managers/ManagerMyPlace";
 
 // Admin
 import DashBoardAdmin from "./components/admins/DashBoard";
 import Admin from "./components/admins/Admin";
-import Info from "./components/users/Info";
 
 
 function App() {
@@ -62,8 +62,10 @@ function App() {
           <Route path="info" element={<Info />} />
         </Route>
         <Route path="/manager">
-          <Route index element={<DashBoard />} />
-          <Route path=":navPage" element={<Manager />} />
+          <Route index element={<ManagerDashBoard />} />
+          <Route path="reservation" element={<ManagerReservation />} />
+          <Route path="review" element={<ManagerReview/>}/>
+          <Route path="myPlace" element={<ManagerMyPlace/>}/>
         </Route>
         <Route path="/admin">
           <Route index element={<DashBoardAdmin />} />
