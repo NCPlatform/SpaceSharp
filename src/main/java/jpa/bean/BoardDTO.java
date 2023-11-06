@@ -33,7 +33,7 @@ public class BoardDTO {
 	private String email;
 	
 	@Column
-	private Date release;
+	private Date releaseDate;
 	
 	
 }
