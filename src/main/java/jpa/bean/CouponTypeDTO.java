@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "CouponTypeDTO")
+@Table(name = "CouponType")
 @Data
 public class CouponTypeDTO {
 

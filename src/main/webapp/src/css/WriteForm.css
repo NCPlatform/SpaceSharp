@@ -1,0 +1,109 @@
+.h2Title{
+    font-size: 36px !important; 
+    text-align: center !important;
+  }
+  
+  button.WriteInputBtn{
+      text-align: center !important;
+      align-self: center !important;
+      width: 33rem !important;
+      height: 60px !important;
+      background-color: skyblue !important;
+      font-size: 18px !important;
+      font-weight: bold !important;
+      font-family: sans-serif !important;
+      display: flex !important;
+      align-items: center !important;   
+  }
+  
+  .WriteSubmitBtn{
+      text-align: center !important;
+      align-self: center !important;
+      width: 33rem !important;
+      height: 60px !important;
+      background-color: skyblue !important;
+      font-size: 18px !important;
+      font-weight: bold !important;
+      font-family: sans-serif !important;
+  
+  }
+  
+  .WriteInputBox {   
+      width: 33rem !important;     
+      height: 25px !important;
+      border-radius: 5px !important; 
+      align-self: center !important;
+  }
+  
+  input[type=checkbox] {
+  
+      zoom: 1.2 !important;
+  }   
+  
+  .WriteInputBtn:hover {
+      color: crimson !important;
+  }
+  
+  .WriteSubmitBtn:hover {
+    color: crimson !important;
+  }
+  
+    /**/
+    #box {
+      width: 550px !important;
+      height: 1080px !important;
+      border-radius: 30px !important;
+      background-color: aliceblue !important;
+      overflow: hidden !important;
+      margin: 100px auto !important;
+      padding: 2% !important;
+      transition: all 0.3s cubic-bezier(0.42, 0.0, 0.58, 1.0) !important;
+    }
+    
+    #box:hover {
+      box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22) !important;
+      transform: translateY(-10px) !important;
+    }
+  
+    #box * {
+      padding: 10px !important;
+    }
+    
+    #box .img {
+      display: block !important;
+      width: 100% !important;
+      padding: 0 !important;
+    }
+  
+    #box .heading {
+      font-size: 28px !important;
+    }
+    
+    #box .data {
+      display: flex !important;
+      flex-direction: column !important;
+      font-size: 12px !important;
+      color: #666 !important;
+    }
+    
+    #box .data span {
+      padding: 0 !important;
+    }
+    
+    #box .data .date {
+      margin-bottom: 2px !important;
+    }
+    
+    #box .data .user-id {
+      font-size: 16px !important;
+      color: #000 !important;
+      font-weight: 600 !important;
+    }
+    
+    #box .texts {
+      font-size: 14px !important;
+      line-height: 18px !important;
+    }
+  
+  
+  
