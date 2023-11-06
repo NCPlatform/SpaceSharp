@@ -1,11 +1,11 @@
 import React from "react";
 import Maps from "./Maps";
-import NavTest from "./NavTest";
+import Nav from "./Nav";
 
 const HotelInMap = () => {
   return (
     <>
-      <NavTest />
+      <Nav />
       <Maps />
     </>
   );

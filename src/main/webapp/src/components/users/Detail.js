@@ -1,10 +1,10 @@
 import React from "react";
-import NavTest from "./NavTest";
+import Nav from "./Nav";
 
 const Detail = () => {
   return (
     <>
-      <NavTest />
+      <Nav />
       <h1>호텔 상세 정보</h1>
     </>
   );

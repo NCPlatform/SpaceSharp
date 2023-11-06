@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import NavTest from "./NavTest";
+import Nav from "./Nav";
 import Search from "./Search";
 import "../../css/main_nav_tab.css";
 
@@ -78,7 +78,7 @@ const Main = () => {
   return (
     <>
       {/* <NavOffcanvas /> */}
-      <NavTest />
+      <Nav />
 
       {/* Carousel */}
       <div className="container">
