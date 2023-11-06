@@ -1,9 +1,13 @@
 import React from "react";
+
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
+import '../../css/navheader.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 
 const NavTest = () => {
   return (
