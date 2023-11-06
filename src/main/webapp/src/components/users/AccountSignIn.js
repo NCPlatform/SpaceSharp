@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import '../../css/WriteForm.css';
-import '../../css/managersNav.css';
-import '../../css/main_nav_tab.css';
+import '../../css/AccountSignIn.css';
 import naverBtn from '../../image/naverBtn.png';
 import kakaoBtn from '../../image/kakaoBtn.png';
 import axios from 'axios';
@@ -79,8 +77,8 @@ const SignIn = () => {
                       //현재 데이터값의 필터를 돌려서 길이가 1보다 작은것 =참이 아닌것 // 0이라는 것은 조건이 활성화=checked
   return (
       <>
-      <div id="box">
-          <h2 className='h2Title'>회원가입</h2>
+      <div className='WriteBox'>
+          <h2 className='h2Title'>회 원 가 입</h2>
               <div className=''>
                   <button className='WriteInputBtn'>
                       &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
@@ -99,12 +97,16 @@ const SignIn = () => {
               또는
               </p>
 
-                  <input type='text'  className='WriteInputBox' value={ userDTO.nickname } name='nickname' id='' onChange={ (e) => onChange(e) } placeholder='닉네임' /><br/>
                   <input type='email' className='WriteInputBox ' value={ userDTO.email } name='email' id='' onChange={ (e)=> onChange(e) }  placeholder='이메일' /><br/>
+                  <input type='text' className='WriteInputBox' name='name' id='' onChange={ (e)=> onChange(e) } placeholder='이름 ' />
+                  <input type='text'  className='WriteInputBox' value={ userDTO.nickname } name='nickname' id='' onChange={ (e) => onChange(e) } placeholder='닉네임' /><br/>
                   <input type='password' className='WriteInputBox' value={ userDTO.password } name='password' id='' onChange={ (e)=> onChange(e) } placeholder='비밀번호' /><br />
                   <pre>-문자/숫자/특수문자 중 2가지 이상 조합(8~30자)<br />
                       -3개 이상 키보드 상 배열이 연속되거나 동일한 문자/숫자 제외</pre>
                   <input type='password' className='WriteInputBox' name='' id='' placeholder='비밀번호 확인' /><br />
+                  <input type='text' className='WriteInputBox' name='addr' id='' onChange={ (e)=> onChange(e) } placeholder='주소(우편번호)' />
+                  <input type='text' className='WriteInputBox' name='tel' id='' onChange={ (e)=> onChange(e) } placeholder='휴대폰 번호' />
+
                   
                   {/*약관동의*/ }
                       <p>
@@ -115,7 +117,7 @@ const SignIn = () => {
                       </p>
                       
                       {
-                          data.map(item => <p key={ item.id }>        
+                          data.map(item => <p className='checkBoxFont' key={ item.id }>        
                                   <input type='checkbox' name={ item.name } checked={ item.isChk } onChange={ onChk }/>
                                   <label>{ item.text }</label>
                                           </p>)
