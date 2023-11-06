@@ -1,0 +1,13 @@
+.BoardReadWrap{
+    border: solid 1px #E8E8E8;
+}
+.BoardReadContent{
+    min-height: 90vh;
+    border: solid 1px #E8E8E8;
+}
+.BoardReadTitle1{
+    font-size: 25pt;
+}
+.BoardReadP{
+    margin: 0;
+}

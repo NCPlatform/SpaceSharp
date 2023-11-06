@@ -9,9 +9,9 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "IssuedCouponDTO")
+@Table(name = "IssuedCoupon")
 @Data
-public class IssuedCouponDTO {
+public class IssuedCoupon {
 	
 	@Id
 	@Column(nullable = false)

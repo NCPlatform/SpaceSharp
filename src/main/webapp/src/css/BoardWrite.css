@@ -1,0 +1,15 @@
+.BoardWriteHeader{
+    border-bottom: solid 1px black;
+}
+.BoardWriteTitle{
+    margin-top: 15px;
+}
+.BoardWriteTitle input::placeholder {
+    color: #c0bebe;
+}
+.BoardWirteContent{
+    margin-top: 15px;
+}  
+.BoardWirteContent textarea::placeholder {
+    color: #c0bebe;
+}
