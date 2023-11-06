@@ -6,7 +6,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 // Main
 import Main from "./components/users/Main";
 
-
 // Account
 import Login from "./components/users/AccountLogin";
 import Signin from "./components/users/AccountSignIn";
@@ -16,6 +15,7 @@ import HotelList from "./components/users/HotelList";
 import HotelDetail from "./components/users/HotelDetail";
 import HotelReserve from "./components/users/HotelReserve";
 import HotelInMap from "./components/users/HotelInMap";
+import HotelReviewTest from "./components/users/HotelReviewTest";
 
 // Hotel Reserve Check
 import HotelReserveList from "./components/users/HotelReserveList";
@@ -27,7 +27,7 @@ import BoardDetail from "./components/users/BoardDetail";
 import BoardWrite from "./components/users/BoardWrite";
 import BoardUpdate from "./components/users/BoardUpdate";
 import Info from "./components/users/Info";
-import Review from './components/users/Review'
+import Review from "./components/users/Review";
 
 // Manager
 import ManagerDashBoard from "./components/managers/ManagerDashBoard";
@@ -39,19 +39,22 @@ import ManagerMyPlace from "./components/managers/ManagerMyPlace";
 import DashBoardAdmin from "./components/admins/DashBoard";
 import Admin from "./components/admins/Admin";
 
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/">
-          <Route index element={<Main />} /> 
+          <Route index element={<Main />} />
           <Route path="hotelList" element={<HotelList />} />
           <Route path="detail" element={<HotelDetail />} />
           <Route path="hotelInMap" element={<HotelInMap />} />
           <Route path="hotelReserve" element={<HotelReserve />} />
           <Route path="hotelReserveList" element={<HotelReserveList />} />
-          <Route path="hotelReserveListDetail" element={<HotelReserveDetail />} />
+          <Route path="hotelReviewTest" element={<HotelReviewTest />} />
+          <Route
+            path="hotelReserveListDetail"
+            element={<HotelReserveDetail />}
+          />
           <Route path="login" element={<Login />} />
           <Route path="signin" element={<Signin />} />
           <Route path="boardList" element={<BoardList />} />
@@ -64,8 +67,8 @@ function App() {
         <Route path="/manager">
           <Route index element={<ManagerDashBoard />} />
           <Route path="reservation" element={<ManagerReservation />} />
-          <Route path="review" element={<ManagerReview/>}/>
-          <Route path="myPlace" element={<ManagerMyPlace/>}/>
+          <Route path="review" element={<ManagerReview />} />
+          <Route path="myPlace" element={<ManagerMyPlace />} />
         </Route>
         <Route path="/admin">
           <Route index element={<DashBoardAdmin />} />
