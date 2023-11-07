@@ -18,7 +18,7 @@ public class HotelDTO {
 	private int seqHotel;
 	
 	@Column
-	private int seqHotelCategory;
+	private String seqHotelCategory;
 	
 	@Column
 	private String name;

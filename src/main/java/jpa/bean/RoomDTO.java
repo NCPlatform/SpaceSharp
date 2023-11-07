@@ -36,10 +36,10 @@ public class RoomDTO {
 	private String placeSize;
 	
 	@Column
-	private int people;
+	private String people;
 	
 	@Column
-	private Date datetime;
+	private String datetime;
 	
 	@Column
 	private String reserveRule;
