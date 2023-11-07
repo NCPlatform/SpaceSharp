@@ -7,6 +7,7 @@ import { Container, Row, Col, Carousel, Tabs, Tab } from 'react-bootstrap';
 import '../../css/hotelDetail.css';
 import img01 from '../../img/img01.png';
 import DetailSelect from '../detail/DetailSelect';
+import HotelContentMap from "./HotelContentMap";
 
 const Detail = () => {
   return (
@@ -129,7 +130,11 @@ const Detail = () => {
                         </div>
                       </div>
                     </div>
-
+                    <br />
+                    <div className='mapFrame'>
+                      <h2>상세 위치</h2>
+                      <HotelContentMap />
+                    </div>
                   </div>
                 </Tab>
                 <Tab eventKey="profile" title={<span style={{ color: '#656565', fontWeight: 'bold' }}>시설안내</span>}>

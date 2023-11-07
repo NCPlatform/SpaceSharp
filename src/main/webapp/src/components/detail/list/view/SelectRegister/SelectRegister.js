@@ -227,7 +227,7 @@ const SelectRegister = ({ data, index }) => {
           value="-"
           onClick={() => toggleDecreasePeopleNumber()}
         />
-        <span style={{ width: "75%", border: "1px solid" }}>
+        <span style={{ width: "70%", border: "1px solid" }}>
           <input
             style={inputNumberViewStyle}
             className="btn btn-lg w-100"

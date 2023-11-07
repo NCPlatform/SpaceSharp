@@ -17,5 +17,7 @@ public class HotelCategoryDTO {
 	
 	@Column(nullable = false)
 	private String name;
-
+	
+	@Column
+	private String tab;
 }
