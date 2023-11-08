@@ -9,8 +9,9 @@ import Swal from "sweetalert2";
 
 import { Link } from 'react-router-dom';
 import FindPassword from './FindPassword';
+import axios from 'axios';
 
-import '../../css/Login.css';
+import styles from '../../css/Login.module.css';
 
 
 const Login = () => {
@@ -20,12 +21,7 @@ const Login = () => {
   const[userDTO, setUserDTO] = useState(
     {
     "email": '',
-    "name": '',
-    "password": '',
-    "addr": '',
-    "tel": '',
-    "usergrade": '',
-    "payment": ''
+    "password": ''
     }
   )
 
@@ -41,42 +37,10 @@ const Login = () => {
 
   const currentEmail = 'admin'
 
-  const user = [
-      {
-        "email": 'user',
-        "name": '이용자',
-        "password": '111',
-        "addr": '주소',
-        "tel": '010-1111-1111',
-        "usergrade": 1,
-        "payment": 'credit-card'
-      }, {
-        "email": 'admin',
-        "name": '최고 관리자',
-        "password": '123',
-        "addr": '주소',
-        "tel": '010-2222-2222',
-        "usergrade": 10,
-        "payment": 'credit-card'
-      }, {
-        "email": 'manager',
-        "name": '사장님',
-        "password": '456',
-        "addr": '주소',
-        "tel": '010-3333-3333',
-        "usergrade": 6,
-        "payment": 'credit-card'
-      }
-    ];
-
-
   const onLoginSubmit = () => {
     
-    var sw = 1
-
     if(!email) {
       setEmailDiv('이메일 주소를 입력하세요')
-      sw = 0
     }
     else if(!password) {
       setEmailDiv('')
@@ -84,40 +48,29 @@ const Login = () => {
     }
     else if(email && password){
       setPasswordDiv('')
-      const userExists = user.some(item => item.email === email);
-      if (!userExists){
-        Swal.fire({
-          title: '없는 계정입니다.',
-          imageUrl: 'https://item.kakaocdn.net/do/58119590d6204ebd70e97763ca933baf82f3bd8c9735553d03f6f982e10ebe70',
-          imageWidth: 300,
-          imageHeight: 200,
-          imageAlt: '루피',
-        })
-        sw = 0;
-      }else{
-        setEmailDiv('');
-      }
+
+      axios.post('/user/login', null, {params:userDTO})
+           .then(res => {
+            if(res.data === "none"){
+              Swal.fire({
+                    title: '아이디 또는 비밀번호가 잘못되었습니다.',
+                    imageUrl: 'https://item.kakaocdn.net/do/58119590d6204ebd70e97763ca933baf82f3bd8c9735553d03f6f982e10ebe70',
+                    imageWidth: 300,
+                    imageHeight: 200,
+                    imageAlt: '루피',
+                  })
+            }else{
+              Swal.fire({
+                    title: '성공',
+                    imageUrl: 'https://item.kakaocdn.net/do/a7884a879ae30614290a1c20325e05e59cbcbe2de7f4969efc79ab353e0c19e8',
+                    imageWidth: 300,
+                    imageHeight: 200,
+                    imageAlt: '루피',
+                  }) 
+            }
+           })
+           .catch( error=> console.log(error) )
     } 
-    if( sw === 1 ) {
-      user.filter((item) => item.email === userDTO.email).map((item) =>{
-      item.password === userDTO.password ? 
-        Swal.fire({
-          title: '성공',
-          imageUrl: 'https://item.kakaocdn.net/do/a7884a879ae30614290a1c20325e05e59cbcbe2de7f4969efc79ab353e0c19e8',
-          imageWidth: 300,
-          imageHeight: 200,
-          imageAlt: '루피',
-        }) 
-        : 
-        Swal.fire({
-          title: '실패',
-          imageUrl: 'https://item.kakaocdn.net/do/a7884a879ae30614290a1c20325e05e5339e41ce89b663315d96faecd7cfd11b',
-          imageWidth: 300,
-          imageHeight: 200,
-          imageAlt: '루피',
-        })
-      })
-    }
   }
 
   /*
@@ -127,11 +80,11 @@ const Login = () => {
   */
 
     return (
-    <div className='Login0'>
-    <div className='Login1'>
-    <div className='Login2'>
-        <h1 className='login-h1'> 로그인 화면 </h1>
-        <div className="d-grid gap-2 Login3">
+    <div className='styles.Login0'>
+    <div className='styles.Login1'>
+    <div className='styles.Login2'>
+        <h1 className='styles.login-h1'> 로그인 화면 </h1>
+        <div className="d-grid gap-2 styles.Login3">
       <Button variant="primary" size="lg" style={{ color:'black', fontWeight:'bold', background: '#2db400', border: 'none' }}>
         네이버로 로그인하기
       </Button>
@@ -142,7 +95,7 @@ const Login = () => {
     </div>
     <hr />
     <>
-        <h5 className='login-h5'>또는</h5>
+        <h5 className='styles.login-h5'>또는</h5>
         <FloatingLabel
         controlId="floatingInput"
         label="Email address"
@@ -167,7 +120,7 @@ const Login = () => {
     <div className="d-grid gap-2">
     <button variant="primary" size="1g" onClick={ onLoginSubmit } style={{ background: '#FFEB00', border: 'none' }}>이메일로 로그인</button>
     </div>
-    <h5 className='login-h5'>아직 회원이 아니신가요? <a href='' className='createBtn'> 회원가입 </a></h5>
+    <h5 className='styles.login-h5'>아직 회원이 아니신가요? <a href='' className='createBtn'> 회원가입 </a></h5>
     </div>
     </div>
     
