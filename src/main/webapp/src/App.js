@@ -45,7 +45,9 @@ function App() {
       <Routes>
         <Route path="/">
           <Route index element={<Main />} />
-          <Route path="hotelList" element={<HotelList />} />
+          <Route path="hotelList" >
+            <Route path=":seqHotelCategory" element={<HotelList />}/>
+          </Route>
           <Route path="detail" element={<HotelDetail />} />
           <Route path="hotelInMap" element={<HotelInMap />} />
           <Route path="hotelReserve" element={<HotelReserve />} />
