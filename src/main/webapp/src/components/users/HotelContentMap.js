@@ -22,7 +22,7 @@ const HotelContentMap = () => {
     }, []);
 
     return (
-        <div id="map" style={{ width: '500px', height: '500px' }}></div>
+        <div id="map" style={{ width: '70%', height: '500px' }}></div>
     );
 };
 
