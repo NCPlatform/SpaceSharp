@@ -3,13 +3,15 @@ import Nav from "./Nav";
 import Footer from "./Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { Container, Row, Col, Carousel, Tabs, Tab } from 'react-bootstrap';
+import { Container, Row, Col, Carousel, Tabs, Tab, Button, Card } from 'react-bootstrap';
 import '../../css/hotelDetail.css';
 import img01 from '../../img/img01.png';
+import img02 from '../../img/img02.jpg';
 import DetailSelect from '../detail/DetailSelect';
 import HotelContentMap from "./HotelContentMap";
 
 const Detail = () => {
+
   return (
     <>
       <Nav />
@@ -132,7 +134,6 @@ const Detail = () => {
                     </div>
                     <br />
                     <div className='mapFrame'>
-                      <h2>상세 위치</h2>
                       <HotelContentMap />
                     </div>
                   </div>
@@ -165,7 +166,54 @@ const Detail = () => {
               <DetailSelect />
             </Col>
           </Row>
+          <br />
+          <br />
+          <strong style={{ color: 'black' }}>비슷한 공간</strong>
+          <br />
+          <hr style={{ width: '20px', border: '4px solid #ff7402' }} />
+          <Row>
+            <Col xs={4} className="mb-3">
+              <Card style={{ width: '100%' }}>
+                <Card.Img variant="top" src={img02} style={{ width: '100%', height: '200px' }} />
+                <Card.Body>
+                  <Card.Title>Card Title</Card.Title>
+                  <Card.Text>
+                    Some quick example text to build on the card title and make up the
+                    bulk of the card's content.
+                  </Card.Text>
+                  <Button variant="primary">Go somewhere</Button>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col xs={4} className="mb-3">
+              <Card style={{ width: '100%' }}>
+                <Card.Img variant="top" src={img02} style={{ width: '100%', height: '200px' }} />
+                <Card.Body>
+                  <Card.Title>Card Title</Card.Title>
+                  <Card.Text>
+                    Some quick example text to build on the card title and make up the
+                    bulk of the card's content.
+                  </Card.Text>
+                  <Button variant="primary">Go somewhere</Button>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col xs={4} className="mb-3">
+              <Card style={{ width: '100%' }}>
+                <Card.Img variant="top" src={img02} style={{ width: '100%', height: '200px' }} />
+                <Card.Body>
+                  <Card.Title>Card Title</Card.Title>
+                  <Card.Text>
+                    Some quick example text to build on the card title and make up the
+                    bulk of the card's content.
+                  </Card.Text>
+                  <Button variant="primary">Go somewhere</Button>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
         </Container>
+        <br /><br /><br />
       </div>
       <Footer />
     </>
