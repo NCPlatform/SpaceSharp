@@ -7,14 +7,11 @@ import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import { $ } from "react-jquery-plugin";
 import { Card } from "react-bootstrap";
-<<<<<<< HEAD
 
 import axios from 'axios'
 import { Link } from "react-router-dom";
-=======
 import { options } from "@fullcalendar/core/preact";
 import Footer from "./Footer";
->>>>>>> refs/remotes/origin/userEunchan
 
 const Main = () => {
   const [activeTab, setActiveTab] = useState("total");
@@ -204,33 +201,9 @@ const Main = () => {
           </button>
         </div>
         <div className="row row-cols-4 row-cols-sm-4 row-cols-md-6">
-          {activeTab === "total"
+        {activeTab === "total"
             ? data.map((item, index) => {
-              return (
-                <div className="col my-3 text-center" key={index}>
-                  <p className="">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      className="bi bi-cursor-fill"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z" />
-                    </svg>
-                  </p>
-                  <span style={{ color: "#999", fontSize: "0.8rem" }}>
-                    {item.title}
-                  </span>
-                </div>
-              );
-            })
-            : data
-              .filter((item) => item.tab === activeTab)
-              .map((item, index) => {
                 return (
-<<<<<<< HEAD
                   <Link to={`hotelList/${item.seqHotelCategory}`} key={index} className="hotelCategoryList">
                     <div className="col my-3 text-center" >
                       <p className="">
@@ -277,27 +250,6 @@ const Main = () => {
                     </Link>
                   );
                 })}
-=======
-                  <div className="col my-3 text-center" key={index}>
-                    <p className="">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        className="bi bi-cursor-fill"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z" />
-                      </svg>
-                    </p>
-                    <span style={{ color: "#999", fontSize: "0.8rem" }}>
-                      {item.title}
-                    </span>
-                  </div>
-                );
-              })}
->>>>>>> refs/remotes/origin/userEunchan
         </div>
       </div>
 
@@ -349,6 +301,7 @@ const Main = () => {
                   className="rounded"
                   style={{ height: "2xh", objectFit: "cover" }}
                   src="https://modo-phinf.pstatic.net/20190516_174/15579658255198n1x7_JPEG/mosaDAPqzk.jpeg?type=w1100"
+                  alt=""
                 />
                 <Card.Title>가게이름</Card.Title>
                 <div className="mb-0 pb-0" style={{ fontSize: "0.8rem" }}>
