@@ -20,8 +20,4 @@ public class HotelCategoryDTO {
 	
 	@Column
 	private String tab;
-<<<<<<< HEAD
-
-=======
->>>>>>> refs/remotes/origin/userEunchan
 }
