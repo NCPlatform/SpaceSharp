@@ -18,7 +18,7 @@ public class HotelDTO {
 	private int seqHotel;
 	
 	@Column
-	private int seqHotelCategory;
+	private String seqHotelCategory;
 	
 	@Column
 	private String name;
@@ -56,7 +56,7 @@ public class HotelDTO {
 	@Column
 	private String refund;
 	
-	@Column
+	@Column(columnDefinition = "boolean default false")
 	private boolean coupon;
 	
 	@Column
@@ -88,5 +88,83 @@ public class HotelDTO {
 	
 	@Column
 	private boolean parking;
+
+	@Column
+	private boolean smoke;
+
+	@Column
+	private boolean animal;
+
+	@Column
+	private boolean pc;
+
+	@Column
+	private boolean table;
+
+	@Column
+	private boolean socket;
+
+	@Column
+	private boolean open24;
+
+	@Column
+	private boolean noHoliday;
+
+	@Column
+	private boolean restaurant;
+
+	@Column
+	private boolean freeFood;
+
+	@Column
+	private boolean locker;
+
+	@Column
+	private boolean mailService;
+
+	@Column
+	private boolean kitchen;
+
+	@Column
+	private boolean waterFurifier;
+
+	@Column
+	private boolean catering;
+
+	@Column
+	private boolean heater;
+
+	@Column
+	private boolean airConditioner;
+
+	@Column
+	private boolean fax;
+
+	@Column
+	private boolean wareHouse;
+
+	@Column
+	private boolean percelService;
+
+	@Column
+	private boolean privateToilet;
+
+	@Column
+	private boolean fittingRoom;
+
+	@Column
+	private boolean roofTop;
+
+	@Column
+	private boolean rounge;
+
+	@Column
+	private boolean mirror;
+
+	@Column
+	private boolean bbq;
+
+	@Column
+	private boolean doorlock;
 	
 }

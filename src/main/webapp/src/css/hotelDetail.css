@@ -3,21 +3,20 @@
     padding: 7px 9px;
     border-radius: 4px;
     margin-top: -15px;
-    background-color: #704de4;
+    background-color: #704de4; 
     color: #fff;
     font-weight: bold;
 }
 
-.space_name {
+.space_name{
     font-weight: bold;
     font-size: 36px;
     overflow-wrap: break-word;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
 }
-
-.sub_desc {
+.sub_desc{
     margin-top: 17px;
     padding-bottom: 22px;
     font-size: 22px;
@@ -25,8 +24,7 @@
     color: #656565;
     font-weight: 300;
 }
-
-.tag {
+.tag{
     display: inline-block;
     padding: 0 15px;
     height: 29px;
@@ -36,42 +34,32 @@
     background-color: #fff;
     border: 1px solid #e0e0e0;
 }
-
 i {
     cursor: pointer;
 }
-
 .fixed-col {
     position: sticky;
     top: 0;
     height: 100vh;
-    overflow-y: auto;
-    /* 내용이 스크롤 가능하도록 설정 */
-    background-color: #fff;
-    /* 원하는 배경색으로 설정 */
-    z-index: 1;
-    /* 다른 요소 위에 표시되도록 설정 */
-    padding: 20px;
-    /* 내용 주위에 여백을 추가할 수 있습니다. */
+    overflow-y: auto; /* 내용이 스크롤 가능하도록 설정 */
+    background-color: #fff; /* 원하는 배경색으로 설정 */
+    z-index: 1; /* 다른 요소 위에 표시되도록 설정 */
+    padding: 20px; /* 내용 주위에 여백을 추가할 수 있습니다. */
 }
-
-.mapContent {
-    width: 800px;
-    margin: auto;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+.mapContent{
+ width: 800px;
+ margin: auto;
+ border-radius: 10px;
+ overflow: hidden;
+ box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
 }
-
 /* 전화 버튼 스타일 */
 button.phone-button {
-    background-color: #fff;
-    /* 배경색 흰색 */
-    border-color: #704de4;
-    /* 테두리 색 #704de4 */
-    color: #704de4;
-    /* 텍스트 색 #704de4 */
+    background-color: #fff; /* 배경색 흰색 */
+    border-color: #704de4; /* 테두리 색 #704de4 */
+    color: #704de4; /* 텍스트 색 #704de4 */
     height: 50px;
     width: 10%;
-    border-radius: 25px;
+    border-radius: 25px; 
 }
+

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
 
 const { kakao } = window;
 
@@ -7,6 +7,14 @@ const HotelContentMap = () => {
     const [isMapDraggable, setIsMapDraggable] = useState(false);
     const [location, setLocation] = useState(''); // 상세 위치 정보를 저장할 상태
     const [locationName, setLocationName] = useState('');
+    const [locationNumber, setLocationNumber] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const modalContent = (
+        <div>
+            "스페이스 샵을 통해<br /> 연락드렸어요~" <br /> 라고 말하면 더 친절하게 안내<br /> 받으실 수 있습니다.<br />
+        </div>
+    );// 모달내용
 
     // useEffect를 사용하여 컴포넌트가 마운트될 때 한 번 데이터를 불러올 수 있음
     useEffect(() => {
@@ -20,6 +28,7 @@ const HotelContentMap = () => {
         // 가상의 데이터를 상태에 설정 (실제로는 데이터베이스에서 가져와야 함)
         setLocationName('달래해장 강남역점');
         setLocation('서울 강남구 강남대로94길 20 1층');
+        setLocationNumber('010-1234-5678');
     }, []);
 
     useEffect(() => {
@@ -45,12 +54,21 @@ const HotelContentMap = () => {
         setIsMapDraggable(!isMapDraggable);
     };
 
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
     const handleFindPath = () => {
         const destinationName = '달래해장 강남역점';
         const destinationLat = '37.499541';
         const destinationLng = '127.029007';
         window.open(`https://map.kakao.com/link/to/${destinationName},${destinationLat},${destinationLng}`);
     };
+
 
     return (
         <div>
@@ -65,9 +83,9 @@ const HotelContentMap = () => {
             {/* '전화' 버튼과 '길 찾기' 버튼*/}
             <Row className="p-3" style={{ justifyContent: "left" }}>
                 <Col sm={6} style={{ width: '30%' }}>
-                    <Button variant="primary" className="w-100 phone-button">
+                    <Button variant="primary" className="w-100 phone-button" onClick={handleOpenModal}>
                         <span style={{ fontWeight: 'bold' }}>
-                            <i className="bi bi-telephone-fill" />&nbsp;전화
+                            <i className="bi bi-telephone-fill" />&nbsp;&nbsp;전화
                         </span>
                     </Button>
                 </Col>
@@ -75,7 +93,7 @@ const HotelContentMap = () => {
                 <Col sm={6} style={{ width: '30%' }}>
                     <Button variant="primary" className="w-100 phone-button" onClick={handleFindPath}>
                         <span style={{ fontWeight: 'bold' }}>
-                            <i className="bi bi-geo-alt-fill" />&nbsp;길 찾기
+                            <i className="bi bi-geo-alt-fill" />&nbsp;&nbsp;길 찾기
                         </span>
                     </Button>
                 </Col>
@@ -94,6 +112,18 @@ const HotelContentMap = () => {
             </button>
             <br />
             <div id="map" style={{ width: '70%', height: '500px' }}></div>
+            <Modal show={isModalOpen} onHide={handleCloseModal}>
+                <Modal.Body style={{ padding: '50px', textAlign: 'center' }}>
+                    <p style={{ fontSize: '25px', fontWeight: 'lighter' }}>{modalContent}</p>
+                    <hr />
+                    <p style={{ fontSize: '25px', fontWeight: 'bold' }}>{locationName}</p>
+                    <p style={{ fontSize: '25px', fontWeight: 'lighter', color: 'purple' }}>{locationNumber}</p>
+                    <hr />
+                    <br />
+                    <br />
+                    <Button style={{ width: '70%' }} onClick={handleCloseModal}>확인</Button>
+                </Modal.Body>
+            </Modal>
         </div>
     );
 };
