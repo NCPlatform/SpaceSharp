@@ -1,0 +1,15 @@
+.my-navbar {
+    padding-top: 1%;
+    padding-left: 8%;
+    padding-right: 8%;
+}
+
+.bg-body-tertiary {
+    --bs-bg-opacity: 1;
+    background-color: #fff !important;
+}
+.navbar-brand {
+    margin-left: 210px; 
+}
+
+
