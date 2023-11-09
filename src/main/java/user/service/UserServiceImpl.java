@@ -1,9 +1,10 @@
 package user.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jpa.bean.BoardDTO;
@@ -42,11 +43,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String list(BoardDTO boardDTO) {
-		
-		 List<BoardDTO> boardList = boardDAO.findAll();
+	public Page<BoardDTO> list(Pageable pageable) {
 		 
-		 return "성공";
+		Page<BoardDTO> list = boardDAO.findAll(pageable);
+		
+		return list;
+		 
 	}
 
+	@Override
+	public Optional<BoardDTO> getBoard(int seqBoard) {
+	    return boardDAO.findById(seqBoard);
+	}
 }

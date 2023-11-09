@@ -54,7 +54,9 @@ function App() {
           <Route path="hotelReserveListDetail" element={<HotelReserveDetail />} />
           <Route path="login" element={<Login />} />
           <Route path="signin" element={<Signin />} />
-          <Route path="boardList" element={<BoardList />} />
+          <Route path="boardList">
+            <Route path=':page' element={<BoardList />} />
+          </Route>
           <Route path="boardDetail" element={<BoardDetail />} />
           <Route path="boardWrite" element={<BoardWrite />} />
           <Route path="boardUpdate" element={<BoardUpdate />} />

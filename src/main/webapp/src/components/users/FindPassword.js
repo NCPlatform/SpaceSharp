@@ -2,18 +2,18 @@ import React from 'react';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 
-import '../../css/FindPassword.css';
+import styles from '../../css/FindPassword.module.css';
 
 const FindPassword = () => {
     return (
-        <div className='FindPassword--wrap'>
-        <div className='FindPassword0'> 
-            <h1 className='FindPassword1'>비밀번호 찾기</h1>
+        <div className={styles.FindPasswordWrap}>
+        <div className={styles.FindPassword0}> 
+            <h1 className={styles.FindPassword1}>비밀번호 찾기</h1>
             <div>  
                 <FloatingLabel
                 controlId="floatingInput"
                 label="이메일"
-                className="mb-3 FindPassword2"
+                className={`mb-3 ${styles.FindPassword2}`}
                 >
                     <Form.Control type="email" placeholder="name@example.com" />
                 </FloatingLabel>

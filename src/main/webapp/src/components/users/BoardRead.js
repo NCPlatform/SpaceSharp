@@ -1,12 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
-import '../../css/BoardRead.css'
+import styles from '../../css/BoardRead.module.css'
+import { useParams } from 'react-router-dom';
 
 const BoardRead = () => {
+
+    const { seqBoard: paramSeqBoard } = useParams();
+
+
+    const[boardDTO, setBoardDTO] = useState(
+        {
+            "seqBoard": '',
+            "seqBoardCategory" : 7,
+            "title" : '',
+            "content" : '',
+            "seqRefSeqBoard" : 0,
+            "email" : 'user',
+            "releaseDate" : ''
+        }
+    )
+
+    useEffect(() => {
+        axios.get(`/user/getBoard?seqBoard=${seqBoard}`)
+            .then(response => {
+                setBoardDTO(response.data);
+            })
+            .catch(error => console.error('Error:', error));
+    }, [seqBoard]);
+
+    const { title, content, seqBoard, seqBoardCategory, seqRefSeqBoard, email, release } = boardDTO
+
     return (
-        <div className='container BoardReadWrap'>
+        <div className={`container ${styles.BoardReadWrap}`}>
         <div>
         <div>
         <Row>
@@ -23,16 +50,16 @@ const BoardRead = () => {
                 <div>
                     <div>
                         <Row md={1}>
-                        <Col className="d-flex justify-content-start BoardReadSeq">
+                        <Col className={`d-flex justify-content-start ${styles.BoardReadSeq}`}>
                         <div className=''>
                             <button>seq-category 위치</button>
                         </div>
                         </Col>
                         </Row>
                         <Row>
-                        <Col className="d-flex justify-content-start BoardReadTitle">
+                        <Col className={`d-flex justify-content-start ${styles.BoardReadTitle}`}>
                         <div className="">
-                            <p className='BoardReadTitle1'> 아무말이나 하자</p>
+                        <p className={styles.BoardReadTitle1}>{boardDTO.title}</p>
                         </div>
                         </Col>
                         </Row>
@@ -47,8 +74,8 @@ const BoardRead = () => {
                                 </svg>
                             </div>
                             <div className="">
-                                <p className='BoardReadP'>bitcamp@babo.com</p>
-                                <p className='BoardReadP'>2023-11-02</p>
+                                <p className={styles.BoardReadP}>bitcamp@babo.com</p>
+                                <p className={styles.BoardReadP}>2023-11-02</p>
                             </div>
                         </div>
                         </Col>
@@ -60,7 +87,7 @@ const BoardRead = () => {
                     </Row>
                     </div>
                    
-                    <div className="BoardReadContent d-flex justify-content-start">
+                    <div className={`${styles.BoardReadContent} d-flex justify-content-start`}>
                         <div>
                            내용
                         </div>

@@ -1,20 +1,60 @@
-import React from 'react';
-import '../../css/BoardList.css'
+import React, { useEffect, useState } from 'react';
+import styles from '../../css/BoardList.module.css'
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
+import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const BoardList = () => {
+
+    const { page } = useParams()
+
+    const [list, setList] = useState([])
+    const [pagingArray, setPagingArray] = useState([])
+
+    const [pageSize, setPageSize] = useState('10');
+
+    const handlePageSizeChange = (e) => {
+        setPageSize(e.target.value)
+    };
+
+
+    const[boardDTO, setBoardDTO] = useState(
+        {
+            "seqBoard": '',
+            "seqBoardCategory" : 7,
+            "title" : '',
+            "content" : '',
+            "seqRefSeqBoard" : 0,
+            "email" : 'user',
+            "releaseDate" : ''
+        }
+    )
+
+    const { seqBoard, seqBoardCategory, title, seqRefSeqBoard, email, release } = boardDTO
+
+        useEffect(() => {
+            axios.get(`/user/list?page=${page}&size=${pageSize}`)
+                 .then(res => {
+                    setList(res.data.content)
+
+                    setPagingArray(Array.from({ length: res.data.totalPages }, (_, index) => index + 1))
+                 })
+                 .catch(error => console.log(error))
+        }, [page, pageSize])
+
+       
     return(
     <div className='container'>
         <div>
         <div>
             <h1>seq카테고리</h1>
         </div>
-        <div className='secondArea'>
+        <div className={styles.secondArea}>
         <Row md={1}>
-            <Col className="d-flex justify-content-end ">
-            <div className='noticeHide'>
+            <Col className='d-flex justify-content-end '>
+            <div className={styles.noticeHide}>
                 <label>
                 <input type='checkbox' />
                 공지 숨기기
@@ -38,106 +78,85 @@ const BoardList = () => {
             </a>
             </div>
             <div>
-            <select className='BoardListSelect'>
-            <option>10개씩</option>
-            <option>15개씩</option>
-            <option>20개씩</option>
-            <option>25개씩</option>
-            <option>30개씩</option>
-            <option>50개씩</option>
+            <select className={styles.BoardListSelect} value={pageSize} onChange={handlePageSizeChange}>
+            <option value={10}>10개씩</option>
+            <option value={15}>15개씩</option>
+            <option value={20}>20개씩</option>
+            <option value={25}>25개씩</option>
+            <option value={30}>30개씩</option>
+            <option value={50}>50개씩</option>
             </select>
             </div>
             </Col>
             </Row>
         </div>
-        <div>
-            
-            <table className='table '>
+        <div className='container'>
+            <div>
+            <table className={styles.table}>
             <thead>
                 <tr className=''>
-                <th scope="col">글번호</th>
-                <th scope="col">제목</th>
-                <th scope="col">이메일</th>
-                <th scope="col">등록일</th>
+                    <th className={styles.BoardListTh1}>글번호</th>
+                    <th className={styles.BoardListTh2}>제목</th>
+                    <th className={styles.BoardListTh3}>이메일</th>
+                    <th className={styles.BoardListTh4}>등록일</th>
+                    <th className={styles.BoardListTh5} style={{ visibility:'hidden' }}>seqRefSeqBoard</th>
                 </tr>
             </thead>
             <tbody>
-                <tr className=''>
-                <td>1</td>
-                <td>첫번째 게시글입니다.</td>
-                <td>aaaaaa@aaaa.com</td>
-                <td>2020-10-25</td>
-                </tr>
+                {
+                    list && list.map(item => {
+                        const releaseDate = new Date(item.releaseDate);
+                        const formattedReleaseDate = releaseDate.toLocaleDateString('ko-KR');
                 
+                        return(
+                            <tr key={ item.id }>
+                                <td>{ item.seqBoard }</td>
+                                <td><Link className={styles.BoardListTitle } to={`/user/BoardRead/${item.seqBoard}`}>{ item.title }</Link></td>
+                                <td>{ item.email }</td>
+                                <td>{ formattedReleaseDate }</td>
+                                <td style={{ visibility:'hidden' }}>{ item.seqRefSeqBoard }</td>
+                                {console.log(item)}
+                            </tr>
+                            
+                
+                )       
+            })  
+        }
             </tbody>
             </table>
             <div className="d-flex justify-content-end">
-                <button className='BoardListWriteButton'> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-</svg>글쓰기</button>
+                <Link to="/boardWrite" >
+                    <button className={styles.BoardListWriteButton}> 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                    </svg>글쓰기</button>
+                </Link>
+            </div>
             </div>
         </div>
         <div className='text-center'>
         <div>
             <Row>
 
-            <div className='BoardListPaging'>
+            <div className={styles.BoardListPaging}>
                 <div>
                     <Col>
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                        &lt;<button type="button" class="btn btn--bs-light-bg-subtle BoardListPagingPN">이전</button>
-                        <button type="button" class="btn btn--bs-light-bg-subtle BoardListPagingButton">1</button>
-                        <button type="button" class="btn btn--bs-light-bg-subtle BoardListPagingButton">2</button>
-                        <button type="button" class="btn btn--bs-light-bg-subtle BoardListPagingButton">3</button>
-                        <button type="button" class="btn btn--bs-light-bg-subtle BoardListPagingButton">4</button>
-                        <button type="button" class="btn btn--bs-light-bg-subtle BoardListPagingButton">5</button>
-                        <button type="button" class="btn btn--bs-light-bg-subtle BoardListPagingButton">6</button>
-                        <button type="button" class="btn btn--bs-light-bg-subtle BoardListPagingButton">7</button>
-                        <button type="button" class="btn btn--bs-light-bg-subtle BoardListPagingButton">8</button>
-                        <button type="button" class="btn btn--bs-light-bg-subtle BoardListPagingButton">9</button>
-                        <button type="button" class="btn btn--bs-light-bg-subtle BoardListPagingButton">10</button>
-                        <button type="button" class="btn btn--bs-light-bg-subtle BoardListPagingPN">다음</button>&gt; 
+                        <p style={{ width: '650px', textAlign: 'center'}}>
+                        {
+                            pagingArray.map(item => 
+                            <span key={item}>
+                                {/* page는 useParams()으로 받은 객체라서 parseInt() 사용 */}
+                                <Link id={ (item -1) === parseInt(page) ? styles.currentPaging : styles.paging } to = { `/BoardList/${item-1}` }>{item}</Link>
+                            </span>)
+                        }
+                        </p>
                     </div>
                     </Col>
                 </div>
             </div>
 
             </Row>
-            
-            <div className='BoardListFooter'>
-                <div className='BoardListFooter1'>
-            <Row>
-                <Col md={3}>
-                <div className='BoardListFooter2'>
-                    <select className="form-select BoardListSelect">
-                        <option>전체기간</option>
-                        <option>1일</option>
-                        <option>1주</option>
-                        <option>1개월</option>
-                        <option>6개월</option>
-                        <option>1년</option>
-                    </select>
-                </div>
-                </Col>
-                <Col md={3}>
-                <div className='BoardListFooter2'>
-                    <select className="form-select BoardListSelect">
-                        <option>제목만</option>
-                        <option>글작성자</option>
-                        <option>댓글내용</option>
-                        <option>댓글작성자</option>
-                    </select>
-                </div>
-                </Col>
-                <Col md={6}>
-                <div class="input-group mb-3 BoardListInput">
-                    <input type="text" className="form-control BoardListInput" aria-label="Recipient's username" aria-describedby="button-addon2" />
-                    <button className="btn btn-success BoardListButton" type="button" id="button-addon2">검색</button>
-                </div>
-                </Col>
-            </Row>
-                </div>
-            </div>
            
         </div>
         </div>
