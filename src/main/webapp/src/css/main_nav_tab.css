@@ -6,3 +6,28 @@ div.mainNav button.nav-link.active{
 div.mainNav button.nav-link{
     color: #999 !important;
 }
+
+a.hotelCategoryList{
+    text-decoration: none;
+    color:black;
+    transition: 0.5s;
+}
+
+a.hotelCategoryList:hover{
+    text-decoration: none;
+    color: #6249D6;
+    background-color: #e6e6e9;
+    border-radius: 2rem;
+}
+
+span.hotelCategoryListName{
+    color: #999;
+    font-size: 0.8rem;
+    transition: 1s;
+}
+
+a.hotelCategoryList:hover span.hotelCategoryListName{
+    color: black;
+    font-weight: bold;
+    border-bottom: 1px solid #6249D6;
+}
