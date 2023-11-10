@@ -11,6 +11,7 @@ import Main from "./components/users/Main";
 import Login from "./components/users/AccountLogin";
 import Signin from "./components/users/AccountSignIn";
 
+
 // Hotel
 import HotelList from "./components/users/HotelList";
 import HotelDetail from "./components/users/HotelDetail";
@@ -39,6 +40,11 @@ import ManagerMyPlace from "./components/managers/ManagerMyPlace";
 import DashBoardAdmin from "./components/admins/DashBoard";
 import Admin from "./components/admins/Admin";
 
+//kakao social login
+import KakaoLogin from "./components/users/KakaoLogin";
+import KakaoRedirect from "./components/users/KakaoRedirect";
+import Redirection from "./components/users/Redirection";
+
 
 function App() {
   return (
@@ -60,6 +66,9 @@ function App() {
           <Route path="boardUpdate" element={<BoardUpdate />} />
           <Route path="review" element={<Review />} />
           <Route path="info" element={<Info />} />
+          <Route path="kakaoLogin" element={ <KakaoLogin />} />
+          <Route path="KakaoRedirect" element={ <KakaoRedirect />} />
+          <Route path="redirection" element={ <Redirection />} />         
         </Route>
         <Route path="/manager">
           <Route index element={<ManagerDashBoard />} />
