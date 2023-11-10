@@ -7,7 +7,7 @@ import jpa.bean.HotelDTO;
 
 public interface UserService {
 
-    String getHotelName(int seqHotel);
+	public String getHotelName(int seqHotel);
 
 	public List<HotelCategoryDTO> getHotelCategoryList();
 

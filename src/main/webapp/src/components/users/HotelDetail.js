@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Nav from "./Nav";
 import Footer from "./Footer";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,9 +9,29 @@ import img01 from '../../img/img01.png';
 import DetailSelect from '../detail/DetailSelect';
 import HotelContentMap from "./HotelContentMap";
 import HotelSameSpace from "./HotelSameSpace";
+import axios from "axios";
 
 const Detail = () => {
+  const [hotelName, setHotelName] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [seqHotel, setSeqHotel] = useState(2);
 
+  useEffect(() => {
+    axios.get(`/user/getHotelName?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setHotelName(data);
+        } else {
+          console.error('해당 호텔을 찾을 수 없습니다.');
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+        setLoading(false);
+      });
+  }, [seqHotel]);
   return (
     <>
       <Nav />
@@ -25,7 +45,7 @@ const Detail = () => {
                 <span className="distance_option">해방촌 메인 거리 근처</span>
                 <br />
                 <br />
-                <h2 className="space_name">용산 남산뷰 루프탑 파티룸 제그만</h2>
+                <h2 className="space_name">{hotelName}</h2>
               </div>
               <p className="sub_desc">해방촌의 감성과 남산뷰를 품은 프라이빗 공간</p>
               <div className="tags">

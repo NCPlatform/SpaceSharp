@@ -31,9 +31,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String getHotelName(int seqHotel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public String getHotelName(int seqHotel) {
+        return hotelDAO.findById(seqHotel)
+                .map(hotelDTO -> hotelDTO.getName())
+                .orElse(null);
+    }
 
 }
