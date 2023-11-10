@@ -16,8 +16,8 @@ const DetailHeader = () => {
   return (
     <div className="box_form p-3 pt-1 pb-1">
       <div className="collapse" id="collapseExample">
-        <div className="card card-body">
-          <Sharekakao /> &nbsp;
+        <div className="card card-body" style={{ display: 'flex', alignItems: 'center', flexDirection: 'row', justifyContent: 'center' }}>
+          <Sharekakao /> &nbsp;&nbsp;&nbsp;
           <ShortURL />
         </div>
       </div>
