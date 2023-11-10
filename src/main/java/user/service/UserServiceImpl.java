@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<HotelDTO> getHotelList(String seqHotelCategory) {
-		return hotelDAO.findAllBySeqHotelCategory(seqHotelCategory);
+		return hotelDAO.findBySeqHotelCategoryContaining(seqHotelCategory);
 	}
 
 }

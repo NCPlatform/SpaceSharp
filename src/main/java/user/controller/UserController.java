@@ -31,7 +31,6 @@ public class UserController {
 	@PostMapping(value = "getHotelList")
 	@ResponseBody
 	public List<HotelDTO> getHotelList(@ModelAttribute HotelDTO hotelDTO){
-		System.out.println("서버 방문");
 		System.out.println(hotelDTO.getSeqHotelCategory());
 		return userService.getHotelList(hotelDTO.getSeqHotelCategory());
 	}

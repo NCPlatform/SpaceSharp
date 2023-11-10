@@ -7,6 +7,7 @@ import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
 import '../../css/navheader.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import { Offcanvas } from "react-bootstrap";
 
 
 const NavTest = () => {
@@ -24,29 +25,11 @@ const NavTest = () => {
                 aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
                 placement="start"
               >
-                <div className="py-4 bg-warning">
-                  <button
-                    type="button"
-                    className="border-0 bg-transparent position-absolute top-0 end-0 pe-3 pt-3"
-                    data-bs-dismiss="offcanvas"
-                    aria-label="Close"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="30"
-                      height="30"
-                      fill="purple"
-                      className="bi bi-arrow-left"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"
-                      />
-                    </svg>
-                  </button>
+                <Offcanvas.Header className="py-4" style={{backgroundColor:'#F4DFB6'}} closeButton>
+                <p></p>
                   <div className="text-center">
-                    <Link to="/login">
+                    <Link to="/login" style={{textDecoration:'none', color:'black'}} className="text-center">
+                      
                       <p
                         className="offcanvas-title fw-bold"
                         id="offcanvasNavbarLabel"
@@ -57,7 +40,7 @@ const NavTest = () => {
                       </p>
                     </Link>
                   </div>
-                </div>
+                </Offcanvas.Header>
 
                 {/* offcanvas body */}
                 <div className="bg-body-secondary" style={{ height: "100vh" }}>
@@ -87,7 +70,7 @@ const NavTest = () => {
 
                   {/* list */}
                   <div
-                    style={{ backgroundColor: "#6249D6" }}
+                    style={{ backgroundColor: "#9A4444" }}
                     className="py-3 ps-3 pe-3 mb-3 text-white fw-bold d-flex justify-content-between"
                   >
                     <span className="py-0">내 관심정보 설정</span>
@@ -252,8 +235,8 @@ const NavTest = () => {
                   </div>
                 </div>
                 <div
-                  style={{ backgroundColor: "#6249D6" }}
-                  className="py-3 ps-3 pe-3 text-warning fw-bold text-center"
+                  style={{ backgroundColor: "#9A4444" }}
+                  className="py-3 ps-3 pe-3 text-white fw-bold text-center"
                 >
                   <span className="py-0 me-2">호스트센터로 이동</span>
                   <svg
@@ -271,7 +254,9 @@ const NavTest = () => {
                   </svg>
                 </div>
               </Navbar.Offcanvas>
-              <Navbar.Brand href="#">Space #</Navbar.Brand>
+              <Link to="/">
+                <Navbar.Brand href="#">Space #</Navbar.Brand>
+              </Link>
               <Form className="d-flex">
                 <Form.Control
                   type="search"
