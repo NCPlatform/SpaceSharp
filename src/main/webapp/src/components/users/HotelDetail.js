@@ -40,7 +40,7 @@ const Detail = () => {
         <br />
         <Container>
           <Row>
-            <Col xs={8}>
+            <Col xs={12} md={8}>
               <div className="h_area" style={{ overflow: 'hidden' }}>
                 <span className="distance_option">해방촌 메인 거리 근처</span>
                 <br />
@@ -182,7 +182,7 @@ const Detail = () => {
 
               </Tabs>
             </Col>
-            <Col xs={4} className="fixed-col">
+            <Col xs={12} md={4} className="fixed-col">
               <DetailSelect />
             </Col>
           </Row>
