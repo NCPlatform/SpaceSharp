@@ -55,4 +55,23 @@ public class UserServiceImpl implements UserService {
 	public Optional<BoardDTO> getBoard(int seqBoard) {
 	    return boardDAO.findById(seqBoard);
 	}
+
+	@Override
+	public Object update(BoardDTO boardDTO) {
+		  try {
+		        // save 메서드를 이용하여 데이터를 업데이트
+		        boardDAO.save(boardDTO);
+		        return "success";
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        return "fail";
+		    }
+	}
+
+	@Override
+	public void delete(int seqBoard) {
+		
+		boardDAO.deleteById(seqBoard);
+		
+	}
 }

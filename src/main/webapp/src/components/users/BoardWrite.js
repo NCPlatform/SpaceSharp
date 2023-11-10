@@ -17,8 +17,7 @@ const BoardWrite = () => {
             "title" : '',
             "content" : '',
             "seqRefSeqBoard" : 0,
-            "email" : 'user',
-            "release" : ''
+            "email" : 'user'
         }
     )
 
@@ -59,7 +58,7 @@ const BoardWrite = () => {
                         imageHeight: 200,
                         imageAlt: '구데타마',
                       })
-                      navigate('/BoardList');
+                      navigate('/BoardList/0');
                  })
                  .catch( error=> console.log(error) )
            }
@@ -70,7 +69,6 @@ const BoardWrite = () => {
               [{ size: ["small", false, "large", "huge"] }],
               ["bold", "italic", "underline", "strike", "blockquote"],
               [{ list: "ordered" }, { list: "bullet" }],
-              ["link", "image"],
               [
                 { list: "ordered" },
                 { list: "bullet" },
@@ -98,22 +96,22 @@ const BoardWrite = () => {
     return (
         <div className='container'>
             <div>
-                <div className='styles.BoardWriteHeader'>
+                <div className={styles.BoardWriteHeader}>
                     <div className='d-flex justify-content-between'>
-                        <h3 className='styles.text-start'> 게시판 글쓰기 </h3>
+                        <h3 className={styles.textStart}> 게시판 글쓰기 </h3>
                         
-                        <div className='styles.BoardWriteHeaderButton'>
+                        <div className={styles.BoardWriteHeaderButton}>
                             <button className="btn btn-success" onClick={ onWriteSuccess }>등록</button>
                         </div>
                     </div>
                 </div>
-                <div className='styles.BoardWriteBody'>
-                    <div className='styles.BoardWriteTitle'>
+                <div className={styles.BoardWriteBody}>
+                    <div className={styles.BoardWriteTitle}>
                        
                         <input type='text'  className="form-control" name='title' value={ boardDTO.title } onChange={ onChange } maxLength={50} placeholder='제목을 입력해주세요.' />
                         <div id='titleDiv'>{ titleDiv }</div>
                     </div>
-                    <div className='styles.BoardWirteContent'>
+                    <div className={styles.BoardWirteContent}>
                    
                             <ReactQuill
                             theme="snow"
@@ -129,7 +127,7 @@ const BoardWrite = () => {
                             </ReactQuill>
                         {/* <textarea className="form-control" name='content' value={ boardDTO.content } onChange={ onChange } placeholder='내용을 입력해주세요.'  rows={30} /> */}
 
-                        <div id='styles.contentDiv'>{ contentDiv }</div>
+                        <div id={styles.contentDiv}>{ contentDiv }</div>
                     </div>
                 </div>
             </div>

@@ -9,9 +9,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,8 +51,22 @@ public class UserController {
 	}
 	
 	@GetMapping(path = "getBoard")
+	@ResponseBody
 	public Optional<BoardDTO> getBoard(@RequestParam int seqBoard){
-	    return userService.getBoard(seqBoard);
+	    System.out.println("출력 : " + userService.getBoard(seqBoard));
+		return userService.getBoard(seqBoard);
+	}
+	
+	@PutMapping(path = "update")
+	@ResponseBody
+	public void update(@ModelAttribute BoardDTO boardDTO) {
+		userService.update(boardDTO);
+	}
+	
+	@DeleteMapping(path = "delete")
+	@ResponseBody
+	public void delete(@RequestParam int seqBoard) {
+		userService.delete(seqBoard);
 	}
 	
 }

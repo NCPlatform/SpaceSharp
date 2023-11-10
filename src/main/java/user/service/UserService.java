@@ -18,5 +18,9 @@ public interface UserService {
 
 	public Optional<BoardDTO> getBoard(int seqBoard);
 
+	public Object update(BoardDTO boardDTO);
+
+	public void delete(int seqBoard);
+
 	
 }

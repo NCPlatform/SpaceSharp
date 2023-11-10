@@ -80,10 +80,10 @@ const Login = () => {
   */
 
     return (
-    <div className='styles.Login0'>
-    <div className='styles.Login1'>
-    <div className='styles.Login2'>
-        <h1 className='styles.login-h1'> 로그인 화면 </h1>
+    <div className={styles.Login0}>
+    <div className={styles.Login1}>
+    <div className={styles.Login2}>
+        <h1 className={styles.loginH1}> 로그인 화면 </h1>
         <div className="d-grid gap-2 styles.Login3">
       <Button variant="primary" size="lg" style={{ color:'black', fontWeight:'bold', background: '#2db400', border: 'none' }}>
         네이버로 로그인하기
@@ -95,7 +95,7 @@ const Login = () => {
     </div>
     <hr />
     <>
-        <h5 className='styles.login-h5'>또는</h5>
+        <h5 className={styles.loginH5}>또는</h5>
         <FloatingLabel
         controlId="floatingInput"
         label="Email address"
@@ -120,7 +120,7 @@ const Login = () => {
     <div className="d-grid gap-2">
     <button variant="primary" size="1g" onClick={ onLoginSubmit } style={{ background: '#FFEB00', border: 'none' }}>이메일로 로그인</button>
     </div>
-    <h5 className='styles.login-h5'>아직 회원이 아니신가요? <a href='' className='createBtn'> 회원가입 </a></h5>
+    <h5 className={styles.loginH5}>아직 회원이 아니신가요? <a href='' className='createBtn'> 회원가입 </a></h5>
     </div>
     </div>
     
