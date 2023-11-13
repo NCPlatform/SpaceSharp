@@ -18,7 +18,11 @@ public class HotelDTO {
 	private int seqHotel;
 	
 	@Column
-	private int seqHotelCategory;
+	private String seqHotelCategory;
+	
+	public void setSeqHotelCategory(String cates) {
+		seqHotelCategory = cates;
+	}
 	
 	@Column
 	private String name;
@@ -31,6 +35,10 @@ public class HotelDTO {
 	
 	@Column
 	private String keyword;
+	
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
 	
 	@Column
 	private String addr;
@@ -88,5 +96,105 @@ public class HotelDTO {
 	
 	@Column
 	private boolean parking;
+
+	@Column
+	private boolean smoke;
+
+	@Column
+	private boolean animal;
+
+	@Column
+	private boolean pc;
+
+	@Column
+	private boolean isTable;
+
+	@Column
+	private boolean socket;
+
+	@Column
+	private boolean open24;
+
+	@Column
+	private boolean noHoliday;
+
+	@Column
+	private boolean restaurant;
+
+	@Column
+	private boolean freeFood;
+
+	@Column
+	private boolean locker;
+
+	@Column
+	private boolean mailService;
+
+	@Column
+	private boolean kitchen;
+
+	@Column
+	private boolean waterFurifier;
+
+	@Column
+	private boolean catering;
+
+	@Column
+	private boolean heater;
+
+	@Column
+	private boolean airConditioner;
+
+	@Column
+	private boolean fax;
+
+	@Column
+	private boolean wareHouse;
+
+	@Column
+	private boolean percelService;
+
+	@Column
+	private boolean privateToilet;
+
+	@Column
+	private boolean fittingRoom;
+
+	@Column
+	private boolean roofTop;
+
+	@Column
+	private boolean rounge;
+
+	@Column
+	private boolean mirror;
+
+	@Column
+	private boolean bbq;
+
+	@Column
+	private boolean doorlock;
+	
+	public boolean getIstable() {
+		return isTable;
+	}
+	
+	@Override
+	public String toString() {
+		String result = seqHotelCategory+"/"+name+"/"+subscribe+"\n";
+		result += mainKeyword+"/"+ keyword+"/"+ addr+"/"+ ownerEmail+"/"+ workinghour+"/";
+		result += holiday+"/"+"\n"+ placeEx+"/"+ facilities;
+		result += "/"+alert+"/"+ refund+"/";
+		result += TV+"/"+ alcohol+"/"+ cooking+"/"+ copy+"/"+"\n"+ coupon+"/"+ food+"/";
+		result += internet+"/"+ mic+"/"+ parking+"/"+ washing+"/"+"\n"+ whiteboard+"/";
+		result += airConditioner+"/"+ animal+"/"+ bbq+"/"+ catering+"/"+ doorlock+"/"+"\n";
+		result += fax+"/"+ fittingRoom+"/"+ freeFood+"/"+ heater+"/"+ kitchen+"/";
+		result += locker+"/"+"\n"+ mailService+"/"+ mirror+"/"+ noHoliday+"/"+ open24+"/";
+		result += pc+"/"+ percelService+"/"+"\n"+ privateToilet+"/"+ restaurant+"/";
+		result += roofTop+"/"+ rounge+"/"+ smoke+"/"+ socket+"/"+"\n"+ wareHouse+"/"+ waterFurifier + "/";
+		result += isTable ;
+		return result;
+	}
+	
 	
 }

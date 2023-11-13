@@ -1,8 +1,19 @@
 package admin.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import admin.service.AdminService;
+
+@CrossOrigin
 @Controller
+@RequestMapping(value = "admin")
 public class AdminController {
-	// created userJY Branch 231106 PM 03:10
+	@Autowired
+	private AdminService adminService;
+	
+	
+	
 }

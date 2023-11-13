@@ -38,6 +38,7 @@ import ManagerMyPlace from "./components/managers/ManagerMyPlace";
 // Admin
 import DashBoardAdmin from "./components/admins/DashBoard";
 import Admin from "./components/admins/Admin";
+import ManagerAddPlace from "./components/managers/ManagerAddPlace";
 
 
 function App() {
@@ -66,6 +67,8 @@ function App() {
           <Route path="reservation" element={<ManagerReservation />} />
           <Route path="review" element={<ManagerReview/>}/>
           <Route path="myPlace" element={<ManagerMyPlace/>}/>
+
+          <Route path="addPlace" element={<ManagerAddPlace/>}/>
         </Route>
         <Route path="/admin">
           <Route index element={<DashBoardAdmin />} />
