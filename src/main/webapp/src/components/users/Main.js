@@ -126,7 +126,7 @@ const Main = () => {
       </div>
 
       {/* main mid select category */}
-      <div className="container mt-4">
+      <div className="container pt-4">
         <h5 className="fw-bold text-center">찾는 공간이 있나요?</h5>
         <div
           className="nav nav-tabs mb-3 mainNav row row-cols-6"

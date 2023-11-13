@@ -7,15 +7,23 @@ import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
 import '../../css/navheader.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import "../../css/mainColor.css"
 import { Offcanvas } from "react-bootstrap";
+import axios from "axios";
 
 
 const NavTest = () => {
+
+  const goNav = () => {
+    console.log('노티스')
+    window.location.href = 'http://localhost:8080/user/notice';
+  }
+
   return (
     <div>
       {[false].map((expand) => (
-        <div key={expand} className="my-navbar">
-          <Navbar expand={expand} className="bg-body-tertiary">
+        <div key={expand} className="mb-5 my-navbar fourthBackColor">
+          <Navbar expand={expand} className="">
             <Container fluid>
               <Navbar.Toggle
                 aria-controls={`offcanvasNavbar-expand-${expand}`}
@@ -25,7 +33,7 @@ const NavTest = () => {
                 aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
                 placement="start"
               >
-                <Offcanvas.Header className="py-4" style={{backgroundColor:'#F4DFB6'}} closeButton>
+                <Offcanvas.Header className="py-4 fourthBackColor" closeButton>
                 <p></p>
                   <div className="text-center">
                     <Link to="/login" style={{textDecoration:'none', color:'black'}} className="text-center">
@@ -70,8 +78,7 @@ const NavTest = () => {
 
                   {/* list */}
                   <div
-                    style={{ backgroundColor: "#9A4444" }}
-                    className="py-3 ps-3 pe-3 mb-3 text-white fw-bold d-flex justify-content-between"
+                    className="py-3 ps-3 pe-3 mb-3 text-white fw-bold d-flex justify-content-between firstBackColor"
                   >
                     <span className="py-0">내 관심정보 설정</span>
                     <svg
@@ -104,7 +111,8 @@ const NavTest = () => {
                       />
                     </svg>
                   </div>
-                  <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border">
+                  
+                  <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border" onClick={()=>goNav()}>
                     <span className="py-0">공지사항</span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -120,6 +128,7 @@ const NavTest = () => {
                       />
                     </svg>
                   </div>
+
                   <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border">
                     <span className="py-0">도움말</span>
                     <svg
@@ -235,8 +244,7 @@ const NavTest = () => {
                   </div>
                 </div>
                 <div
-                  style={{ backgroundColor: "#9A4444" }}
-                  className="py-3 ps-3 pe-3 text-white fw-bold text-center"
+                  className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor"
                 >
                   <span className="py-0 me-2">호스트센터로 이동</span>
                   <svg
@@ -249,6 +257,7 @@ const NavTest = () => {
                   >
                     <path
                       fillRule="evenodd"
+                      className="firstFontColor"
                       d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
                     />
                   </svg>
@@ -265,7 +274,7 @@ const NavTest = () => {
                   aria-label="Search"
                   style={{ width: "220px" }}
                 />
-                <Button variant="outline-success">
+                <Button variant="outline-dark">
                   <span className="bi bi-search"></span>
                 </Button>
               </Form>
