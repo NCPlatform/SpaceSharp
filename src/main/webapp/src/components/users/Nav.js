@@ -14,11 +14,6 @@ import axios from "axios";
 
 const NavTest = () => {
 
-  const goNav = () => {
-    console.log('노티스')
-    window.location.href = 'http://localhost:8080/user/notice';
-  }
-
   return (
     <div>
       {[false].map((expand) => (
@@ -112,7 +107,7 @@ const NavTest = () => {
                     </svg>
                   </div>
                   
-                  <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border" onClick={()=>goNav()}>
+                  <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border">
                     <span className="py-0">공지사항</span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -264,7 +259,7 @@ const NavTest = () => {
                 </div>
               </Navbar.Offcanvas>
               <Link to="/">
-                <Navbar.Brand href="#">Space #</Navbar.Brand>
+                <Navbar.Brand>Space #</Navbar.Brand>
               </Link>
               <Form className="d-flex">
                 <Form.Control
