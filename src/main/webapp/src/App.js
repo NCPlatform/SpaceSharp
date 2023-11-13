@@ -38,6 +38,7 @@ import ManagerMyPlace from "./components/managers/ManagerMyPlace";
 // Admin
 import DashBoardAdmin from "./components/admins/DashBoard";
 import Admin from "./components/admins/Admin";
+import KakaoAuth from "./components/users/KakaoAuth";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
           />
           <Route path="login" element={<Login />} />
           <Route path="signin" element={<Signin />} />
+          <Route path="/oauth/callback/kakao" element={<KakaoAuth/>} />
           <Route path="boardList" element={<BoardList />} />
           <Route path="boardDetail" element={<BoardDetail />} />
           <Route path="boardWrite" element={<BoardWrite />} />
