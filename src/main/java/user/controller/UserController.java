@@ -34,9 +34,14 @@ public class UserController {
 	
 	@PostMapping(value="login")
 	@ResponseBody
-	public String login(@ModelAttribute UserDTO userDTO) {
-		return userService.login(userDTO);
+	public UserDTO login(@ModelAttribute UserDTO userDTO) {
+		Optional<UserDTO> DTO = userService.login(userDTO);
 		
+		if(DTO.isPresent() && DTO.get().getPassword().equals(userDTO.getPassword())) {
+			return DTO.get();
+		}else {
+			return null;
+		}
 	}
 	
 	@PostMapping(value="write")

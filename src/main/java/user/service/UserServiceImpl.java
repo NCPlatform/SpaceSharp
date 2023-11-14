@@ -32,7 +32,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private BoardDAO boardDAO;
 	
-	UserDAO userDAO;
+	@Autowired
+	private UserDAO userDAO;
 
 	@Override
 	public List<HotelCategoryDTO> getHotelCategoryList() {
@@ -45,22 +46,13 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public String login(UserDTO userDTO) {
-		
-		Optional<UserDTO> user = userDAO.findById(userDTO.getEmail());
-		
-		if(user.isEmpty()) {
-			return "none";
-		}else if(user.get().getPassword().equals(userDTO.getPassword())) {
-			return "true";
-		}else {
-			return "none";
-		}
+	public Optional<UserDTO> login(UserDTO userDTO) {
+		return userDAO.findById(userDTO.getEmail());
 	}
 
 	@Override
 	public Optional<BoardDTO> getBoard(int seqRefSeqBoard) {
-		return boardDAO.getBySeqRefBoard(seqRefSeqBoard);
+		return boardDAO.getBySeqRefSeqBoard(seqRefSeqBoard);
 	}
 
 	@Override

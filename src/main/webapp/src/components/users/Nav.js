@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -12,10 +12,14 @@ import { Offcanvas } from "react-bootstrap";
 import Session from "react-session-api";
 
 const NavTest = () => {
+  const [sessionUserDTO, setSessionUserDTO] = useState(
+    JSON.parse(sessionStorage.getItem("user"))
+  );
+
   return (
     <div>
       {[false].map((expand) => (
-        <div key={expand} className="mb-5 my-navbar fourthBackColor">
+        <div key={expand} className="mb-5 my-navbar bg-body-tertiary">
           <Navbar expand={expand} className="">
             <Container fluid>
               <Navbar.Toggle
@@ -29,21 +33,39 @@ const NavTest = () => {
                 <Offcanvas.Header className="py-4 fourthBackColor" closeButton>
                   <p></p>
                   <div className="text-center">
-                    {Session}
-                    <Link
-                      to="/login"
-                      style={{ textDecoration: "none", color: "black" }}
-                      className="text-center"
-                    >
-                      <p
-                        className="offcanvas-title fw-bold"
-                        id="offcanvasNavbarLabel"
+                    {sessionUserDTO ? (
+                      <div
+                        style={{ textDecoration: "none", color: "black" }}
+                        className="text-center"
                       >
-                        게스트로
-                        <br />
-                        로그인 / 회원가입
-                      </p>
-                    </Link>
+                        <p className="fw-bold mb-0">{sessionUserDTO.name}</p>
+                        <Link
+                          to=""
+                          style={{
+                            fontSize: "0.8rem",
+                            color: "black",
+                            textDecoration: "none",
+                          }}
+                        >
+                          프로필 관리
+                        </Link>
+                      </div>
+                    ) : (
+                      <Link
+                        to="/login"
+                        style={{ textDecoration: "none", color: "black" }}
+                        className="text-center"
+                      >
+                        <p
+                          className="offcanvas-title fw-bold"
+                          id="offcanvasNavbarLabel"
+                        >
+                          게스트로
+                          <br />
+                          로그인 / 회원가입
+                        </p>
+                      </Link>
+                    )}
                   </div>
                 </Offcanvas.Header>
 
@@ -235,12 +257,26 @@ const NavTest = () => {
                     </div>
                   </div>
                   <div className="text-center pt-2">
-                    로그인
+                    {sessionUserDTO ? (
+                      <span
+                        onClick={() => {
+                          sessionStorage.clear();
+                          window.location.reload();
+                        }}
+                      >
+                        로그아웃
+                      </span>
+                    ) : (
+                      <Link to="login">로그인</Link>
+                    )}
                     <br />
                     powered by &#9426; Netflex Corp
                   </div>
                 </div>
-                <div className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor">
+                <Link
+                  to="/manager"
+                  className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor"
+                >
                   <span className="py-0 me-2">호스트센터로 이동</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -256,7 +292,7 @@ const NavTest = () => {
                       d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
                     />
                   </svg>
-                </div>
+                </Link>
               </Navbar.Offcanvas>
               <Link to="/">
                 <Navbar.Brand>Space #</Navbar.Brand>

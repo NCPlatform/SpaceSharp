@@ -13,7 +13,7 @@ import jpa.bean.UserDTO;
 
 public interface UserService {
 
-	public String login(UserDTO userDTO);
+	public Optional<UserDTO> login(UserDTO userDTO);
 	
 	public String write(BoardDTO boardDTO);
 

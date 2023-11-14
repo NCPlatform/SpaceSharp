@@ -14,6 +14,6 @@ import jpa.bean.UserDTO;
 @Repository
 public interface BoardDAO extends JpaRepository<BoardDTO, Integer> {
 
-	Optional<BoardDTO> getBySeqRefBoard(int parentSeqBoard);
+	Optional<BoardDTO> getBySeqRefSeqBoard(int parentSeqBoard);
 	Page<BoardDTO> findAll(Pageable pageable);
 }
