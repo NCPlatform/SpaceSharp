@@ -37,4 +37,25 @@ public class UserServiceImpl implements UserService {
                 .orElse(null);
     }
 
+	@Override
+	public String getMainKeyword(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+                .map(hotelDTO -> hotelDTO.getMainKeyword())
+                .orElse(null);
+	}
+
+	@Override
+	public String getSubscribe(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+                .map(hotelDTO -> hotelDTO.getSubscribe())
+                .orElse(null);
+	}
+
+	@Override
+	public String getTags(int seqHotel) {
+	    return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getKeyword())
+	            .orElse(null);
+	}
+
 }

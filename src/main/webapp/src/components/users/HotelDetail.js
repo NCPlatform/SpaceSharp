@@ -13,6 +13,9 @@ import axios from "axios";
 
 const Detail = () => {
   const [hotelName, setHotelName] = useState('');
+  const [mainKeyword, setMainKeyword] = useState('');
+  const [subscribe, setSubscribe] = useState('');
+  const [tags, setTags] = useState('');
   const [loading, setLoading] = useState(true);
   const [seqHotel, setSeqHotel] = useState(2);
 
@@ -31,7 +34,47 @@ const Detail = () => {
         console.error('데이터를 불러오는 중 에러 발생:', error);
         setLoading(false);
       });
+    // 새로운 요청을 통해 main_keyword 가져오기
+    axios.get(`/user/getMainKeyword?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setMainKeyword(data);
+        } else {
+          console.error('해당 호텔의 키워드를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
+    // 새로운 요청을 통해 subscribe 가져오기
+    axios.get(`/user/getSubscribe?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setSubscribe(data);
+        } else {
+          console.error('해당 호텔의 키워드를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
+    // 새로운 요청을 통해 키워드 가져오기
+    axios.get(`/user/getTags?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setTags(data);
+        } else {
+          console.error('해당 호텔의 키워드를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
   }, [seqHotel]);
+
   return (
     <>
       <Nav />
@@ -42,16 +85,16 @@ const Detail = () => {
           <Row>
             <Col xs={12} md={8}>
               <div className="h_area" style={{ overflow: 'hidden' }}>
-                <span className="distance_option">해방촌 메인 거리 근처</span>
+                <span className="distance_option">{mainKeyword}</span>
                 <br />
                 <br />
                 <h2 className="space_name">{hotelName}</h2>
               </div>
-              <p className="sub_desc">해방촌의 감성과 남산뷰를 품은 프라이빗 공간</p>
+              <p className="sub_desc">{subscribe}</p>
               <div className="tags">
-                <span className="tag"> #태그1 </span>
-                <span className="tag"> #태그2 </span>
-                <span className="tag"> #태그3 </span>
+                {tags.split(',').map((tag, index) => (
+                  <span key={index} className="tag"> {tag.trim()} </span>
+                ))}
               </div>
               <br /><br />
               <div className='detail_forms'>
@@ -78,7 +121,7 @@ const Detail = () => {
                     />
                   </Carousel.Item>
                 </Carousel>
-                <p className='sub_desc' style={{ color: '#666', fontSize: '200%' }}>해방촌의 감성과 남산뷰를 품은 프라이빗 공간</p>
+                <p className='sub_scribe' style={{ color: '#666', fontSize: '200%', whiteSpace: 'pre-wrap' }}>{subscribe}</p>
               </div>
               <Tabs
                 defaultActiveKey="home"
