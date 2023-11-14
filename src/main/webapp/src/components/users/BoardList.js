@@ -49,7 +49,7 @@ const BoardList = () => {
     <div className='container'>
         <div>
         <div>
-            <h1>seq카테고리</h1>
+            <h1>{boardDTO.seqBoardCategory}</h1>
         </div>
         <div className={styles.secondArea}>
         <Row md={1}>
@@ -109,13 +109,12 @@ const BoardList = () => {
                         const formattedReleaseDate = releaseDate.toLocaleDateString('ko-KR');
                 
                         return(
-                            <tr key={ item.id }>
+                            <tr key={ item.seqBoard }>
                                 <td>{ item.seqBoard }</td>
-                                <td><Link className={styles.BoardListTitle } to={`/user/BoardRead/${item.seqBoard}`}>{ item.title }</Link></td>
+                                <td><Link className={styles.BoardListTitle } to={`/boardDetail/${item.seqBoard}`}>{ item.title }</Link></td>
                                 <td>{ item.email }</td>
                                 <td>{ formattedReleaseDate }</td>
                                 <td style={{ visibility:'hidden' }}>{ item.seqRefSeqBoard }</td>
-                                {console.log(item)}
                             </tr>
                             
                 

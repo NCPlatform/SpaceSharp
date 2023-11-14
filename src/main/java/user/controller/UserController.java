@@ -9,7 +9,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,10 +62,26 @@ public class UserController {
 		userService.update(boardDTO);
 	}
 	
-	@DeleteMapping(path = "delete")
+	@PostMapping(path = "delete")
 	@ResponseBody
-	public void delete(@RequestParam int seqBoard) {
-		userService.delete(seqBoard);
+	public void delete(@ModelAttribute BoardDTO boardDTO) {
+		userService.delete(boardDTO.getSeqBoard());
 	}
+	
+	@PostMapping(path = "writeReply")
+	@ResponseBody
+	public String reply(@ModelAttribute BoardDTO boardDTO) {
+		int seqRefSeqBoard = boardDTO.getSeqRefSeqBoard();
+		
+		Optional<BoardDTO> parentBoardOptional = userService.getBoard(seqRefSeqBoard);
+		if (parentBoardOptional.isPresent()) {
+			userService.write(boardDTO);
+			return "Reply added successfully!";
+		} else {
+			return "원글이 없습니다.";
+		}
+	}
+	
+
 	
 }

@@ -3,6 +3,7 @@ package jpa.bean;
 import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,6 +38,7 @@ public class BoardDTO {
 	@Column
 	private String email;
 	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	@CreationTimestamp
 	@Column
 	private Date releaseDate;

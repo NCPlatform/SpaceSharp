@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService {
 		boardDAO.save(boardDTO);
 		
 		return "성공";
+		    
 	}
 
 	@Override
@@ -71,6 +72,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void delete(int seqBoard) {
 		
+		System.out.println(seqBoard);
 		boardDAO.deleteById(seqBoard);
 		
 	}
