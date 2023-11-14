@@ -97,7 +97,7 @@ public class HotelDTO {
 	private boolean pc;
 
 	@Column
-	private boolean table;
+	private boolean isTable;
 
 	@Column
 	private boolean socket;

@@ -38,6 +38,7 @@ import ManagerMyPlace from "./components/managers/ManagerMyPlace";
 // Admin
 import DashBoardAdmin from "./components/admins/DashBoard";
 import Admin from "./components/admins/Admin";
+import KakaoAuth from "./components/users/KakaoAuth";
 
 function App() {
   return (
@@ -59,10 +60,17 @@ function App() {
           />
           <Route path="login" element={<Login />} />
           <Route path="signin" element={<Signin />} />
-          <Route path="boardList" element={<BoardList />} />
-          <Route path="boardDetail" element={<BoardDetail />} />
+          <Route path="boardList">
+            <Route path=':page' element={<BoardList />} />
+          </Route>
+          <Route path="boardDetail" element={<BoardDetail />} >
+            <Route path=':paramSeqBoard' element={<BoardDetail />} />
+          </Route>
+          <Route path="/oauth/callback/kakao" element={<KakaoAuth/>} />
           <Route path="boardWrite" element={<BoardWrite />} />
-          <Route path="boardUpdate" element={<BoardUpdate />} />
+          <Route path="boardUpdate" element={<BoardUpdate />} >
+          <Route path=':paramSeqBoard' element={<BoardUpdate />} />
+          </Route>
           <Route path="review" element={<Review />} />
           <Route path="info" element={<Info />} />
         </Route>

@@ -10,6 +10,8 @@ import { Card } from "react-bootstrap";
 
 import axios from 'axios'
 import { Link } from "react-router-dom";
+import { options } from "@fullcalendar/core/preact";
+import Footer from "./Footer";
 
 const Main = () => {
   const [activeTab, setActiveTab] = useState("total");
@@ -124,7 +126,7 @@ const Main = () => {
       </div>
 
       {/* main mid select category */}
-      <div className="container mt-4">
+      <div className="container pt-4">
         <h5 className="fw-bold text-center">찾는 공간이 있나요?</h5>
         <div
           className="nav nav-tabs mb-3 mainNav row row-cols-6"
@@ -199,7 +201,7 @@ const Main = () => {
           </button>
         </div>
         <div className="row row-cols-4 row-cols-sm-4 row-cols-md-6">
-          {activeTab === "total"
+        {activeTab === "total"
             ? data.map((item, index) => {
                 return (
                   <Link to={`hotelList/${item.seqHotelCategory}`} key={index} className="hotelCategoryList">
@@ -299,6 +301,7 @@ const Main = () => {
                   className="rounded"
                   style={{ height: "2xh", objectFit: "cover" }}
                   src="https://modo-phinf.pstatic.net/20190516_174/15579658255198n1x7_JPEG/mosaDAPqzk.jpeg?type=w1100"
+                  alt=""
                 />
                 <Card.Title>가게이름</Card.Title>
                 <div className="mb-0 pb-0" style={{ fontSize: "0.8rem" }}>
@@ -370,6 +373,17 @@ const Main = () => {
           ))}
         </div>
       </div>
+      <div className="container mt-5">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+          <div className="px-3">
+            <div className="card">
+              <h1>게임</h1>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      <Footer />
     </>
   );
 };
