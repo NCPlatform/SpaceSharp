@@ -5,8 +5,13 @@ const setScript = () => {
             const deleteTags = document.createElement('script')
             deleteTags.setAttribute('type', 'text/javascript')
             deleteTags.innerText = 'const deleteTags = (event) => {event.target.setAttribute("style","display:none"); }'
-           
+
             document.body.appendChild(deleteTags)
+
+            const insertImage = document.createElement('script')
+            insertImage.setAttribute('type', 'text/javascript')
+            insertImage.innerText = 'const insertImage = (event) => {console.log(event.target.value)}'
+            document.body.appendChild(insertImage)
 }
  window.onload = setScript();
 
@@ -16,6 +21,7 @@ const ManagerAddPlace = () => {
 
     // useState & variables ==========================================
         const [hotelDTO, setHotelDTO] = useState({
+            img: '',
             name: '', subscribe: '', mainKeyword: '', seqHotelCategory: '',
             keyword: '', addr: '', ownerEmail: '',
             workinghour: '', holiday: '', placeEx: '', // placeEx -> <p></p> 태그에 싸야 함
@@ -39,7 +45,7 @@ const ManagerAddPlace = () => {
                 coupon, TV, internet, copy, whiteboard, mic, cooking, food, alcohol, washing, parking,
                 smoke, animal, pc, isTable, socket, open24, noHoliday, restaurant, freeFood, locker, mailService,
                 kitchen, waterFurifier, catering, heater, airConditioner, fax, wareHouse, percelService,
-                privateToilet, fittingRoom, roofTop, rounge, mirror, bbq, doorlock} = hotelDTO
+                privateToilet, fittingRoom, roofTop, rounge, mirror, bbq, doorlock, img} = hotelDTO
 
         const [whenOn, setWhenOn]  = useState({
             openTime: 0,
@@ -88,7 +94,7 @@ const ManagerAddPlace = () => {
             if(value.includes(',')){
                 newA = document.createElement('a')
             //    console.log(value.replace(',',''))
-                newA.setAttribute('onclick', 'javascript:deleteTags(event);') // script 동적으로 추가해야 할 듯 
+                newA.setAttribute('onClick', 'javascript:deleteTags(event);') // script 동적으로 추가해야 할 듯 
                 newA.setAttribute('style', 'margin-left: 5px;')
                 newA.innerHTML = '<span>#'+value.replace(',', '')+'</span>'
                 e.target.value=''
@@ -102,6 +108,47 @@ const ManagerAddPlace = () => {
             tags = tags.replaceAll('#',',#')
             console.log(tags)
            setHotelDTO({...hotelDTO, keyword:tags})
+        }
+
+        const addImage = () => {
+            const newImg = document.createElement('input')
+            newImg.setAttribute('type', 'text')
+            newImg.setAttribute('name', 'img')
+           // newImg.setAttribute('onChange','javascript:insertImage(event)')
+           // const firstImage = document.getElementById('firstImage')
+            const imgAddBtn = document.getElementById('imgAddBtn')
+
+            const br = document.createElement('br')
+            imgAddBtn.after(br)
+            imgAddBtn.after(newImg)
+           // imgAddBtn.onChange=insertImage(e)
+           // firstImage.after(newImg)
+            
+        }
+
+        const settingImgs = () => {
+            const imgInfo = document.getElementsByName('img')
+            let img = "";
+            console.log(imgInfo)
+            imgInfo.forEach((eachTags)=>{
+                img += ","+eachTags.value
+            })
+
+            console.log(img)
+            setHotelDTO({...hotelDTO, img:img})
+            // imgInfo.map((item) => {
+            //     console.log(item.value)
+            // })
+        }
+
+        // const insertImage = (e) => {
+        //     let {value} = e.target
+        //     console.log(value)
+        // }
+
+        const settingVals = () => { // 주소창 입력하려 눌렀을 때 해시태그, 이미지 확정
+            settingImgs()
+            insertTags()
         }
 
         const settingHolidays = (e) => {
@@ -160,7 +207,11 @@ const ManagerAddPlace = () => {
             console.log(hotelDTO)
             axios.post('http://localhost:8080/manager/addPlace', null, {
                 params: hotelDTO
-            }).then(res => console.log(res)).catch(e => console.log(e))
+            }).then(res => 
+               // console.log(res)
+                window.location.href = '/manager/addRoom/'+res.data
+                                    // 맨 앞에 /가 있느냐 없느냐에 따라 결과가 다름
+            ).catch(e => console.log(e))
         }
 
     // NOTE ========================================================== 231107 ~ 추가중
@@ -212,6 +263,12 @@ const ManagerAddPlace = () => {
                             </td>
                         </tr>
                         <tr>
+                            <td>숙소 사진 등록</td>
+                            <td>
+                                <input type = 'text' id = 'firstImage' style = {styleB} name = 'img' placeholder = "이미지 URL을 등록해 주세요" onChange = {insertData} onBlur = {settingImgs}/> <button type = 'button' id = 'imgAddBtn' onClick = {addImage}>+</button> 
+                            </td>
+                        </tr>
+                        <tr>
                             <td>시설</td>
                             <td><input type = 'text' style = {styleB} name = 'facilities' placeholder = '시설 소개를 작성해 주세요.' onChange = {insertData}/></td>
                         </tr>
@@ -221,7 +278,7 @@ const ManagerAddPlace = () => {
                         </tr>
                         <tr>
                             <td>주소</td>
-                            <td><input type = 'text' style = {styleB} name = 'addr' placeholder = '주소를 입력해 주세요.' onChange = {insertData}/></td>
+                            <td><input type = 'text' style = {styleB} name = 'addr' placeholder = '주소를 입력해 주세요.' onChange = {insertData} onClick = {settingVals}/></td>
                         </tr>
                         <tr>
                             <td>영업시간 & 휴무일</td>
@@ -356,7 +413,7 @@ const ManagerAddPlace = () => {
                     </tbody>
                     
                 </table>
-                        <button type = 'button' onClick = {confirmVals}>값 확인하기</button> 
+                        <button type = 'button' onClick = {confirmVals}>플레이스 등록하기</button> 
                         
             </form>
         </div>

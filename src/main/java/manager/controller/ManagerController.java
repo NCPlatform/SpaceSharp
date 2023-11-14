@@ -26,11 +26,16 @@ public class ManagerController {
 	
 	@PostMapping(value = "addPlace")
 	@ResponseBody
-	public HotelDTO addPlace(@ModelAttribute HotelDTO hotelDTO) {
+	public int addPlace(@ModelAttribute HotelDTO hotelDTO) {
 		System.out.println(hotelDTO.toString());
+		// 쉼표 빼기 작업
 		hotelDTO.setSeqHotelCategory(commaClearInt(hotelDTO.getSeqHotelCategory()));
 		hotelDTO.setKeyword(commaClearStr(hotelDTO.getKeyword()));
-		return hotelDTO;
+		hotelDTO.setImg(commaClearStr(hotelDTO.getImg()));
+		// DB Action
+		managerService.addPlace(hotelDTO);
+		int result = managerService.importSeq(hotelDTO.getOwnerEmail(), hotelDTO.getName(), hotelDTO.getAddr());
+		return result; // 값 확인, 배포 시 void로 변경
 	}
 	
 	public String commaClearInt(String sample) {

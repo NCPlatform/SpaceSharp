@@ -34,11 +34,13 @@ import ManagerDashBoard from "./components/managers/ManagerDashBoard";
 import ManagerReservation from "./components/managers/ManagerReservation";
 import ManagerReview from "./components/managers/ManagerReview";
 import ManagerMyPlace from "./components/managers/ManagerMyPlace";
+import ManagerAddPlace from "./components/managers/ManagerAddPlace2";
+import ManagerAddRoom from "./components/managers/ManagerAddRoom";
 
 // Admin
 import DashBoardAdmin from "./components/admins/DashBoard";
 import Admin from "./components/admins/Admin";
-import ManagerAddPlace from "./components/managers/ManagerAddPlace";
+import Authorize from "./components/admins/Authorize";
 
 
 function App() {
@@ -69,9 +71,11 @@ function App() {
           <Route path="myPlace" element={<ManagerMyPlace/>}/>
 
           <Route path="addPlace" element={<ManagerAddPlace/>}/>
+          <Route path="addRoom/:roomSeq" element = {<ManagerAddRoom/>}/>
         </Route>
         <Route path="/admin">
           <Route index element={<DashBoardAdmin />} />
+          <Route path="auth" element = {<Authorize/>}/>
           <Route path=":navPage" element={<Admin />} />
         </Route>
       </Routes>

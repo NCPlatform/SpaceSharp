@@ -13,12 +13,20 @@ import lombok.Data;
 @Data
 public class HotelDTO {
 	
+	@Column
+	private String img;
+	// column 줄 경우 길이는 varchar(1000) 생각 중
+	public String getImg() {
+		return img;
+	}
+	
 	@Id
 	@Column(nullable = false)
 	private int seqHotel;
 	
 	@Column
 	private String seqHotelCategory;
+	
 	
 	public void setSeqHotelCategory(String cates) {
 		seqHotelCategory = cates;
