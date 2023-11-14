@@ -92,7 +92,6 @@ const BoardDetail = () => {
             <Nav/>
         <div className={`container ${styles.BoardReadWrap}`}>
         <div>
-<<<<<<< HEAD
         <Row>
             <Col className="d-flex justify-content-end ">
             <div>
@@ -163,9 +162,6 @@ const BoardDetail = () => {
                 </div>
             </div>
         </div>
-=======
-            <h1>테스팅</h1>
->>>>>>> refs/remotes/origin/user
         </div>
     );
 };
