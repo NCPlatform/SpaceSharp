@@ -1,13 +1,16 @@
 package user.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import jpa.bean.BoardDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.dao.BoardDAO;
 import jpa.dao.HotelCategoryDAO;
 import jpa.dao.HotelDAO;
 
@@ -19,6 +22,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private HotelDAO hotelDAO;
+	
+	@Autowired
+	private BoardDAO boardDAO;
 
 	@Override
 	public List<HotelCategoryDTO> getHotelCategoryList() {
@@ -28,6 +34,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<HotelDTO> getHotelList(String seqHotelCategory) {
 		return hotelDAO.findAllBySeqHotelCategory(seqHotelCategory);
+	}
+
+	@Override
+	public Optional<BoardDTO> getBoard(int seqRefSeqBoard) {
+		return boardDAO.getBySeqRefBoard(seqRefSeqBoard);
+	}
+
+	@Override
+	public void write(BoardDTO boardDTO) {
+		boardDAO.save(boardDTO);
 	}
 
 }
