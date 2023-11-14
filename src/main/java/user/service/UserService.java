@@ -22,5 +22,9 @@ public interface UserService {
 
 	public void delete(int seqBoard);
 
-	
-}
+		public List<HotelCategoryDTO> getHotelCategoryList();
+
+	public List<HotelDTO> getHotelList(String seqHotelCategory);
+}	public List<HotelCategoryDTO> getHotelCategoryList();
+
+	public List<HotelDTO> getHotelList(String seqHotelCategory);

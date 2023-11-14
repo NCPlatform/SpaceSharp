@@ -11,21 +11,38 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+<<<<<<< HEAD
     "axios": "^1.6.0",
     "bootstrap": "^5.3.2",
+=======
+    "axios": "^1.6.1",
+    "bootstrap": "^5.3.2",
+    "bootstrap-icons": "^1.11.1",
+    "moment": "^2.29.4",
+>>>>>>> refs/remotes/origin/user
     "rc-slider": "^10.4.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.1",
+    "react-calendar": "^4.6.1",
     "react-dom": "^18.2.0",
     "react-jquery-plugin": "^1.1.7",
+    "react-kakao-login": "^2.1.1",
     "react-kakao-maps-sdk": "^1.1.24",
     "react-owl-carousel": "^2.3.3",
     "react-quill": "^2.0.0",
+<<<<<<< HEAD
     "react-responsive-carousel": "^3.2.23",
+=======
+    "react-redux": "^8.1.3",
+>>>>>>> refs/remotes/origin/user
     "react-router-dom": "^6.18.0",
     "react-scripts": "5.0.1",
+<<<<<<< HEAD
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.9.0",
+=======
+    "react-slideshow-image": "^4.3.0",
+>>>>>>> refs/remotes/origin/user
     "web-vitals": "^2.1.4"
   },
   "scripts": {

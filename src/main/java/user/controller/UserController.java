@@ -84,4 +84,26 @@ public class UserController {
 	
 
 	
+	@Autowired
+	private UserService userService;
+	
+	@PostMapping(value = "getHotelCategoryList")
+	@ResponseBody
+	public List<HotelCategoryDTO> getHotelCategoryList(){
+		return userService.getHotelCategoryList();
+	}
+	
+	@PostMapping(value = "getHotelList")
+	@ResponseBody
+	public List<HotelDTO> getHotelList(@ModelAttribute HotelDTO hotelDTO){
+		System.out.println(hotelDTO.getSeqHotelCategory());
+		return userService.getHotelList(hotelDTO.getSeqHotelCategory());
+	}
+	
+	@GetMapping(value="notice")
+	public String goNotice() {
+		
+		return "redirect:http://127.0.0.1:3000/login";
+	}
+	
 }

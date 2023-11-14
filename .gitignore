@@ -1,6 +1,9 @@
 <<<<<<< HEAD
 =======
 HELP.md
+
+.metadata/
+
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -60,6 +63,7 @@ out/
 
 /**/npm-debug.log*
 /**/yarn-debug.log*
+<<<<<<< HEAD
 /**/yarn-error.log*
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
@@ -147,3 +151,6 @@ out/
 /**/npm-debug.log*
 /**/yarn-debug.log*
 /**/yarn-error.log*
+=======
+/**/yarn-error.log*
+>>>>>>> refs/remotes/origin/user
