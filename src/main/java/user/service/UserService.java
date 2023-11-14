@@ -1,11 +1,14 @@
 package user.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import jpa.bean.BoardDTO;
+import jpa.bean.HotelCategoryDTO;
+import jpa.bean.HotelDTO;
 import jpa.bean.UserDTO;
 
 public interface UserService {
@@ -22,9 +25,7 @@ public interface UserService {
 
 	public void delete(int seqBoard);
 
-		public List<HotelCategoryDTO> getHotelCategoryList();
+	public List<HotelCategoryDTO> getHotelCategoryList();
 
 	public List<HotelDTO> getHotelList(String seqHotelCategory);
-}	public List<HotelCategoryDTO> getHotelCategoryList();
-
-	public List<HotelDTO> getHotelList(String seqHotelCategory);
+}

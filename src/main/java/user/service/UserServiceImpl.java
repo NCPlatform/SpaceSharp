@@ -29,6 +29,12 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private HotelDAO hotelDAO;
+	
+	@Autowired
+	UserDAO userDAO;
+	
+	@Autowired
+	BoardDAO boardDAO;
 
 	@Override
 	public List<HotelCategoryDTO> getHotelCategoryList() {
@@ -39,11 +45,6 @@ public class UserServiceImpl implements UserService {
 	public List<HotelDTO> getHotelList(String seqHotelCategory) {
 		return hotelDAO.findBySeqHotelCategoryContaining(seqHotelCategory);
 	}
-
-	@Autowired
-	UserDAO userDAO;
-	@Autowired
-	BoardDAO boardDAO;
 	
 	@Override
 	public String login(UserDTO userDTO) {

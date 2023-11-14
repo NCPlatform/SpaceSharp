@@ -79,47 +79,47 @@ const Login = () => {
 
     return (
     <div className={styles.Login0}>
-    <div className={styles.Login1}>
-    <div className={styles.Login2}>
-        <h1 className={styles.loginH1}> 로그인 화면 </h1>
-        <div className="d-grid gap-2 styles.Login3">
-      <Button variant="primary" size="lg" style={{ color:'black', fontWeight:'bold', background: '#2db400', border: 'none' }}>
-        네이버로 로그인하기
-      </Button>
-      <Button variant="secondary" size="lg" style={{ color:'black', fontWeight:'bold', background: '#FFEB00', border: 'none' }}>
-        카카오로 로그인하기
-      </Button>
-    </div>
-    </div>
-    <hr />
-    <>
-        <h5 className={styles.loginH5}>또는</h5>
-        <FloatingLabel
-        controlId="floatingInput"
-        label="Email address"
-        className="mb-3"
-        >
-            <Form.Control type="email" name='email' value={ userDTO.email } onChange={ onChange } placeholder="name@example.com" /><div id='emailDiv'>{ emailDiv }</div>
-        </FloatingLabel>
-        <FloatingLabel controlId="floatingPassword" label="Password">
-            <Form.Control type="password" name='password' value={ userDTO.password } onChange={ onChange } placeholder="Password" /><div id='passwordDiv'>{ passwordDiv }</div>
-        </FloatingLabel>
+      <div className={styles.Login1}>
+      <div className={styles.Login2}>
+          <h1 className={styles.loginH1}> 로그인 화면 </h1>
+          <div className="d-grid gap-2 styles.Login3">
+        <Button variant="primary" size="lg" style={{ color:'black', fontWeight:'bold', background: '#2db400', border: 'none' }}>
+          네이버로 로그인하기
+        </Button>
+        <Button variant="secondary" size="lg" style={{ color:'black', fontWeight:'bold', background: '#FFEB00', border: 'none' }}>
+          카카오로 로그인하기
+        </Button>
+      </div>
+      </div>
+      <hr />
+      <>
+          <h5 className={styles.loginH5}>또는</h5>
+          <FloatingLabel
+          controlId="floatingInput"
+          label="Email address"
+          className="mb-3"
+          >
+              <Form.Control type="email" name='email' value={ userDTO.email } onChange={ onChange } placeholder="name@example.com" /><div id='emailDiv'>{ emailDiv }</div>
+          </FloatingLabel>
+          <FloatingLabel controlId="floatingPassword" label="Password">
+              <Form.Control type="password" name='password' value={ userDTO.password } onChange={ onChange } placeholder="Password" /><div id='passwordDiv'>{ passwordDiv }</div>
+          </FloatingLabel>
 
-        <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-  <input type='checkbox' />아이디 기억하기
-        </div>
-  <div>
-    <a href=''>비밀번호 찾기</a>
-  </div>
-</label>
+          <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+    <input type='checkbox' />아이디 기억하기
+          </div>
+    <div>
+      <a href=''>비밀번호 찾기</a>
+    </div>
+  </label>
 
-    </>
-    <div className="d-grid gap-2">
-    <button variant="primary" size="1g" onClick={ onLoginSubmit } style={{ background: '#FFEB00', border: 'none' }}>이메일로 로그인</button>
-    </div>
-    <h5 className={styles.loginH5}>아직 회원이 아니신가요? <a href='' className='createBtn'> 회원가입 </a></h5>
-    </div>
+      </>
+      <div className="d-grid gap-2">
+      <button variant="primary" size="1g" onClick={ onLoginSubmit } style={{ background: '#FFEB00', border: 'none' }}>이메일로 로그인</button>
+      </div>
+        <h5 className={styles.loginH5}>아직 회원이 아니신가요? <a href='' className='createBtn'> 회원가입 </a></h5>
+      </div>
     </div>
     
     );

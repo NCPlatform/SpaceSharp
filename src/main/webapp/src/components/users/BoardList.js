@@ -5,6 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import Nav from "./Nav";
 
 const BoardList = () => {
 
@@ -34,20 +35,21 @@ const BoardList = () => {
 
     const { seqBoard, seqBoardCategory, title, seqRefSeqBoard, email, release } = boardDTO
 
-        useEffect(() => {
-            axios.get(`/user/list?page=${page}&size=${pageSize}`)
-                 .then(res => {
-                    setList(res.data.content)
+    useEffect(() => {
+        axios.get(`/user/list?page=${page}&size=${pageSize}`)
+                .then(res => {
+                setList(res.data.content)
 
-                    setPagingArray(Array.from({ length: res.data.totalPages }, (_, index) => index + 1))
-                 })
-                 .catch(error => console.log(error))
-        }, [page, pageSize])
+                setPagingArray(Array.from({ length: res.data.totalPages }, (_, index) => index + 1))
+                })
+                .catch(error => console.log(error))
+    }, [page, pageSize])
 
        
     return(
-    <div className='container'>
-        <div>
+    <div>
+        <Nav/>
+        <div className='container'>
         <div>
             <h1>{boardDTO.seqBoardCategory}</h1>
         </div>

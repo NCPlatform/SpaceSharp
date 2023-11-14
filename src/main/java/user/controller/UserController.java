@@ -1,5 +1,6 @@
 package user.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jpa.bean.BoardDTO;
+import jpa.bean.HotelCategoryDTO;
+import jpa.bean.HotelDTO;
 import jpa.bean.UserDTO;
 import user.service.UserService;
 
@@ -81,11 +84,6 @@ public class UserController {
 			return "원글이 없습니다.";
 		}
 	}
-	
-
-	
-	@Autowired
-	private UserService userService;
 	
 	@PostMapping(value = "getHotelCategoryList")
 	@ResponseBody
