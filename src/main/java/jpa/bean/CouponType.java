@@ -7,17 +7,18 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "HotelCategory")
+@Table(name = "CouponType")
 @Data
-public class HotelCategoryDTO {
-	
+public class CouponType {
+
 	@Id
 	@Column(nullable = false)
-	private int seqHotelCategory;
+	private int seqCouponType;
 	
-	@Column(nullable = false)
-	private String name;
-		
 	@Column
-	private String tab;
+	private String title;
+	
+	@Column
+	private int discount;
+	
 }

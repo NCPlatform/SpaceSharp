@@ -1,5 +1,7 @@
 package jpa.bean;
 
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -7,17 +9,24 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "HotelCategory")
+@Table(name = "IssuedCoupon")
 @Data
-public class HotelCategoryDTO {
+public class IssuedCoupon {
 	
 	@Id
 	@Column(nullable = false)
-	private int seqHotelCategory;
+	private int seqIssuedCoupon;
 	
 	@Column(nullable = false)
-	private String name;
-		
+	private String email;
+	
+	@Column(nullable = false)
+	private int seqCoupon;
+	
 	@Column
-	private String tab;
+	private Date IssuedDate;
+	
+	@Column
+	private Date endOfUse;
+	
 }

@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
-import styles from '../../css/BoardWrite.module.css';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button';
+import ReactQuill from 'react-quill';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import "quill/dist/quill.snow.css";
-import ReactQuill from "react-quill";
 import Swal from "sweetalert2";
-import { Navigate,  useNavigate } from 'react-router-dom';
+import styles from '../../css/BoardWrite.module.css';
 
-const BoardWrite = () => {
+const BoardReply = () => {
 
     const[boardDTO, setBoardDTO] = useState(
         {
@@ -23,8 +20,7 @@ const BoardWrite = () => {
 
     const { title, content } = boardDTO
 
-
-    const navigate = useNavigate()
+    const Navigate = useNavigate()
 
     const[titleDiv, setTitleDiv] = useState('')
     const[contentDiv, setContentDiv] = useState('')
@@ -33,7 +29,6 @@ const BoardWrite = () => {
         setBoardDTO({ ...boardDTO, [e.target.name] : e.target.value } )
         //console.log(e)
     }
-
         
         const onWriteSuccess = () => {
 
@@ -49,7 +44,7 @@ const BoardWrite = () => {
             
             setContentDiv('');
 
-            axios.post('/user/write', null, {params:boardDTO})
+            axios.post('/user/writeReply', null, {params:boardDTO})
                  .then(res => {
                     Swal.fire({
                         title: '게시글이 등록되었습니다.',
@@ -58,7 +53,7 @@ const BoardWrite = () => {
                         imageHeight: 200,
                         imageAlt: '구데타마',
                       })
-                      navigate('/BoardList/0');
+                      Navigate('/BoardList/0');
                  })
                  .catch( error=> console.log(error) )
            }
@@ -92,26 +87,24 @@ const BoardWrite = () => {
             setBoardDTO({...boardDTO, content: content })
           };
         
-        
+
     return (
         <div className='container'>
             <div>
                 <div className={styles.BoardWriteHeader}>
                     <div className='d-flex justify-content-between'>
-                        <h3 className={styles.textStart}> 게시판 글쓰기 </h3>
+                        <h3 className={styles.textStart}> 답글 </h3>
                         
-                        <div className={styles.BoardWriteHeaderButton}>
-                            <button className="btn btn-success" onClick={ onWriteSuccess }>등록</button>
-                        </div>
+                        
                     </div>
                 </div>
-                <div className={styles.BoardWriteBody}>
+                <div className={styles.BoardWriteBody} >
                     <div className={styles.BoardWriteTitle}>
                        
-                        <input type='text'  className="form-control" name='title' value={ boardDTO.title } onChange={ onChange } maxLength={50} placeholder='제목을 입력해주세요.' />
+                        <input type='text'  className="form-control" name='title' value={title} onChange={ onChange } maxLength={50} placeholder='제목을 입력해주세요.' />
                         <div id='titleDiv'>{ titleDiv }</div>
                     </div>
-                    <div className={styles.BoardWirteContent}>
+                    <div className={styles.BoardWirteContent} >
                    
                             <ReactQuill
                             theme="snow"
@@ -119,20 +112,23 @@ const BoardWrite = () => {
                             formats={formats}
                             placeholder='내용을 입력해주세요.'
                             onChange={handleProcedureContentChange}
-                            value={ boardDTO.content }
+                            value={content}
                             className='form-control'
-                            style={{ height: "400px" }}
+                            style={{ height: "100px" }}
                             >
 
                             </ReactQuill>
                         {/* <textarea className="form-control" name='content' value={ boardDTO.content } onChange={ onChange } placeholder='내용을 입력해주세요.'  rows={30} /> */}
-
                         <div id={styles.contentDiv}>{ contentDiv }</div>
                     </div>
+                       
                 </div>
             </div>
+                        <div>
+                            <button className={`btn btn-success ${styles.overlayButton}`} onClick={ onWriteSuccess }>등록</button>
+                        </div>
         </div>
     );
 };
 
-export default BoardWrite;
+export default BoardReply;

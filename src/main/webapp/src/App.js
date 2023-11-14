@@ -60,11 +60,22 @@ function App() {
           />
           <Route path="login" element={<Login />} />
           <Route path="signin" element={<Signin />} />
+<<<<<<< HEAD
+          <Route path="boardList">
+            <Route path=':page' element={<BoardList />} />
+          </Route>
+          <Route path="boardDetail" element={<BoardDetail />} >
+            <Route path=':paramSeqBoard' element={<BoardDetail />} />
+          </Route>
+=======
           <Route path="/oauth/callback/kakao" element={<KakaoAuth/>} />
           <Route path="boardList" element={<BoardList />} />
           <Route path="boardDetail" element={<BoardDetail />} />
+>>>>>>> refs/remotes/origin/user
           <Route path="boardWrite" element={<BoardWrite />} />
-          <Route path="boardUpdate" element={<BoardUpdate />} />
+          <Route path="boardUpdate" element={<BoardUpdate />} >
+          <Route path=':paramSeqBoard' element={<BoardUpdate />} />
+          </Route>
           <Route path="review" element={<Review />} />
           <Route path="info" element={<Info />} />
         </Route>

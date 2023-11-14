@@ -140,6 +140,7 @@ const NavTest = () => {
                       />
                     </svg>
                   </div>
+                  <Link to="/boardList/0">
                   <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border">
                     <span className="py-0">1:1 문의</span>
                     <svg
@@ -156,6 +157,7 @@ const NavTest = () => {
                       />
                     </svg>
                   </div>
+                  </Link>
                   <div className="fw-bold accordion accordion-flush">
                     <div className="accordion-header"></div>
                     <div
