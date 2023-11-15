@@ -1,21 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const setScript = () => {
-            const deleteTags = document.createElement('script')
-            deleteTags.setAttribute('type', 'text/javascript')
-            deleteTags.innerText = 'const deleteTags = (event) => {event.target.setAttribute("style","display:none"); }'
-
-            document.body.appendChild(deleteTags)
-
-            const insertImage = document.createElement('script')
-            insertImage.setAttribute('type', 'text/javascript')
-            insertImage.innerText = 'const insertImage = (event) => {console.log(event.target.value)}'
-            document.body.appendChild(insertImage)
-}
- window.onload = setScript();
-
-
 const ManagerAddPlace = () => {
 
 
@@ -30,7 +15,7 @@ const ManagerAddPlace = () => {
             copy: false, whiteboard: false, mic: false, 
             cooking: false, food: false, alcohol: false,
             washing: false, parking: false, smoke: false,
-            animal: false, pc: false, isTable: false, 
+            animal: false, pc: false,
             socket: false, open24: false, noHoliday: false, 
             restaurant: false, freeFood: false, locker: false,
             mailService: false, kitchen: false, waterFurifier: false, 
@@ -41,11 +26,7 @@ const ManagerAddPlace = () => {
 
         })
 
-        const {name, subscribe, mainKeyword, keyword, seqHotelCategory, addr, ownerEmail, workinghour, holiday, placeEx, facilities, alert, refund, 
-                coupon, TV, internet, copy, whiteboard, mic, cooking, food, alcohol, washing, parking,
-                smoke, animal, pc, isTable, socket, open24, noHoliday, restaurant, freeFood, locker, mailService,
-                kitchen, waterFurifier, catering, heater, airConditioner, fax, wareHouse, percelService,
-                privateToilet, fittingRoom, roofTop, rounge, mirror, bbq, doorlock, img} = hotelDTO
+        const {seqHotelCategory} = hotelDTO
 
         const [whenOn, setWhenOn]  = useState({
             openTime: 0,
@@ -79,26 +60,23 @@ const ManagerAddPlace = () => {
             })
             
         }
-        
-        const setHashScript = () => {
-            // const deleteTags = document.createElement('script')
-            // deleteTags.setAttribute('type', 'text/javascript')
-            // deleteTags.innerText = 'const deleteTags = (event) => {console.log(event.target.innerText)}'
-            // document.body.appendChild(deleteTags)
-        }
 
         const settingHashTags = (e) => {
             let {name, value} = e.target
             var newA;
             const div = document.getElementById('addTags')
-            if(value.includes(',')){
-                newA = document.createElement('a')
-            //    console.log(value.replace(',',''))
-                newA.setAttribute('onClick', 'javascript:deleteTags(event);') // script 동적으로 추가해야 할 듯 
-                newA.setAttribute('style', 'margin-left: 5px;')
-                newA.innerHTML = '<span>#'+value.replace(',', '')+'</span>'
-                e.target.value=''
-                div.appendChild(newA)
+            if (value.includes(',')) {
+                const newA = document.createElement('a');
+                const hashtag = value.replace(',', '');
+        
+                newA.setAttribute('style', 'margin-left: 5px;');
+                newA.innerHTML = '<span>#' + hashtag + '</span>';
+                e.target.value = ''; 
+                newA.addEventListener('click', () => {
+                    newA.style.display = 'none'
+                });
+        
+                div.appendChild(newA);
             }
 
         }
@@ -114,15 +92,15 @@ const ManagerAddPlace = () => {
             const newImg = document.createElement('input')
             newImg.setAttribute('type', 'text')
             newImg.setAttribute('name', 'img')
-           // newImg.setAttribute('onChange','javascript:insertImage(event)')
-           // const firstImage = document.getElementById('firstImage')
+            newImg.addEventListener('change', () => {
+                console.log('이미지세팅===========')
+                settingImgs()
+            })
             const imgAddBtn = document.getElementById('imgAddBtn')
 
             const br = document.createElement('br')
             imgAddBtn.after(br)
-            imgAddBtn.after(newImg)
-           // imgAddBtn.onChange=insertImage(e)
-           // firstImage.after(newImg)
+            br.after(newImg)
             
         }
 
@@ -136,15 +114,7 @@ const ManagerAddPlace = () => {
 
             console.log(img)
             setHotelDTO({...hotelDTO, img:img})
-            // imgInfo.map((item) => {
-            //     console.log(item.value)
-            // })
         }
-
-        // const insertImage = (e) => {
-        //     let {value} = e.target
-        //     console.log(value)
-        // }
 
         const settingVals = () => { // 주소창 입력하려 눌렀을 때 해시태그, 이미지 확정
             settingImgs()
@@ -203,8 +173,10 @@ const ManagerAddPlace = () => {
         
     // API, etc ======================================================
         const confirmVals = () => {
-            
             console.log(hotelDTO)
+        }
+
+        const submitVals = () => {
             axios.post('http://localhost:8080/manager/addPlace', null, {
                 params: hotelDTO
             }).then(res => 
@@ -256,7 +228,7 @@ const ManagerAddPlace = () => {
                         </tr>
                         <tr>
                             <td>해시태그</td>
-                            <td><input type = 'text' style = {styleB} name = 'keyword' placeholder='#' onLoad = {setHashScript} onChange = {settingHashTags} onBlur = {insertTags}/>
+                            <td><input type = 'text' style = {styleB} name = 'keyword' placeholder='#'onChange = {settingHashTags} onBlur = {insertTags}/>
                                 <div id = 'addTags'>
                                     
                                 </div>
@@ -265,7 +237,7 @@ const ManagerAddPlace = () => {
                         <tr>
                             <td>숙소 사진 등록</td>
                             <td>
-                                <input type = 'text' id = 'firstImage' style = {styleB} name = 'img' placeholder = "이미지 URL을 등록해 주세요" onChange = {insertData} onBlur = {settingImgs}/> <button type = 'button' id = 'imgAddBtn' onClick = {addImage}>+</button> 
+                                <input type = 'text' id = 'firstImage' style = {styleB} name = 'img' placeholder = "이미지 URL을 등록해 주세요" onChange = {insertData}/> <button type = 'button' id = 'imgAddBtn' onClick = {addImage}>+</button> 
                             </td>
                         </tr>
                         <tr>
@@ -278,7 +250,7 @@ const ManagerAddPlace = () => {
                         </tr>
                         <tr>
                             <td>주소</td>
-                            <td><input type = 'text' style = {styleB} name = 'addr' placeholder = '주소를 입력해 주세요.' onChange = {insertData} onClick = {settingVals}/></td>
+                            <td><input type = 'text' style = {styleB} name = 'addr' placeholder = '주소를 입력해 주세요.' onChange = {insertData} onFocus = {settingVals}/></td>
                         </tr>
                         <tr>
                             <td>영업시간 & 휴무일</td>
@@ -375,35 +347,34 @@ const ManagerAddPlace = () => {
                                         </tr>
                                         <tr>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'pc' onChange = {setBooleans}/>PC</label></td>
-                                            <td style = {styleD}><label><input type = 'checkbox' name = 'isTable' onChange = {setBooleans}/>테이블</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'socket' onChange = {setBooleans}/>콘센트</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'open24' onChange = {setBooleans}/>24시 운영</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'noHoliday' onChange = {setBooleans}/>연중무휴</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'restaurant' onChange = {setBooleans}/>식당 및 카페</label></td>
+                                            <td style = {styleD}><label><input type = 'checkbox' name = 'freeFood' onChange = {setBooleans}/>다과 및 음료</label></td>
                                         </tr>
                                         <tr>
-                                            <td style = {styleD}><label><input type = 'checkbox' name = 'freeFood' onChange = {setBooleans}/>다과 및 음료</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'locker' onChange = {setBooleans}/>개인사물함</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'mailService' onChange = {setBooleans}/>메일 서비스</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'kitchen' onChange = {setBooleans}/>주방</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'waterFurifier' onChange = {setBooleans}/>정수기</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'catering' onChange = {setBooleans}/>케이터링</label></td>
+                                            <td style = {styleD}><label><input type = 'checkbox' name = 'heater' onChange = {setBooleans}/>난방</label></td>
                                         </tr>
                                         <tr>
-                                            <td style = {styleD}><label><input type = 'checkbox' name = 'heater' onChange = {setBooleans}/>난방</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'airConditioner' onChange = {setBooleans}/>에어컨</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'fax' onChange = {setBooleans}/>팩스</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'wareHouse' onChange = {setBooleans}/>창고서비스</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'percelService' onChange = {setBooleans}/>택배서비스</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'privateToilet' onChange = {setBooleans}/>내부화장실</label></td>
+                                            <td style = {styleD}><label><input type = 'checkbox' name = 'fittingRoom' onChange = {setBooleans}/>탈의실</label></td>
                                         </tr>
                                         <tr>
-                                            <td style = {styleD}><label><input type = 'checkbox' name = 'fittingRoom' onChange = {setBooleans}/>탈의실</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'roofTop' onChange = {setBooleans}/>루프탑/테라스</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'rounge' onChange = {setBooleans}/>라운지</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'mirror' onChange = {setBooleans}/>전신거울</label></td>
                                             <td style = {styleD}><label><input type = 'checkbox' name = 'bbq' onChange = {setBooleans}/>바베큐</label></td>
-                                            <td style = {styleD}><label><input type = 'checkbox' name = 'doorlock' onChange = {setBooleans}/>도어락</label></td>
+                                            <td style = {styleD} rowSpan = '2'><label><input type = 'checkbox' name = 'doorlock' onChange = {setBooleans}/>도어락</label></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -413,7 +384,8 @@ const ManagerAddPlace = () => {
                     </tbody>
                     
                 </table>
-                        <button type = 'button' onClick = {confirmVals}>플레이스 등록하기</button> 
+                        <button type = 'button' onClick = {confirmVals}>DTO 값 확인하기</button>
+                        <button type = 'button' onClick = {submitVals}>플레이스 등록하기</button> 
                         
             </form>
         </div>
