@@ -10,6 +10,7 @@ import Main from "./components/users/Main";
 import Login from "./components/users/AccountLogin";
 import Signin from "./components/users/AccountSignIn";
 
+
 // Hotel
 import HotelList from "./components/users/HotelList";
 import HotelDetail from "./components/users/HotelDetail";
@@ -34,10 +35,19 @@ import ManagerDashBoard from "./components/managers/ManagerDashBoard";
 import ManagerReservation from "./components/managers/ManagerReservation";
 import ManagerReview from "./components/managers/ManagerReview";
 import ManagerMyPlace from "./components/managers/ManagerMyPlace";
+import ManagerAddPlace from "./components/managers/ManagerAddPlace2";
+import ManagerAddRoom from "./components/managers/ManagerAddRoom";
 
 // Admin
 import DashBoardAdmin from "./components/admins/DashBoard";
 import Admin from "./components/admins/Admin";
+import Authorize from "./components/admins/Authorize";
+
+//kakao social login
+import KakaoLogin from "./components/users/KaKaoLogin";
+import KakaoRedirect from "./components/users/KakaoRedirect";
+import Redirection from "./components/users/Redirection";
+
 import KakaoAuth from "./components/users/KakaoAuth";
 
 function App() {
@@ -73,15 +83,22 @@ function App() {
           </Route>
           <Route path="review" element={<Review />} />
           <Route path="info" element={<Info />} />
+          <Route path="kakaoLogin" element={ <KakaoLogin />} />
+          <Route path="KakaoRedirect" element={ <KakaoRedirect />} />
+          <Route path="redirection" element={ <Redirection />} />         
         </Route>
         <Route path="/manager">
           <Route index element={<ManagerDashBoard />} />
           <Route path="reservation" element={<ManagerReservation />} />
+          <Route path="addPlace" element={<ManagerAddPlace/>}/>
+          <Route path="addRoom/:roomSeq" element = {<ManagerAddRoom/>}/>
+
           <Route path="review" element={<ManagerReview />} />
           <Route path="myPlace" element={<ManagerMyPlace />} />
         </Route>
         <Route path="/admin">
           <Route index element={<DashBoardAdmin />} />
+          <Route path="auth" element = {<Authorize/>}/>
           <Route path=":navPage" element={<Admin />} />
         </Route>
       </Routes>

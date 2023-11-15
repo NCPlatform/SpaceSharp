@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -24,7 +23,7 @@ import jpa.dao.UserDAO;
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
-	private HotelCategoryDAO hotelCategoryDAO;
+	private UserDAO userDAO;
 	
 	@Autowired
 	private HotelDAO hotelDAO;
@@ -33,7 +32,14 @@ public class UserServiceImpl implements UserService {
 	private BoardDAO boardDAO;
 	
 	@Autowired
-	private UserDAO userDAO;
+	private HotelCategoryDAO hotelCategoryDAO;
+	
+	@Override
+	public String accountWrite(UserDTO userDTO) {
+				
+		userDAO.save(userDTO);
+		return "리턴 성공";
+	}
 
 	@Override
 	public List<HotelCategoryDTO> getHotelCategoryList() {
