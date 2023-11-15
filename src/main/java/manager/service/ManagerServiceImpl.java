@@ -9,7 +9,6 @@ import jpa.dao.HotelDAO;
 @Service
 public class ManagerServiceImpl implements ManagerService {
 	
-	// Autowired DAO
 	@Autowired
 	HotelDAO hotelDAO;
 	

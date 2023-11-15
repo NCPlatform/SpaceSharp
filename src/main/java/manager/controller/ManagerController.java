@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jpa.bean.HotelDTO;
+
 import manager.service.ManagerService;
 
 

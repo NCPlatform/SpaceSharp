@@ -69,7 +69,6 @@ function App() {
           <Route path="reservation" element={<ManagerReservation />} />
           <Route path="review" element={<ManagerReview/>}/>
           <Route path="myPlace" element={<ManagerMyPlace/>}/>
-
           <Route path="addPlace" element={<ManagerAddPlace/>}/>
           <Route path="addRoom/:roomSeq" element = {<ManagerAddRoom/>}/>
         </Route>

@@ -11,6 +11,7 @@ import admin.service.AdminService;
 @Controller
 @RequestMapping(value = "admin")
 public class AdminController {
+	
 	@Autowired
 	private AdminService adminService;
 	
