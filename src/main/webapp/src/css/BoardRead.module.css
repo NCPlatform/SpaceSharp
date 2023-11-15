@@ -11,3 +11,14 @@
 .BoardReadP{
     margin: 0;
 }
+.BoardDetailCommentsEmail {
+    text-align: left; 
+}
+  
+.BoardDetailCommentsReleaseDate {
+    text-align: left;
+}
+
+.BoardReadSeq {
+    border-bottom: solid 1px #e0dfdf;
+}
