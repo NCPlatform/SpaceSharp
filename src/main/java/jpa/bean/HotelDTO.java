@@ -112,8 +112,6 @@ public class HotelDTO {
 	@Column
 	private boolean pc;
 
-	@Column
-	private boolean isTable;
 
 	@Column
 	private boolean socket;
@@ -181,9 +179,6 @@ public class HotelDTO {
 	@Column
 	private boolean doorlock;
 	
-	public boolean getIstable() {
-		return isTable;
-	}
 	
 	@Override
 	public String toString() {
@@ -198,7 +193,7 @@ public class HotelDTO {
 		result += locker+"/"+"\n"+ mailService+"/"+ mirror+"/"+ noHoliday+"/"+ open24+"/";
 		result += pc+"/"+ percelService+"/"+"\n"+ privateToilet+"/"+ restaurant+"/";
 		result += roofTop+"/"+ rounge+"/"+ smoke+"/"+ socket+"/"+"\n"+ wareHouse+"/"+ waterFurifier + "/";
-		result += isTable ;
+		
 		return result;
 	}
 	
