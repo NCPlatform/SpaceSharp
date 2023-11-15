@@ -17,6 +17,7 @@ import jpa.bean.UserDTO;
 import jpa.dao.BoardDAO;
 import jpa.dao.HotelCategoryDAO;
 import jpa.dao.HotelDAO;
+import jpa.dao.RoomDAO;
 import jpa.dao.UserDAO;
 
 @Service
@@ -30,6 +31,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private BoardDAO boardDAO;
+	
+	@Autowired
+	private RoomDAO roomDAO;
 	
 	@Autowired
 	private HotelCategoryDAO hotelCategoryDAO;
