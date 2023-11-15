@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Nav from "./Nav";
-import Search from "./Search";
 import "../../css/main_nav_tab.css";
 
 import OwlCarousel from "react-owl-carousel";
@@ -8,49 +7,25 @@ import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import { $ } from "react-jquery-plugin";
 import { Card } from "react-bootstrap";
+
+import axios from 'axios'
+import { Link } from "react-router-dom";
 import { options } from "@fullcalendar/core/preact";
+import Footer from "./Footer";
 
 const Main = () => {
   const [activeTab, setActiveTab] = useState("total");
 
-  const [data, setData] = useState([
-    {
-      tab: "gather",
-      title: "파티룸",
-    },
-    {
-      tab: "picture",
-      title: "촬영스튜디오",
-    },
-    {
-      tab: "gather",
-      title: "스터디룸",
-    },
-    {
-      tab: "practice",
-      title: "댄스 연습실",
-    },
-    {
-      tab: "practice",
-      title: "보컬 연습실",
-    },
-    {
-      tab: "practice",
-      title: "연습실",
-    },
-    {
-      tab: "practice",
-      title: "연습실",
-    },
-    {
-      tab: "practice",
-      title: "연습실",
-    },
-    {
-      tab: "practice",
-      title: "연습실",
-    },
-  ]);
+  const [data, setData] = useState([]);
+
+  useEffect(()=>{
+    axios.post('/user/getHotelCategoryList',null,{})
+    .then(res=>{
+      setData(res.data);
+    })
+    .catch(error => console.log(error))
+    
+  },[])
 
   const options = {
     loop: true,
@@ -151,7 +126,7 @@ const Main = () => {
       </div>
 
       {/* main mid select category */}
-      <div className="container mt-4">
+      <div className="container pt-4">
         <h5 className="fw-bold text-center">찾는 공간이 있나요?</h5>
         <div
           className="nav nav-tabs mb-3 mainNav row row-cols-6"
@@ -226,33 +201,11 @@ const Main = () => {
           </button>
         </div>
         <div className="row row-cols-4 row-cols-sm-4 row-cols-md-6">
-          {activeTab === "total"
+        {activeTab === "total"
             ? data.map((item, index) => {
                 return (
-                  <div className="col my-3 text-center" key={index}>
-                    <p className="">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        className="bi bi-cursor-fill"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z" />
-                      </svg>
-                    </p>
-                    <span style={{ color: "#999", fontSize: "0.8rem" }}>
-                      {item.title}
-                    </span>
-                  </div>
-                );
-              })
-            : data
-                .filter((item) => item.tab === activeTab)
-                .map((item, index) => {
-                  return (
-                    <div className="col my-3 text-center" key={index}>
+                  <Link to={`hotelList/${item.seqHotelCategory}`} key={index} className="hotelCategoryList">
+                    <div className="col my-3 text-center" >
                       <p className="">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -265,10 +218,36 @@ const Main = () => {
                           <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z" />
                         </svg>
                       </p>
-                      <span style={{ color: "#999", fontSize: "0.8rem" }}>
-                        {item.title}
+                      <span className="hotelCategoryListName">
+                        {item.name}
                       </span>
                     </div>
+                  </Link>
+                );
+              })
+            : data
+                .filter((item) => item.tab === activeTab)
+                .map((item, index) => {
+                  return (
+                    <Link to={`hotelList/${item.seqHotelCategory}`} key={index} className="hotelCategoryList">
+                      <div className="col my-3 text-center" key={index}>
+                        <p className="">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            className="bi bi-cursor-fill"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z" />
+                          </svg>
+                        </p>
+                        <span style={{ color: "#999", fontSize: "0.8rem" }}>
+                          {item.name}
+                        </span>
+                      </div>
+                    </Link>
                   );
                 })}
         </div>
@@ -322,6 +301,7 @@ const Main = () => {
                   className="rounded"
                   style={{ height: "2xh", objectFit: "cover" }}
                   src="https://modo-phinf.pstatic.net/20190516_174/15579658255198n1x7_JPEG/mosaDAPqzk.jpeg?type=w1100"
+                  alt=""
                 />
                 <Card.Title>가게이름</Card.Title>
                 <div className="mb-0 pb-0" style={{ fontSize: "0.8rem" }}>
@@ -393,6 +373,17 @@ const Main = () => {
           ))}
         </div>
       </div>
+      <div className="container mt-5">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+          <div className="px-3">
+            <div className="card">
+              <h1>게임</h1>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      <Footer />
     </>
   );
 };

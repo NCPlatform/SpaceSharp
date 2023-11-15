@@ -1,7 +1,5 @@
 package jpa.bean;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -72,7 +70,7 @@ public class HotelDTO {
 	@Column
 	private String refund;
 	
-	@Column
+	@Column(columnDefinition = "boolean default false")
 	private boolean coupon;
 	
 	@Column
