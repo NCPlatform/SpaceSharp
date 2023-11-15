@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
 const ManagerAddPlace = () => {
@@ -35,9 +35,7 @@ const ManagerAddPlace = () => {
 
         const {openTime, closeTime} = whenOn
 
-        const [whenOff, setWhenOff] = useState('')
-
-        const [tags, setTags] = useState([])
+      //  const [whenOff, setWhenOff] = useState('')
         
         const [exceptNoHolidays, setExceptNoHolidays] = useState('visible')
 
@@ -62,8 +60,7 @@ const ManagerAddPlace = () => {
         }
 
         const settingHashTags = (e) => {
-            let {name, value} = e.target
-            var newA;
+            let {value} = e.target
             const div = document.getElementById('addTags')
             if (value.includes(',')) {
                 const newA = document.createElement('a');
@@ -92,6 +89,7 @@ const ManagerAddPlace = () => {
             const newImg = document.createElement('input')
             newImg.setAttribute('type', 'text')
             newImg.setAttribute('name', 'img')
+            newImg.setAttribute('style', 'width: 350px')
             newImg.addEventListener('change', () => {
                 console.log('이미지세팅===========')
                 settingImgs()
@@ -192,14 +190,15 @@ const ManagerAddPlace = () => {
 
             2. 이 단계에서 유저가 집어넣으면 안 되는 값들
                  -> seq_hotel(AI), ownerEmail(세션에서 줌)
+            2-1. ownerEmail 세션 태우기    
 
             3. [TO DO] textarea -> 글자 수 세기 추가 (jquery -> vanilaJS)
 
-            4. [TO DO] 해시태그 -> 해시태그 넣어서 동적으로 추가되는 게 보이게 구현하기
-            4-1. [TO DO] 사용자는 hashtag의 # 제외한 value만 입력할 수 있도록 하기
-            4-2. [TO DO] 해시태그 객체가 동적으로 추가되게 하려면? 방법 생각해 보기
+            4. [TO DO] 해시태그 -> 해시태그 넣어서 동적으로 추가되는 게 보이게 구현하기 (완료)
+            4-1. [TO DO] 사용자는 hashtag의 # 제외한 value만 입력할 수 있도록 하기  (완료)
+            4-2. [TO DO] 해시태그 객체가 동적으로 추가되게 하려면? 방법 생각해 보기  (완료)
 
-
+           
         */
 
     return (

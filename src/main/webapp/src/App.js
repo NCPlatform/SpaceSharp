@@ -91,15 +91,12 @@ function App() {
           <Route index element={<ManagerDashBoard />} />
           <Route path="reservation" element={<ManagerReservation />} />
           <Route path="addPlace" element={<ManagerAddPlace/>}/>
-          <Route path="addRoom" //  /:roomSeq" 
-            element = {<ManagerAddRoom/>}/>
-
+          <Route path="addRoom/:hotelSeq" element = {<ManagerAddRoom/>}/>
           <Route path="review" element={<ManagerReview />} />
           <Route path="myPlace" element={<ManagerMyPlace />} />
         </Route>
         <Route path="/admin">
           <Route index element={<DashBoardAdmin />} />
-          <Route path="auth" element = {<Authorize/>}/>
           <Route path=":navPage" element={<Admin />} />
         </Route>
       </Routes>
