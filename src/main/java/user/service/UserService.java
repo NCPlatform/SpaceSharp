@@ -4,6 +4,7 @@ import java.util.List;
 
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.UserDTO;
 
 public interface UserService {
 
@@ -30,5 +31,7 @@ public interface UserService {
 	public HotelDTO getHotelInfo(int seqHotel);
 
 	public String getAddr(int seqHotel);
+	
+	public UserDTO getUserByEmail(String email);
 
 }

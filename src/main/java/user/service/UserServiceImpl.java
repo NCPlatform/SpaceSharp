@@ -4,12 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.UserDTO;
 import jpa.dao.HotelCategoryDAO;
 import jpa.dao.HotelDAO;
+import jpa.dao.UserDAO;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,6 +21,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private HotelDAO hotelDAO;
 
+	@Autowired
+    private UserDAO userDAO;
+	
 	@Override
 	public List<HotelCategoryDTO> getHotelCategoryList() {
 		return hotelCategoryDAO.findAll();
@@ -97,4 +101,10 @@ public class UserServiceImpl implements UserService {
 	            .map(hotelDTO -> hotelDTO.getAddr())
 	            .orElse(null);
 	}
+
+	@Override
+	public UserDTO getUserByEmail(String email) {
+	    return userDAO.findById(email).orElse(null);
+	}
+	
 }

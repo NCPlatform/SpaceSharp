@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.UserDTO;
 import user.service.UserService;
 
 
@@ -77,6 +78,12 @@ public class UserController {
 	public String getAddr(@RequestParam int seqHotel) {
 	    return userService.getAddr(seqHotel);
 	}
+	
+	@GetMapping("/getUserByEmail")
+	public UserDTO getUserByEmail(@RequestParam String email) {
+	    return userService.getUserByEmail(email);
+	}
+	
 	
 	@PostMapping(value = "getHotelCategoryList")
 	@ResponseBody
