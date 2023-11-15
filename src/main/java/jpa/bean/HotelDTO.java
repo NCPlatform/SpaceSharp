@@ -97,9 +97,6 @@ public class HotelDTO {
 	private boolean pc;
 
 	@Column
-	private boolean isTable;
-
-	@Column
 	private boolean socket;
 
 	@Column
@@ -164,5 +161,8 @@ public class HotelDTO {
 
 	@Column
 	private boolean doorlock;
+	
+	@Column
+	private String img;
 	
 }

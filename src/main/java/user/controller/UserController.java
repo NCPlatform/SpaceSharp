@@ -23,6 +23,7 @@ import user.service.UserService;
 @RestController
 @RequestMapping(path="user")
 public class UserController {
+	
 	@Autowired
 	private UserService userService;
 
@@ -31,18 +32,52 @@ public class UserController {
     public String getHotelName(@RequestParam int seqHotel) {
         return userService.getHotelName(seqHotel);
     }
+	
 	@GetMapping("/getMainKeyword")
     public String getMainKeyword(@RequestParam int seqHotel) {
         return userService.getMainKeyword(seqHotel);
     }
+	
 	@GetMapping("/getSubscribe")
 	public String getSubscribe(@RequestParam int seqHotel) {
 		return userService.getSubscribe(seqHotel);
 	}
+	
 	@GetMapping("/getTags")
 	public String getTags(@RequestParam int seqHotel) {
 	    return userService.getTags(seqHotel);
 	}
+	
+	@GetMapping("/getPlaceEx")
+	public String getPlaceEx(@RequestParam int seqHotel) {
+	    return userService.getPlaceEx(seqHotel);
+	}
+	
+	@GetMapping("/getWorkinghour")
+	public String getWorkinghour(@RequestParam int seqHotel) {
+	    return userService.getWorkinghour(seqHotel);
+	}
+	
+	@GetMapping("/getHoliday")
+	public String getHoliday(@RequestParam int seqHotel) {
+	    return userService.getHoliday(seqHotel);
+	}
+	
+	@GetMapping("/getImages")
+	public String getImages(@RequestParam int seqHotel) {
+	    return userService.getImages(seqHotel);
+	}
+	
+	@GetMapping("/getHotelInfo")
+	public HotelDTO getHotelInfo(@RequestParam int seqHotel) {
+	    return userService.getHotelInfo(seqHotel);
+	}
+	
+	@GetMapping("/getAddr")
+	public String getAddr(@RequestParam int seqHotel) {
+	    return userService.getAddr(seqHotel);
+	}
+	
 	@PostMapping(value = "getHotelCategoryList")
 	@ResponseBody
 	public List<HotelCategoryDTO> getHotelCategoryList(){
@@ -56,5 +91,6 @@ public class UserController {
 		System.out.println(hotelDTO.getSeqHotelCategory());
 		return userService.getHotelList(hotelDTO.getSeqHotelCategory());
 	}
+	
 	
 }

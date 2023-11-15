@@ -57,5 +57,44 @@ public class UserServiceImpl implements UserService {
 	            .map(hotelDTO -> hotelDTO.getKeyword())
 	            .orElse(null);
 	}
+	
+	@Override
+	public String getPlaceEx(int seqHotel) {
+	    return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getPlaceEx())
+	            .orElse(null);
+	}
 
+	@Override
+	public String getWorkinghour(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getWorkinghour())
+	            .orElse(null);
+	}
+
+	@Override
+	public String getHoliday(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getHoliday())
+	            .orElse(null);
+	}
+
+	@Override
+	public String getImages(int seqHotel) {
+	    return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getImg())
+	            .orElse(null);
+	}
+
+	@Override
+	public HotelDTO getHotelInfo(int seqHotel) {
+	    return hotelDAO.findById(seqHotel).orElse(null);
+	}
+
+	@Override
+	public String getAddr(int seqHotel) {
+	    return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getAddr())
+	            .orElse(null);
+	}
 }

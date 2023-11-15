@@ -18,6 +18,17 @@ public interface UserService {
 	public String getSubscribe(int seqHotel);
 	
 	public String getTags(int seqHotel);
+	
+	public String getPlaceEx(int seqHotel);
+
+	public String getWorkinghour(int seqHotel);
+
+	public String getHoliday(int seqHotel);
+
+	public String getImages(int seqHotel);
+	
+	public HotelDTO getHotelInfo(int seqHotel);
+
+	public String getAddr(int seqHotel);
 
 }
-
