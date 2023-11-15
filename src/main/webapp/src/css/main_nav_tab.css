@@ -1,7 +1,11 @@
 div.mainNav button.nav-link.active{
+    font-weight: bold !important;
+    color:#6249D6 !important;
+    border-bottom: 2px solid #6249D6 !important;
     font-weight: bold;
     color:#9A4444 !important;
     border-bottom: 2px solid #9A4444 !important;
+
 }
 div.mainNav button.nav-link{
     color: #999 !important;

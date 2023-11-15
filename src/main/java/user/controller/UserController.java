@@ -10,18 +10,19 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.view.RedirectView;
 
 import jpa.bean.BoardDTO;
+import jpa.bean.UserDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
-import jpa.bean.UserDTO;
 import user.service.UserService;
 
 @CrossOrigin
@@ -85,6 +86,14 @@ public class UserController {
 		}
 	}
 	
+	@PostMapping(value = "accountWrite")
+	@ResponseBody
+	public String accountWrite(@ModelAttribute UserDTO userDTO ){
+		System.out.println(userDTO.getEmail());
+		System.out.println("부트 찍힘");
+		return userService.accountWrite(userDTO);
+	}
+		
 	@PostMapping(value = "getHotelCategoryList")
 	@ResponseBody
 	public List<HotelCategoryDTO> getHotelCategoryList(){

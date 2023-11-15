@@ -1,23 +1,21 @@
 package user.service;
 
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
-import jpa.dao.HotelCategoryDAO;
-import jpa.dao.HotelDAO;
-
 import jpa.bean.BoardDTO;
 import jpa.bean.UserDTO;
+
+import jpa.dao.HotelCategoryDAO;
+import jpa.dao.HotelDAO;
 import jpa.dao.BoardDAO;
 import jpa.dao.UserDAO;
 
@@ -25,16 +23,23 @@ import jpa.dao.UserDAO;
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
-	private HotelCategoryDAO hotelCategoryDAO;
+	private UserDAO userDAO;
 	
 	@Autowired
 	private HotelDAO hotelDAO;
 	
 	@Autowired
-	UserDAO userDAO;
+	BoardDAO boardDAO;
 	
 	@Autowired
-	BoardDAO boardDAO;
+	private HotelCategoryDAO hotelCategoryDAO;
+	
+	@Override
+	public String accountWrite(UserDTO userDTO) {
+				
+		userDAO.save(userDTO);
+		return "리턴 성공";
+	}
 
 	@Override
 	public List<HotelCategoryDTO> getHotelCategoryList() {

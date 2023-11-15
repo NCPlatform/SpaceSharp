@@ -20,4 +20,5 @@ public class HotelCategoryDTO {
 		
 	@Column
 	private String tab;
+	
 }
