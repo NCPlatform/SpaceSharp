@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
@@ -14,15 +13,9 @@ import axios from 'axios';
 
 import styles from '../../css/Login.module.css';
 
-=======
-import axios from "axios";
-import React from "react";
 import KakaoLogin from "react-kakao-login";
->>>>>>> refs/remotes/origin/user
 
 const Login = () => {
-
-<<<<<<< HEAD
   
 
   const[userDTO, setUserDTO] = useState(
@@ -79,6 +72,13 @@ const Login = () => {
            .catch( error=> console.log(error) )
     } 
   }
+  const Rest_api_key='037f534097da993a9af7449a8f6cadfd' //REST API KEY
+  const redirect_uri = 'http://localhost:3000/oauth/callback/kakao' //Redirect URI
+  const KakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
+  
+  const handleKaKaoLogin = () => {
+    window.location.href=KakaoUrl;
+  }
 
   /*
     로그인페이지에서 없는 계정인지 <- filter로 갖고온 값이 없다면 패스워드 비교 안하고 바로 alert("없는 계정입니다") 띄우기
@@ -95,22 +95,9 @@ const Login = () => {
       <Button variant="primary" size="lg" style={{ color:'black', fontWeight:'bold', background: '#2db400', border: 'none' }}>
         네이버로 로그인하기
       </Button>
-      <Button variant="secondary" size="lg" style={{ color:'black', fontWeight:'bold', background: '#FFEB00', border: 'none' }}>
+      <Button variant="secondary" size="lg" style={{ color:'black', fontWeight:'bold', background: '#FFEB00', border: 'none' }}  onClick={handleKaKaoLogin}>
         카카오로 로그인하기
       </Button>
-=======
-  const Rest_api_key='037f534097da993a9af7449a8f6cadfd' //REST API KEY
-  const redirect_uri = 'http://localhost:3000/oauth/callback/kakao' //Redirect URI
-  const KakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
-  
-  const handleKaKaoLogin = () => {
-    window.location.href=KakaoUrl;
-  }
-
-  return (
-    <div className="container">
-      <button className="btn btn-warning" onClick={handleKaKaoLogin}>카카오 로그인</button>
->>>>>>> refs/remotes/origin/user
     </div>
     </div>
     <hr />

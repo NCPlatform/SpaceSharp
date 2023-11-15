@@ -11,9 +11,15 @@ import BoardReply from './BoardReply.js';
 
 const BoardDetail = () => {
 
-    const { paramSeqBoard } = useParams();
+    const { paramSeqBoard, paramSeqRefSeqBoard } = useParams();
+
+    const [comments, setComments] = useState();
 
     const navigate = useNavigate()
+
+    const categoryTitles = {
+        '7': '1:1 문의'
+    };
 
 
     const[boardDTO, setBoardDTO] = useState(
@@ -28,13 +34,6 @@ const BoardDetail = () => {
         }
     )
 
-    const [comment, setComment] = useState({
-        content: '',
-        author: 'user', // 댓글 작성자
-        date: new Date(),
-    });
-    
-    const [comments, setComments] = useState([]); // 댓글 목록
 
     const onDeleteSuccess = (e) => {
         e.preventDefault()
@@ -65,9 +64,17 @@ const BoardDetail = () => {
             })
             .catch(error => console.error('Error:', error));
     }, [paramSeqBoard]);
+    
+    useEffect(() => {
+        axios.get(`/user/getReply?seqRefSeqBoard=${paramSeqBoard}`)
+            .then(response => {
+                console.log('Comments:', response.data);
+                setComments(response.data);
+            })
+            .catch(error => console.error('Error fetching comments:', error));
+    }, []);
 
     
-
     const { title, content, seqBoard, seqBoardCategory, seqRefSeqBoard, email, release } = boardDTO
 
     const formattedReleaseDate = new Date(boardDTO.releaseDate).toLocaleDateString('ko-KR');
@@ -92,7 +99,6 @@ const BoardDetail = () => {
             <Nav/>
         <div className={`container ${styles.BoardReadWrap}`}>
         <div>
-<<<<<<< HEAD
         <Row>
             <Col className="d-flex justify-content-end ">
             <div>
@@ -106,8 +112,8 @@ const BoardDetail = () => {
                     <div>
                         <Row md={1}>
                         <Col className={`d-flex justify-content-start ${styles.BoardReadSeq}`}>
-                        <div className=''>
-                            <button>{boardDTO.seqBoardCategory}</button>
+                        <div className={styles.BoardDetailCategoryTitle}>
+                            <h1>{categoryTitles[boardDTO.seqBoardCategory]}</h1>
                         </div>
                         </Col>
                         </Row>
@@ -153,19 +159,43 @@ const BoardDetail = () => {
                         <button className="btn btn-secondary" onClick={ onDeleteSuccess }>삭제</button>
                     </div>
 
+                    <div>
+                        {comments ? (
+                            <div>
+                                {/* 댓글 목록 표시 */}
+                                <div>
+                                        <div>                                          
+                                            <div className={styles.BoardDetailCommentsEmail}> 작성자  &nbsp; {comments.email} &nbsp; / &nbsp; 작성일 &nbsp;  {new Date(comments.releaseDate).toLocaleDateString('ko-KR')}
+                                             
+                                            </div> <br />
+                                            
+                                            <div className="input-group mb-3">
+                                            <span className="input-group-text" id="inputGroup-sizing-default" style={{color:'teal'}}>제목 </span>
+                                                <input className= {`form-control ${styles.BoardDetailCommentsTitle}`} value={comments.title} readOnly />
+                                            </div>
+                                            <div className="input-group mb-3">
+                                            <span className="input-group-text" id="inputGroup-sizing-default" style={{color:'teal'}}>내용 </span>
+                                                <input className= {`form-control ${styles.BoardDetailCommentsContent}`} value={removeHtmlTags(comments.content)} readOnly />
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div>
+                                {/* 내용 입력란 */}
+                                {/* ... */}
+                                <BoardReply seqRefSeqBoard={boardDTO.seqBoard} />
+                            </div>
+                        )}
+                    </div>
                 </div>
-                <div>
-                    <BoardReply />
-                </div>
+               
                 <div>
                     <button className="btn btn-secondary" onClick={ () => navigate('/BoardList/0') }>목록</button> &nbsp;
                     <button className="btn btn-secondary" onClick={ scrollToTop }>TOP</button>
                 </div>
             </div>
         </div>
-=======
-            <h1>테스팅</h1>
->>>>>>> refs/remotes/origin/user
         </div>
     );
 };

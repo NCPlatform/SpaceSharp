@@ -68,15 +68,7 @@ public class UserServiceImpl implements UserService {
 		    
 	}
 
-	@Override
-	public Page<BoardDTO> list(Pageable pageable) {
-		 
-		Page<BoardDTO> list = boardDAO.findAll(pageable);
-		
-		return list;
-		 
-	}
-
+	
 	@Override
 	public Optional<BoardDTO> getBoard(int seqBoard) {
 	    return boardDAO.findById(seqBoard);
@@ -101,4 +93,20 @@ public class UserServiceImpl implements UserService {
 		boardDAO.deleteById(seqBoard);
 		
 	}
+
+
+	
+
+	@Override
+	public Page<BoardDTO> list(Pageable pageable, int seqRefSeqBoard) {
+		Page<BoardDTO> list = boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
+		return list;
+	}
+
+	@Override
+	public Optional<BoardDTO> getReply(int seqRefSeqBoard) {
+		System.out.println(seqRefSeqBoard);
+		return boardDAO.findBySeqRefSeqBoard(seqRefSeqBoard);
+	}
+
 }

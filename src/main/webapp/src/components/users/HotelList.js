@@ -1,27 +1,15 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
-=======
 import React, { useEffect, useState } from "react";
->>>>>>> refs/remotes/origin/user
 import Nav from "./Nav";
-<<<<<<< HEAD
-import Card from 'react-bootstrap/Card';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel } from "react-responsive-carousel";
 import Button from 'react-bootstrap/Button';
 
-=======
 import { Card, Carousel, Col, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import axios from 'axios'
->>>>>>> refs/remotes/origin/user
 
 const List = () => {
-<<<<<<< HEAD
   const [selectedOption1, setSelectedOption1] = useState(null);
   const [selectedOption2, setSelectedOption2] = useState(null);
   const [selectedOption3, setSelectedOption3] = useState(null);
@@ -46,6 +34,17 @@ const List = () => {
 //   </div>
 // ));
 
+const {seqHotelCategory} = useParams()
+  const [hotelList,setHotelList] = useState([]);
+
+  useEffect(()=>{
+    axios.post('/user/getHotelList',null,{params : {seqHotelCategory}})
+    .then(res=>{
+      setHotelList(res.data);
+    })
+    .catch(error => console.log(error))
+  },[])
+
   const [currentIndex, setCurrentIndex] = useState();
   function handleChange(index) {
     setCurrentIndex(index);
@@ -53,8 +52,9 @@ const List = () => {
   
     return (
 
-        <div className='container'>
-          <div>
+        <div >
+          <Nav />
+          <div className='container'>
             <Row md={5}>
             <div>
             <Col>
@@ -494,73 +494,7 @@ const List = () => {
     </div>
 
 
-            {/* <div>
-
-          <Row  className=" container">
-              <div class="row">
-      {Array.from({ length: 3 }).map((_, idx) => (
-        <div className='col-lg-4'>
-        <Col key={idx}>
-          <Card>
-            <Carousel
-             
-              showArrows={true}
-              autoPlay={true}
-              infiniteLoop={true}
-              showThumbs={false}
-              selectedItem={imageData[currentIndex]}
-              onChange={handleChange} >
-                 {imageData.map((image, index) => (
-                <div key={index} style={{ height:"100%"}}>
-                  <img
-                    src={image.url}
-                    alt={image.alt}
-                    style={{ maxWidth: '100%', maxHeight: '100%' }}
-                  />
-                </div>
-              ))}
-              {renderSlides}
-             </Carousel>
-            <Card.Body>
-              <Card.Title>Card title</Card.Title>
-              <Card.Text value='address'>
-                This is a longer card with supporting text below as a natural
-                lead-in to additional content. This content is a little bit
-                longer.
-              </Card.Text>
-              <Card.Text value='price people'>
-
-              </Card.Text>
-              <Card.Link href='#'>PageLink</Card.Link>
-            </Card.Body>
-          </Card>
-        </Col>
-        </div>
-      ))}
-      
-      </div>
-    </Row>  
-              </div> */}
-          </div>
-        </div>
-    );
-=======
-
-  const {seqHotelCategory} = useParams()
-  const [hotelList,setHotelList] = useState([]);
-
-  useEffect(()=>{
-    axios.post('/user/getHotelList',null,{params : {seqHotelCategory}})
-    .then(res=>{
-      setHotelList(res.data);
-    })
-    .catch(error => console.log(error))
-  },[])
-
-  return (
-    <>
-      <Nav />
-      <div>
+    <div>
         <div className="container">
           <div className="row">
             {
@@ -617,9 +551,9 @@ const List = () => {
           </div>
         </div>
       </div>
-    </>
-  );
->>>>>>> refs/remotes/origin/user
+          </div>
+        </div>
+    );
 };
 
 export default List;
