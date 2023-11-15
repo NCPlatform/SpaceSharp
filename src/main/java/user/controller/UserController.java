@@ -54,7 +54,6 @@ public class UserController {
 	@GetMapping(value="list")
 	@ResponseBody
 	public Page<BoardDTO> list(@PageableDefault(page=0, size=10, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable) {
-		
 		return userService.list(pageable);
 	}
 	

@@ -10,7 +10,6 @@ import Main from "./components/users/Main";
 import Login from "./components/users/AccountLogin";
 import Signin from "./components/users/AccountSignIn";
 
-
 // Hotel
 import HotelList from "./components/users/HotelList";
 import HotelDetail from "./components/users/HotelDetail";
@@ -41,7 +40,6 @@ import ManagerAddRoom from "./components/managers/ManagerAddRoom";
 // Admin
 import DashBoardAdmin from "./components/admins/DashBoard";
 import Admin from "./components/admins/Admin";
-import Authorize from "./components/admins/Authorize";
 
 //kakao social login
 import KakaoLogin from "./components/users/KaKaoLogin";
@@ -98,7 +96,6 @@ function App() {
         </Route>
         <Route path="/admin">
           <Route index element={<DashBoardAdmin />} />
-          <Route path="auth" element = {<Authorize/>}/>
           <Route path=":navPage" element={<Admin />} />
         </Route>
       </Routes>

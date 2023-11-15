@@ -6,7 +6,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Button from 'react-bootstrap/Button';
 
 import { Card, Carousel, Col, Row } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from 'axios'
 
 const List = () => {
@@ -450,7 +450,7 @@ const List = () => {
   <Col className="d-flex justify-content-end">
   <div>
     <button>필터</button>
-    <button>지도</button>
+    <Link to="/hotelInMap" ><button>지도</button></Link>
   </div>
   </Col>
   </Row>

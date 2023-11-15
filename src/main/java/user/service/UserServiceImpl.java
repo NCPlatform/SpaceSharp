@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Optional<BoardDTO> getBoard(int seqRefSeqBoard) {
-		return boardDAO.getBySeqRefSeqBoard(seqRefSeqBoard);
+		return boardDAO.findById(seqRefSeqBoard);
 	}
 
 	@Override
