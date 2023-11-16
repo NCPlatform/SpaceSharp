@@ -92,8 +92,8 @@ function App() {
         <Route path="/manager">
           <Route index element={<ManagerDashBoard />} />
           <Route path="reservation" element={<ManagerReservation />} />
-          <Route path="addPlace" element={<ManagerAddPlace />} />
-          <Route path="addRoom/:roomSeq" element={<ManagerAddRoom />} />
+          <Route path="addPlace" element={<ManagerAddPlace/>}/>
+          <Route path="addRoom/:hotelSeq" element = {<ManagerAddRoom/>}/>
           <Route path="review" element={<ManagerReview />} />
           <Route path="myPlace" element={<ManagerMyPlace />} />
         </Route>

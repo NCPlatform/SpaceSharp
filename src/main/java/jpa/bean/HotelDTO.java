@@ -179,4 +179,22 @@ public class HotelDTO {
 	private boolean doorlock;
 	
 	
+	@Override
+	public String toString() {
+		String result = seqHotelCategory+"/"+name+"/"+subscribe+"\n";
+		result += mainKeyword+"/"+ keyword+"/"+ addr+"/"+ ownerEmail+"/"+ workinghour+"/";
+		result += holiday+"/"+"\n"+ placeEx+"/"+ facilities;
+		result += "/"+alert+"/"+ refund+"/";
+		result += TV+"/"+ alcohol+"/"+ cooking+"/"+ copy+"/"+"\n"+ coupon+"/"+ food+"/";
+		result += internet+"/"+ mic+"/"+ parking+"/"+ washing+"/"+"\n"+ whiteboard+"/";
+		result += airConditioner+"/"+ animal+"/"+ bbq+"/"+ catering+"/"+ doorlock+"/"+"\n";
+		result += fax+"/"+ fittingRoom+"/"+ freeFood+"/"+ heater+"/"+ kitchen+"/";
+		result += locker+"/"+"\n"+ mailService+"/"+ mirror+"/"+ noHoliday+"/"+ open24+"/";
+		result += pc+"/"+ percelService+"/"+"\n"+ privateToilet+"/"+ restaurant+"/";
+		result += roofTop+"/"+ rounge+"/"+ smoke+"/"+ socket+"/"+"\n"+ wareHouse+"/"+ waterFurifier + "/";
+		
+		return result;
+	}
+	
+	
 }

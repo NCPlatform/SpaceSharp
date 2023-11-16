@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import jpa.bean.HotelDTO;
-
+import jpa.bean.RoomDTO;
 import manager.service.ManagerService;
 
 
@@ -25,9 +25,9 @@ public class ManagerController {
 	@Autowired
 	private ManagerService managerService;
 	
-	@PostMapping(value = "addPlace")
+	@PostMapping(value = "addedPlace")
 	@ResponseBody
-	public int addPlace(@ModelAttribute HotelDTO hotelDTO) {
+	public int addedPlace(@ModelAttribute HotelDTO hotelDTO) {
 		System.out.println(hotelDTO.toString());
 		// 쉼표 빼기 작업
 		hotelDTO.setSeqHotelCategory(commaClearInt(hotelDTO.getSeqHotelCategory()));
@@ -37,6 +37,15 @@ public class ManagerController {
 		managerService.addPlace(hotelDTO);
 		int result = managerService.importSeq(hotelDTO.getOwnerEmail(), hotelDTO.getName(), hotelDTO.getAddr());
 		return result; // 값 확인, 배포 시 void로 변경
+	}
+	
+	@PostMapping(value = "addedRoom")
+	@ResponseBody
+	public void addedRoom(@ModelAttribute RoomDTO roomDTO){
+		System.out.println(roomDTO.toString());
+		roomDTO.setImg(commaClearStr(roomDTO.getImg()));
+		managerService.addRoom(roomDTO);
+		
 	}
 	
 	public String commaClearInt(String sample) {
