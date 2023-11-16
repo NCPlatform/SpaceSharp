@@ -175,7 +175,7 @@ const ManagerAddPlace = () => {
         }
 
         const submitVals = () => {
-            axios.post('http://localhost:8080/manager/addPlace', null, {
+            axios.post('http://localhost:8080/manager/addedPlace', null, {
                 params: hotelDTO
             }).then(res => 
                // console.log(res)

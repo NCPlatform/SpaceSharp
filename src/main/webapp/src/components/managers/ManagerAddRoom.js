@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
+
 const AddRoom = () => {
     // useState & variables ==========================================
     
@@ -86,8 +88,14 @@ const AddRoom = () => {
             console.log(roomDTO)
         }
 
-        const submitVals = () => { 
-            console.log(roomDTO)
+        const submitVals = () => {
+            axios.post('http://localhost:8080/manager/addedRoom', null, {
+                params: roomDTO
+            }).then(res => 
+                console.log(res)
+              //  window.location.href = '/manager/addRoom/'+res.data
+                                    // 맨 앞에 /가 있느냐 없느냐에 따라 결과가 다름
+            ).catch(e => console.log(e))
         }
     // NOTE ========================================================== 231115 ~ 추가중
         /*
@@ -101,6 +109,8 @@ const AddRoom = () => {
             ex) <td> 최소 <input type = 'number'> ~ 최대 <input type = 'number'> 명까지 수용 가능</td> (완료)
 
           3. 면적 등록 시 n평 / n제곱미터 변환 기능 구현 (완료)
+
+          4. 룸 등록 완료 후 선택 창 모달 띄우기 > 메인으로 가기 / 숙소 관리로 이동하기 / 새로운 룸 추가하기
 
         */
     return (
