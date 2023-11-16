@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Nav from "./Nav";
 import Footer from "./Footer";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -9,8 +9,141 @@ import img01 from "../../img/img01.png";
 import DetailSelect from "../detail/DetailSelect";
 import HotelContentMap from "./HotelContentMap";
 import HotelSameSpace from "./HotelSameSpace";
+import axios from "axios";
 
 const Detail = () => {
+  const [hotelDTO, setHotelDTO] = useState(null);
+  const [hotelName, setHotelName] = useState('');
+  const [mainKeyword, setMainKeyword] = useState('');
+  const [subscribe, setSubscribe] = useState('');
+  const [tags, setTags] = useState('');
+  const [placeEx, setPlaceEx] = useState('');
+  const [workinghour, setWorkinghour] = useState('');
+  const [holiday, setHoliday] = useState('');
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [seqHotel, setSeqHotel] = useState(2);
+
+  useEffect(() => {
+    axios.get(`/user/getHotelName?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setHotelName(data);
+        } else {
+          console.error('해당 공간을 찾을 수 없습니다.');
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+        setLoading(false);
+      });
+    // 새로운 요청을 통해 main_keyword 가져오기
+    axios.get(`/user/getMainKeyword?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setMainKeyword(data);
+        } else {
+          console.error('해당 공간의 키워드를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
+    // 새로운 요청을 통해 subscribe 가져오기
+    axios.get(`/user/getSubscribe?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setSubscribe(data);
+        } else {
+          console.error('해당 공간의 키워드를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
+    // 새로운 요청을 통해 키워드 가져오기
+    axios.get(`/user/getTags?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setTags(data);
+        } else {
+          console.error('해당 공간의 키워드를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
+    // 새로운 요청을 통해 공간소개 가져오기
+    axios.get(`/user/getPlaceEx?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setPlaceEx(data);
+        } else {
+          console.error('해당 공간의 소개를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
+    // 새로운 요청을 통해 영업시간 가져오기
+    axios.get(`/user/getWorkinghour?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setWorkinghour(data);
+        } else {
+          console.error('해당 공간의 소개를 찾을 수 없습니다.');
+        }
+      })
+    // 새로운 요청을 통해 휴무 가져오기
+    axios.get(`/user/getHoliday?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setHoliday(data);
+        } else {
+          console.error('해당 공간의 소개를 찾을 수 없습니다.');
+        }
+      })
+    // 새로운 요청을 통해 이미지 가져오기
+    axios.get(`/user/getImages?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          // 이미지 경로를 콤마로 나누어 배열로 저장
+          setImages(data.split(','));
+        } else {
+          console.error('해당 공간을 찾을 수 없습니다.');
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+        setLoading(false);
+      });
+    //공간 정보 아이콘 넣어야함
+    axios.get(`/user/getHotelInfo?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        console.log(data)
+        if (data) {
+          setHotelDTO(data);
+        } else {
+          console.error('해당 공간 정보를 찾을 수 없습니다.');
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+        setLoading(false);
+      });
+  }, [seqHotel]);
   return (
     <>
       <Nav />
@@ -19,46 +152,32 @@ const Detail = () => {
         <br />
         <Container>
           <Row>
-            <Col xs={8}>
+            <Col xs={12} md={8}>
               <div className="h_area" style={{ overflow: "hidden" }}>
-                <span className="distance_option">해방촌 메인 거리 근처</span>
+                <span className="distance_option">{mainKeyword}</span>
                 <br />
                 <br />
-                <h2 className="space_name">용산 남산뷰 루프탑 파티룸 제그만</h2>
+                <h2 className="space_name">{hotelName}</h2>
               </div>
               <p className="sub_desc">
                 해방촌의 감성과 남산뷰를 품은 프라이빗 공간
               </p>
               <div className="tags">
-                <span className="tag"> #태그1 </span>
-                <span className="tag"> #태그2 </span>
-                <span className="tag"> #태그3 </span>
+                {tags.split(',').map((tag, index) => (
+                  <span key={index} className="tag"> {tag.trim()} </span>
+                ))}
               </div>
               <br />
               <br />
               <div className="detail_forms">
                 <Carousel interval={null} style={{ width: "90%" }}>
-                  <Carousel.Item>
-                    <img
-                      className="d-block w-100"
-                      src={img01}
-                      alt="First slide"
-                    />
-                  </Carousel.Item>
-                  <Carousel.Item>
-                    <img
-                      className="d-block w-100"
-                      src={img01}
-                      alt="Second slide"
-                    />
-                  </Carousel.Item>
-                  <Carousel.Item>
-                    <img
-                      className="d-block w-100"
-                      src={img01}
-                      alt="Third slide"
-                    />
-                  </Carousel.Item>
+                  {images.map((image, index) => (
+                    <Carousel.Item key={index}>
+                      <div style={{ overflow: 'hidden', height: '500px', width: '100%' }}>
+                        <img className="d-block w-100 img-fluid" src={image} alt={`Slide ${index + 1}`} style={{ objectFit: 'cover', height: '100%', width: '100%' }} />
+                      </div>
+                    </Carousel.Item>
+                  ))}
                 </Carousel>
                 <p
                   className="sub_desc"
@@ -88,43 +207,7 @@ const Detail = () => {
                     <hr
                       style={{ width: "20px", border: "4px solid #ff7402" }}
                     />
-                    - 3층: 자연광이 드는 실내 공간 + 야외 정원 테라스
-                    <br />
-                    - 4층: 남산타워와, 하얏트와 용산 공원뷰 루프탑
-                    <br />
-                    한 팀 단독으로 대관하실 수 있는 프라이빗 파티룸 입니다.
-                    <br />
-                    <br />
-                    <p>1. 브라이덜샤워 패키지</p>
-                    - 주말: 시간당 7만원 / 올나잇 40만원 / 올데이 50만원
-                    <br />
-                    - 평일 낮: 5H 17만원 / 평일 저녁: 5H 20만원
-                    <br />
-                    - 평일 올나잇: 25만원 / 평일 올데이 30만원
-                    <br />
-                    <br />
-                    <p>2. 공간대여/파티룸</p>
-                    - 주말: 시간당 7만원 / 올나잇 40만원 / 올데이 50만원
-                    <br />
-                    - 평일 낮: 5H 17만원 / 평일 저녁: 5H 20만원
-                    <br />
-                    - 평일 올나잇: 25만원 / 평일 올데이 30만원
-                    <br />
-                    <br />
-                    <p>3. 렌탈스튜디오: 시간당 55,000원</p>
-                    - 최소 예약 시간 2시간
-                    <br />
-                    - 인원 추가 인당 5,500/시간
-                    <br />
-                    <br />
-                    * 기준 인원: 3인 (인당 10,000원 추가)
-                    <br />
-                    * 당일 예약, 반려동물 동반은 따로 문의
-                    <br />
-                    <br />
-                    * 예약 및 문의
-                    <br />
-                    IG@zegmanhaus / 카카오톡 '제그만하우스'
+                    <div dangerouslySetInnerHTML={{ __html: placeEx }} />
                     <br />
                     <br />
                     <div>
@@ -174,7 +257,7 @@ const Detail = () => {
                     </div>
                     <br />
                     <div className="mapFrame">
-                      <HotelContentMap />
+                      <HotelContentMap seqHotel={seqHotel}/>
                     </div>
                   </div>
                 </Tab>
@@ -230,7 +313,7 @@ const Detail = () => {
                 </Tab>
               </Tabs>
             </Col>
-            <Col xs={4} className="fixed-col">
+            <Col xs={12} md={4} className="fixed-col">
               <DetailSelect />
             </Col>
           </Row>

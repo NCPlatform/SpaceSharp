@@ -18,14 +18,14 @@ const Main = () => {
 
   const [data, setData] = useState([]);
 
-  useEffect(()=>{
-    axios.post('/user/getHotelCategoryList',null,{})
-    .then(res=>{
-      setData(res.data);
-    })
-    .catch(error => console.log(error))
-    
-  },[])
+  useEffect(() => {
+    axios.post('/user/getHotelCategoryList', null, {})
+      .then(res => {
+        setData(res.data);
+      })
+      .catch(error => console.log(error))
+
+  }, [])
 
   const options = {
     loop: true,

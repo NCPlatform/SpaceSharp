@@ -13,10 +13,6 @@ public class HotelDTO {
 	
 	@Column
 	private String img;
-	// column 줄 경우 길이는 varchar(1000) 생각 중
-	public String getImg() {
-		return img;
-	}
 	
 	@Id
 	@Column(nullable = false)
@@ -177,24 +173,5 @@ public class HotelDTO {
 
 	@Column
 	private boolean doorlock;
-	
-	
-	@Override
-	public String toString() {
-		String result = seqHotelCategory+"/"+name+"/"+subscribe+"\n";
-		result += mainKeyword+"/"+ keyword+"/"+ addr+"/"+ ownerEmail+"/"+ workinghour+"/";
-		result += holiday+"/"+"\n"+ placeEx+"/"+ facilities;
-		result += "/"+alert+"/"+ refund+"/";
-		result += TV+"/"+ alcohol+"/"+ cooking+"/"+ copy+"/"+"\n"+ coupon+"/"+ food+"/";
-		result += internet+"/"+ mic+"/"+ parking+"/"+ washing+"/"+"\n"+ whiteboard+"/";
-		result += airConditioner+"/"+ animal+"/"+ bbq+"/"+ catering+"/"+ doorlock+"/"+"\n";
-		result += fax+"/"+ fittingRoom+"/"+ freeFood+"/"+ heater+"/"+ kitchen+"/";
-		result += locker+"/"+"\n"+ mailService+"/"+ mirror+"/"+ noHoliday+"/"+ open24+"/";
-		result += pc+"/"+ percelService+"/"+"\n"+ privateToilet+"/"+ restaurant+"/";
-		result += roofTop+"/"+ rounge+"/"+ smoke+"/"+ socket+"/"+"\n"+ wareHouse+"/"+ waterFurifier + "/";
-		
-		return result;
-	}
-	
 	
 }
