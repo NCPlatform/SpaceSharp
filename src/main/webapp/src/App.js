@@ -41,11 +41,7 @@ import DashBoardAdmin from "./components/admins/DashBoard";
 import Admin from "./components/admins/Admin";
 
 //kakao social login
-import KakaoLogin from "./components/users/KakaoLogin";
 import KakaoRedirect from "./components/users/KakaoRedirect";
-import Redirection from "./components/users/Redirection";
-
-import KakaoAuth from "./components/users/KakaoAuth";
 
 function App() {
   return (
@@ -67,16 +63,13 @@ function App() {
           />
           <Route path="login" element={<Login />} />
           <Route path="signin" element={<Signin />} />
-          <Route path="/oauth/callback/kakao" element={<KakaoAuth/>} />
           <Route path="boardList" element={<BoardList />} />
           <Route path="boardDetail" element={<BoardDetail />} />
           <Route path="boardWrite" element={<BoardWrite />} />
           <Route path="boardUpdate" element={<BoardUpdate />} />
           <Route path="review" element={<Review />} />
           <Route path="info" element={<Info />} />
-          <Route path="kakaoLogin" element={ <KakaoLogin />} />
-          <Route path="KakaoRedirect" element={ <KakaoRedirect />} />
-          <Route path="redirection" element={ <Redirection />} />         
+          <Route path="KakaoRedirect" element={ <KakaoRedirect />} />      
         </Route>
         <Route path="/manager">
           <Route index element={<ManagerDashBoard />} />
