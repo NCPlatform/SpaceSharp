@@ -137,6 +137,7 @@ const Login = () => {
                 background: "#2db400",
                 border: "none",
               }}
+              id="naverIdLogin"
             >
               네이버로 로그인하기
             </Button>
