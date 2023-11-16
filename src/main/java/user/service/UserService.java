@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import jpa.bean.BoardDTO;
+import jpa.bean.HotelCategoryDTO;
+import jpa.bean.HotelDTO;
 import jpa.bean.UserDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
@@ -17,8 +19,6 @@ public interface UserService {
 	
 	public String write(BoardDTO boardDTO);
 
-	public Page<BoardDTO> list(Pageable pageable);
-
 	public Optional<BoardDTO> getBoard(int seqBoard);
 
 	public Object update(BoardDTO boardDTO);
@@ -28,7 +28,11 @@ public interface UserService {
 	public String accountWrite(UserDTO userDTO);
 	
 	public List<HotelCategoryDTO> getHotelCategoryList();
-	
+
 	public List<HotelDTO> getHotelList(String seqHotelCategory);
 
+	public Page<BoardDTO> list(Pageable pageable, int seqRefSeqBoard);
+
+	public Optional<BoardDTO> getReply(int seqRefSeqBoard);
+	
 }

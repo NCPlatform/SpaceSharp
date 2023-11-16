@@ -33,6 +33,10 @@ const BoardList = () => {
         }
     )
 
+    const categoryTitles = {
+        '7': '1:1 문의'
+    };
+
     const { seqBoard, seqBoardCategory, title, seqRefSeqBoard, email, release } = boardDTO
 
     useEffect(() => {
@@ -51,7 +55,7 @@ const BoardList = () => {
         <Nav/>
         <div className='container'>
         <div>
-            <h1>{boardDTO.seqBoardCategory}</h1>
+            <h1>{categoryTitles[boardDTO.seqBoardCategory]}</h1>
         </div>
         <div className={styles.secondArea}>
         <Row md={1}>

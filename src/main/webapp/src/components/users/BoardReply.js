@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -6,17 +6,25 @@ import "quill/dist/quill.snow.css";
 import Swal from "sweetalert2";
 import styles from '../../css/BoardWrite.module.css';
 
-const BoardReply = () => {
+const BoardReply = ( {seqRefSeqBoard} ) => {
+
+    const [commentContent, setCommentContent] = useState('');
+    const [commentEmail, setCommentEmail] = useState('');
+    const [commentTitle, setCommentTitle] = useState('');
 
     const[boardDTO, setBoardDTO] = useState(
         {
             "seqBoardCategory" : 7,
             "title" : '',
             "content" : '',
-            "seqRefSeqBoard" : 0,
+            "seqRefSeqBoard" : seqRefSeqBoard,
             "email" : 'user'
         }
     )
+
+    useEffect(()=>{
+        setBoardDTO({...boardDTO, "seqRefSeqBoard" : seqRefSeqBoard})
+    },[seqRefSeqBoard])
 
     const { title, content } = boardDTO
 
@@ -27,8 +35,24 @@ const BoardReply = () => {
 
     const onChange = (e) => {
         setBoardDTO({ ...boardDTO, [e.target.name] : e.target.value } )
-        //console.log(e)
+        console.log(boardDTO)
     }
+
+    const handleCommentSubmit = () => {
+        axios.post('/user/writeReply', {
+          content: commentContent,
+          seqRefSeqBoard: seqRefSeqBoard,
+          email: commentEmail,
+          title: commentTitle
+        })
+        .then(response => {
+          console.log(response.data); // 서버에서의 응답을 처리
+          // 댓글 작성 후 필요한 동작을 수행할 수 있습니다.
+        })
+        .catch(error => {
+          console.error('Error adding comment:', error);
+        });
+      };
         
         const onWriteSuccess = () => {
 
@@ -41,7 +65,7 @@ const BoardReply = () => {
             setContentDiv('내용을 입력하세요')
            }
            else {
-            
+            console.log(boardDTO);
             setContentDiv('');
 
             axios.post('/user/writeReply', null, {params:boardDTO})

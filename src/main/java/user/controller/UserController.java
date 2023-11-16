@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
 import jpa.bean.BoardDTO;
+import jpa.bean.HotelCategoryDTO;
+import jpa.bean.HotelDTO;
 import jpa.bean.UserDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
@@ -54,7 +56,8 @@ public class UserController {
 	@GetMapping(value="list")
 	@ResponseBody
 	public Page<BoardDTO> list(@PageableDefault(page=0, size=10, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable) {
-		return userService.list(pageable);
+		int seqRefSeqBoard = 0;
+		return userService.list(pageable, seqRefSeqBoard);
 	}
 	
 	@GetMapping(path = "getBoard")
@@ -99,15 +102,33 @@ public class UserController {
 	@PostMapping(path = "writeReply")
 	@ResponseBody
 	public String reply(@ModelAttribute BoardDTO boardDTO) {
+		
+		System.out.println("메소드 진입성공");
+		System.out.println(boardDTO);
+		
 		int seqRefSeqBoard = boardDTO.getSeqRefSeqBoard();
 		
 		Optional<BoardDTO> parentBoardOptional = userService.getBoard(seqRefSeqBoard);
 		if (parentBoardOptional.isPresent()) {
+			
 			userService.write(boardDTO);
 			return "Reply added successfully!";
 		} else {
 			return "원글이 없습니다.";
 		}
+		
 	}
 	
+	@GetMapping(path = "getReply")
+	@ResponseBody
+	public Optional<BoardDTO> getReply(@RequestParam int seqRefSeqBoard){
+		
+		return userService.getReply(seqRefSeqBoard);
+	}
+	
+	@GetMapping(value="notice")
+	public String goNotice() {
+		
+		return "redirect:http://127.0.0.1:3000/login";
+	}
 }
