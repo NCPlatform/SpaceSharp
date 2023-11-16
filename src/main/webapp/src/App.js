@@ -10,7 +10,6 @@ import Main from "./components/users/Main";
 import Login from "./components/users/AccountLogin";
 import Signin from "./components/users/AccountSignIn";
 
-
 // Hotel
 import HotelList from "./components/users/HotelList";
 import HotelDetail from "./components/users/HotelDetail";
@@ -39,9 +38,10 @@ import ManagerAddPlace from "./components/managers/ManagerAddPlace2";
 import ManagerAddRoom from "./components/managers/ManagerAddRoom";
 
 // Admin
-import DashBoardAdmin from "./components/admins/DashBoard";
-import Admin from "./components/admins/Admin";
-import Authorize from "./components/admins/Authorize";
+import AdminDashBoard from "./components/admins/AdminDashBoard";
+import AdminCoupon from "./components/admins/AdminCoupon";
+import AdminEvent from "./components/admins/AdminEvent";
+import AdminUser from "./components/admins/AdminUser";
 
 //kakao social login
 import KakaoLogin from "./components/users/KaKaoLogin";
@@ -56,10 +56,12 @@ function App() {
       <Routes>
         <Route path="/">
           <Route index element={<Main />} />
-          <Route path="hotelList" >
-            <Route path=":seqHotelCategory" element={<HotelList />}/>
+          <Route path="hotelList">
+            <Route path=":seqHotelCategory" element={<HotelList />} />
           </Route>
-          <Route path="detail" element={<HotelDetail />} />
+          <Route path="detail">
+            <Route path=":seqHotel" element={<HotelDetail />} />
+          </Route>
           <Route path="hotelInMap" element={<HotelInMap />} />
           <Route path="hotelReserve" element={<HotelReserve />} />
           <Route path="hotelReserveList" element={<HotelReserveList />} />
@@ -71,21 +73,21 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="signin" element={<Signin />} />
           <Route path="boardList">
-            <Route path=':page' element={<BoardList />} />
+            <Route path=":page" element={<BoardList />} />
           </Route>
-          <Route path="boardDetail" element={<BoardDetail />} >
-            <Route path=':paramSeqBoard' element={<BoardDetail />} />
+          <Route path="boardDetail" element={<BoardDetail />}>
+            <Route path=":paramSeqBoard" element={<BoardDetail />} />
           </Route>
-          <Route path="/oauth/callback/kakao" element={<KakaoAuth/>} />
+          <Route path="/oauth/callback/kakao" element={<KakaoAuth />} />
           <Route path="boardWrite" element={<BoardWrite />} />
-          <Route path="boardUpdate" element={<BoardUpdate />} >
-          <Route path=':paramSeqBoard' element={<BoardUpdate />} />
+          <Route path="boardUpdate" element={<BoardUpdate />}>
+            <Route path=":paramSeqBoard" element={<BoardUpdate />} />
           </Route>
           <Route path="review" element={<Review />} />
           <Route path="info" element={<Info />} />
-          <Route path="kakaoLogin" element={ <KakaoLogin />} />
-          <Route path="KakaoRedirect" element={ <KakaoRedirect />} />
-          <Route path="redirection" element={ <Redirection />} />         
+          <Route path="kakaoLogin" element={<KakaoLogin />} />
+          <Route path="KakaoRedirect" element={<KakaoRedirect />} />
+          <Route path="redirection" element={<Redirection />} />
         </Route>
         <Route path="/manager">
           <Route index element={<ManagerDashBoard />} />
@@ -96,8 +98,10 @@ function App() {
           <Route path="myPlace" element={<ManagerMyPlace />} />
         </Route>
         <Route path="/admin">
-          <Route index element={<DashBoardAdmin />} />
-          <Route path=":navPage" element={<Admin />} />
+          <Route index element={<AdminDashBoard />} />
+          <Route path="user" element={<AdminUser />} />
+          <Route path="coupon" element={<AdminCoupon />} />
+          <Route path="event" element={<AdminEvent />} />
         </Route>
       </Routes>
     </BrowserRouter>

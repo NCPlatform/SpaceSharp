@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../css/managersNav.css";
 import { Link } from "react-router-dom";
 
 const ManagerHeader = () => {
+  const [sessionUserDTO, setSessionUserDTO] = useState(
+    JSON.parse(sessionStorage.getItem("user"))
+  );
+
   return (
     <>
       <nav className="navbar navbar-dark bg-dark fixed-top">
@@ -10,6 +14,7 @@ const ManagerHeader = () => {
           <Link to="/manager" className="navbar-brand">
             MANAGER
           </Link>
+
           <button
             className="navbar-toggler"
             type="button"
@@ -39,6 +44,12 @@ const ManagerHeader = () => {
             </div>
             <div className="offcanvas-body">
               <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li className="nav-item bg-white bg-opacity-25">
+                  <p>
+                    <span className="fw-bold">{sessionUserDTO.name}사장님</span>
+                    안녕하세요.
+                  </p>
+                </li>
                 <li className="nav-item">
                   <Link
                     to="/manager/dashboard"

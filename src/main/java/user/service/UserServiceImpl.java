@@ -1,7 +1,7 @@
 package user.service;
 
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,14 +9,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import jpa.bean.BoardDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
-import jpa.bean.BoardDTO;
 import jpa.bean.UserDTO;
 
+import jpa.dao.BoardDAO;
 import jpa.dao.HotelCategoryDAO;
 import jpa.dao.HotelDAO;
-import jpa.dao.BoardDAO;
+import jpa.dao.RoomDAO;
 import jpa.dao.UserDAO;
 
 @Service
@@ -29,7 +30,10 @@ public class UserServiceImpl implements UserService {
 	private HotelDAO hotelDAO;
 	
 	@Autowired
-	BoardDAO boardDAO;
+	private BoardDAO boardDAO;
+	
+	@Autowired
+	private RoomDAO roomDAO;
 	
 	@Autowired
 	private HotelCategoryDAO hotelCategoryDAO;
@@ -52,26 +56,20 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public String login(UserDTO userDTO) {
-		
-		Optional<UserDTO> user = userDAO.findById(userDTO.getEmail());
-		
-		if(user.isEmpty()) {
-			return "none";
-		}else if(user.get().getPassword().equals(userDTO.getPassword())) {
-			return "true";
-		}else {
-			return "none";
-		}
+	public Optional<UserDTO> login(UserDTO userDTO) {
+		return userDAO.findById(userDTO.getEmail());
+	}
+
+	@Override
+	public Optional<BoardDTO> getBoard(int seqRefSeqBoard) {
+		return boardDAO.findById(seqRefSeqBoard);
 	}
 
 	@Override
 	public String write(BoardDTO boardDTO) {
-		
 		boardDAO.save(boardDTO);
 		
-		return "성공";
-		    
+		return "";
 	}
 
 	@Override
@@ -81,11 +79,6 @@ public class UserServiceImpl implements UserService {
 		
 		return list;
 		 
-	}
-
-	@Override
-	public Optional<BoardDTO> getBoard(int seqBoard) {
-	    return boardDAO.findById(seqBoard);
 	}
 
 	@Override

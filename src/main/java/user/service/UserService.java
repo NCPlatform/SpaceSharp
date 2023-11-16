@@ -13,7 +13,7 @@ import jpa.bean.HotelDTO;
 
 public interface UserService {
 
-	public String login(UserDTO userDTO);
+	public Optional<UserDTO> login(UserDTO userDTO);
 	
 	public String write(BoardDTO boardDTO);
 
@@ -30,4 +30,5 @@ public interface UserService {
 	public List<HotelCategoryDTO> getHotelCategoryList();
 	
 	public List<HotelDTO> getHotelList(String seqHotelCategory);
+
 }

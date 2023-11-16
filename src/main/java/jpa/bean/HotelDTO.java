@@ -112,7 +112,6 @@ public class HotelDTO {
 	@Column
 	private boolean pc;
 
-
 	@Column
 	private boolean socket;
 

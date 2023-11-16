@@ -1,23 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
-import '../../css/navheader.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import "../../css/mainColor.css"
+import "../../css/navheader.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "../../css/mainColor.css";
 import { Offcanvas } from "react-bootstrap";
-import axios from "axios";
-
 
 const NavTest = () => {
+  const [sessionUserDTO, setSessionUserDTO] = useState(
+    JSON.parse(sessionStorage.getItem("user"))
+  );
 
   return (
     <div>
       {[false].map((expand) => (
-        <div key={expand} className="mb-5 my-navbar fourthBackColor">
+        <div key={expand} className="mb-5 my-navbar bg-body-tertiary">
           <Navbar expand={expand} className="">
             <Container fluid>
               <Navbar.Toggle
@@ -29,19 +30,41 @@ const NavTest = () => {
                 placement="start"
               >
                 <Offcanvas.Header className="py-4 fourthBackColor" closeButton>
-                <p></p>
+                  <p></p>
                   <div className="text-center">
-                    <Link to="/login" style={{textDecoration:'none', color:'black'}} className="text-center">
-                      
-                      <p
-                        className="offcanvas-title fw-bold"
-                        id="offcanvasNavbarLabel"
+                    {sessionUserDTO ? (
+                      <div
+                        style={{ textDecoration: "none", color: "black" }}
+                        className="text-center"
                       >
-                        게스트로
-                        <br />
-                        로그인 / 회원가입
-                      </p>
-                    </Link>
+                        <p className="fw-bold mb-0">{sessionUserDTO.name}</p>
+                        <Link
+                          to=""
+                          style={{
+                            fontSize: "0.8rem",
+                            color: "black",
+                            textDecoration: "none",
+                          }}
+                        >
+                          프로필 관리
+                        </Link>
+                      </div>
+                    ) : (
+                      <Link
+                        to="/login"
+                        style={{ textDecoration: "none", color: "black" }}
+                        className="text-center"
+                      >
+                        <p
+                          className="offcanvas-title fw-bold"
+                          id="offcanvasNavbarLabel"
+                        >
+                          게스트로
+                          <br />
+                          로그인 / 회원가입
+                        </p>
+                      </Link>
+                    )}
                   </div>
                 </Offcanvas.Header>
 
@@ -72,9 +95,7 @@ const NavTest = () => {
                   </div>
 
                   {/* list */}
-                  <div
-                    className="py-3 ps-3 pe-3 mb-3 text-white fw-bold d-flex justify-content-between firstBackColor"
-                  >
+                  <div className="py-3 ps-3 pe-3 mb-3 text-white fw-bold d-flex justify-content-between firstBackColor">
                     <span className="py-0">내 관심정보 설정</span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +127,7 @@ const NavTest = () => {
                       />
                     </svg>
                   </div>
-                  
+
                   <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border">
                     <span className="py-0">공지사항</span>
                     <svg
@@ -141,22 +162,22 @@ const NavTest = () => {
                     </svg>
                   </div>
                   <Link to="/boardList/0">
-                  <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border">
-                    <span className="py-0">1:1 문의</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="22"
-                      height="24"
-                      fill="currentColor"
-                      className="bi bi-chevron-right"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
-                      />
-                    </svg>
-                  </div>
+                    <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border">
+                      <span className="py-0">1:1 문의</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="22"
+                        height="24"
+                        fill="currentColor"
+                        className="bi bi-chevron-right"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+                        />
+                      </svg>
+                    </div>
                   </Link>
                   <div className="fw-bold accordion accordion-flush">
                     <div className="accordion-header"></div>
@@ -235,30 +256,84 @@ const NavTest = () => {
                     </div>
                   </div>
                   <div className="text-center pt-2">
-                    로그인
+                    {sessionUserDTO ? (
+                      <span
+                        onClick={() => {
+                          sessionStorage.clear();
+                          window.location.reload();
+                        }}
+                      >
+                        로그아웃
+                      </span>
+                    ) : (
+                      <Link to="login">로그인</Link>
+                    )}
                     <br />
                     powered by &#9426; Netflex Corp
                   </div>
                 </div>
-                <div
-                  className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor"
-                >
-                  <span className="py-0 me-2">호스트센터로 이동</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    fill="currentColor"
-                    className="bi bi-arrow-right-circle"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      className="firstFontColor"
-                      d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
-                    />
-                  </svg>
-                </div>
+                
+                {
+                  sessionUserDTO && sessionUserDTO.usergrade*1 > 5 ?
+                  <Link to="/manager" style={{textDecoration: "none"}}>
+                    <div className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor">
+                      <span className="py-0 me-2">호스트센터로 이동</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        fill="currentColor"
+                        className="bi bi-arrow-right-circle"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          className="firstFontColor"
+                          d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
+                        />
+                      </svg>
+                    </div>
+                  </Link>:
+                  <div className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor" onClick={()=>alert("일반유저는 접근할 수 없습니다.")}>
+                    <span className="py-0 me-2">호스트센터로 이동</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      fill="currentColor"
+                      className="bi bi-arrow-right-circle"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        className="firstFontColor"
+                        d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
+                      />
+                    </svg>
+                  </div>
+                }
+                {
+                  sessionUserDTO && sessionUserDTO.usergrade*1 === 10 ?
+                  <Link to="/admin" style={{textDecoration: "none"}}>
+                    <div className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor">
+                        <span className="py-0 me-2">최고 관리자 페이지로 이동</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="currentColor"
+                          className="bi bi-arrow-right-circle"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            className="firstFontColor"
+                            d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
+                          />
+                        </svg>
+                      </div>
+                    </Link>:<></>
+                }
               </Navbar.Offcanvas>
               <Link to="/">
                 <Navbar.Brand>Space #</Navbar.Brand>

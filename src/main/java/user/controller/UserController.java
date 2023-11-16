@@ -35,9 +35,14 @@ public class UserController {
 	
 	@PostMapping(value="login")
 	@ResponseBody
-	public String login(@ModelAttribute UserDTO userDTO) {
-		return userService.login(userDTO);
+	public UserDTO login(@ModelAttribute UserDTO userDTO) {
+		Optional<UserDTO> DTO = userService.login(userDTO);
 		
+		if(DTO.isPresent() && DTO.get().getPassword().equals(userDTO.getPassword())) {
+			return DTO.get();
+		}else {
+			return null;
+		}
 	}
 	
 	@PostMapping(value="write")
@@ -49,7 +54,6 @@ public class UserController {
 	@GetMapping(value="list")
 	@ResponseBody
 	public Page<BoardDTO> list(@PageableDefault(page=0, size=10, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable) {
-		
 		return userService.list(pageable);
 	}
 	
@@ -72,20 +76,6 @@ public class UserController {
 		userService.delete(boardDTO.getSeqBoard());
 	}
 	
-	@PostMapping(path = "writeReply")
-	@ResponseBody
-	public String reply(@ModelAttribute BoardDTO boardDTO) {
-		int seqRefSeqBoard = boardDTO.getSeqRefSeqBoard();
-		
-		Optional<BoardDTO> parentBoardOptional = userService.getBoard(seqRefSeqBoard);
-		if (parentBoardOptional.isPresent()) {
-			userService.write(boardDTO);
-			return "Reply added successfully!";
-		} else {
-			return "원글이 없습니다.";
-		}
-	}
-	
 	@PostMapping(value = "accountWrite")
 	@ResponseBody
 	public String accountWrite(@ModelAttribute UserDTO userDTO ){
@@ -103,14 +93,21 @@ public class UserController {
 	@PostMapping(value = "getHotelList")
 	@ResponseBody
 	public List<HotelDTO> getHotelList(@ModelAttribute HotelDTO hotelDTO){
-		System.out.println(hotelDTO.getSeqHotelCategory());
 		return userService.getHotelList(hotelDTO.getSeqHotelCategory());
 	}
 	
-	@GetMapping(value="notice")
-	public String goNotice() {
+	@PostMapping(path = "writeReply")
+	@ResponseBody
+	public String reply(@ModelAttribute BoardDTO boardDTO) {
+		int seqRefSeqBoard = boardDTO.getSeqRefSeqBoard();
 		
-		return "redirect:http://127.0.0.1:3000/login";
+		Optional<BoardDTO> parentBoardOptional = userService.getBoard(seqRefSeqBoard);
+		if (parentBoardOptional.isPresent()) {
+			userService.write(boardDTO);
+			return "Reply added successfully!";
+		} else {
+			return "원글이 없습니다.";
+		}
 	}
 	
 }

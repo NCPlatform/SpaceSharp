@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
 const HotelReserveDetail = () => {
-    return (
-        <div>
-            
-        </div>
-    );
+  return (
+    <div>
+      <h1>Detail</h1>
+    </div>
+  );
 };
 
 export default HotelReserveDetail;
