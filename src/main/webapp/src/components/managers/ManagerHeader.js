@@ -65,6 +65,11 @@ const ManagerHeader = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
+                  <Link to="/manager/addPlace" className="nav-link">
+                    ADD MY PLACE
+                  </Link>
+                </li>
+                <li className="nav-item">
                   <Link to="/manager/reservation" className="nav-link">
                     RESERVATION
                   </Link>
