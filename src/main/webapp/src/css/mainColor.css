@@ -1,0 +1,33 @@
+/* back */
+.firstBackColor{
+    background-color: rgb(245, 80, 80) !important;
+}
+
+.secondBackColor{
+    background-color: rgb(244, 132, 132) !important;
+}
+
+.thirdBackColor{
+    background-color: rgb(232, 210, 166) !important;
+}
+
+.fourthBackColor{
+    background-color: rgb(134, 163, 184) !important;
+}
+
+
+.firstFontColor{
+    color: rgb(245, 80, 80) !important;
+}
+
+.secondFontColor{
+    color: rgb(244, 132, 132) !important;
+}
+
+.thirdFontColor{
+    color: rgb(232, 210, 166) !important;
+}
+
+.fourthFontColor{
+    color: rgb(134, 163, 184) !important;
+}

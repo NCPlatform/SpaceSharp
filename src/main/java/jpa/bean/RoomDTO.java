@@ -38,4 +38,9 @@ public class RoomDTO {
 	
 	@Column
 	private String reserveRule;
+	
+	@Override
+	public String toString() {
+		return seqRoom + "/" + seqHotel + "/" + name + "/" + price + "/" + img + "/n" + normalExplain + "/" + placeSize + "/" + people + "/" + datetime + "/" + reserveRule; 
+	}
 }

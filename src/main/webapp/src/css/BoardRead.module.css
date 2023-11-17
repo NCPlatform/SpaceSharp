@@ -1,0 +1,24 @@
+.BoardReadWrap{
+    border: solid 1px #E8E8E8;
+}
+.BoardReadContent{
+    min-height: 90vh;
+    border: solid 1px #E8E8E8;
+}
+.BoardReadTitle1{
+    font-size: 25pt;
+}
+.BoardReadP{
+    margin: 0;
+}
+.BoardDetailCommentsEmail {
+    text-align: left; 
+}
+  
+.BoardDetailCommentsReleaseDate {
+    text-align: left;
+}
+
+.BoardReadSeq {
+    border-bottom: solid 1px #e0dfdf;
+}
