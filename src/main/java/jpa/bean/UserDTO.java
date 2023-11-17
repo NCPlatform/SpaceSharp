@@ -1,11 +1,9 @@
 package jpa.bean;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
-
 @Entity
 @Table(name = "User")
 @Data
@@ -15,31 +13,30 @@ public class UserDTO {
 	@Column(name="email", nullable=false)
 	private String email;
 	
-	@Column(name="name", nullable=false)
+	@Column
 	private String name;
 	
-	@Column(name="nickname")
+	@Column
 	private String nickname;
 	
-	@Column(name="password", nullable=false)
+	@Column(nullable=false)
 	private String password;
 	
-	@Column(name="addr")
+	@Column
 	private String addr;
 	
-	@Column(name="businessRegistrationNumber")
+	@Column
 	private int businessRegistrationNumber;
 	
-	@Column(name="companyName")
+	@Column
 	private String companyName;
 	
-	@Column(name="usergrade")
+	@Column
 	private int usergrade;
 	
-	@Column(name="payment")
+	@Column
 	private String payment;
 	
-	@Column(name="tel")
+	@Column
 	private String tel;
-
 }

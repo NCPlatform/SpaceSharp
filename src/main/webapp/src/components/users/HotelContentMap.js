@@ -1,13 +1,15 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Modal, Row } from 'react-bootstrap';
 
 const { kakao } = window;
 
-const HotelContentMap = () => {
+const HotelContentMap = ({ seqHotel }) => {
     const [isMapDraggable, setIsMapDraggable] = useState(false);
     const [location, setLocation] = useState(''); // 상세 위치 정보를 저장할 상태
     const [locationName, setLocationName] = useState('');
-    const [locationNumber, setLocationNumber] = useState('');
+    const [tel, setTel] = useState('');
+    const [ownerEmail, setOwnerEmail] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const modalContent = (
@@ -27,9 +29,48 @@ const HotelContentMap = () => {
 
         // 가상의 데이터를 상태에 설정 (실제로는 데이터베이스에서 가져와야 함)
         setLocationName('달래해장 강남역점');
-        setLocation('서울 강남구 강남대로94길 20 1층');
-        setLocationNumber('010-1234-5678');
-    }, []);
+        axios.get(`/user/getAddr?seqHotel=${seqHotel}`)
+            .then(response => {
+                const data = response.data;
+                if (data) {
+                    setLocation(data);
+                } else {
+                    console.error('해당 공간의 주소를 찾을 수 없습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('데이터를 불러오는 중 에러 발생:', error);
+            });
+        // 서버로 요청을 보내 tel 값을 받아옵니다.
+        axios.get(`/user/getHotelInfo?seqHotel=${seqHotel}`)
+            .then(response => {
+                const data = response.data;
+                if (data) {
+                    setLocation(data.addr);
+                    setOwnerEmail(data.ownerEmail);
+                } else {
+                    console.error('해당 공간 정보를 찾을 수 없습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('데이터를 불러오는 중 에러 발생:', error);
+            });
+
+        if (ownerEmail) {
+            axios.get(`/user/getUserByEmail?email=${ownerEmail}`)
+                .then(response => {
+                    const userData = response.data;
+                    if (userData) {
+                        setTel(userData.tel);
+                    } else {
+                        console.error('해당 사용자 정보를 찾을 수 없습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('데이터를 불러오는 중 에러 발생:', error);
+                });
+        }
+    }, [seqHotel, ownerEmail]);
 
     useEffect(() => {
         const Container = document.getElementById('map'); // 지도를 담을 영역의 DOM 레퍼런스
@@ -116,8 +157,8 @@ const HotelContentMap = () => {
                 <Modal.Body style={{ padding: '50px', textAlign: 'center' }}>
                     <p style={{ fontSize: '25px', fontWeight: 'lighter' }}>{modalContent}</p>
                     <hr />
-                    <p style={{ fontSize: '25px', fontWeight: 'bold' }}>{locationName}</p>
-                    <p style={{ fontSize: '25px', fontWeight: 'lighter', color: 'purple' }}>{locationNumber}</p>
+                    <p style={{ fontSize: '25px', fontWeight: 'bold' }}>{location}</p>
+                    <p style={{ fontSize: '25px', fontWeight: 'lighter', color: 'purple' }}>{tel}</p>
                     <hr />
                     <br />
                     <br />

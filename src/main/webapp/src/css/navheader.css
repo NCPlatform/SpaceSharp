@@ -11,5 +11,10 @@
 .navbar-brand {
     margin-left: 210px; 
 }
+.transparent-bg {
+    background: transparent !important;
+    border: none !important;
+    color: initial !important;
+}
 
 

@@ -1,45 +1,33 @@
 /* back */
 .firstBackColor{
-    background-color: rgb(132, 84, 96) !important;
-    /* background-color: rgb(154, 68, 68) !important;
     background-color: rgb(245, 80, 80) !important;
-    background-color: rgb(103, 93, 80) !important; */
 }
 
 .secondBackColor{
-    background-color: rgb(234, 211, 203) !important;
-    /*background-color: rgb(222, 143, 95) !important;
     background-color: rgb(244, 132, 132) !important;
-    background-color: rgb(171, 196, 170) !important; */
 }
 
 .thirdBackColor{
-    background-color: rgb(189, 199, 201) !important; 
-    /* background-color: rgb(244, 223, 182) !important;
     background-color: rgb(232, 210, 166) !important;
-    background-color: rgb(243, 222, 186) !important;*/
 }
 
 .fourthBackColor{
-    background-color: rgb(43, 79, 96) !important;
-    /* background-color: rgb(214, 212, 109) !important;
     background-color: rgb(134, 163, 184) !important;
-    background-color: rgb(169, 144, 126) !important; */
 }
 
-/* font */
-/* .firstFontColor{
-    color: rgb(154, 68, 68);
+
+.firstFontColor{
+    color: rgb(245, 80, 80) !important;
 }
 
 .secondFontColor{
-    color: rgb(222, 143, 95);
+    color: rgb(244, 132, 132) !important;
 }
 
 .thirdFontColor{
-    color: rgb(244, 223, 182);
+    color: rgb(232, 210, 166) !important;
 }
 
 .fourthFontColor{
-    color: rgb(214, 212, 109);
-} */
+    color: rgb(134, 163, 184) !important;
+}

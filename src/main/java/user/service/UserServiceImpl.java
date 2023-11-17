@@ -1,35 +1,49 @@
 package user.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
-
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
-
-import jpa.bean.HotelCategoryDTO;
-import jpa.bean.HotelDTO;
-import jpa.dao.HotelCategoryDAO;
-import jpa.dao.HotelDAO;
 
 import jpa.bean.BoardDTO;
+import jpa.bean.HotelCategoryDTO;
+import jpa.bean.HotelDTO;
 import jpa.bean.UserDTO;
+
 import jpa.dao.BoardDAO;
+import jpa.dao.HotelCategoryDAO;
+import jpa.dao.HotelDAO;
+import jpa.dao.RoomDAO;
 import jpa.dao.UserDAO;
 
 @Service
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
-	private HotelCategoryDAO hotelCategoryDAO;
+	private UserDAO userDAO;
 	
 	@Autowired
 	private HotelDAO hotelDAO;
-
+	
+	@Autowired
+	private BoardDAO boardDAO;
+	
+	@Autowired
+	private RoomDAO roomDAO;
+	
+	@Autowired
+	private HotelCategoryDAO hotelCategoryDAO;
+	
+	@Override
+	public String accountWrite(UserDTO userDTO) {
+				
+		userDAO.save(userDTO);
+		return "리턴 성공";
+	}
+	
 	@Override
 	public List<HotelCategoryDTO> getHotelCategoryList() {
 		return hotelCategoryDAO.findAll();
@@ -39,41 +53,25 @@ public class UserServiceImpl implements UserService {
 	public List<HotelDTO> getHotelList(String seqHotelCategory) {
 		return hotelDAO.findBySeqHotelCategoryContaining(seqHotelCategory);
 	}
-
-	@Autowired
-	UserDAO userDAO;
-	@Autowired
-	BoardDAO boardDAO;
 	
 	@Override
-	public String login(UserDTO userDTO) {
-		
-		Optional<UserDTO> user = userDAO.findById(userDTO.getEmail());
-		
-		if(user.isEmpty()) {
-			return "none";
-		}else if(user.get().getPassword().equals(userDTO.getPassword())) {
-			return "true";
-		}else {
-			return "none";
-		}
+	public Optional<UserDTO> login(UserDTO userDTO) {
+		return userDAO.findById(userDTO.getEmail());
+	}
+
+	@Override
+	public Optional<BoardDTO> getBoard(int seqRefSeqBoard) {
+		return boardDAO.findById(seqRefSeqBoard);
 	}
 
 	@Override
 	public String write(BoardDTO boardDTO) {
-		
 		boardDAO.save(boardDTO);
 		
-		return "성공";
-		    
+		return "";
 	}
 
 	
-	@Override
-	public Optional<BoardDTO> getBoard(int seqBoard) {
-	    return boardDAO.findById(seqBoard);
-	}
-
 	@Override
 	public Object update(BoardDTO boardDTO) {
 		  try {
@@ -109,4 +107,77 @@ public class UserServiceImpl implements UserService {
 		return boardDAO.findBySeqRefSeqBoard(seqRefSeqBoard);
 	}
 
+	@Override
+    public String getHotelName(int seqHotel) {
+        return hotelDAO.findById(seqHotel)
+                .map(hotelDTO -> hotelDTO.getName())
+                .orElse(null);
+    }
+
+	@Override
+	public String getMainKeyword(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+                .map(hotelDTO -> hotelDTO.getMainKeyword())
+                .orElse(null);
+	}
+
+	@Override
+	public String getSubscribe(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+                .map(hotelDTO -> hotelDTO.getSubscribe())
+                .orElse(null);
+	}
+
+	@Override
+	public String getTags(int seqHotel) {
+	    return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getKeyword())
+	            .orElse(null);
+	}
+	
+	@Override
+	public String getPlaceEx(int seqHotel) {
+	    return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getPlaceEx())
+	            .orElse(null);
+	}
+
+	@Override
+	public String getWorkinghour(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getWorkinghour())
+	            .orElse(null);
+	}
+
+	@Override
+	public String getHoliday(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getHoliday())
+	            .orElse(null);
+	}
+
+	@Override
+	public String getImages(int seqHotel) {
+	    return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getImg())
+	            .orElse(null);
+	}
+
+	@Override
+	public HotelDTO getHotelInfo(int seqHotel) {
+	    return hotelDAO.findById(seqHotel).orElse(null);
+	}
+
+	@Override
+	public String getAddr(int seqHotel) {
+	    return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getAddr())
+	            .orElse(null);
+	}
+
+	@Override
+	public UserDTO getUserByEmail(String email) {
+	    return userDAO.findById(email).orElse(null);
+	}
+	
 }
