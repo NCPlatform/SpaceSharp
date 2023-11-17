@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
+import styles from '../../css/HotelList.module.css'
 import Nav from "./Nav";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Button from "react-bootstrap/Button";
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import moment from 'moment';
 
 import { Card, Carousel, Col, Row } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
@@ -12,12 +16,7 @@ import axios from "axios";
 const List = () => {
   const [selectedOption1, setSelectedOption1] = useState("");
   const [selectedOption2, setSelectedOption2] = useState("");
-  const [selectedOption3, setSelectedOption3] = useState("");
-  const [selectedOption4, setSelectedOption4] = useState("");
-  const [selectedOption5, setSelectedOption5] = useState("");
-  const [selectedOption6, setSelectedOption6] = useState("");
-  const [selectedOption7, setSelectedOption7] = useState("");
-  const [selectedOption8, setSelectedOption8] = useState("");
+
 
   const handleOption1Change = (e) => {
     setSelectedOption1(e.target.value);
@@ -28,10 +27,13 @@ const List = () => {
     setSelectedOption2(e.target.value);
   };
 
+  
   const [currentIndex, setCurrentIndex] = useState();
   function handleChange(index) {
     setCurrentIndex(index);
   }
+
+  const [value, onChange] = useState(new Date());
 
   const { seqHotelCategory } = useParams();
   const [hotelList, setHotelList] = useState([]);
@@ -49,7 +51,7 @@ const List = () => {
     <div>
       <Nav />
       <div className="container">
-        <Row md={5}>
+        <Row xl={4} lg={2} md={1}>
           <div>
             <Col>
               <div>
@@ -461,103 +463,37 @@ const List = () => {
             </Col>
           </div>
           <Col>
-            <div>
-              <select className="form-select ms-auto" value={selectedOption3}>
-                <option value="default" readonly>
-                  선택하세요
-                </option>
-                <option value="option1">옵션 1</option>
-                <option value="option2">옵션 2</option>
-              </select>
-
-              {selectedOption3 && (
-                <select className="form-select ms-auto" value={selectedOption4}>
-                  <option value="default" readonly>
-                    선택하세요
-                  </option>
-                  {selectedOption3 === "option1" && (
-                    <>
-                      <option value="option1-1">옵션 1-1</option>
-                      <option value="option1-2">옵션 1-2</option>
-                    </>
-                  )}
-                  {selectedOption3 === "option2" && (
-                    <>
-                      <option value="option2-1">옵션 2-1</option>
-                      <option value="option2-2">옵션 2-2</option>
-                    </>
-                  )}
-                </select>
-              )}
-            </div>
+          <div className="input-group mb-3">
+            <span className="input-group-text" id="basic-addon1">예약 인원</span>
+            <input type="text" class="form-control" placeholder="명" aria-label="Username" aria-describedby="basic-addon1" />
+          </div>
           </Col>
           <Col>
-            <div>
-              <select className="form-select ms-auto" value={selectedOption5}>
-                <option value="default" readonly>
-                  선택하세요
-                </option>
-                <option value="option1">옵션 1</option>
-                <option value="option2">옵션 2</option>
-              </select>
-
-              {selectedOption5 && (
-                <select className="form-select ms-auto" value={selectedOption6}>
-                  <option value="default" readonly>
-                    선택하세요
-                  </option>
-                  {selectedOption5 === "option1" && (
-                    <>
-                      <option value="option1-1">옵션 1-1</option>
-                      <option value="option1-2">옵션 1-2</option>
-                    </>
-                  )}
-                  {selectedOption5 === "option2" && (
-                    <>
-                      <option value="option2-1">옵션 2-1</option>
-                      <option value="option2-2">옵션 2-2</option>
-                    </>
-                  )}
-                </select>
-              )}
+          <div className="accordion">
+          <div className={`${styles.HotelListAccordionItem} accordion-item`}>
+           <h2 className={`${styles.HotelListAccordionHeader} accordion-header`}>
+              <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                예약 날짜
+              </button>
+            </h2>
+            <div class="accordion" id="accordionExample">
+              <div id="collapseOne" className="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                <div className="accordion-body">
+                  <Calendar onChange={onChange} value={value} />
+                    <div className="text-gray-500 mt-4">
+                      {moment(value).format("YYYY년 MM월 DD일")} 
+                    </div>
+                </div>
+              </div>
             </div>
-          </Col>
-
-          <Col>
-            <div>
-              <select className="form-select ms-auto" value={selectedOption7}>
-                <option value="default" readonly>
-                  선택하세요
-                </option>
-                <option value="option1">옵션 1</option>
-                <option value="option2">옵션 2</option>
-              </select>
-
-              {selectedOption7 && (
-                <select className="form-select ms-auto" value={selectedOption8}>
-                  <option value="default" readonly>
-                    선택하세요
-                  </option>
-                  {selectedOption7 === "option1" && (
-                    <>
-                      <option value="option1-1">옵션 1-1</option>
-                      <option value="option1-2">옵션 1-2</option>
-                    </>
-                  )}
-                  {selectedOption7 === "option2" && (
-                    <>
-                      <option value="option2-1">옵션 2-1</option>
-                      <option value="option2-2">옵션 2-2</option>
-                    </>
-                  )}
-                </select>
-              )}
-            </div>
+          </div>
+          </div>
+         
           </Col>
 
           <Col className="d-flex justify-content-end">
             <div>
-              <button>필터</button>
+              <button className="btn btn-outline-dark">필터</button>
               <Link to="/hotelInMap">
                 <button className="btn btn-outline-dark">지도</button>
               </Link>
@@ -576,10 +512,10 @@ const List = () => {
 
             <Col className="d-flex justify-content-end">
               <div>
-                <button>전체</button>
-                <button>시간단위</button>
-                <button>패키지단위</button>
-                <button>월단위</button>
+                <Button>전체</Button>
+                <Button>시간단위</Button>
+                <Button>패키지단위</Button>
+                <Button>월단위</Button>
               </div>
             </Col>
 
