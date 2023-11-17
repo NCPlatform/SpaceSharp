@@ -174,4 +174,7 @@ public class HotelDTO {
 	@Column
 	private boolean doorlock;
 	
+	@Column
+	private boolean isAccept;
+	
 }
