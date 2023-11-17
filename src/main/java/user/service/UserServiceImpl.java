@@ -22,11 +22,17 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public String accountWrite(UserDTO userDTO) {
-				
+		System.out.println(userDTO);
 		userDAO.save(userDTO);
 		return "리턴 성공";
 	}
 		
+	@Override
+	public boolean existsByEmail(String email) {
+		return userDAO.existsByEmail(email);
+	}
+
+	@Autowired
 	private HotelCategoryDAO hotelCategoryDAO;
 	
 	@Autowired
@@ -42,4 +48,9 @@ public class UserServiceImpl implements UserService {
 		return hotelDAO.findBySeqHotelCategoryContaining(seqHotelCategory);
 	}
 
+
+
+
+
 }
+	    

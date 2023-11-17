@@ -31,6 +31,16 @@ const SignIn = ({ userInfo }) => {
 
   const [readCheck, setReadCheck] = useState(''); //유효성검사 div영역
 
+  //카카오 REST API
+  const REST_API_KEY = '9ee2bf7ff3fd8c0f4da4c49d740dc522';//developers.kakao.com 에서 발급받은 restAPI_Key
+  const REDIRECT_URI = 'http://localhost:3000/KakaoRedirect';//developers.kakao.com 에서 설정해놓은 REDIRECT_URI
+  const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+
+  //카카오 로그인(페이지이동;버튼)
+  const loginHandler = () => {
+    window.location.href = link;
+  };
+
   //카카오 소셜로그인 닉네임 속성 불러오기
   useEffect(() => {
     if (userInfo) {
@@ -56,17 +66,27 @@ const SignIn = ({ userInfo }) => {
   }, [userInfo]); 
 
 
-  axios.post('/user/checkEmail', null, { params: { email: userDTO.email } })
+  //이메일 중복검사
+  useEffect(()=>{
+    if(userDTO.email){
+    axios.post('/user/existsByEmail', null, { params: { email: userDTO.email } })
   .then(response => {
     // 서버 응답에 대한 처리
     console.log(response.data);
+    console.log('중복 이메일 검사중입니다.');
+    if(response.data === true){
+      alert('이미존재하는 이메일입니다. 다른 이메일을 입력하여주세요!');
+    }else{
+      alert('사용 가능한 이메일 입니다.');
+    }
   })
   .catch(error => {
-    // 오류 처리
-    console.error('Error during email check:', error);
+    console.error(error);
   });
-  
+    }
+  },[userDTO.email])
 
+  
   const onChange = (e) => {
     setUserDTO({ ...userDTO, [e.target.name]: e.target.value });
   };
@@ -102,14 +122,16 @@ const SignIn = ({ userInfo }) => {
     console.log('눌림');
     console.log(userDTO);
 
-    // axios.post('/user/accountWrite', null, { params: userDTO.email })
-    //   .then(res => {
-    //     alert('회원가입을 축하합니다.');
-    //   })
-    //   .catch(error => console.log(error));
+    axios.post('/user/accountWrite', null, { params: userDTO })
+      .then(res => {
+        alert('회원가입을 축하합니다.');
+        console.log(res.data)
+      })
+      .catch(error => console.log(error));
     };
 
-  const onChk = (e) => {//약관체크(전체선택.해제)
+  //약관체크(전체선택.해제)
+  const onChk = (e) => {
     const { name, checked } = e.target;
 
     if (name === 'all') {
@@ -119,16 +141,6 @@ const SignIn = ({ userInfo }) => {
     }
   };
 
-  //카카오 REST API
-  const REST_API_KEY = '9ee2bf7ff3fd8c0f4da4c49d740dc522';//developers.kakao.com 에서 발급받은 restAPI_Key
-  const REDIRECT_URI = 'http://localhost:3000/KakaoRedirect';//developers.kakao.com 에서 설정해놓은 REDIRECT_URI
-  const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
-
-  const loginHandler = () => {
-    window.location.href = link;
-  };//카카오 로그인(페이지이동;버튼)
-  
-  
   return (
     <>
       <div className="WriteBox">

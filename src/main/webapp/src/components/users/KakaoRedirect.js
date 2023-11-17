@@ -9,6 +9,7 @@ function KakaoRedirect() {
   const location = useLocation();
   const KAKAO_CODE = new URLSearchParams(location.search).get('code');
 
+  //로컬스토리지에 토큰 저장
   const getKakaoToken = () => {
     fetch(`https://kauth.kakao.com/oauth/token`, {
       method: 'POST',
@@ -25,6 +26,7 @@ function KakaoRedirect() {
       });
   };
 
+  //카카오 토큰 발급
   useEffect(() => {
     // KAKAO_CODE가 있는 경우에만 사용자 정보를 요청
     if (KAKAO_CODE) {
@@ -65,6 +67,27 @@ function KakaoRedirect() {
         });
     }
   }, [KAKAO_CODE]);
+
+  //카카오 소셜로그인을 했을 때, DB에 email이 존재하는 회원이면 메인이동, 아니면 회원가입페이지로 UserInfo 전달
+  useEffect(()=> {
+    if (userInfo && userInfo.email) {
+      axios.post('/user/existsByEmail', null, { params: { email: userInfo.email } })
+        .then(response => {
+          console.log(response.data);
+          console.log('중복 이메일 검사중입니다.');
+          if (response.data === true) {
+            console.log('이미 존재하는 이메일입니다. 다른 이메일을 입력하여주세요!');
+            navigate('/');
+          } else {
+            console.log('사용 가능한 이메일 입니다.');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  }, [userInfo]);
+
 
   return (
     <div>

@@ -12,5 +12,8 @@ public interface UserService {
 	public String accountWrite(UserDTO userDTO);
 	public List<HotelCategoryDTO> getHotelCategoryList();
 	public List<HotelDTO> getHotelList(String seqHotelCategory);
+	boolean existsByEmail(String email);
+
+	
 
 }

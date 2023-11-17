@@ -1,6 +1,7 @@
 package user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
 import jpa.bean.UserDTO;
+import jpa.dao.UserDAO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import user.service.UserService;
@@ -27,14 +29,26 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+    private UserDAO userDAO; 
+	
 	@PostMapping(value = "accountWrite")
 	@ResponseBody
 	public String accountWrite(@ModelAttribute UserDTO userDTO ){
 		System.out.println(userDTO.getEmail());
-		System.out.println("부트 찍힘");
 		return userService.accountWrite(userDTO);
 	}
-		
+	
+	@PostMapping(value = "existsByEmail")
+	@ResponseBody
+	public boolean existsByEmail(@RequestParam String email) {
+
+		boolean exists = userService.existsByEmail(email);
+
+		return userService.existsByEmail(email);
+	
+    }
+				
 	@PostMapping(value = "getHotelCategoryList")
 	@ResponseBody
 	public List<HotelCategoryDTO> getHotelCategoryList(){
@@ -53,5 +67,7 @@ public class UserController {
 		
 		return "redirect:http://127.0.0.1:3000/login";
 	}
+	
+	
 	
 }
