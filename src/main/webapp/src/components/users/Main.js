@@ -18,14 +18,14 @@ const Main = () => {
 
   const [data, setData] = useState([]);
 
-  useEffect(()=>{
-    axios.post('/user/getHotelCategoryList',null,{})
-    .then(res=>{
-      setData(res.data);
-    })
-    .catch(error => console.log(error))
-    
-  },[])
+  useEffect(() => {
+    axios.post('/user/getHotelCategoryList', null, {})
+      .then(res => {
+        setData(res.data);
+      })
+      .catch(error => console.log(error))
+
+  }, [])
 
   const options = {
     loop: true,
@@ -371,6 +371,16 @@ const Main = () => {
               </Card>
             </div>
           ))}
+        </div>
+      </div>
+      <div className="container mt-5">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+          <div className="px-3">
+            <div className="card">
+              <h1>게임</h1>
+            </div>
+            
+          </div>
         </div>
       </div>
       <Footer />

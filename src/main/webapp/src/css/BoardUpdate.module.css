@@ -1,0 +1,15 @@
+.BoardUpdateHeader{
+    border-bottom: solid 1px black;
+}
+.BoardUpdateTitle{
+    margin-top: 15px;
+}
+.BoardUpdateTitle input::placeholder {
+    color: #c0bebe;
+}
+.BoardUpdateContent{
+    margin-top: 15px;
+}  
+.BoardUpdateContent textarea::placeholder {
+    color: #c0bebe;
+}

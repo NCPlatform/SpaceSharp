@@ -11,12 +11,20 @@ import lombok.Data;
 @Data
 public class HotelDTO {
 	
+	@Column
+	private String img;
+	
 	@Id
 	@Column(nullable = false)
 	private int seqHotel;
 	
 	@Column
 	private String seqHotelCategory;
+	
+	
+	public void setSeqHotelCategory(String cates) {
+		seqHotelCategory = cates;
+	}
 	
 	@Column
 	private String name;
@@ -29,6 +37,10 @@ public class HotelDTO {
 	
 	@Column
 	private String keyword;
+	
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
 	
 	@Column
 	private String addr;
@@ -97,9 +109,6 @@ public class HotelDTO {
 	private boolean pc;
 
 	@Column
-	private boolean isTable;
-
-	@Column
 	private boolean socket;
 
 	@Column
@@ -164,5 +173,8 @@ public class HotelDTO {
 
 	@Column
 	private boolean doorlock;
+	
+	@Column
+	private boolean isAccept;
 	
 }
