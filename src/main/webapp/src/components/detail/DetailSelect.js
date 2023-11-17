@@ -5,12 +5,13 @@ import DetailList from "./list/DetailList";
 // 샘플 데이터 가져와서 사용하기
 import responseData from "./sample/responseData";
 
+
 const DetailSelect = () => {
   // list radio 선택 시 변화, 조건문 참조(DetailList 참조)
   const [isCheckIndex, setIsCheckIndex] = useState(-1);
   //샘플코드로 데이터 불려옴
   const [resData, setResData] = useState(responseData);
-
+ 
   useEffect(() => {
     // console.log(resData);
   }, [isCheckIndex]);
@@ -27,10 +28,10 @@ const DetailSelect = () => {
     if (!(isCheckIndex < 0)) {
       // 이미 선택한 값을 다시 선택할 때 조건부로 수행 (미 선택 모드로 돌리기)
       d[isCheckIndex] = {
-      ...resData[isCheckIndex],
+        ...resData[isCheckIndex],
         isCheck: "N"
       }
-    } 
+    }
     setResData(d);
     setIsCheckIndex(index);
     // console.log(resData[index]);
@@ -47,9 +48,9 @@ const DetailSelect = () => {
       {/* 상세 내역 추가 */}
       <div className="box_form w-100">
         <Row>
-            <h2 className="p-2" style={{ textAlign: "center" }} >
-              결제 후 바로 예약확정
-            </h2>
+          <h2 className="p-2" style={{ textAlign: "center" }} >
+            결제 후 바로 예약확정
+          </h2>
         </Row>
         <Row className="p-3" style={{ color: "#6d3afb", textAlign: "center" }}>
           {"빠르고 확실한 예약을 위해 스페이스# 에서 온라인 결제를 진행하세요 :-)"}

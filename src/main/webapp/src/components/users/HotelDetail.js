@@ -10,6 +10,7 @@ import DetailSelect from "../detail/DetailSelect";
 import HotelContentMap from "./HotelContentMap";
 import HotelSameSpace from "./HotelSameSpace";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const Detail = () => {
   const [hotelDTO, setHotelDTO] = useState(null);
@@ -22,7 +23,8 @@ const Detail = () => {
   const [holiday, setHoliday] = useState('');
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [seqHotel, setSeqHotel] = useState(2);
+  // useParams를 통해 동적인 URL 파라미터 값을 가져옴
+  const { seqHotel } = useParams();
 
   useEffect(() => {
     axios.get(`/user/getHotelName?seqHotel=${seqHotel}`)
@@ -250,7 +252,7 @@ const Detail = () => {
                   }
                 >
                   <div style={{ color: "#656565" }}>
-                    <strong style={{ color: "black" }}>공간소개</strong>
+                    <strong style={{ color: "black" }}>시설안내</strong>
                     <br />
                     <hr
                       style={{ width: "20px", border: "4px solid #ff7402" }}
