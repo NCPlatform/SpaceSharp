@@ -159,9 +159,7 @@ const Detail = () => {
                 <br />
                 <h2 className="space_name">{hotelName}</h2>
               </div>
-              <p className="sub_desc">
-                해방촌의 감성과 남산뷰를 품은 프라이빗 공간
-              </p>
+              <p className="sub_desc">{subscribe}</p>
               <div className="tags">
                 {tags.split(',').map((tag, index) => (
                   <span key={index} className="tag"> {tag.trim()} </span>
@@ -179,12 +177,7 @@ const Detail = () => {
                     </Carousel.Item>
                   ))}
                 </Carousel>
-                <p
-                  className="sub_desc"
-                  style={{ color: "#666", fontSize: "200%" }}
-                >
-                  해방촌의 감성과 남산뷰를 품은 프라이빗 공간
-                </p>
+                <p className='sub_scribe' style={{ color: '#666', fontSize: '200%', whiteSpace: 'pre-wrap' }}>{subscribe}</p>
               </div>
               <Tabs
                 defaultActiveKey="home"
@@ -214,50 +207,37 @@ const Detail = () => {
                       <h5 style={{ display: "inline", color: "black" }}>
                         영업시간&nbsp;&nbsp;
                       </h5>
-                      &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <h5 style={{ display: "inline" }}>0 ~ 24시</h5>
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h5 style={{ display: 'inline' }}>{workinghour}</h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       <h5 style={{ display: "inline", color: "black" }}>
                         휴무일&nbsp;&nbsp;
                       </h5>
-                      &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <h5 style={{ display: "inline" }}>없음</h5>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h5 style={{ display: 'inline' }}>{holiday}</h5>
                       <br />
                       <div style={{ display: "flex", alignItems: "center" }}>
-                        <div>
-                          <i
-                            className="bi bi-arrow-up-right-square"
-                            style={{
-                              color: "black",
-                              fontSize: "40px",
-                              marginRight: "70px",
-                            }}
-                          />
-                          <p style={{ fontSize: "12px" }}>지상 3층</p>
-                        </div>
-                        <div>
-                          <i
-                            className="bi bi-car-front"
-                            style={{
-                              color: "black",
-                              fontSize: "40px",
-                              marginRight: "70px",
-                            }}
-                          />
-                          <p style={{ fontSize: "12px" }}>주차 O</p>
-                        </div>
-                        <div>
-                          <i
-                            className="bi bi-arrow-down-up"
-                            style={{ color: "black", fontSize: "40px" }}
-                          />
-                          <p style={{ fontSize: "12px" }}>엘리베이터 X</p>
-                        </div>
+                        {hotelDTO && (
+                          <React.Fragment>
+                            {hotelDTO.animal === true && (
+                              <div>
+                                <p style={{ fontSize: '12px' }}>반려동물 가능</p>
+                              </div>
+                            )}
+                            {hotelDTO.parking === true && (
+                              <div>
+                                <p style={{ fontSize: '12px' }}>주차 가능</p>
+                              </div>
+                            )}
+                            {hotelDTO.roofTop === true && (
+                              <div>
+                                <p style={{ fontSize: '12px' }}>루프탑 보유</p>
+                              </div>
+                            )}
+                          </React.Fragment>
+                        )}
                       </div>
                     </div>
                     <br />
                     <div className="mapFrame">
-                      <HotelContentMap seqHotel={seqHotel}/>
+                      <HotelContentMap seqHotel={seqHotel} />
                     </div>
                   </div>
                 </Tab>
