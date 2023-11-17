@@ -8,12 +8,21 @@ import Button from "react-bootstrap/Button";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import moment from 'moment';
+import Slider, { Range } from "rc-slider";
+import "rc-slider/assets/index.css";
 
 import { Card, Carousel, Col, Row } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
 const List = () => {
+
+  const [priceRange, setPriceRange] = useState({
+    lowerBound: 0,
+    upperBound: 300000,
+    value: [0, 300000],
+  });
+
   const [selectedOption1, setSelectedOption1] = useState("");
   const [selectedOption2, setSelectedOption2] = useState("");
 
@@ -491,9 +500,136 @@ const List = () => {
          
           </Col>
 
-          <Col className="d-flex justify-content-end">
+          <Col className="d-flex justify-content-between">
             <div>
-              <button className="btn btn-outline-dark">필터</button>
+              <button type="button" className="btn btn-outline-dark" data-bs-toggle="dropdown" data-bs-auto-close="false">필터</button>
+              <div className="dropdown-menu p-3">
+                <form>
+                  <div className="p-3 border">
+                    <p>결제 유형</p>
+                    <div className="row">
+                      <button
+                        type="button"
+                        className="btn btn btn-outline-secondary col mx-2"
+                        data-bs-toggle="button"
+                      >
+                        바로 결제
+                      </button>
+                      <button
+                        className="btn btn btn-outline-secondary col mx-2"
+                        data-bs-toggle="button"
+                      >
+                        승인 결제
+                      </button>
+                    </div>
+                    <p className="mt-5">가격</p>
+                    <span style={{ fontSize: "0.6rem" }}>
+                      가격 검색의 최소 단위는 5,000원입니다.
+                    </span>
+                    <div className="row">
+                      <div className="col form-floating mb-3">
+                        <input
+                          type="number"
+                          className="form-control"
+                          id="floatingInput"
+                          placeholder="0"
+                          value={priceRange.lowerBound}
+                          name="lowerBound"
+                          onChange={(e) =>
+                            setPriceRange({
+                              ...priceRange,
+                              [e.target.name]: [e.target.value],
+                            })
+                          }
+                        />
+                        <label htmlFor="floatingInput" style={{ fontSize: "0.6rem" }}>
+                          최소가격
+                        </label>
+                      </div>
+                      ~
+                      <div className="col form-floating">
+                        <input
+                          type="number"
+                          className="form-control"
+                          id="floatingPassword"
+                          placeholder="Password"
+                          value={priceRange.upperBound}
+                          name="upperBound"
+                          onChange={(e) =>
+                            setPriceRange({
+                              ...priceRange,
+                              [e.target.name]: [e.target.value],
+                            })
+                          }
+                        />
+                        <label
+                          htmlFor="floatingPassword"
+                          style={{ fontSize: "0.6rem" }}
+                        >
+                          최대가격
+                        </label>
+                      </div>
+                    </div>
+                    <Slider
+                      range
+                      min={0}
+                      max={300000}
+                      defaultValue={priceRange.value}
+                      onChange={(e) => {
+                        setPriceRange({ lowerBound: [e[0]], upperBound: [e[1]] });
+                      }}
+                      allowCross={false}
+                    />
+
+                    <p className="mt-5">편의 시설</p>
+                    <div className="row row-cols-3">
+                      <div className="col p-2">
+                        <button
+                          className="btn btn-outline-dark container-fluid"
+                          data-bs-toggle="button"
+                        >
+                          TV
+                        </button>
+                      </div>
+                      <div className="col p-2">
+                        <button
+                          className="btn btn-outline-dark container-fluid"
+                          data-bs-toggle="button"
+                        >
+                          TV
+                        </button>
+                      </div>
+                      <div className="col p-2">
+                        <button
+                          className="btn btn-outline-dark container-fluid"
+                          data-bs-toggle="button"
+                        >
+                          TV
+                        </button>
+                      </div>
+                      <div className="col p-2">
+                        <button
+                          className="btn btn-outline-dark container-fluid"
+                          data-bs-toggle="button"
+                        >
+                          TV
+                        </button>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <button type="reset" className="col-5 btn btn-warning border-0">
+                        초기화
+                      </button>
+                      <button
+                        type="button"
+                        className="col-7 btn btn-warning border-0"
+                      >
+                        필터 적용하기
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
               <Link to="/hotelInMap">
                 <button className="btn btn-outline-dark">지도</button>
               </Link>
