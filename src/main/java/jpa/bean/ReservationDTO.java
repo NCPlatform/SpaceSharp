@@ -36,7 +36,7 @@ public class ReservationDTO {
 	private int travelfulltime;
 	
 	@Column
-	private int active;
+	private Integer active;
 	
 	@Column
 	private String payment;

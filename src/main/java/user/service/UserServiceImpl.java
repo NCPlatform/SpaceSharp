@@ -1,23 +1,15 @@
 package user.service;
 
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import jpa.bean.*;
+import jpa.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import jpa.bean.BoardDTO;
-import jpa.bean.HotelCategoryDTO;
-import jpa.bean.HotelDTO;
-import jpa.bean.UserDTO;
-
-import jpa.dao.BoardDAO;
-import jpa.dao.HotelCategoryDAO;
-import jpa.dao.HotelDAO;
-import jpa.dao.RoomDAO;
-import jpa.dao.UserDAO;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -36,7 +28,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private HotelCategoryDAO hotelCategoryDAO;
-	
+	@Autowired
+	private ReservationDAO reservationDAO;
+
 	@Override
 	public String accountWrite(UserDTO userDTO) {
 				
@@ -179,5 +173,33 @@ public class UserServiceImpl implements UserService {
 	public UserDTO getUserByEmail(String email) {
 	    return userDAO.findById(email).orElse(null);
 	}
-	
+
+	@Override
+	public List<RoomDTO> getRoomListByHotel(int seqHotel) {
+		return roomDAO.findBySeqHotel( seqHotel);
+	}
+
+
+	@Override
+	public List<Integer> getReservationListByRoom(int seqRoom, Date date) {
+//		return reservationDAO.findAll();
+		List<ReservationDTO> reservations =  reservationDAO.findReservationsByRoomAndDate(seqRoom,date);
+
+		TreeSet<Integer> uniqueTimes = new TreeSet<>();
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH");
+
+		for (ReservationDTO reservation : reservations) {
+			Date currentTime = reservation.getTravelStartDate();
+			Date endTime = reservation.getTravelEndDate();
+
+			while (!currentTime.after(endTime) && currentTime.before(endTime)) {
+				uniqueTimes.add(Integer.parseInt(timeFormat.format(currentTime)));
+				currentTime.setTime(currentTime.getTime() + 60 * 60 * 1000); // Add 1 hour
+			}
+		}
+
+		return new ArrayList<>(uniqueTimes);
+	}
+
+
 }

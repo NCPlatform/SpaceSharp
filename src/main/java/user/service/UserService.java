@@ -1,5 +1,6 @@
 package user.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import jpa.bean.BoardDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
@@ -57,5 +59,9 @@ public interface UserService {
 	public String getAddr(int seqHotel);
 	
 	public UserDTO getUserByEmail(String email);
+
+	public List<RoomDTO> getRoomListByHotel(int seqHotel);
+
+	public List<Integer> getReservationListByRoom(int seqRoom, Date date);
 
 }

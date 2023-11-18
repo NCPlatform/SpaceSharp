@@ -1,5 +1,6 @@
 package user.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import jpa.bean.BoardDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
 import user.service.UserService;
 
@@ -90,6 +92,15 @@ public class UserController {
 	    return userService.getUserByEmail(email);
 	}
 	
+	@GetMapping("getRoom")
+	public List<RoomDTO> getRoomListByHotel(@RequestParam int seqHotel){
+		return userService.getRoomListByHotel(seqHotel);
+	}
+
+	@GetMapping("getReservation")
+	public  List<Integer> getReservationListByRoom(@RequestParam int seqRoom, @RequestParam Date date){
+		return userService.getReservationListByRoom(seqRoom, date);
+	}
 	
 	@PostMapping(value="login")
 	@ResponseBody

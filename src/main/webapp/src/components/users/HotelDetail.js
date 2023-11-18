@@ -296,7 +296,7 @@ const Detail = () => {
               </Tabs>
             </Col>
             <Col xs={12} md={4} className="fixed-col">
-              <DetailSelect />
+              <DetailSelect hotel={seqHotel} />
             </Col>
           </Row>
           <br />
