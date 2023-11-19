@@ -11,6 +11,7 @@ const HotelContentMap = ({ seqHotel }) => {
     const [ownerEmail, setOwnerEmail] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [map, setMap] = useState(null);
+    const [destinationLatLng, setDestinationLatLng] = useState(null);
 
     const modalContent = (
         <div>
@@ -69,15 +70,14 @@ const HotelContentMap = ({ seqHotel }) => {
         geocoder.addressSearch(location, (result, status) => {
             if (status === kakao.maps.services.Status.OK) {
                 const center = new kakao.maps.LatLng(result[0].y, result[0].x);
-
-            
                 map.setCenter(center);
 
-                
                 const marker = new kakao.maps.Marker({
                     position: center,
                 });
                 marker.setMap(map);
+
+                setDestinationLatLng(center); // 좌표 정보 설정
             } else {
                 console.error('주소를 좌표로 변환하는데 실패했습니다.');
             }
@@ -101,9 +101,8 @@ const HotelContentMap = ({ seqHotel }) => {
 
         marker.setMap(newMap);
 
-        
         return () => {
-            newMap && setMap(null); 
+            newMap && setMap(null);
         };
     }, [isMapDraggable]);
 
@@ -120,10 +119,14 @@ const HotelContentMap = ({ seqHotel }) => {
     };
 
     const handleFindPath = () => {
-        const destinationName = '달래해장 강남역점';
-        const destinationLat = '37.499541';
-        const destinationLng = '127.029007';
-        window.open(`https://map.kakao.com/link/to/${destinationName},${destinationLat},${destinationLng}`);
+        if (destinationLatLng) {
+            const destinationName = encodeURIComponent(location);
+            const destinationLat = destinationLatLng.getLat();
+            const destinationLng = destinationLatLng.getLng();
+            window.open(`https://map.kakao.com/link/to/${destinationName},${destinationLat},${destinationLng}`);
+        } else {
+            console.error('도착지의 좌표를 가져올 수 없습니다.');
+        }
     };
 
     return (
