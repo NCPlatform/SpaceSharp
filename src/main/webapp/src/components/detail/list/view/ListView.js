@@ -24,16 +24,23 @@ const ListView = ({ data, room }) => {
     // console.log(isCalendarView);
   }, [isCalendarView]);
 
+  const handleImageClick = () => {
+    const images = data?.img.split(', ');
+    const firstImageUrl = images[0];
+    console.log("Image Clicked", firstImageUrl);
+    modalShow();
+  };
+
   return (
     <div className="p-3" style={{ border: "1px solid #6d3afb" }}>
       <div className="p-3" style={{ display: `${true ? "block" : "none"}` }}>
         <Row className="pt-3 pb-3">
           <button
             className="btn justify-content-end"
-            onClick={() => modalShow()}
+            onClick={handleImageClick}
             style={{
               backgroundSize: "100% 100%",
-              backgroundImage: `url(${data?.img})`,
+              backgroundImage: `url(${data?.img.split(', ')[0]})`,
               height: "300px",
               textAlign: "end",
               display: "flex",
@@ -44,11 +51,11 @@ const ListView = ({ data, room }) => {
             {/* <em className="bg-white" style={{ marginLeft: "98%" }}>
               이미지
             </em> */}
-            {/* {data?.pictureLink?.length > 1 && (
+            {data?.img?.length > 1 && (
               <em className="bg-white" style={{ marginLeft: "98%" }}>
-                +{data?.pictureLink?.length}
+                +{data?.img?.split(', ').length - 1}
               </em>
-            )} */}
+            )}
           </button>
         </Row>
         <Row className="pt-3 pb-3" style={{ whiteSpace: "pre-line" }}>
@@ -60,11 +67,11 @@ const ListView = ({ data, room }) => {
           2. 평일 저녁 시간 당 15,000(18~09시) */}
           {data?.normalExplain}
         </Row>
-        <Row className="border-2 border-top  pt-2 pb-2">
+        {/* <Row className="border-2 border-top  pt-2 pb-2">
           <Col md={4}>● 공간 유형</Col>
           <Col md={8}>파티룸</Col>
-          {/* <Col md={8}>{data?.spaceType}</Col> */}
-        </Row>
+          <Col md={8}>{data?.spaceType}</Col>
+        </Row> */}
         <Row className="border-2 border-top  pt-2 pb-2">
           <Col md={4}>● 공간 면적</Col>
           {/* <Col md={8}>53 m^3</Col> */}
@@ -117,11 +124,11 @@ const ListView = ({ data, room }) => {
       - 이미지가 DB에는 한장밖에 없음. 
       - 필드명은 pictureLink가 아닌 img
       */}
-      {/* <ModalPicture
+      <ModalPicture
         data={data}
         isModalView={isModalView}
         modalClose={modalClose}
-      /> */}
+      />
     </div>
   );
 };

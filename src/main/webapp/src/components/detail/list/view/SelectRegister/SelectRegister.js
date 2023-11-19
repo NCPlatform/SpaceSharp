@@ -214,7 +214,7 @@ const SelectRegister = ({ data, room }) => {
                   onClick={() => toggleTime(index)}
                   disabled={reservations.includes(index)}
                 >
-                  12,000
+                  {`${data?.price}`}
                 </button>
               </li>
             ))}
