@@ -3,6 +3,7 @@ import '../../css/AccountSignIn.css';
 import naverBtn from '../../image/naverBtn.png';
 import kakaoBtn from '../../image/kakaoBtn.png';
 import axios from 'axios';
+import PopupPostCode from './PopupPostCode';
 
 const dataList = [  //약관데이터리스트
   { id: 1, name: 'chk1', text: '연령(만 14세 이상) 확인(필수)', isChk: false, isnecessary: true },
@@ -11,6 +12,7 @@ const dataList = [  //약관데이터리스트
   { id: 4, name: 'chk4', text: '이벤트 우대 혜택 동의 안내(선택)', isChk: false, isnecessary: false },
   { id: 5, name: 'chk5', text: '이벤트 등 프로모션 알림 메일 수신 (선택)', isChk: false, isnecessary: false },
 ];
+
 
 const SignIn = ({ userInfo }) => {
   const [data, setData] = useState(dataList); //약관
@@ -26,20 +28,24 @@ const SignIn = ({ userInfo }) => {
     companyName: '',
     usergrade: 1,     //회원 기본 등급
     payment: '',
-    passwordChk: '', // 비밀번호 확인 필드 추가
+    passwordChk: '', 
   });
 
+
   const [readCheck, setReadCheck] = useState(''); //유효성검사 div영역
+
 
   //카카오 REST API
   const REST_API_KEY = '9ee2bf7ff3fd8c0f4da4c49d740dc522';//developers.kakao.com 에서 발급받은 restAPI_Key
   const REDIRECT_URI = 'http://localhost:3000/KakaoRedirect';//developers.kakao.com 에서 설정해놓은 REDIRECT_URI
   const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
+
   //카카오 로그인(페이지이동;버튼)
   const loginHandler = () => {
     window.location.href = link;
   };
+
 
   //카카오 소셜로그인 닉네임 속성 불러오기
   useEffect(() => {
@@ -47,12 +53,11 @@ const SignIn = ({ userInfo }) => {
       setUserDTO({ ...userDTO, nickname: userInfo.properties.nickname });
     }
   }, [userInfo]);
+
+
   //카카오 소셜로그인 이메일 속성 불러오기
   useEffect(() => {
     if (userInfo) {
-
-      //이메일 중복체크 결과 후 없으면 입력, 존재하면 메인페이지로 이동
-
       // userInfo 객체에서 이메일 속성이 있는지 확인
       const userEmail = userInfo.kakao_account?.email;
   
@@ -66,31 +71,71 @@ const SignIn = ({ userInfo }) => {
   }, [userInfo]); 
 
 
+  //비밀번호 정규식 유효성 검사
+  const [passwordValidationError, setPasswordValidationError] = useState(''); // 비밀번호 유효성 에러 메시지
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d|.*[!@#$%^&*()_+])(?!.*(abc|def|ghi|jkl|mno|pqr|stu|vwx|yz|123|234|345|456|567|678|789|890)).{8,30}$/;
+
+  //이메일 정규식 유효성 검사
+  const [emailValidationError, setEmailValidationError] = useState(''); // 이메일 유효성 에러 메시지
+  const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$/;
+
+
   //이메일 중복검사
-  useEffect(()=>{
-    if(userDTO.email){
-    axios.post('/user/existsByEmail', null, { params: { email: userDTO.email } })
-  .then(response => {
-    // 서버 응답에 대한 처리
-    console.log(response.data);
-    console.log('중복 이메일 검사중입니다.');
-    if(response.data === true){
-      alert('이미존재하는 이메일입니다. 다른 이메일을 입력하여주세요!');
-    }else{
-      alert('사용 가능한 이메일 입니다.');
-    }
-  })
-  .catch(error => {
-    console.error(error);
-  });
-    }
-  },[userDTO.email])
+  const onFocusEmail = () => {
 
+    if (userDTO.email) {
+      // 이메일 형식 유효성 검사
+      if (!emailRegex.test(userDTO.email)) {
+        setEmailValidationError('올바른 이메일 형식이 아닙니다.');
+      } else {
+        setEmailValidationError('');
+      }
+    
+    if (userDTO.email) {
+      axios.post('/user/existsByEmail', null, { params: { email: userDTO.email } })
+        .then(response => {
+          console.log(response.data);
+          console.log('중복 이메일 검사중입니다.');
+          if (response.data === true) {
+            setReadCheck('이미 존재하는 이메일입니다. 다른 이메일을 입력해주세요!');
+          } else {
+            setReadCheck('사용 가능한 이메일입니다.');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  }
+}
+  const [modalVisible, setModalVisible] = useState(false); // 팝업의 표시 여부를 제어하는 상태
+  const handleComplete = (data) => {
+    setUserDTO({
+      ...userDTO,
+      addr: data.address,
+    });
+    setModalVisible(false); // 주소를 선택한 후 팝업을 닫습니다.
+  };
 
+  const handleAddData = (data) => {
+    // 주소 선택 후의 로직을 여기에 구현
+    console.log('Selected Address:', data);
   
+    // Destructure the data to get address and postalCode
+    const { address, postalCode } = data;
+    // 주소 선택 후의 로직을 여기에 구현
+    console.log('Selected Address:', data);
+    setUserDTO({
+      ...userDTO,
+      addr: `${postalCode}`, 
+    });
+  };
+  
+
   const onChange = (e) => {
     setUserDTO({ ...userDTO, [e.target.name]: e.target.value });
   };
+
 
   const onSubmit = (e) => {
     // 필수 동의 체크박스들이 모두 체크되었는지 확인
@@ -101,6 +146,7 @@ const SignIn = ({ userInfo }) => {
       return; // 회원가입을 중지하고 함수를 빠져나감
     }
 
+
     // 유효성 검사
     const requiredFields = ['email', 'name', 'nickname', 'password', 'passwordChk', 'addr', 'tel'];
     for (const field of requiredFields) {
@@ -109,6 +155,7 @@ const SignIn = ({ userInfo }) => {
         return; // 회원가입을 중지하고 함수를 빠져나감
       }
     }
+
 
     // 비밀번호와 비밀번호 확인이 일치하는지 확인
     if (userDTO.password !== userDTO.passwordChk) {
@@ -131,6 +178,7 @@ const SignIn = ({ userInfo }) => {
       .catch(error => console.log(error));
     };
 
+
   //약관체크(전체선택.해제)
   const onChk = (e) => {
     const { name, checked } = e.target;
@@ -141,6 +189,7 @@ const SignIn = ({ userInfo }) => {
       setData(data.map((item) => (item.name === name ? { ...item, isChk: checked } : item)));
     }
   };
+  
 
   return (
     <>
@@ -161,7 +210,7 @@ const SignIn = ({ userInfo }) => {
           또는
         </p>
 
-        <input type="email" className="WriteInputBox" value={userDTO.email} name="email" onChange={(e) => onChange(e)} placeholder="이메일" />
+        <input type="email" className="WriteInputBox" value={userDTO.email} name="email" onChange={(e) => onChange(e)} onBlur={ onFocusEmail } placeholder="이메일" />
         <br />
         <input type="text" className="WriteInputBox" name="name" onChange={(e) => onChange(e)} placeholder="이름 " />
         <input type="text" className="WriteInputBox" value={userDTO.nickname} name="nickname" onChange={(e) => onChange(e)} placeholder="닉네임" />
@@ -174,7 +223,13 @@ const SignIn = ({ userInfo }) => {
         </pre>
         <input type="password" className="WriteInputBox" name="passwordChk" id="pwd2" onChange={(e) => onChange(e)} placeholder="비밀번호 확인" />
         <br />
-        <input type="text" className="WriteInputBox" name="addr" onChange={(e) => onChange(e)} placeholder="주소(우편번호)" />
+
+        <input type="text" className="WriteAddrInputBox" name="addr" value={userDTO.addr}
+        onChange={(e) => onChange(e)} placeholder="주소(우편번호)" />
+        <button className="addrBtn" onClick={() => setModalVisible(true)}>
+          우편번호 검색
+        </button>
+
         <input type="text" className="WriteInputBox" name="tel" onChange={(e) => onChange(e)} placeholder="휴대폰 번호" />
 
         {/* 약관동의 */}
@@ -193,9 +248,17 @@ const SignIn = ({ userInfo }) => {
         <button className="WriteSubmitBtn" onClick={onSubmit}>
           회원가입
         </button>
-        <div className="readCheck">{readCheck}</div>
-
+        <div className="readCheck">{ readCheck } <br/> { emailValidationError }</div>
       </div>
+
+      {modalVisible && (
+      <PopupPostCode
+        onComplete={handleComplete}
+        onAddData={handleAddData} // onAddData 함수를 전달
+        // ... (다른 필요한 속성이나 구성)
+      />
+    )}
+
     </>
   );
 };

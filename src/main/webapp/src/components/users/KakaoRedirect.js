@@ -77,7 +77,7 @@ function KakaoRedirect() {
           console.log('중복 이메일 검사중입니다.');
           if (response.data === true) {
             console.log('이미 존재하는 이메일입니다. 다른 이메일을 입력하여주세요!');
-            navigate('/');
+            navigate('/');      //이메일 중복체크 결과 후 없으면 입력, 존재하면 메인페이지로 이동
           } else {
             console.log('사용 가능한 이메일 입니다.');
           }

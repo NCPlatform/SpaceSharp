@@ -1,4 +1,4 @@
-  /*제목*/
+/*제목*/
   .h2Title{
       font-size: 36px; 
       text-align: center;
@@ -62,7 +62,7 @@
     
   .WriteBox {
     width: 625px;
-    height: 1185px;
+    height: 1195px;
     border-radius: 30px;
     background-color: aliceblue;
     overflow: hidden;
@@ -115,6 +115,28 @@
     font-size: 14px;
     line-height: 18px;
   }
+
+  /*우편번호 검색버튼*/
+.addrBtn{
+  text-align: center;
+  align-self: center !important;
+  width: 9rem;
+  height: 42px;
+  background-color: rgb(198, 235, 135);
+  font-size: 14px;
+  font-weight: bold;
+  font-family: sans-serif;
+  border-radius: 5px;
+  align-items: center;
+}
+
+/*우편번호 인풋박스*/
+.WriteAddrInputBox{
+  width: 25rem;     
+  height: 42px;
+  border-radius: 5px; 
+  align-self: center;
+}
 
   /*스페이스샵 폰트:나눔고딕*/
   @font-face {
