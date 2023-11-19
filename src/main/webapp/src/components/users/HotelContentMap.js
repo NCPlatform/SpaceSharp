@@ -70,10 +70,10 @@ const HotelContentMap = ({ seqHotel }) => {
             if (status === kakao.maps.services.Status.OK) {
                 const center = new kakao.maps.LatLng(result[0].y, result[0].x);
 
-                // Set map center
+            
                 map.setCenter(center);
 
-                // Create and set marker at the location
+                
                 const marker = new kakao.maps.Marker({
                     position: center,
                 });

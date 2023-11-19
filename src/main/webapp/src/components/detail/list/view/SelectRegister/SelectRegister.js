@@ -225,8 +225,8 @@ const SelectRegister = ({ data, room }) => {
           <div className="mr-2" style={{ whiteSpace: 'nowrap' }}>예약불가</div>
           <div
             style={{
-              width: "1em", // Adjust the width as needed
-              height: "1em", // Adjust the height as needed
+              width: "1em", 
+              height: "1em", 
               backgroundColor: "#DC3545",
             }}
           ></div>
@@ -235,8 +235,8 @@ const SelectRegister = ({ data, room }) => {
           <div className="mr-2" style={{ whiteSpace: 'nowrap' }}>가능</div>
           <div
             style={{
-              width: "1em", // Adjust the width as needed
-              height: "1em", // Adjust the height as needed
+              width: "1em", 
+              height: "1em",
               backgroundColor: "#FFC107",
             }}
           ></div>
@@ -245,8 +245,8 @@ const SelectRegister = ({ data, room }) => {
           <div className="mr-2" style={{ whiteSpace: 'nowrap' }}>선택</div>
           <div
             style={{
-              width: "1em", // Adjust the width as needed
-              height: "1em", // Adjust the height as needed
+              width: "1em", 
+              height: "1em", 
               backgroundColor: "#0D6EFD",
             }}
           ></div>
