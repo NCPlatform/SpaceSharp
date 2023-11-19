@@ -62,6 +62,21 @@ public class UserController {
 	    return userService.getPlaceEx(seqHotel);
 	}
 	
+	@GetMapping("/getFacilities")
+	public String getFacilities(@RequestParam int seqHotel) {
+	    return userService.getFacilities(seqHotel);
+	}
+	
+	@GetMapping("/getAlert")
+	public String getAlert(@RequestParam int seqHotel) {
+	    return userService.getAlert(seqHotel);
+	}
+	
+	@GetMapping("/getRefund")
+	public String getRefund(@RequestParam int seqHotel) {
+	    return userService.getRefund(seqHotel);
+	}
+	
 	@GetMapping("/getWorkinghour")
 	public String getWorkinghour(@RequestParam int seqHotel) {
 	    return userService.getWorkinghour(seqHotel);
@@ -92,12 +107,12 @@ public class UserController {
 	    return userService.getUserByEmail(email);
 	}
 	
-	@GetMapping("getRoom")
+	@GetMapping("/getRoom")
 	public List<RoomDTO> getRoomListByHotel(@RequestParam int seqHotel){
 		return userService.getRoomListByHotel(seqHotel);
 	}
 
-	@GetMapping("getReservation")
+	@GetMapping("/getReservation")
 	public  List<Integer> getReservationListByRoom(@RequestParam int seqRoom, @RequestParam Date date){
 		return userService.getReservationListByRoom(seqRoom, date);
 	}

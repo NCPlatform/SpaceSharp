@@ -72,8 +72,8 @@ const ListView = ({ data, room }) => {
         </Row>
         <Row className="border-2 border-top  pt-2 pb-2">
           <Col md={4}>● 예약 시간</Col>
-          <Col md={8}>최소 4시간 부터</Col>
-          {/* <Col md={8}>{data?.registerTime}</Col> */}
+          {/* <Col md={8}>최소 4시간 부터</Col> */}
+          <Col md={8}>최소 {data?.datetime}시간 부터</Col>
         </Row>
         <Row className="border-2 border-top  pt-2 pb-2">
           <Col md={4}>● 수용 인원</Col>

@@ -19,6 +19,9 @@ const Detail = () => {
   const [subscribe, setSubscribe] = useState('');
   const [tags, setTags] = useState('');
   const [placeEx, setPlaceEx] = useState('');
+  const [facilities, setFacilities] = useState('');
+  const [alert, setAlert] = useState('');
+  const [refund, setRefund] = useState('');
   const [workinghour, setWorkinghour] = useState('');
   const [holiday, setHoliday] = useState('');
   const [images, setImages] = useState([]);
@@ -86,6 +89,45 @@ const Detail = () => {
         const data = response.data;
         if (data) {
           setPlaceEx(data);
+        } else {
+          console.error('해당 공간의 소개를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
+    // 새로운 요청을 통해 시설안내 가져오기
+    axios.get(`/user/getFacilities?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setFacilities(data);
+        } else {
+          console.error('해당 공간의 소개를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
+    // 새로운 요청을 통해 유의사항 가져오기
+    axios.get(`/user/getAlert?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setAlert(data);
+        } else {
+          console.error('해당 공간의 소개를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
+    // 새로운 요청을 통해 환불정책 가져오기
+    axios.get(`/user/getRefund?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setRefund(data);
         } else {
           console.error('해당 공간의 소개를 찾을 수 없습니다.');
         }
@@ -222,17 +264,17 @@ const Detail = () => {
                               <div>
                                 <p style={{ fontSize: '12px' }}>반려동물 가능</p>
                               </div>
-                            )}
+                            )}&nbsp;&nbsp;
                             {hotelDTO.parking === true && (
                               <div>
                                 <p style={{ fontSize: '12px' }}>주차 가능</p>
                               </div>
-                            )}
+                            )}&nbsp;&nbsp;
                             {hotelDTO.roofTop === true && (
                               <div>
                                 <p style={{ fontSize: '12px' }}>루프탑 보유</p>
                               </div>
-                            )}
+                            )}&nbsp;&nbsp;
                           </React.Fragment>
                         )}
                       </div>
@@ -257,10 +299,7 @@ const Detail = () => {
                     <hr
                       style={{ width: "20px", border: "4px solid #ff7402" }}
                     />
-                    - 3층: 자연광이 드는 실내 공간 + 야외 정원 테라스
-                    <br />
-                    - 4층: 남산타워와, 하얏트와 용산 공원뷰 루프탑
-                    <br />
+                    <div dangerouslySetInnerHTML={{ __html: facilities }} />
                   </div>
                 </Tab>
                 <Tab
@@ -271,7 +310,14 @@ const Detail = () => {
                     </span>
                   }
                 >
-                  Tab content for Loooonger Tab
+                  <div style={{ color: "#656565" }}>
+                    <strong style={{ color: "black" }}>유의사항</strong>
+                    <br />
+                    <hr
+                      style={{ width: "20px", border: "4px solid #ff7402" }}
+                    />
+                    <div dangerouslySetInnerHTML={{ __html: alert }} />
+                  </div>
                 </Tab>
                 <Tab
                   eventKey="longer-tab2"
@@ -281,7 +327,14 @@ const Detail = () => {
                     </span>
                   }
                 >
-                  Tab content for Loooonger Tab
+                  <div style={{ color: "#656565" }}>
+                    <strong style={{ color: "black" }}>유의사항</strong>
+                    <br />
+                    <hr
+                      style={{ width: "20px", border: "4px solid #ff7402" }}
+                    />
+                    <div dangerouslySetInnerHTML={{ __html: refund }} />
+                  </div>
                 </Tab>
                 <Tab
                   eventKey="longer-tab3"
@@ -291,7 +344,14 @@ const Detail = () => {
                     </span>
                   }
                 >
-                  Tab content for Loooonger Tab
+                  <div style={{ color: "#656565" }}>
+                    <strong style={{ color: "black" }}>이용후기</strong>
+                    <br />
+                    <hr
+                      style={{ width: "20px", border: "4px solid #ff7402" }}
+                    />
+                    
+                  </div>
                 </Tab>
               </Tabs>
             </Col>

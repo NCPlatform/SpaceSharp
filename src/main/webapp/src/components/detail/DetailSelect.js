@@ -1,14 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Row } from "react-bootstrap";
+import { Button, Col, Modal, Row } from "react-bootstrap";
 import DetailHeader from "./Header/DetailHeader";
 import DetailList from "./list/DetailList";
 import axios from "axios";
 
-const DetailSelect = ({ hotel }) => {
+const DetailSelect = ({ hotel}) => {
   const [rooms, setRooms] = useState([]); //rooms state 추가
   const [checkedRoom, setCheckedRoom] = useState(null);
+  const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
+  const [location, setLocation] = useState(''); // 상세 위치 정보를 저장할 상태
+  const [tel, setTel] = useState('');
+  const [ownerEmail, setOwnerEmail] = useState('');
 
+  const modalContent = (
+    <div>
+      "스페이스 샵을 통해<br /> 연락드렸어요~" <br /> 라고 말하면 더 친절하게 안내<br /> 받으실 수 있습니다.<br />
+    </div>
+  );// 모달내용
   useEffect(() => {
+    axios.get(`/user/getAddr?seqHotel=${hotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setLocation(data);
+        } else {
+          console.error('해당 공간의 주소를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
     axios
       .get(`/user/getRoom?seqHotel=${hotel}`)
       .then((response) => {
@@ -22,13 +43,48 @@ const DetailSelect = ({ hotel }) => {
       .catch((error) => {
         console.error("데이터를 불러오는 중 에러 발생:", error);
       });
-  }, [hotel]);
+    // 서버로 요청을 보내 tel 값을 받아옵니다.
+    axios.get(`/user/getHotelInfo?seqHotel=${hotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setLocation(data.addr);
+          setOwnerEmail(data.ownerEmail);
+        } else {
+          console.error('해당 공간 정보를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
+
+    if (ownerEmail) {
+      axios.get(`/user/getUserByEmail?email=${ownerEmail}`)
+        .then(response => {
+          const userData = response.data;
+          if (userData) {
+            setTel(userData.tel);
+          } else {
+            console.error('해당 사용자 정보를 찾을 수 없습니다.');
+          }
+        })
+        .catch(error => {
+          console.error('데이터를 불러오는 중 에러 발생:', error);
+        });
+    }
+  }, [hotel, ownerEmail]);
 
   // radio 체크 확인
   const handleRadioButtonClick = (e, data, index) => {
     setCheckedRoom(index);
   };
+  const handlePhoneButtonClick = () => {
+    setIsPhoneModalOpen(true);
+  };
 
+  const handleClosePhoneModal = () => {
+    setIsPhoneModalOpen(false);
+  };
   return (
     <div style={{ backgroundColor: "#fff" }}>
       <DetailHeader />
@@ -70,7 +126,7 @@ const DetailSelect = ({ hotel }) => {
       {/* '전화' 버튼과 '예약하기' 버튼*/}
       <Row className="p-3" style={{ justifyContent: "center" }}>
         <Col sm={6}>
-          <Button variant="primary" className="w-100">
+          <Button variant="primary" className="w-100" onClick={handlePhoneButtonClick}>
             전화
           </Button>
         </Col>
@@ -80,6 +136,18 @@ const DetailSelect = ({ hotel }) => {
           </Button>
         </Col>
       </Row>
+      <Modal show={isPhoneModalOpen} onHide={handleClosePhoneModal}>
+        <Modal.Body style={{ padding: "50px", textAlign: "center" }}>
+          <p style={{ fontSize: '25px', fontWeight: 'lighter' }}>{modalContent}</p>
+          <hr />
+          <p style={{ fontSize: '25px', fontWeight: 'bold' }}>{location}</p>
+          <p style={{ fontSize: '25px', fontWeight: 'lighter', color: 'purple' }}>{tel}</p>
+          <hr />
+          <br />
+          <br />
+          <Button style={{ width: '70%' }} onClick={handleClosePhoneModal}>확인</Button>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };

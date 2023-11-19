@@ -64,4 +64,9 @@ public interface UserService {
 
 	public List<Integer> getReservationListByRoom(int seqRoom, Date date);
 
+	public String getFacilities(int seqHotel);
+
+	public String getAlert(int seqHotel);
+
+	public String getRefund(int seqHotel);
 }

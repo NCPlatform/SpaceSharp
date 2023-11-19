@@ -201,5 +201,26 @@ public class UserServiceImpl implements UserService {
 		return new ArrayList<>(uniqueTimes);
 	}
 
+	@Override
+	public String getFacilities(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getFacilities())
+	            .orElse(null);
+	}
+
+	@Override
+	public String getAlert(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getAlert())
+	            .orElse(null);
+	}
+	
+	@Override
+	public String getRefund(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getRefund())
+	            .orElse(null);
+	}
+
 
 }

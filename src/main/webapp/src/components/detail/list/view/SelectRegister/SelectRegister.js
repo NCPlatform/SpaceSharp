@@ -204,13 +204,12 @@ const SelectRegister = ({ data, room }) => {
               >
                 <span>{index}</span> <br />
                 <button
-                  className={`border ${
-                    reservations.includes(index)
-                      ? "bg-danger"
-                      : isSelectedTime[index]
+                  className={`border ${reservations.includes(index)
+                    ? "bg-danger"
+                    : isSelectedTime[index]
                       ? "bg-primary"
                       : "bg-warning"
-                  } text-white`}
+                    } text-white`}
                   style={{ width: "100%", height: "70%" }}
                   onClick={() => toggleTime(index)}
                   disabled={reservations.includes(index)}
@@ -222,16 +221,43 @@ const SelectRegister = ({ data, room }) => {
         </ul>
       </div>
       <Row style={{ paddingLeft: "1em" }}>
-        <Col md={3}>예약불가</Col>
-        <Col md={3}>가능</Col>
-        <Col md={3}>선택</Col>
+        <Col md={4} className="d-flex align-items-center">
+          <div className="mr-2" style={{ whiteSpace: 'nowrap' }}>예약불가</div>
+          <div
+            style={{
+              width: "1em", // Adjust the width as needed
+              height: "1em", // Adjust the height as needed
+              backgroundColor: "#DC3545",
+            }}
+          ></div>
+        </Col>
+        <Col md={4} className="d-flex align-items-center">
+          <div className="mr-2" style={{ whiteSpace: 'nowrap' }}>가능</div>
+          <div
+            style={{
+              width: "1em", // Adjust the width as needed
+              height: "1em", // Adjust the height as needed
+              backgroundColor: "#FFC107",
+            }}
+          ></div>
+        </Col>
+        <Col md={4} className="d-flex align-items-center">
+          <div className="mr-2" style={{ whiteSpace: 'nowrap' }}>선택</div>
+          <div
+            style={{
+              width: "1em", // Adjust the width as needed
+              height: "1em", // Adjust the height as needed
+              backgroundColor: "#0D6EFD",
+            }}
+          ></div>
+        </Col>
       </Row>
       <br />
       <br />
       <span className="text-danger">
         <i className="bi bi-info-circle" />
         &nbsp;
-        {`예약 도중 이탈하시는 경우(결제 오류 및 취소 등), 중복 예약 방지 목적으로 10분 동안 해당 날짜에 예약하실 수 없습니다.`}
+        {`예약 도중 이탈하시는 경우, 결제 오류가 발생할 수 있습니다.`}
       </span>
       <br />
       <br />
@@ -240,11 +266,9 @@ const SelectRegister = ({ data, room }) => {
         <h4>예약일시</h4>
       </Row>
       <div>
-        {`${calendarData.getFullYear()}. ${
-          calendarData.getMonth() + 1
-        }. ${calendarData.getDate()}. ${dayViewText()} ` +
-          `${
-            !!startHour || !!endHour ? startHour + "시 ~ " + endHour + "시" : ""
+        {`${calendarData.getFullYear()}. ${calendarData.getMonth() + 1
+          }. ${calendarData.getDate()}. ${dayViewText()} ` +
+          `${!!startHour || !!endHour ? startHour + "시 ~ " + endHour + "시" : ""
           }`}
       </div>
       <br />

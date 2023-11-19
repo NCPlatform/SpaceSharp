@@ -38,7 +38,7 @@ const ModalPicture = ({data, isModalView, modalClose}) => {
       <div style={{paddingTop:"6%"}}>
         <Slide autoplay={false}>
          {/* {slideImages.map((slideImage, index)=> ( */}
-         {slideImages?.pictureLink.map((slideImage, index)=> (
+         {slideImages?.img.map((slideImage, index)=> (
             <div key={index} style={{width:"80%", paddingLeft:"20%", height:"100%"}}>
               {/* <div style={{ ...divStyle, 'backgroundImage': `url(${slideImage.url})` }}> */}
               <div style={{ ...divStyle, 'backgroundImage': `url(${slideImage})` }}>
