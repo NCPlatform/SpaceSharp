@@ -449,7 +449,7 @@ const List = () => {
               />
             </div>
           </Col>
-          
+
           <Col className="mb-3" xl={5} lg={10} md={12} sm={12} xs={12}>
             <div className="accordion">
               <div
@@ -487,7 +487,14 @@ const List = () => {
             </div>
           </Col>
 
-          <Col className="d-flex justify-content-between mb-3" xl={2} lg={2} md={12} sm={12} xs={12}>
+          <Col
+            className="d-flex justify-content-end mb-3"
+            xl={2}
+            lg={2}
+            md={12}
+            sm={12}
+            xs={12}
+          >
             <div>
               <button
                 type="button"
@@ -694,7 +701,7 @@ const List = () => {
                       style={{ textDecoration: "none" }}
                     >
                       <Col>
-                        <HotelItemCard item={item}/>
+                        <HotelItemCard item={item} />
                       </Col>
                     </Link>
                   </div>
