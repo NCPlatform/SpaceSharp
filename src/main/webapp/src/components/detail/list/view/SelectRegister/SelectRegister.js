@@ -32,7 +32,13 @@ const SelectRegister = ({ data, room }) => {
 
   const [startHour, setStartHour] = useState();
   const [endHour, setEndHour] = useState();
+  // 오늘보다 이전인 경우 비활성화
+  const checkDisabledTime = (date) => {
+    const today = new Date();
+    const isPastDate = date < today.setHours(0, 0, 0, 0);
 
+    return isPastDate;
+  };
   useEffect(() => {
     axios
       .get(
@@ -154,9 +160,9 @@ const SelectRegister = ({ data, room }) => {
       setClickCount(0);
     }
   };
-  const checkDisabledTime = (date, view) => {
-    return false;
-  };
+  // const checkDisabledTime = (date, view) => {
+  //   return false;
+  // };
   return (
     <div>
       {/* 날짜 선택 */}
@@ -174,6 +180,7 @@ const SelectRegister = ({ data, room }) => {
           onChange={setCalendarData}
           formatDay={(locale, date) => moment(date).format("D")}
           value={calendarData}
+          tileDisabled={({ date }) => checkDisabledTime(date)}
         />
       </Row>
       <br />
@@ -225,8 +232,8 @@ const SelectRegister = ({ data, room }) => {
           <div className="mr-2" style={{ whiteSpace: 'nowrap' }}>예약불가</div>
           <div
             style={{
-              width: "1em", 
-              height: "1em", 
+              width: "1em",
+              height: "1em",
               backgroundColor: "#DC3545",
             }}
           ></div>
@@ -235,7 +242,7 @@ const SelectRegister = ({ data, room }) => {
           <div className="mr-2" style={{ whiteSpace: 'nowrap' }}>가능</div>
           <div
             style={{
-              width: "1em", 
+              width: "1em",
               height: "1em",
               backgroundColor: "#FFC107",
             }}
@@ -245,8 +252,8 @@ const SelectRegister = ({ data, room }) => {
           <div className="mr-2" style={{ whiteSpace: 'nowrap' }}>선택</div>
           <div
             style={{
-              width: "1em", 
-              height: "1em", 
+              width: "1em",
+              height: "1em",
               backgroundColor: "#0D6EFD",
             }}
           ></div>
