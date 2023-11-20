@@ -2,6 +2,7 @@ package manager.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,33 +11,75 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.http.HttpSession;
 import jpa.bean.HotelDTO;
 import jpa.bean.RoomDTO;
 import manager.service.ManagerService;
+import manager.service.ObjectStorageService;
 
 
 @CrossOrigin
 @Controller
 @RequestMapping(value = "manager")
 public class ManagerController {
-
+	
+	
 	@Autowired
 	private ManagerService managerService;
+
+	@Autowired
+	private ObjectStorageService ncpService;
+	
+	private String bucketName = "spacesharpbucket";
 	
 	@PostMapping(value = "addedPlace")
 	@ResponseBody
-	public int addedPlace(@ModelAttribute HotelDTO hotelDTO) {
-		System.out.println(hotelDTO.toString());
+//	public int addedPlace(@ModelAttribute HotelDTO hotelDTO) {
+	public int addedPlace(@RequestPart HotelDTO hotelDTO,
+				@RequestPart("img") List<MultipartFile> list,
+				HttpSession session ) {
+		
+		String originalFileName, fileName;
+		ArrayList<String> fileNames = new ArrayList<>();
+		
+		for(MultipartFile img : list) {
+				originalFileName = img.getOriginalFilename();
+				System.out.println(originalFileName);
+				fileName = ncpService.uploadFile(bucketName, "storage/hotel/", img);
+				fileNames.add(fileName);
+			}
+		
+		String imgValue = "";
+		
+		for(String img : fileNames) {
+			if(imgValue.equals("")) {
+				imgValue += img;
+			}else {
+				imgValue +=","+img;
+			}
+		}
+		
 		// 쉼표 빼기 작업
 		hotelDTO.setSeqHotelCategory(commaClearInt(hotelDTO.getSeqHotelCategory()));
 		hotelDTO.setKeyword(commaClearStr(hotelDTO.getKeyword()));
-		hotelDTO.setImg(commaClearStr(hotelDTO.getImg()));
+		hotelDTO.setImg(imgValue);
+		String holiday = commaClearStr(hotelDTO.getHoliday());
+		if(holiday.equals("")) {
+			hotelDTO.setHoliday("없음");
+		}
+		
+		System.out.println(hotelDTO.toString());
+		
 		// DB Action
-		managerService.addPlace(hotelDTO);
-		int result = managerService.importSeq(hotelDTO.getOwnerEmail(), hotelDTO.getName(), hotelDTO.getAddr());
-		return result; // 값 확인, 배포 시 void로 변경
+	//	managerService.addPlace(hotelDTO);
+	//	int result = managerService.importSeq(hotelDTO.getOwnerEmail(), hotelDTO.getName(), hotelDTO.getAddr());
+	//	return result; // 값 확인, 배포 시 void로 변경
+		
+		return 0; // test
 	}
 	
 	@PostMapping(value = "addedRoom")
