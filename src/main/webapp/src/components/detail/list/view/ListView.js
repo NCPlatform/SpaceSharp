@@ -25,10 +25,12 @@ const ListView = ({ data, room }) => {
   }, [isCalendarView]);
 
   const handleImageClick = () => {
-    const images = data?.img.split(', ');
-    const firstImageUrl = images[0];
-    console.log("Image Clicked", firstImageUrl);
-    modalShow();
+    if (data?.img) {
+      const images = data.img.split(', ');
+      const firstImageUrl = images[0];
+      console.log("Image Clicked", firstImageUrl);
+      modalShow();
+    }
   };
 
   return (
@@ -40,11 +42,12 @@ const ListView = ({ data, room }) => {
             onClick={handleImageClick}
             style={{
               backgroundSize: "100% 100%",
-              backgroundImage: `url(${data?.img.split(', ')[0]})`,
+              backgroundImage: `url(${data?.img ? data?.img.split(', ')[0] : "https://adventure.co.kr/wp-content/uploads/2020/09/no-image.jpg"})`,
               height: "300px",
               textAlign: "end",
               display: "flex",
               flexDirection: "column",
+              pointerEvents: data?.img === "https://adventure.co.kr/wp-content/uploads/2020/09/no-image.jpg" ? "none" : "auto"
             }}
           >
             {/* FIXME: 이미지가 DB와 필드 일치하지 않음 */}

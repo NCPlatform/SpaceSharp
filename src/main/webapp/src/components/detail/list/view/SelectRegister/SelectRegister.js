@@ -257,7 +257,7 @@ const SelectRegister = ({ data, room }) => {
       <span className="text-danger">
         <i className="bi bi-info-circle" />
         &nbsp;
-        {`예약 도중 이탈하시는 경우, 결제 오류가 발생할 수 있습니다.`}
+        {`24시간 이상 예약은 1:1 문의 부탁드립니다. 예약 도중 이탈하시는 경우, 결제 오류가 발생할 수 있습니다.`}
       </span>
       <br />
       <br />
