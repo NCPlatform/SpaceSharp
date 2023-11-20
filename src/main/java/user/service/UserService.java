@@ -2,6 +2,7 @@ package user.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -69,4 +70,6 @@ public interface UserService {
 	public String getAlert(int seqHotel);
 
 	public String getRefund(int seqHotel);
+	public Map<String, Object> mainPage();
+
 }

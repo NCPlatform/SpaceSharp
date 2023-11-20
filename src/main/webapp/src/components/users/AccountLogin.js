@@ -7,7 +7,7 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Stack from "react-bootstrap/Stack";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FindPassword from "./FindPassword";
 import axios from "axios";
 
@@ -61,14 +61,17 @@ const Login = () => {
               imageWidth: 300,
               imageHeight: 200,
               imageAlt: "루피",
-            });
+            })
             window.sessionStorage.setItem("user", JSON.stringify(res.data));
             setSessionUserDTO(res.data);
+            navigate("/");
           }
         })
         .catch((error) => console.log(error));
     }
   };
+
+  const navigate = useNavigate();
 
   const [sessionUserDTO, setSessionUserDTO] = useState(
     window.sessionStorage.getItem("user")

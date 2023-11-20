@@ -214,6 +214,16 @@ public class UserServiceImpl implements UserService {
 	            .map(hotelDTO -> hotelDTO.getAlert())
 	            .orElse(null);
 	}
+
+	@Override
+	public Map<String, Object> mainPage() {
+		
+		List<HotelCategoryDTO> hotelCategoryList = hotelCategoryDAO.findAll();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("categoryList", hotelCategoryList);
+		return map;
+	}
 	
 	@Override
 	public String getRefund(int seqHotel) {
