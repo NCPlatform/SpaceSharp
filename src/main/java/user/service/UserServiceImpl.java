@@ -1,25 +1,15 @@
 package user.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import jpa.bean.*;
+import jpa.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import jpa.bean.BoardDTO;
-import jpa.bean.HotelCategoryDTO;
-import jpa.bean.HotelDTO;
-import jpa.bean.UserDTO;
-
-import jpa.dao.BoardDAO;
-import jpa.dao.HotelCategoryDAO;
-import jpa.dao.HotelDAO;
-import jpa.dao.RoomDAO;
-import jpa.dao.UserDAO;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -38,7 +28,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private HotelCategoryDAO hotelCategoryDAO;
-	
+	@Autowired
+	private ReservationDAO reservationDAO;
+
 	@Override
 	public String accountWrite(UserDTO userDTO) {
 				
@@ -183,6 +175,47 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public List<RoomDTO> getRoomListByHotel(int seqHotel) {
+		return roomDAO.findBySeqHotel( seqHotel);
+	}
+
+
+	@Override
+	public List<Integer> getReservationListByRoom(int seqRoom, Date date) {
+//		return reservationDAO.findAll();
+		List<ReservationDTO> reservations =  reservationDAO.findReservationsByRoomAndDate(seqRoom,date);
+
+		TreeSet<Integer> uniqueTimes = new TreeSet<>();
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH");
+
+		for (ReservationDTO reservation : reservations) {
+			Date currentTime = reservation.getTravelStartDate();
+			Date endTime = reservation.getTravelEndDate();
+
+			while (!currentTime.after(endTime) && currentTime.before(endTime)) {
+				uniqueTimes.add(Integer.parseInt(timeFormat.format(currentTime)));
+				currentTime.setTime(currentTime.getTime() + 60 * 60 * 1000); // Add 1 hour
+			}
+		}
+
+		return new ArrayList<>(uniqueTimes);
+	}
+
+	@Override
+	public String getFacilities(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getFacilities())
+	            .orElse(null);
+	}
+
+	@Override
+	public String getAlert(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getAlert())
+	            .orElse(null);
+	}
+
+	@Override
 	public Map<String, Object> mainPage() {
 		
 		List<HotelCategoryDTO> hotelCategoryList = hotelCategoryDAO.findAll();
@@ -194,4 +227,12 @@ public class UserServiceImpl implements UserService {
 		return map;
 	}
 	
+	@Override
+	public String getRefund(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getRefund())
+	            .orElse(null);
+	}
+
+
 }

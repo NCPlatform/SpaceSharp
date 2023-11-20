@@ -10,6 +10,7 @@ import DetailSelect from "../detail/DetailSelect";
 import HotelContentMap from "./HotelContentMap";
 import HotelSameSpace from "./HotelSameSpace";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const Detail = () => {
   const [hotelDTO, setHotelDTO] = useState(null);
@@ -18,11 +19,15 @@ const Detail = () => {
   const [subscribe, setSubscribe] = useState('');
   const [tags, setTags] = useState('');
   const [placeEx, setPlaceEx] = useState('');
+  const [facilities, setFacilities] = useState('');
+  const [alert, setAlert] = useState('');
+  const [refund, setRefund] = useState('');
   const [workinghour, setWorkinghour] = useState('');
   const [holiday, setHoliday] = useState('');
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [seqHotel, setSeqHotel] = useState(2);
+  // useParams를 통해 동적인 URL 파라미터 값을 가져옴
+  const { seqHotel } = useParams();
 
   useEffect(() => {
     axios.get(`/user/getHotelName?seqHotel=${seqHotel}`)
@@ -84,6 +89,45 @@ const Detail = () => {
         const data = response.data;
         if (data) {
           setPlaceEx(data);
+        } else {
+          console.error('해당 공간의 소개를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
+    // 새로운 요청을 통해 시설안내 가져오기
+    axios.get(`/user/getFacilities?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setFacilities(data);
+        } else {
+          console.error('해당 공간의 소개를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
+    // 새로운 요청을 통해 유의사항 가져오기
+    axios.get(`/user/getAlert?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setAlert(data);
+        } else {
+          console.error('해당 공간의 소개를 찾을 수 없습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+      });
+    // 새로운 요청을 통해 환불정책 가져오기
+    axios.get(`/user/getRefund?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        if (data) {
+          setRefund(data);
         } else {
           console.error('해당 공간의 소개를 찾을 수 없습니다.');
         }
@@ -159,9 +203,7 @@ const Detail = () => {
                 <br />
                 <h2 className="space_name">{hotelName}</h2>
               </div>
-              <p className="sub_desc">
-                해방촌의 감성과 남산뷰를 품은 프라이빗 공간
-              </p>
+              <p className="sub_desc">{subscribe}</p>
               <div className="tags">
                 {tags.split(',').map((tag, index) => (
                   <span key={index} className="tag"> {tag.trim()} </span>
@@ -179,12 +221,7 @@ const Detail = () => {
                     </Carousel.Item>
                   ))}
                 </Carousel>
-                <p
-                  className="sub_desc"
-                  style={{ color: "#666", fontSize: "200%" }}
-                >
-                  해방촌의 감성과 남산뷰를 품은 프라이빗 공간
-                </p>
+                <p className='sub_scribe' style={{ color: '#666', fontSize: '200%', whiteSpace: 'pre-wrap' }}>{subscribe}</p>
               </div>
               <Tabs
                 defaultActiveKey="home"
@@ -214,50 +251,37 @@ const Detail = () => {
                       <h5 style={{ display: "inline", color: "black" }}>
                         영업시간&nbsp;&nbsp;
                       </h5>
-                      &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <h5 style={{ display: "inline" }}>0 ~ 24시</h5>
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h5 style={{ display: 'inline' }}>{workinghour}</h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       <h5 style={{ display: "inline", color: "black" }}>
                         휴무일&nbsp;&nbsp;
                       </h5>
-                      &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <h5 style={{ display: "inline" }}>없음</h5>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h5 style={{ display: 'inline' }}>{holiday}</h5>
                       <br />
                       <div style={{ display: "flex", alignItems: "center" }}>
-                        <div>
-                          <i
-                            className="bi bi-arrow-up-right-square"
-                            style={{
-                              color: "black",
-                              fontSize: "40px",
-                              marginRight: "70px",
-                            }}
-                          />
-                          <p style={{ fontSize: "12px" }}>지상 3층</p>
-                        </div>
-                        <div>
-                          <i
-                            className="bi bi-car-front"
-                            style={{
-                              color: "black",
-                              fontSize: "40px",
-                              marginRight: "70px",
-                            }}
-                          />
-                          <p style={{ fontSize: "12px" }}>주차 O</p>
-                        </div>
-                        <div>
-                          <i
-                            className="bi bi-arrow-down-up"
-                            style={{ color: "black", fontSize: "40px" }}
-                          />
-                          <p style={{ fontSize: "12px" }}>엘리베이터 X</p>
-                        </div>
+                        {hotelDTO && (
+                          <React.Fragment>
+                            {hotelDTO.animal === true && (
+                              <div>
+                                <p style={{ fontSize: '12px' }}>반려동물 가능</p>
+                              </div>
+                            )}&nbsp;&nbsp;
+                            {hotelDTO.parking === true && (
+                              <div>
+                                <p style={{ fontSize: '12px' }}>주차 가능</p>
+                              </div>
+                            )}&nbsp;&nbsp;
+                            {hotelDTO.roofTop === true && (
+                              <div>
+                                <p style={{ fontSize: '12px' }}>루프탑 보유</p>
+                              </div>
+                            )}&nbsp;&nbsp;
+                          </React.Fragment>
+                        )}
                       </div>
                     </div>
                     <br />
                     <div className="mapFrame">
-                      <HotelContentMap seqHotel={seqHotel}/>
+                      <HotelContentMap seqHotel={seqHotel} />
                     </div>
                   </div>
                 </Tab>
@@ -270,15 +294,12 @@ const Detail = () => {
                   }
                 >
                   <div style={{ color: "#656565" }}>
-                    <strong style={{ color: "black" }}>공간소개</strong>
+                    <strong style={{ color: "black" }}>시설안내</strong>
                     <br />
                     <hr
                       style={{ width: "20px", border: "4px solid #ff7402" }}
                     />
-                    - 3층: 자연광이 드는 실내 공간 + 야외 정원 테라스
-                    <br />
-                    - 4층: 남산타워와, 하얏트와 용산 공원뷰 루프탑
-                    <br />
+                    <div dangerouslySetInnerHTML={{ __html: facilities }} />
                   </div>
                 </Tab>
                 <Tab
@@ -289,7 +310,14 @@ const Detail = () => {
                     </span>
                   }
                 >
-                  Tab content for Loooonger Tab
+                  <div style={{ color: "#656565" }}>
+                    <strong style={{ color: "black" }}>유의사항</strong>
+                    <br />
+                    <hr
+                      style={{ width: "20px", border: "4px solid #ff7402" }}
+                    />
+                    <div dangerouslySetInnerHTML={{ __html: alert }} />
+                  </div>
                 </Tab>
                 <Tab
                   eventKey="longer-tab2"
@@ -299,7 +327,14 @@ const Detail = () => {
                     </span>
                   }
                 >
-                  Tab content for Loooonger Tab
+                  <div style={{ color: "#656565" }}>
+                    <strong style={{ color: "black" }}>유의사항</strong>
+                    <br />
+                    <hr
+                      style={{ width: "20px", border: "4px solid #ff7402" }}
+                    />
+                    <div dangerouslySetInnerHTML={{ __html: refund }} />
+                  </div>
                 </Tab>
                 <Tab
                   eventKey="longer-tab3"
@@ -309,12 +344,19 @@ const Detail = () => {
                     </span>
                   }
                 >
-                  Tab content for Loooonger Tab
+                  <div style={{ color: "#656565" }}>
+                    <strong style={{ color: "black" }}>이용후기</strong>
+                    <br />
+                    <hr
+                      style={{ width: "20px", border: "4px solid #ff7402" }}
+                    />
+                    
+                  </div>
                 </Tab>
               </Tabs>
             </Col>
             <Col xs={12} md={4} className="fixed-col">
-              <DetailSelect />
+              <DetailSelect hotel={seqHotel} />
             </Col>
           </Row>
           <br />

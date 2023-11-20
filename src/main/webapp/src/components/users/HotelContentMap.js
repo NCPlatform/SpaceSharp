@@ -6,29 +6,20 @@ const { kakao } = window;
 
 const HotelContentMap = ({ seqHotel }) => {
     const [isMapDraggable, setIsMapDraggable] = useState(false);
-    const [location, setLocation] = useState(''); // 상세 위치 정보를 저장할 상태
-    const [locationName, setLocationName] = useState('');
+    const [location, setLocation] = useState('');
     const [tel, setTel] = useState('');
     const [ownerEmail, setOwnerEmail] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [map, setMap] = useState(null);
+    const [destinationLatLng, setDestinationLatLng] = useState(null);
 
     const modalContent = (
         <div>
             "스페이스 샵을 통해<br /> 연락드렸어요~" <br /> 라고 말하면 더 친절하게 안내<br /> 받으실 수 있습니다.<br />
         </div>
-    );// 모달내용
+    ); // 모달내용
 
-    // useEffect를 사용하여 컴포넌트가 마운트될 때 한 번 데이터를 불러올 수 있음
     useEffect(() => {
-        // 이 부분에서 데이터베이스에서 위치 정보를 가져오는 API 요청 등을 수행
-        // 예: fetch('API_URL')
-        //       .then(response => response.json())
-        //       .then(data => {
-        //           setLocation(data.location);
-        //       });
-
-        // 가상의 데이터를 상태에 설정 (실제로는 데이터베이스에서 가져와야 함)
-        setLocationName('달래해장 강남역점');
         axios.get(`/user/getAddr?seqHotel=${seqHotel}`)
             .then(response => {
                 const data = response.data;
@@ -41,7 +32,7 @@ const HotelContentMap = ({ seqHotel }) => {
             .catch(error => {
                 console.error('데이터를 불러오는 중 에러 발생:', error);
             });
-        // 서버로 요청을 보내 tel 값을 받아옵니다.
+
         axios.get(`/user/getHotelInfo?seqHotel=${seqHotel}`)
             .then(response => {
                 const data = response.data;
@@ -73,22 +64,46 @@ const HotelContentMap = ({ seqHotel }) => {
     }, [seqHotel, ownerEmail]);
 
     useEffect(() => {
-        const Container = document.getElementById('map'); // 지도를 담을 영역의 DOM 레퍼런스
+        if (!location || !map) return;
+
+        const geocoder = new kakao.maps.services.Geocoder();
+        geocoder.addressSearch(location, (result, status) => {
+            if (status === kakao.maps.services.Status.OK) {
+                const center = new kakao.maps.LatLng(result[0].y, result[0].x);
+                map.setCenter(center);
+
+                const marker = new kakao.maps.Marker({
+                    position: center,
+                });
+                marker.setMap(map);
+
+                setDestinationLatLng(center); // 좌표 정보 설정
+            } else {
+                console.error('주소를 좌표로 변환하는데 실패했습니다.');
+            }
+        });
+    }, [location, map]);
+
+    useEffect(() => {
+        const Container = document.getElementById('map');
         const options = {
-            center: new kakao.maps.LatLng(37.499541, 127.029007), // 지도의 중심좌표.
-            draggable: isMapDraggable, // draggable 속성을 상태에 따라 설정 //움직임 잠금
+            center: new kakao.maps.LatLng(37.499541, 127.029007),
+            draggable: isMapDraggable,
             level: 3,
         };
-        const map = new kakao.maps.Map(Container, options); // 지도 생성 및 객체 리턴
+        const newMap = new kakao.maps.Map(Container, options);
+        setMap(newMap);
 
-        // 마커를 생성하고 위치를 설정
         const markerPosition = new kakao.maps.LatLng(37.499541, 127.029007);
         const marker = new kakao.maps.Marker({
             position: markerPosition,
         });
 
-        // 마커를 지도에 표시
-        marker.setMap(map);
+        marker.setMap(newMap);
+
+        return () => {
+            newMap && setMap(null);
+        };
     }, [isMapDraggable]);
 
     const toggleMapDraggable = () => {
@@ -104,12 +119,15 @@ const HotelContentMap = ({ seqHotel }) => {
     };
 
     const handleFindPath = () => {
-        const destinationName = '달래해장 강남역점';
-        const destinationLat = '37.499541';
-        const destinationLng = '127.029007';
-        window.open(`https://map.kakao.com/link/to/${destinationName},${destinationLat},${destinationLng}`);
+        if (destinationLatLng) {
+            const destinationName = encodeURIComponent(location);
+            const destinationLat = destinationLatLng.getLat();
+            const destinationLng = destinationLatLng.getLng();
+            window.open(`https://map.kakao.com/link/to/${destinationName},${destinationLat},${destinationLng}`);
+        } else {
+            console.error('도착지의 좌표를 가져올 수 없습니다.');
+        }
     };
-
 
     return (
         <div>
@@ -117,11 +135,8 @@ const HotelContentMap = ({ seqHotel }) => {
             <br />
             <hr style={{ width: '20px', border: '4px solid #ff7402' }} />
 
-            <strong>{locationName}</strong>
-            <br />
             {location}
             <br />
-            {/* '전화' 버튼과 '길 찾기' 버튼*/}
             <Row className="p-3" style={{ justifyContent: "left" }}>
                 <Col sm={6} style={{ width: '30%' }}>
                     <Button variant="primary" className="w-100 phone-button" onClick={handleOpenModal}>
@@ -130,7 +145,6 @@ const HotelContentMap = ({ seqHotel }) => {
                         </span>
                     </Button>
                 </Col>
-
                 <Col sm={6} style={{ width: '30%' }}>
                     <Button variant="primary" className="w-100 phone-button" onClick={handleFindPath}>
                         <span style={{ fontWeight: 'bold' }}>
@@ -139,7 +153,6 @@ const HotelContentMap = ({ seqHotel }) => {
                     </Button>
                 </Col>
             </Row>
-
             <button onClick={toggleMapDraggable} style={{ border: 'none', background: 'none' }}>
                 {isMapDraggable ? (
                     <>
@@ -168,6 +181,5 @@ const HotelContentMap = ({ seqHotel }) => {
         </div>
     );
 };
-
 
 export default HotelContentMap;
