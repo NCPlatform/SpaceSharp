@@ -1,6 +1,8 @@
 package user.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,10 +145,11 @@ public class UserController {
 		return userService.accountWrite(userDTO);
 	}
 		
-	@PostMapping(value = "getHotelCategoryList")
+	@PostMapping(value = "mainPage")
 	@ResponseBody
-	public List<HotelCategoryDTO> getHotelCategoryList(){
-		return userService.getHotelCategoryList();
+	public Map<String, Object> mainPage(){
+		
+		return userService.mainPage();
 	}
 	
 	@PostMapping(value = "getHotelList")

@@ -1,6 +1,7 @@
 package user.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,5 +58,7 @@ public interface UserService {
 	public String getAddr(int seqHotel);
 	
 	public UserDTO getUserByEmail(String email);
+
+	public Map<String, Object> mainPage();
 
 }

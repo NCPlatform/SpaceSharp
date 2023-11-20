@@ -1,6 +1,8 @@
 package user.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,6 +180,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDTO getUserByEmail(String email) {
 	    return userDAO.findById(email).orElse(null);
+	}
+
+	@Override
+	public Map<String, Object> mainPage() {
+		
+		List<HotelCategoryDTO> hotelCategoryList = hotelCategoryDAO.findAll();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("categoryList", hotelCategoryList);
+		return map;
 	}
 	
 }

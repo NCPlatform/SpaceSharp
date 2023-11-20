@@ -14,6 +14,7 @@ import "rc-slider/assets/index.css";
 import { Card, Carousel, Col, Row } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+import HotelItemCard from "./HotelItemCard";
 
 const List = () => {
   const [priceRange, setPriceRange] = useState({
@@ -53,7 +54,7 @@ const List = () => {
       <Nav />
       <div className="container">
         <Row xl={4} lg={2} md={1} sm={1} xs={1}>
-          <Col className="mb-3">
+          <Col className="mb-3" xl={3} lg={6} md={12} sm={12} xs={12}>
             <div>
               <select
                 className="form-select ms-auto location"
@@ -433,7 +434,8 @@ const List = () => {
               )}
             </div>
           </Col>
-          <Col className="mb-3">
+
+          <Col className="mb-3" xl={2} lg={6} md={12} sm={12} xs={12}>
             <div className="input-group mb-3">
               <span className="input-group-text" id="basic-addon1">
                 예약 인원
@@ -447,7 +449,8 @@ const List = () => {
               />
             </div>
           </Col>
-          <Col className="mb-3">
+          
+          <Col className="mb-3" xl={5} lg={10} md={12} sm={12} xs={12}>
             <div className="accordion">
               <div
                 className={`${styles.HotelListAccordionItem} accordion-item`}
@@ -484,7 +487,7 @@ const List = () => {
             </div>
           </Col>
 
-          <Col className="d-flex justify-content-start mb-3">
+          <Col className="d-flex justify-content-between mb-3" xl={2} lg={2} md={12} sm={12} xs={12}>
             <div>
               <button
                 type="button"
@@ -669,8 +672,8 @@ const List = () => {
 
             <Col xl={2} className="d-flex justify-content-end mb-3">
               <div>
-                <select>
-                  <option>베스트 공간 순</option>
+                <select className="form-select">
+                  <option selected>베스트 공간 순</option>
                   <option>가격 낮은 순</option>
                   <option>가격 높은 순</option>
                   <option>이용후기 많은 순</option>
@@ -691,82 +694,7 @@ const List = () => {
                       style={{ textDecoration: "none" }}
                     >
                       <Col>
-                        <Card>
-                          <Card.Body>
-                            {item.img.length !== 0 ? (
-                              item.img.split(",").length > 1 ? (
-                                <Carousel interval={null}>
-                                  {item.img.split(",").map((image, index) => (
-                                    <Carousel.Item key={index}>
-                                      <div style={{}}>
-                                        <img
-                                          className="d-block w-100 img-fluid"
-                                          src={image}
-                                          alt={`Slide ${index + 1}`}
-                                          style={{
-                                            objectFit: "cover",
-                                            height: "250px",
-                                            width: "100%",
-                                          }}
-                                        />
-                                      </div>
-                                    </Carousel.Item>
-                                  ))}
-                                </Carousel>
-                              ) : (
-                                <img
-                                  src={item.img}
-                                  alt="img"
-                                  style={{
-                                    objectFit: "cover",
-                                    height: "250px",
-                                    width: "100%",
-                                  }}
-                                />
-                              )
-                            ) : (
-                              <img
-                                src="https://adventure.co.kr/wp-content/uploads/2020/09/no-image.jpg"
-                                alt="img"
-                                style={{
-                                  objectFit: "cover",
-                                  height: "250px",
-                                  width: "100%",
-                                }}
-                              />
-                            )}
-
-                            <Card.Title>{item.name}</Card.Title>
-                            <div
-                              className="mb-0 pb-0 text-truncate"
-                              style={{ fontSize: "0.8rem" }}
-                            >
-                              {item.addr} | {item.keyword}
-                            </div>
-                            <div
-                              className="d-flex justify-content-between"
-                              style={{ fontSize: "0.8rem" }}
-                            >
-                              <p>
-                                <span
-                                  style={{
-                                    color: "purple",
-                                    fontWeight: "bold",
-                                    fontSize: "1rem",
-                                  }}
-                                >
-                                  16,000
-                                </span>
-                                원/시간
-                              </p>
-                              <p>
-                                <span>최대 3인</span>
-                                <span>평가 15개</span>
-                                <span>좋아요 3개</span>
-                              </p>
-                            </div>
-                          </Card.Body>
-                        </Card>
+                        <HotelItemCard item={item}/>
                       </Col>
                     </Link>
                   </div>
