@@ -9,6 +9,7 @@ import Main from "./components/users/Main";
 // Account
 import Login from "./components/users/AccountLogin";
 import Signin from "./components/users/AccountSignIn";
+import AccountUpdate from "./components/users/AccountUpdate";
 
 // Hotel
 import HotelList from "./components/users/HotelList";
@@ -72,6 +73,7 @@ function App() {
           />
           <Route path="login" element={<Login />} />
           <Route path="signin" element={<Signin />} />
+          <Route path="accountUpdate" element={<AccountUpdate/>}/>
           <Route path="boardList">
             <Route path=":page" element={<BoardList />} />
           </Route>

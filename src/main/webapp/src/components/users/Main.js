@@ -24,6 +24,8 @@ const Main = () => {
       .then(res => {
         setHotelCategoryList(res.data.categoryList);
         setNewHotelList(res.data.hotelList);
+        console.log(newHotelList)
+        console.log(res.data.hotelList)
       })
       .catch(error => console.log(error))
 
