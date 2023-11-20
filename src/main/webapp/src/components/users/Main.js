@@ -12,6 +12,7 @@ import axios from 'axios'
 import { Link } from "react-router-dom";
 import { options } from "@fullcalendar/core/preact";
 import Footer from "./Footer";
+import HotelItemCard from "./HotelItemCard";
 
 const Main = () => {
   const [activeTab, setActiveTab] = useState("total");
@@ -22,6 +23,7 @@ const Main = () => {
     axios.post('/user/mainPage', null, {})
       .then(res => {
         setHotelCategoryList(res.data.categoryList);
+        setNewHotelList(res.data.hotelList);
       })
       .catch(error => console.log(error))
 
@@ -294,8 +296,10 @@ const Main = () => {
       <div className="container mt-5">
         <h5 className="fw-bold">새로 등록됐어요</h5>
         <OwlCarousel className="owl-theme" {...options}>
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <></>
+          {newHotelList.map((item, index) => (
+            <Link to={"/detail/" + item.seqHotel } style={{ textDecoration: "none" }} key={index} className="item">
+              <HotelItemCard item={item} />
+            </Link>
           ))}
         </OwlCarousel>
       </div>

@@ -148,7 +148,6 @@ public class UserController {
 	@PostMapping(value = "mainPage")
 	@ResponseBody
 	public Map<String, Object> mainPage(){
-		
 		return userService.mainPage();
 	}
 	

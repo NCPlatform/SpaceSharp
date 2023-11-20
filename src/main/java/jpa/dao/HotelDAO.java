@@ -14,4 +14,8 @@ public interface HotelDAO extends JpaRepository<HotelDTO, Integer> {
 
 	List<HotelDTO> findBySeqHotelCategoryContaining(String seqHotelCategory);
 
+	public List<HotelDTO> findTop3SeqHotelBy();
+
+	public List<HotelDTO> findTop6SeqHotelBy();
+
 }

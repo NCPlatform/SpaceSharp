@@ -186,9 +186,11 @@ public class UserServiceImpl implements UserService {
 	public Map<String, Object> mainPage() {
 		
 		List<HotelCategoryDTO> hotelCategoryList = hotelCategoryDAO.findAll();
+		List<HotelDTO> hotelList = hotelDAO.findTop6SeqHotelBy();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("categoryList", hotelCategoryList);
+		map.put("hotelList", hotelList);
 		return map;
 	}
 	
