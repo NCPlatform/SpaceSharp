@@ -50,7 +50,7 @@ const ListView = ({ data, room }) => {
               pointerEvents: data?.img === "https://adventure.co.kr/wp-content/uploads/2020/09/no-image.jpg" ? "none" : "auto"
             }}
           >
-            {/* FIXME: 이미지가 DB와 필드 일치하지 않음 */}
+            {/* FIXME: */}
             {/* <em className="bg-white" style={{ marginLeft: "98%" }}>
               이미지
             </em> */}
@@ -123,10 +123,7 @@ const ListView = ({ data, room }) => {
       {/* )} */}
 
       {/* FIXME: 모달 */}
-      {/* 
-      - 이미지가 DB에는 한장밖에 없음. 
-      - 필드명은 pictureLink가 아닌 img
-      */}
+      
       <ModalPicture
         data={data}
         isModalView={isModalView}
