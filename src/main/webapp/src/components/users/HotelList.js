@@ -469,14 +469,15 @@ const List = () => {
           </div>
           </Col>
           <Col>
+          <div>
           <div className="accordion">
           <div className={`${styles.HotelListAccordionItem} accordion-item`}>
            <h2 className={`${styles.HotelListAccordionHeader} accordion-header`}>
-              <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              <button className="accordion-button py-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                 예약 날짜
               </button>
             </h2>
-            <div class="accordion" id="accordionExample">
+            <div className="accordion" id="accordionExample">
               <div id="collapseOne" className="accordion-collapse collapse show" data-bs-parent="#accordionExample">
                 <div className="accordion-body">
                   <Calendar onChange={onChange} value={value} />
@@ -486,6 +487,7 @@ const List = () => {
                 </div>
               </div>
             </div>
+          </div>
           </div>
           </div>
          

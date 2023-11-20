@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jpa.bean.BoardDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
@@ -57,5 +58,6 @@ public interface UserService {
 	public String getAddr(int seqHotel);
 	
 	public UserDTO getUserByEmail(String email);
+
 
 }

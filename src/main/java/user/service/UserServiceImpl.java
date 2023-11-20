@@ -12,7 +12,6 @@ import jpa.bean.BoardDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.UserDTO;
-
 import jpa.dao.BoardDAO;
 import jpa.dao.HotelCategoryDAO;
 import jpa.dao.HotelDAO;
@@ -179,5 +178,7 @@ public class UserServiceImpl implements UserService {
 	public UserDTO getUserByEmail(String email) {
 	    return userDAO.findById(email).orElse(null);
 	}
+
+	
 	
 }

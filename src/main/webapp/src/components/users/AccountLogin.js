@@ -75,6 +75,22 @@ const Login = () => {
   );
   const { naver } = window;
 
+  const [userInfo, setUserInfo] = useState(
+    {
+    'email' : '',
+    'name' : '',
+    'nickname' : '',
+    'password': '',
+    'addr': '',
+    'tel': '',
+    'businessRegistrationNumber': 0,//
+    'companyName': '',//
+    'usergrade': 1,
+    'payment':''
+  }
+  )
+
+
   const initializeNaverLogin = () => {
     const naverLogin = new naver.LoginWithNaverId({
       clientId: "6ttVxktIhMD96aZLn_iu",
@@ -102,15 +118,61 @@ const Login = () => {
         // 아래처럼 선택하여 추출이 가능하고,
         const userid = naverLogin.user.getEmail();
         const username = naverLogin.user.getName();
-        // 정보 전체를 아래처럼 state 에 저장하여 추출하여 사용가능하다.
-        // setUserInfo(naverLogin.user)
+        const usernickname = naverLogin.user.getNickName();
+
+        setUserInfo({
+          email: userid,
+          name: username,
+          nickname: usernickname
+        });
+      
+        console.log(naverLogin.user)
+
+        console.log(userid)
+        console.log(username)
+        console.log(usernickname)
+
+        // if(!userid || userid.trim() === ''){
+
+        //   window.location.href = `/signin?email=${username}&name=${username}&nickname=${usernickname}`;
+        // } else {
+        //   const userData = {
+        //     email: userid,
+        //     name: username,
+        //     nickname: usernickname
+        //   };
+        //   try {
+        //     // 서버로 로그인 정보를 전송
+        //     const response = await axios.post('/user/login', userData);
+  
+        //     if (response.data) {
+        //       // 로그인이 성공하면 세션에 사용자 정보를 저장하고 로그인 완료 페이지로 이동
+        //       window.sessionStorage.setItem('user', JSON.stringify(response.data));
+        //       window.location.href = '/login-success'; // 로그인 완료 페이지로 이동
+        //     } else {
+        //       // 로그인 실패 시 처리
+        //       alert('로그인에 실패했습니다.');
+        //     }
+        //   } catch (error) {
+        //     // 로그인 요청 중 에러 발생 시 처리
+        //     console.error('로그인 요청 에러:', error);
+        //     alert('로그인 요청 중 에러가 발생했습니다.');
+        //   }
+        // }
       }
     });
   };
+    let access_token;
+    let regresh_token;
+    let domain = 'naver';
+
+   
 
   useEffect(() => {
     initializeNaverLogin();
   }, []);
+
+
 
   const Rest_api_key = "037f534097da993a9af7449a8f6cadfd"; //REST API KEY
   const redirect_uri = "http://localhost:3000/oauth/callback/kakao"; //Redirect URI
@@ -219,5 +281,4 @@ const Login = () => {
     </div>
   );
 };
-
 export default Login;
