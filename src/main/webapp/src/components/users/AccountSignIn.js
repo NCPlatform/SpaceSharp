@@ -31,7 +31,9 @@ const SignIn = ({ userInfo }) => {
     companyName: '',
     usergrade: 1,     //회원 기본 등급
     payment: '',
-    passwordChk: '', 
+    passwordChk: '',
+    isKaKao: '',
+    isNaver: '', 
   });
 
 
@@ -50,29 +52,26 @@ const SignIn = ({ userInfo }) => {
   };
 
 
-  //카카오 소셜로그인 닉네임 속성 불러오기
+  // 카카오 소셜로그인 이메일 속성 불러오기
   useEffect(() => {
     if (userInfo) {
-      setUserDTO({ ...userDTO, nickname: userInfo.properties.nickname });
+      // userInfo 객체에서 이메일 속성이 있는지 확인  //userInfo의 이메일과 닉네임값을 가져옴
+      const userEmail = userInfo.kakao_account?.email; 
+      const userNickname = userInfo.kakao_account?.profile?.nickname;
+      const userIsKaKao = 1;  
+
+      // userEmail이 존재하면 해당 값을 userDTO.email에 할당하고, 그렇지 않으면 빈 문자열로 설정합니다.
+      setUserDTO((prevUserDTO) => ({
+        ...prevUserDTO,
+        email: userEmail || '',
+        nickname: userNickname || '',
+        isKaKao: userIsKaKao || '',
+      //nickname: userInfo.properties.nickname,
+      }));
     }
   }, [userInfo]);
 
-
-  //카카오 소셜로그인 이메일 속성 불러오기
-  useEffect(() => {
-    if (userInfo) {
-      // userInfo 객체에서 이메일 속성이 있는지 확인
-      const userEmail = userInfo.kakao_account?.email;
-  
-      // userEmail이 존재하면 해당 값을 userDTO.email에 할당하고, 그렇지 않으면 빈 문자열로 설정합니다.
-      setUserDTO({
-        ...userDTO,
-        email: userEmail || '', // 이메일이 없으면 빈 문자열로 설정합니다.
-        nickname: userInfo.properties.nickname,
-      });
-    }
-  }, [userInfo]); 
-
+  console.log(userDTO);
 
 
 
@@ -106,7 +105,7 @@ const SignIn = ({ userInfo }) => {
       }
     
     if (userDTO.email) {
-      axios.post('/user/existsByEmail', null, { params: { email: userDTO.email } })
+      axios.post('/user/existsByEmail', null, { params: { email: userDTO.email } }) 
         .then(response => {
           console.log(response.data);
           console.log('중복 이메일 검사중입니다.');
@@ -152,6 +151,9 @@ const SignIn = ({ userInfo }) => {
 
 
   const onSubmit = (e) => {
+
+    console.log(userDTO)
+
     // 필수 동의 체크박스들이 모두 체크되었는지 확인
     const isAllNecessaryChecked = data.filter((item) => item.isnecessary && !item.isChk).length === 0;
 

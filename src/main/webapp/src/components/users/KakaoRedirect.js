@@ -9,6 +9,22 @@ function KakaoRedirect() {
   const location = useLocation();
   const KAKAO_CODE = new URLSearchParams(location.search).get('code');
 
+  const [userDTO, setUserDTO] = useState({  //userDTO
+    email: '',
+    name: '',
+    nickname: '',
+    password: '',
+    addr: '',
+    tel: '',
+    businessRegistrationNumber: 0,
+    companyName: '',
+    usergrade: 1,     //회원 기본 등급
+    payment: '',
+    passwordChk: '',
+    isKaKao: '',
+    isNaver: '', 
+  });
+
   //로컬스토리지에 토큰 저장
   const getKakaoToken = () => {
     fetch(`https://kauth.kakao.com/oauth/token`, {
@@ -56,7 +72,7 @@ function KakaoRedirect() {
             }
           )
             .then((res) => {
-              setUserInfo(res.data); // 상태에 사용자 정보 설정
+              setUserDTO(res.data); // 상태에 사용자 정보 설정
             })
             .catch((error) => {
               console.error('사용자 정보 가져오기 실패:', error);
@@ -84,9 +100,17 @@ function KakaoRedirect() {
 
             // session에 저장해줘요
 
+            // userDTO에 userInfo의 정보중 nickname과 email값을 가져와 집어넣기
             navigate('/');      //이메일 중복체크 결과 후 없으면 입력, 존재하면 메인페이지로 이동
           } else {
             console.log('사용 가능한 이메일 입니다.');
+            setUserDTO(
+              {
+              ...userDTO,
+              nickname: userInfo.nickname,
+              email: userInfo.email,
+            }
+            );
           }
         })
         .catch(error => {
@@ -96,11 +120,13 @@ function KakaoRedirect() {
   }, [userInfo]);
 
 
+
+
   return (
     <div>
       {/* <h1>KakaoRedirect에서 작성된 글</h1> */}
 
-      {userInfo && <AccountSignIn userInfo={userInfo} />}
+      {userDTO && <AccountSignIn userInfo={userDTO} />}
      
     </div>
   );
