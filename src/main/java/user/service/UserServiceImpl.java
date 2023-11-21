@@ -247,6 +247,12 @@ public class UserServiceImpl implements UserService {
 	public Page<BoardDTO> list (Pageable pageable, int seqRefSeqBoard) {
 		return boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
 	}
+
+	@Override
+	public String hotelReserve(int seqHotel) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 }

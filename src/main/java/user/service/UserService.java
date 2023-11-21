@@ -77,4 +77,6 @@ public interface UserService {
 	
 	public Map<String, Object> mainPage();
 
+	public String hotelReserve(int seqHotel);
+
 }
