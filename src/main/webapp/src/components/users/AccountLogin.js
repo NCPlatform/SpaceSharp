@@ -25,7 +25,7 @@ const Login = () => {
 
   const [emailDiv, setEmailDiv] = useState("");
   const [passwordDiv, setPasswordDiv] = useState("");
-  const { navigate } = useNavigate()
+  const navigate = useNavigate();
 
   const onChange = (e) => {
     setUserDTO({ ...userDTO, [e.target.name]: e.target.value });
@@ -71,8 +71,6 @@ const Login = () => {
         .catch((error) => console.log(error));
     }
   };
-
-  const navigate = useNavigate();
 
   const [sessionUserDTO, setSessionUserDTO] = useState(
     window.sessionStorage.getItem("user")
@@ -137,26 +135,34 @@ const Login = () => {
               nickname: usernickname
               // ... 기타 필요한 정보 추가
             });
-        
-            if (response.data) {
+            const existingUser = checkUserResponse.data.user;
+
+            const iskakao = existingUser.isKakao; // 기존 사용자가 카카오로 가입한 경우 플래그
+            const isnaver = existingUser.isNaver; // 기존 사용자가 네이버로 가입한 경우 플래그
+
+            if (isnaver && response.data) {
               window.sessionStorage.setItem('user', JSON.stringify(response.data));
               navigate('/'); // 로그인 완료 페이지로 이동
-            } else {
-              alert('로그인에 실패했습니다.');
+              if (iskakao) {
+                // 네이버아이디가 아닌 카카오 아이디라면 네이버 아이디와 통합을 할 것인지 확인
+              } else {
+                alert('로그인에 실패했습니다.');
+                navigate('/login')
+              }
+            } } else {
+              localStorage.setItem('userInfo', JSON.stringify({
+                email: userid,
+                name: username,
+                nickname: usernickname
+                // ... 기타 필요한 정보 추가
+              }));
+              navigate('/signin'); // 회원가입 페이지로 이동
             }
-          } else {
-            localStorage.setItem('userInfo', JSON.stringify({
-              email: userid,
-              name: username,
-              nickname: usernickname
-              // ... 기타 필요한 정보 추가
-            }));
-            navigate('/signin'); // 회원가입 페이지로 이동
+          } catch (error) {
+            console.error('로그인 요청 에러:', error);
+            alert('로그인 요청 중 에러가 발생했습니다.');
           }
-        } catch (error) {
-          console.error('로그인 요청 에러:', error);
-          alert('로그인 요청 중 에러가 발생했습니다.');
-        }
+      
       }
 
     });
