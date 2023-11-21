@@ -49,6 +49,9 @@ import AdminUser from "./components/admins/AdminUser";
 // import KakaoLogin from "./components/users/KaKaoLogin";
 import KakaoRedirect from "./components/users/KakaoRedirect";
 import PopupPostCode from "./components/users/PopupPostCode";
+import NaverLoginForm from "./components/users/NaverLoginForm";
+import NaverRedirect from "./components/users/NaverRedirect";
+
 
 function App() {
   return (
@@ -73,6 +76,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="signin" element={<Signin />} />
           <Route path="update" element={<Update />} />
+          <Route path="naverLoginForm" element={ <NaverLoginForm />} />
           <Route path="boardList" element={<BoardList />} />
           <Route path="boardDetail" element={<BoardDetail />} />
           <Route path="boardList">
@@ -88,7 +92,8 @@ function App() {
           </Route>
           <Route path="review" element={<Review />} />
           <Route path="info" element={<Info />} />
-          <Route path="KakaoRedirect" element={ <KakaoRedirect />} />      
+          <Route path="KakaoRedirect" element={ <KakaoRedirect />} />  
+          <Route path="Naverredirect" element={ <NaverRedirect />} /> 
           {/* <Route path="kakaoLogin" element={<KakaoLogin />} /> */}
           <Route path="KakaoRedirect" element={<KakaoRedirect />} />
           {/* <Route path="redirection" element={<Redirection />} /> */}

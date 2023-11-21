@@ -4,6 +4,7 @@ import naverBtn from '../../image/naverBtn.png';
 import kakaoBtn from '../../image/kakaoBtn.png';
 import axios from 'axios';
 import PopupPostCode from './PopupPostCode';
+import { useNavigate } from 'react-router-dom';
 
 const dataList = [  //약관데이터리스트
   { id: 1, name: 'chk1', text: '연령(만 14세 이상) 확인(필수)', isChk: false, isnecessary: true },
@@ -16,6 +17,8 @@ const dataList = [  //약관데이터리스트
 
 const SignIn = ({ userInfo }) => {
   const [data, setData] = useState(dataList); //약관
+
+  const navigate = useNavigate();
 
   const [userDTO, setUserDTO] = useState({  //userDTO
     email: '',
@@ -70,6 +73,17 @@ const SignIn = ({ userInfo }) => {
     }
   }, [userInfo]); 
 
+
+
+
+  const NAVER_CLIENT_ID ="ojl3HmuVcwz9uJHJPQr0";
+    const REDIRECT_URI1 = "http://localhost:3000/NaverRedirect";
+    const STATE = "false";
+    const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${STATE}&redirect_uri=${REDIRECT_URI1}`;
+
+    const NaverLogin = () =>{
+        window.location.href = NAVER_AUTH_URL;
+    };
 
   //비밀번호 정규식 유효성 검사
   const [passwordValidationError, setPasswordValidationError] = useState(''); // 비밀번호 유효성 에러 메시지
@@ -176,6 +190,8 @@ const SignIn = ({ userInfo }) => {
         console.log(res.data)
       })
       .catch(error => console.log(error));
+      navigate('/login');
+
     };
 
 
@@ -196,7 +212,7 @@ const SignIn = ({ userInfo }) => {
       <div className="WriteBox">
         <h2 className="h2Title">회 원 가 입</h2>
         <div>
-          <button className="WriteInputBtn">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+          <button className="WriteInputBtn" onClick={ NaverLogin }>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
             <img src={naverBtn} style={{ width: '40px', height: '40px' }} alt="네이버 로그인" />
             네이버 로그인
           </button>
