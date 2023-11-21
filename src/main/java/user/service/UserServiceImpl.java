@@ -1,23 +1,15 @@
 package user.service;
 
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import jpa.bean.*;
+import jpa.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import jpa.bean.BoardDTO;
-import jpa.bean.HotelCategoryDTO;
-import jpa.bean.HotelDTO;
-import jpa.bean.UserDTO;
-
-import jpa.dao.BoardDAO;
-import jpa.dao.HotelCategoryDAO;
-import jpa.dao.HotelDAO;
-import jpa.dao.RoomDAO;
-import jpa.dao.UserDAO;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -37,9 +29,12 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private HotelCategoryDAO hotelCategoryDAO;
 	
+	@Autowired
+	private ReservationDAO reservationDAO;
+
 	@Override
 	public String accountWrite(UserDTO userDTO) {
-		System.out.println(userDTO);
+				
 		userDAO.save(userDTO);
 		return "리턴 성공";
 	}
@@ -64,11 +59,6 @@ public class UserServiceImpl implements UserService {
 	public Optional<UserDTO> login(UserDTO userDTO) {
 		return userDAO.findById(userDTO.getEmail());
 	}
-
-
-
-
-	    
 
 	@Override
 	public Optional<BoardDTO> getBoard(int seqRefSeqBoard) {
@@ -101,15 +91,6 @@ public class UserServiceImpl implements UserService {
 		System.out.println(seqBoard);
 		boardDAO.deleteById(seqBoard);
 		
-	}
-
-
-	
-
-	@Override
-	public Page<BoardDTO> list(Pageable pageable, int seqRefSeqBoard) {
-		Page<BoardDTO> list = boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
-		return list;
 	}
 
 	@Override
@@ -189,6 +170,71 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDTO getUserByEmail(String email) {
 	    return userDAO.findById(email).orElse(null);
+	}
+
+	@Override
+	public List<RoomDTO> getRoomListByHotel(int seqHotel) {
+		return roomDAO.findBySeqHotel( seqHotel);
+	}
+
+
+	@Override
+	public List<Integer> getReservationListByRoom(int seqRoom, Date date) {
+//		return reservationDAO.findAll();
+		List<ReservationDTO> reservations =  reservationDAO.findReservationsByRoomAndDate(seqRoom,date);
+
+		TreeSet<Integer> uniqueTimes = new TreeSet<>();
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HH");
+
+		for (ReservationDTO reservation : reservations) {
+			Date currentTime = reservation.getTravelStartDate();
+			Date endTime = reservation.getTravelEndDate();
+
+			while (!currentTime.after(endTime) && currentTime.before(endTime)) {
+				uniqueTimes.add(Integer.parseInt(timeFormat.format(currentTime)));
+				currentTime.setTime(currentTime.getTime() + 60 * 60 * 1000); // Add 1 hour
+			}
+		}
+
+		return new ArrayList<>(uniqueTimes);
+	}
+
+	@Override
+	public String getFacilities(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getFacilities())
+	            .orElse(null);
+	}
+
+	@Override
+	public String getAlert(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getAlert())
+	            .orElse(null);
+	}
+
+	@Override
+	public Map<String, Object> mainPage() {
+		
+		List<HotelCategoryDTO> hotelCategoryList = hotelCategoryDAO.findAll();
+		List<HotelDTO> hotelList = hotelDAO.findTop6SeqHotelBy();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("categoryList", hotelCategoryList);
+		map.put("hotelList", hotelList);
+		return map;
+	}
+
+	@Override
+	public String getRefund(int seqHotel) {
+		return hotelDAO.findById(seqHotel)
+	            .map(hotelDTO -> hotelDTO.getRefund())
+	            .orElse(null);
+	}
+
+	@Override
+	public Page<BoardDTO> list (Pageable pageable, int seqRefSeqBoard) {
+		return boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
 	}
 	
 }

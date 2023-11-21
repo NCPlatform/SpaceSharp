@@ -75,9 +75,6 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="signin" element={<Signin />} />
           <Route path="update" element={<Update />} />
-
-          <Route path="boardList" element={<BoardList />} />
-          <Route path="boardDetail" element={<BoardDetail />} />
           <Route path="boardList">
             <Route path=":page" element={<BoardList />} />
           </Route>
@@ -91,11 +88,7 @@ function App() {
           </Route>
           <Route path="review" element={<Review />} />
           <Route path="info" element={<Info />} />
-          <Route path="KakaoRedirect" element={ <KakaoRedirect />} />  
-        
-          {/* <Route path="kakaoLogin" element={<KakaoLogin />} /> */}
           <Route path="KakaoRedirect" element={<KakaoRedirect />} />
-          {/* <Route path="redirection" element={<Redirection />} /> */}
           <Route path="PopupPostCode" element={ <PopupPostCode />} />
         </Route>
         <Route path="/manager">
