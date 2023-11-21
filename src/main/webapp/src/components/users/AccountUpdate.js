@@ -29,7 +29,7 @@ const AccountUpdate = () => {
                                     (사용자닉네임 출력란)
                                     </p>
                                     <br />&emsp;&nbsp;&nbsp;
-                                <button className='btn green mini'>프로필 사진 변경</button>                   
+                                <button className='updatebtn green mini'>프로필 사진 변경</button>                   
                             </div>
                         </div>
 
@@ -41,7 +41,7 @@ const AccountUpdate = () => {
                                             {/* 내 관심정보 출력자리 */}
                                             <p className='favorFont'>내 관심정보 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                                                             &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                                            <button className='btn green mini'>설정하기</button>
+                                            <button className='updatebtn green mini'>설정하기</button>
                                             </p>
                                         </ul>
                                     </div>
@@ -67,7 +67,7 @@ const AccountUpdate = () => {
                                     <br/>  
                                         <p className='profileTitle'>닉네임 &emsp;(nickname자리)  {/* 닉네임 출력자리 */}
                                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
-                                        <button className='btn green mini'>변경하기</button>
+                                        <button className='updatebtn green mini'>변경하기</button>
                                         </p>                           
                                     <br/>    
                                     </ul>
@@ -80,7 +80,7 @@ const AccountUpdate = () => {
                                     <p className='profileTitle'>
                                     이메일&emsp;(이메일자리){/* 이메일 출력자리 */}
                                     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;
-                                        <button className='btn green mini'>인증하기</button>
+                                        <button className='updatebtn green mini'>인증하기</button>
                                     </p>
                                     <br/>    
                                 </ul>
@@ -92,7 +92,7 @@ const AccountUpdate = () => {
                                     <p className='profileTitle'>{/* 휴대폰정보 출력자리 */}
                                     연락처&emsp;(휴대폰정보-x휴대폰정보없음)
                                     &emsp;&nbsp;
-                                    <button className='btn green mini'>인증하기</button>
+                                    <button className='updatebtn green mini'>인증하기</button>
                                     </p>
                                 <br/>
                                 </ul>
@@ -130,7 +130,7 @@ const AccountUpdate = () => {
                                     <p className='profileTitle'>{/*비밀번호 변경자리 */}
                                     비빌번호&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  
                                             &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
-                                            <button className='btn green mini'>변경하기</button>
+                                            <button className='updatebtn green mini'>변경하기</button>
                                         <br />
                                     </p>
                                 <br/>
@@ -161,7 +161,7 @@ const AccountUpdate = () => {
                             <div className='box2-4'>
                                 <div class="profileCard" style={{width: '100%'}}>{/*회원탈퇴 버튼 */}
                                     <br />&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                                        <button className='btn red mini'>서비스 탈퇴하기</button>
+                                        <button className='updatebtn red mini'>서비스 탈퇴하기</button>
                                     <br />
                                     <br />
                                 </div>

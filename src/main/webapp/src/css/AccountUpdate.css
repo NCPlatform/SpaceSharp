@@ -185,10 +185,10 @@
     
     
     /*프로필버튼 수정하기 green버튼 css*/
-    .btn.green {box-shadow: 0px 4px 0px #87a86f;}
-    .btn.green:active {box-shadow: 0 0 #87a86f; background-color: #87a86f;}
+    .updatebtn.green {box-shadow: 0px 4px 0px #87a86f;}
+    .updatebtn.green:active {box-shadow: 0 0 #87a86f; background-color: #87a86f;}
     
-    .btn {
+    .updatebtn {
     position: relative;
     border: 0;
     padding: 15px 25px;
@@ -197,22 +197,22 @@
     color: white;
     }
   
-    .btn:active {
+    .updatebtn:active {
     top: 4px; 
     }
-    .btn.green, .btn-two.green   {background-color: #9abf7f;}
+    .updatebtn.green, .updatebtn-two.green   {background-color: #9abf7f;}
     
-    .btn.mini, 
-    .btn-two.mini, 
-    .btn-gradient.mini, 
-    .btn-effect.mini {
+    .updatebtn.mini, 
+    .updatebtn-two.mini, 
+    .updatebtn-gradient.mini, 
+    .updatebtn-effect.mini {
     padding: 4px 10px;  
     font-size: 15px;
     }
     /*서비스탈퇴(회원탈퇴) red 버튼 css*/
-    .btn.red, .btn-two.red       {background-color: #fa5a5a;}
-    .btn.red {box-shadow:0px 4px 0px #E04342;}
-    .btn.red:active {box-shadow: 0 0 #ff4c4b; background-color: #ff4c4b;}
+    .updatebtn.red, .updatebtn-two.red       {background-color: #fa5a5a;}
+    .updatebtn.red {box-shadow:0px 4px 0px #E04342;}
+    .updatebtn.red:active {box-shadow: 0 0 #ff4c4b; background-color: #ff4c4b;}
     
     /*웹폰트*/
     @font-face {

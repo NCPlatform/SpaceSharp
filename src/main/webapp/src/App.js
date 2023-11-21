@@ -9,7 +9,8 @@ import Main from "./components/users/Main";
 // Account
 import Login from "./components/users/AccountLogin";
 import Signin from "./components/users/AccountSignIn";
-import AccountUpdate from "./components/users/AccountUpdate";
+import Update from "./components/users/AccountUpdate";
+
 
 // Hotel
 import HotelList from "./components/users/HotelList";
@@ -45,11 +46,11 @@ import AdminEvent from "./components/admins/AdminEvent";
 import AdminUser from "./components/admins/AdminUser";
 
 //kakao social login
-import KakaoLogin from "./components/users/KaKaoLogin";
+// import KakaoLogin from "./components/users/KaKaoLogin";
 import KakaoRedirect from "./components/users/KakaoRedirect";
-import Redirection from "./components/users/Redirection";
+import PopupPostCode from "./components/users/PopupPostCode";
 
-import KakaoAuth from "./components/users/KakaoAuth";
+
 
 function App() {
   return (
@@ -73,23 +74,22 @@ function App() {
           />
           <Route path="login" element={<Login />} />
           <Route path="signin" element={<Signin />} />
-          <Route path="accountUpdate" element={<AccountUpdate/>}/>
+          <Route path="update" element={<Update />} />
           <Route path="boardList">
             <Route path=":page" element={<BoardList />} />
           </Route>
           <Route path="boardDetail" element={<BoardDetail />}>
             <Route path=":paramSeqBoard" element={<BoardDetail />} />
           </Route>
-          <Route path="/oauth/callback/kakao" element={<KakaoAuth />} />
+          {/* <Route path="/oauth/callback/kakao" element={<KakaoAuth />} /> */}
           <Route path="boardWrite" element={<BoardWrite />} />
           <Route path="boardUpdate" element={<BoardUpdate />}>
             <Route path=":paramSeqBoard" element={<BoardUpdate />} />
           </Route>
           <Route path="review" element={<Review />} />
           <Route path="info" element={<Info />} />
-          <Route path="kakaoLogin" element={<KakaoLogin />} />
           <Route path="KakaoRedirect" element={<KakaoRedirect />} />
-          <Route path="redirection" element={<Redirection />} />
+          <Route path="PopupPostCode" element={ <PopupPostCode />} />
         </Route>
         <Route path="/manager">
           <Route index element={<ManagerDashBoard />} />

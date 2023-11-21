@@ -11,6 +11,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import jpa.bean.BoardDTO;
+import jpa.bean.HotelCategoryDTO;
+import jpa.bean.HotelDTO;
+import jpa.bean.UserDTO;
+import jpa.dao.BoardDAO;
+import jpa.dao.HotelCategoryDAO;
+import jpa.dao.HotelDAO;
+import jpa.dao.RoomDAO;
+import jpa.dao.UserDAO;
+
 @Service
 public class UserServiceImpl implements UserService {
 	
@@ -28,6 +38,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private HotelCategoryDAO hotelCategoryDAO;
+	
 	@Autowired
 	private ReservationDAO reservationDAO;
 
@@ -37,6 +48,12 @@ public class UserServiceImpl implements UserService {
 		userDAO.save(userDTO);
 		return "리턴 성공";
 	}
+		
+	@Override
+	public boolean existsByEmail(String email) {
+		return userDAO.existsByEmail(email);
+	}
+
 	
 	@Override
 	public List<HotelCategoryDTO> getHotelCategoryList() {
@@ -86,19 +103,10 @@ public class UserServiceImpl implements UserService {
 		
 	}
 
-
-	
-
-	@Override
-	public Page<BoardDTO> list(Pageable pageable, int seqRefSeqBoard) {
-		Page<BoardDTO> list = boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
-		return list;
-	}
-
 	@Override
 	public Optional<BoardDTO> getReply(int seqRefSeqBoard) {
 		System.out.println(seqRefSeqBoard);
-		return boardDAO.findBySeqRefSeqBoard(seqRefSeqBoard);
+		return boardDAO.getBySeqRefSeqBoard(seqRefSeqBoard);
 	}
 
 	@Override
@@ -174,6 +182,7 @@ public class UserServiceImpl implements UserService {
 	    return userDAO.findById(email).orElse(null);
 	}
 
+
 	@Override
 	public List<RoomDTO> getRoomListByHotel(int seqHotel) {
 		return roomDAO.findBySeqHotel( seqHotel);
@@ -226,7 +235,7 @@ public class UserServiceImpl implements UserService {
 		map.put("hotelList", hotelList);
 		return map;
 	}
-	
+
 	@Override
 	public String getRefund(int seqHotel) {
 		return hotelDAO.findById(seqHotel)
@@ -234,5 +243,10 @@ public class UserServiceImpl implements UserService {
 	            .orElse(null);
 	}
 
-
+	@Override
+	public Page<BoardDTO> list (Pageable pageable, int seqRefSeqBoard) {
+		return boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
+	}
+	
+	
 }
