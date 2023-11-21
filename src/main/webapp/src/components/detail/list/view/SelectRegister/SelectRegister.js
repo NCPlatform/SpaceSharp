@@ -17,10 +17,18 @@ const inputNumberViewStyle = {
   lineHeight: 1,
 };
 
-const SelectRegister = ({ data, room }) => {
-  // 기존 예약된 정보 -> 예약 불가능한 시간
-  const [reservations, setReservations] = useState([]);
+function formatDateTime(date) {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 1을 더하고, 두 자리로 표현
+  const day = date.getDate().toString().padStart(2, "0");
+  const dayOfWeek = ["일", "월", "화", "수", "목", "금", "토"][date.getDay()];
+  const hours = date.getHours().toString().padStart(2, "0");
 
+  return `${year}. ${month}. ${day}. (${dayOfWeek}) ${hours}시`;
+}
+const SelectRegister = ({ data, room }) => {
+  //KMONG: 기존 예약된 정보 -> 예약 불가능한 시간
+  const [reservations, setReservations] = useState([]);
   // react-calendar를 위한 state 선언
   const [calendarData, setCalendarData] = useState(new Date());
 
@@ -30,24 +38,72 @@ const SelectRegister = ({ data, room }) => {
   // 시간 선택된 거 설정 여부
   const [isSelectedTime, setIsSelectedTime] = useState(Array(24).fill(false));
 
-  const [startHour, setStartHour] = useState();
-  const [endHour, setEndHour] = useState();
-  // 오늘보다 이전인 경우 비활성화
-  const checkDisabledTime = (date) => {
-    const today = new Date();
-    const isPastDate = date < today.setHours(0, 0, 0, 0);
+  const [startHour, setStartHour] = useState(null);
+  const [endHour, setEndHour] = useState(null);
 
-    return isPastDate;
-  };
   useEffect(() => {
+    // 선택한 날짜와 비교해 같은 날일 경우 시간을,
+    // 다음날일 경우 시간+24를 반환하는 함수.
+    const datetimeToHours = (date) => {
+      const calendarNextDate = new Date(calendarData);
+      calendarNextDate.setDate(calendarData.getDate() + 1);
+
+      if (
+        date.getFullYear() === calendarData.getFullYear() &&
+        date.getMonth() === calendarData.getMonth() &&
+        date.getDate() === calendarData.getDate()
+      ) {
+        return date.getHours();
+      } else if (
+        date.getFullYear() === calendarNextDate.getFullYear() &&
+        date.getMonth() === calendarNextDate.getMonth() &&
+        date.getDate() === calendarNextDate.getDate()
+      ) {
+        return date.getHours() + 24;
+      } else {
+        return null;
+      }
+      // if (
+      // date.getFullYear() === calendarData.getFullYear() &&
+      // date.getMonth() === calendarData.getMonth() &&
+      // date.getDate() === calendarData.getDate()
+      // ) {
+      // return date.getHours();
+      // } else {
+      // return date.getHours() + 24;
+      // }
+    };
+    const getUnavailableTimes = (reservations) => {
+      const unavailableTimes = [];
+      for (let reservation of reservations) {
+        const startDate = new Date(reservation.travelStartDate);
+        const endDate = new Date(reservation.travelEndDate);
+        let currentDateTime = new Date(startDate);
+        while (currentDateTime < endDate) {
+          const hours = datetimeToHours(new Date(currentDateTime));
+          console.log(hours, currentDateTime, calendarData);
+          if (hours !== null) unavailableTimes.push(hours);
+
+          currentDateTime.setHours(currentDateTime.getHours() + 1);
+        }
+      }
+
+      return unavailableTimes.sort();
+    };
+    const endDate = new Date(
+      new Date(calendarData).setDate(calendarData.getDate() + 1)
+    );
+
     axios
       .get(
-        `/user/getReservation?seqRoom=${room}&date=${calendarData.toDateString()}`
+        `/user/getReservation?seqRoom=${room}&startDate=${calendarData.toDateString()}&endDate=${endDate.toDateString()}`
       )
       .then((response) => {
         const data = response.data;
         if (data) {
-          setReservations(data);
+          console.log(data);
+          const reservations = getUnavailableTimes(data);
+          setReservations(reservations);
         } else {
           console.error("해당 공간을 찾을 수 없습니다.");
         }
@@ -62,7 +118,6 @@ const SelectRegister = ({ data, room }) => {
     let number = registerPeopleNumber;
     number++;
     setRegisterPeopleNumber(number);
-    console.log(number);
   };
 
   // 예약 인원 수 감소
@@ -70,7 +125,6 @@ const SelectRegister = ({ data, room }) => {
     let number = registerPeopleNumber;
     number--;
     setRegisterPeopleNumber(number);
-    console.log(number);
   };
 
   // 인원수 이벤트 변경
@@ -103,8 +157,8 @@ const SelectRegister = ({ data, room }) => {
   useEffect(() => {
     dayViewText();
     // 아래는 시간 관련된 데이터 모두 초기화
-    setStartHour(null);
-    setEndHour(null);
+    setStartHour(0);
+    setEndHour(0);
     setClickCount(-1);
     setIsSelectedTime(Array(24).fill(false));
   }, [calendarData]);
@@ -134,13 +188,23 @@ const SelectRegister = ({ data, room }) => {
         alert("종료시간이 시작시간이전을 선택할 수 없습니다.");
         return;
       }
-      // 예약 불가 시간
-      if (reservations.length > 0) {
-        if (startHour <= reservations[0] && endHour >= reservations[0]) {
-          alert("예약 불가능한 시간이 포함되어있습니다.");
-          return;
-        }
+      // KMONG
+      // if (reservations.length > 0) {
+      // if (startHour <= reservations[0] && endHour >= reservations[0]) {
+      // alert("예약 불가능한 시간이 포함되어있습니다.");
+      // return;
+      // }
+      // }
+      const range = Array.from(
+        { length: index - startHour + 1 },
+        (_, index) => startHour + index
+      );
+      const commonHour = range.filter((hour) => reservations.includes(hour));
+      if (commonHour.length > 0) {
+        alert("예약 불가능한 시간이 포함되어있습니다.");
+        return;
       }
+
       setEndHour(index + 1);
       let isArrSelect = isSelectedTime;
       for (
@@ -153,16 +217,15 @@ const SelectRegister = ({ data, room }) => {
       setIsSelectedTime(isArrSelect);
     }
 
-    console.log(tempClickCount);
     if (tempClickCount % 2 === 0) {
       setClickCount(1);
     } else {
       setClickCount(0);
     }
   };
-  // const checkDisabledTime = (date, view) => {
-  //   return false;
-  // };
+  const checkDisabledTime = (index) => {
+    return reservations.includes(index);
+  };
   return (
     <div>
       {/* 날짜 선택 */}
@@ -180,14 +243,41 @@ const SelectRegister = ({ data, room }) => {
           onChange={setCalendarData}
           formatDay={(locale, date) => moment(date).format("D")}
           value={calendarData}
-          tileDisabled={({ date }) => checkDisabledTime(date)}
+          minDate={new Date()} //오늘 날짜보다 과거는 비활성화
         />
       </Row>
       <br />
       <Row style={{ paddingLeft: "1em" }}>
-        <Col md={3}>예약불가</Col>
-        <Col md={3}>오늘</Col>
-        <Col md={3}>선택</Col>
+        <Col md={4} className="d-flex align-items-center">
+          <div className="mr-2" style={{ whiteSpace: 'nowrap' }}>예약불가</div>
+          <div
+            style={{
+              width: "1em",
+              height: "1em",
+              backgroundColor: "#F0F0F0",
+            }}
+          ></div>
+        </Col>
+        <Col md={4} className="d-flex align-items-center">
+          <div className="mr-2" style={{ whiteSpace: 'nowrap' }}>오늘</div>
+          <div
+            style={{
+              width: "1em",
+              height: "1em",
+              backgroundColor: "#FFFF76",
+            }}
+          ></div>
+        </Col>
+        <Col md={4} className="d-flex align-items-center">
+          <div className="mr-2" style={{ whiteSpace: 'nowrap' }}>선택</div>
+          <div
+            style={{
+              width: "1em",
+              height: "1em",
+              backgroundColor: "#006EDC",
+            }}
+          ></div>
+        </Col>
       </Row>
       <br />
       <br />
@@ -202,24 +292,24 @@ const SelectRegister = ({ data, room }) => {
       ></div>
       <div style={{ overflowX: "scroll" }}>
         <ul style={{ listStyle: "none", width: "1510px" }}>
-          {Array(24)
+          {Array(48)
             .fill()
             .map((_, index) => (
               <li
                 key={index}
                 style={{ width: "60px", height: "100px", float: "left" }}
               >
-                <span>{index}</span> <br />
+                <span>{index % 24}</span> <br />
                 <button
-                  className={`border ${reservations.includes(index)
-                    ? "bg-danger"
-                    : isSelectedTime[index]
-                      ? "bg-primary"
-                      : "bg-warning"
+                  className={`border ${checkDisabledTime(index)
+                      ? "bg-danger"
+                      : isSelectedTime[index]
+                        ? "bg-primary"
+                        : "bg-warning"
                     } text-white`}
                   style={{ width: "100%", height: "70%" }}
                   onClick={() => toggleTime(index)}
-                  disabled={reservations.includes(index)}
+                  disabled={checkDisabledTime(index)}
                 >
                   {`${data?.price}`}
                 </button>
@@ -273,10 +363,15 @@ const SelectRegister = ({ data, room }) => {
         <h4>예약일시</h4>
       </Row>
       <div>
-        {`${calendarData.getFullYear()}. ${calendarData.getMonth() + 1
-          }. ${calendarData.getDate()}. ${dayViewText()} ` +
-          `${!!startHour || !!endHour ? startHour + "시 ~ " + endHour + "시" : ""
-          }`}
+        
+        {formatDateTime(new Date(calendarData.setHours(startHour)))}~
+        {formatDateTime(new Date(calendarData.setHours(endHour)))}
+        {/* {`${calendarData.getFullYear()}. ${
+calendarData.getMonth() + 1
+}. ${calendarData.getDate()}. ${dayViewText()} ` +
+`${
+!!startHour || !!endHour ? startHour + "시 ~ " + endHour + "시" : ""
+}`} */}
       </div>
       <br />
       <br />

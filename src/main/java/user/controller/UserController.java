@@ -25,8 +25,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import jpa.bean.BoardDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
+import jpa.dao.ReservationDAO;
+import jpa.dao.UserDAO;
 import user.service.UserService;
 
 
@@ -37,6 +40,10 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private ReservationDAO reservationDAO;
+	@Autowired
+	private UserDAO userDAO;
 
 
 	@GetMapping("/getHotelName")
@@ -109,14 +116,14 @@ public class UserController {
 	    return userService.getUserByEmail(email);
 	}
 	
-	@GetMapping("/getRoom")
+	@GetMapping("getRoom")
 	public List<RoomDTO> getRoomListByHotel(@RequestParam int seqHotel){
 		return userService.getRoomListByHotel(seqHotel);
 	}
 
-	@GetMapping("/getReservation")
-	public  List<Integer> getReservationListByRoom(@RequestParam int seqRoom, @RequestParam Date date){
-		return userService.getReservationListByRoom(seqRoom, date);
+	@GetMapping("getReservation")
+	public  List<ReservationDTO> getReservationListByRoom(@RequestParam int seqRoom, @RequestParam Date startDate, @RequestParam Date endDate){
+		return userService.getReservationListByRoom(seqRoom, startDate, endDate);
 	}
 	
 	@PostMapping(value="login")

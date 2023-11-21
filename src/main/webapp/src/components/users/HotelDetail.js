@@ -228,7 +228,7 @@ const Detail = () => {
                 id="fill-tab-example"
                 className="mb-3"
                 fill
-                style={{ width: "60%" }}
+                style={{ width: "100%" }}
               >
                 <Tab
                   eventKey="home"
@@ -361,7 +361,12 @@ const Detail = () => {
           </Row>
           <br />
           <br />
-          <HotelSameSpace />
+          {hotelDTO && (
+            <HotelSameSpace
+              hotel={seqHotel}
+              hotelCategory={hotelDTO.seqHotelCategory}
+            />
+          )}
         </Container>
         <br />
         <br />

@@ -181,24 +181,9 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public List<Integer> getReservationListByRoom(int seqRoom, Date date) {
-//		return reservationDAO.findAll();
-		List<ReservationDTO> reservations =  reservationDAO.findReservationsByRoomAndDate(seqRoom,date);
-
-		TreeSet<Integer> uniqueTimes = new TreeSet<>();
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HH");
-
-		for (ReservationDTO reservation : reservations) {
-			Date currentTime = reservation.getTravelStartDate();
-			Date endTime = reservation.getTravelEndDate();
-
-			while (!currentTime.after(endTime) && currentTime.before(endTime)) {
-				uniqueTimes.add(Integer.parseInt(timeFormat.format(currentTime)));
-				currentTime.setTime(currentTime.getTime() + 60 * 60 * 1000); // Add 1 hour
-			}
-		}
-
-		return new ArrayList<>(uniqueTimes);
+	public List<ReservationDTO> getReservationListByRoom(int seqRoom, Date startDate, Date endDate) {
+		List<ReservationDTO> reservations =  reservationDAO.findReservationsByRoomAndDate(seqRoom,startDate, endDate);
+		return  reservations;
 	}
 
 	@Override
@@ -231,6 +216,8 @@ public class UserServiceImpl implements UserService {
 	            .map(hotelDTO -> hotelDTO.getRefund())
 	            .orElse(null);
 	}
+
+	
 
 
 }
