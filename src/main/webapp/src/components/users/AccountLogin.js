@@ -7,7 +7,7 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import Stack from "react-bootstrap/Stack";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FindPassword from "./FindPassword";
 import axios from "axios";
 
@@ -25,6 +25,7 @@ const Login = () => {
 
   const [emailDiv, setEmailDiv] = useState("");
   const [passwordDiv, setPasswordDiv] = useState("");
+  const { navigate } = useNavigate()
 
   const onChange = (e) => {
     setUserDTO({ ...userDTO, [e.target.name]: e.target.value });
@@ -103,15 +104,6 @@ const Login = () => {
     });
     naverLogin.init();
 
-    // 선언된 naverLogin 을 이용하여 유저 (사용자) 정보를 불러오는데
-    // 함수 내부에서 naverLogin을 선언하였기에 지역변수처리가 되어
-    // userinfo 정보를 추출하는 것은 지역변수와 같은 함수에서 진행주어야한다.
-
-    // 아래와 같이 로그인한 유저 ( 사용자 ) 정보를 직접 접근하여 추출가능하다.
-    // 이때, 데이터는 첫 연동시 정보 동의한 데이터만 추출 가능하다.
-
-    // 백엔드 개발자가 정보를 전달해준다면 아래 요기! 라고 작성된 부분까지는
-    // 코드 생략이 가능하다.
 
     naverLogin.getLoginStatus(async function (status) {
       if (status) {
@@ -132,34 +124,38 @@ const Login = () => {
         console.log(username)
         console.log(usernickname)
 
-        // if(!userid || userid.trim() === ''){
-
-        //   window.location.href = `/signin?email=${username}&name=${username}&nickname=${usernickname}`;
-        // } else {
-        //   const userData = {
-        //     email: userid,
-        //     name: username,
-        //     nickname: usernickname
-        //   };
-        //   try {
-        //     // 서버로 로그인 정보를 전송
-        //     const response = await axios.post('/user/login', userData);
-  
-        //     if (response.data) {
-        //       // 로그인이 성공하면 세션에 사용자 정보를 저장하고 로그인 완료 페이지로 이동
-        //       window.sessionStorage.setItem('user', JSON.stringify(response.data));
-        //       window.location.href = '/login-success'; // 로그인 완료 페이지로 이동
-        //     } else {
-        //       // 로그인 실패 시 처리
-        //       alert('로그인에 실패했습니다.');
-        //     }
-        //   } catch (error) {
-        //     // 로그인 요청 중 에러 발생 시 처리
-        //     console.error('로그인 요청 에러:', error);
-        //     alert('로그인 요청 중 에러가 발생했습니다.');
-        //   }
-        // }
+        try {
+          const checkUserResponse = await axios.get(`/user/${userid}`);
+          
+          if (checkUserResponse.data.exists) {
+            const response = await axios.post('/user/login', {
+              email: userid,
+              name: username,
+              nickname: usernickname
+              // ... 기타 필요한 정보 추가
+            });
+        
+            if (response.data) {
+              window.sessionStorage.setItem('user', JSON.stringify(response.data));
+              navigate('/'); // 로그인 완료 페이지로 이동
+            } else {
+              alert('로그인에 실패했습니다.');
+            }
+          } else {
+            localStorage.setItem('userInfo', JSON.stringify({
+              email: userid,
+              name: username,
+              nickname: usernickname
+              // ... 기타 필요한 정보 추가
+            }));
+            navigate('/signin'); // 회원가입 페이지로 이동
+          }
+        } catch (error) {
+          console.error('로그인 요청 에러:', error);
+          alert('로그인 요청 중 에러가 발생했습니다.');
+        }
       }
+
     });
   };
     let access_token;
