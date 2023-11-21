@@ -29,6 +29,7 @@ public class AdminController {
 	@GetMapping("getUserList")
 	@ResponseBody
 	public Page<UserDTO> getUserList(@PageableDefault(page=0, size=10, sort="email", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String filterUser){
+		System.out.println(pageable);
 		return adminService.getUserList(pageable,filterUser);
 	}
 	

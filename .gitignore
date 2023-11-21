@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 HELP.md
 
 .metadata/
@@ -151,6 +149,4 @@ out/
 /**/npm-debug.log*
 /**/yarn-debug.log*
 /**/yarn-error.log*
-=======
 /**/yarn-error.log*
->>>>>>> refs/remotes/origin/user

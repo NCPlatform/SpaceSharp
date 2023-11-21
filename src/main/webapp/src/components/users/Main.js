@@ -12,16 +12,20 @@ import axios from 'axios'
 import { Link } from "react-router-dom";
 import { options } from "@fullcalendar/core/preact";
 import Footer from "./Footer";
+import HotelItemCard from "./HotelItemCard";
 
 const Main = () => {
   const [activeTab, setActiveTab] = useState("total");
-
-  const [data, setData] = useState([]);
+  const [hotelCategoryList, setHotelCategoryList] = useState([]);
+  const [newHotelList, setNewHotelList] = useState([]);
 
   useEffect(() => {
-    axios.post('/user/getHotelCategoryList', null, {})
+    axios.post('/user/mainPage', null, {})
       .then(res => {
-        setData(res.data);
+        setHotelCategoryList(res.data.categoryList);
+        setNewHotelList(res.data.hotelList);
+        console.log(newHotelList)
+        console.log(res.data.hotelList)
       })
       .catch(error => console.log(error))
 
@@ -202,7 +206,7 @@ const Main = () => {
         </div>
         <div className="row row-cols-4 row-cols-sm-4 row-cols-md-6">
         {activeTab === "total"
-            ? data.map((item, index) => {
+            ? hotelCategoryList.map((item, index) => {
                 return (
                   <Link to={`hotelList/${item.seqHotelCategory}`} key={index} className="hotelCategoryList">
                     <div className="col my-3 text-center" >
@@ -225,7 +229,7 @@ const Main = () => {
                   </Link>
                 );
               })
-            : data
+            : hotelCategoryList
                 .filter((item) => item.tab === activeTab)
                 .map((item, index) => {
                   return (
@@ -294,43 +298,10 @@ const Main = () => {
       <div className="container mt-5">
         <h5 className="fw-bold">새로 등록됐어요</h5>
         <OwlCarousel className="owl-theme" {...options}>
-          {Array.from({ length: 6 }).map((_, idx) => (
-            <div className="item" key={idx}>
-              <Card className="shadow border-0 pt-3 mx-2 mb-5 bg-body-tertiary rounded">
-                <img
-                  className="rounded"
-                  style={{ height: "2xh", objectFit: "cover" }}
-                  src="https://modo-phinf.pstatic.net/20190516_174/15579658255198n1x7_JPEG/mosaDAPqzk.jpeg?type=w1100"
-                  alt=""
-                />
-                <Card.Title>가게이름</Card.Title>
-                <div className="mb-0 pb-0" style={{ fontSize: "0.8rem" }}>
-                  주소 | #태그 #태그
-                </div>
-                <div
-                  className="d-flex justify-content-between pb-0 mb-0"
-                  style={{ fontSize: "0.8rem" }}
-                >
-                  <p>
-                    <span
-                      style={{
-                        color: "purple",
-                        fontWeight: "bold",
-                        fontSize: "1rem",
-                      }}
-                    >
-                      16,000
-                    </span>
-                    원/시간
-                  </p>
-                  <p className="d-md-block d-lg-none d-xl-block">
-                    <span>최대 3인</span>
-                    <span>평가 15개</span>
-                    <span>좋아요 3개</span>
-                  </p>
-                </div>
-              </Card>
-            </div>
+          {newHotelList.map((item, index) => (
+            <Link to={"/detail/" + item.seqHotel } style={{ textDecoration: "none" }} key={index} className="item">
+              <HotelItemCard item={item} />
+            </Link>
           ))}
         </OwlCarousel>
       </div>

@@ -62,14 +62,17 @@ const Login = () => {
               imageWidth: 300,
               imageHeight: 200,
               imageAlt: "루피",
-            });
+            })
             window.sessionStorage.setItem("user", JSON.stringify(res.data));
             setSessionUserDTO(res.data);
+            navigate("/");
           }
         })
         .catch((error) => console.log(error));
     }
   };
+
+  const navigate = useNavigate();
 
   const [sessionUserDTO, setSessionUserDTO] = useState(
     window.sessionStorage.getItem("user")
@@ -277,4 +280,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

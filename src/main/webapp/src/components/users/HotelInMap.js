@@ -4,6 +4,8 @@ import Nav from "./Nav";
 import Footer from "./Footer";
 
 const HotelInMap = () => {
+
+
   return (
     <>
       <Nav />

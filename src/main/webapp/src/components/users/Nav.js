@@ -24,6 +24,23 @@ const NavTest = () => {
               <Navbar.Toggle
                 aria-controls={`offcanvasNavbar-expand-${expand}`}
               />
+              <Link to="/" >
+                <Navbar.Brand style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", top: "5px" }}>Space #</Navbar.Brand>
+              </Link>
+              <Form className="d-none d-lg-block">
+                <div className="input-group">
+                  <Form.Control
+                    type="search"
+                    placeholder="어떤 공간이 필요하세요?"
+                    className="me-2"
+                    aria-label="Search"
+                    style={{ width: "218px" }}
+                  />
+                  <Button variant="outline-dark">
+                    <span className="bi bi-search"></span>
+                  </Button>
+                </div>
+              </Form>
               <Navbar.Offcanvas
                 id={`offcanvasNavbar-expand-${expand}`}
                 aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
@@ -272,11 +289,29 @@ const NavTest = () => {
                     powered by &#9426; Netflex Corp
                   </div>
                 </div>
-                
+
                 {
-                  sessionUserDTO && sessionUserDTO.usergrade*1 > 5 ?
-                  <Link to="/manager" style={{textDecoration: "none"}}>
-                    <div className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor">
+                  sessionUserDTO && sessionUserDTO.usergrade * 1 > 5 ?
+                    <Link to="/manager" style={{ textDecoration: "none" }}>
+                      <div className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor">
+                        <span className="py-0 me-2">호스트센터로 이동</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          fill="currentColor"
+                          className="bi bi-arrow-right-circle"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            className="firstFontColor"
+                            d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
+                          />
+                        </svg>
+                      </div>
+                    </Link> :
+                    <div className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor" onClick={() => alert("일반유저는 접근할 수 없습니다.")}>
                       <span className="py-0 me-2">호스트센터로 이동</span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -293,29 +328,11 @@ const NavTest = () => {
                         />
                       </svg>
                     </div>
-                  </Link>:
-                  <div className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor" onClick={()=>alert("일반유저는 접근할 수 없습니다.")}>
-                    <span className="py-0 me-2">호스트센터로 이동</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      fill="currentColor"
-                      className="bi bi-arrow-right-circle"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        className="firstFontColor"
-                        d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
-                      />
-                    </svg>
-                  </div>
                 }
                 {
-                  sessionUserDTO && sessionUserDTO.usergrade*1 === 10 ?
-                  <Link to="/admin" style={{textDecoration: "none"}}>
-                    <div className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor">
+                  sessionUserDTO && sessionUserDTO.usergrade * 1 === 10 ?
+                    <Link to="/admin" style={{ textDecoration: "none" }}>
+                      <div className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor">
                         <span className="py-0 me-2">최고 관리자 페이지로 이동</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -332,24 +349,10 @@ const NavTest = () => {
                           />
                         </svg>
                       </div>
-                    </Link>:<></>
+                    </Link> : <></>
                 }
               </Navbar.Offcanvas>
-              <Link to="/">
-                <Navbar.Brand>Space #</Navbar.Brand>
-              </Link>
-              <Form className="d-flex">
-                <Form.Control
-                  type="search"
-                  placeholder="어떤 공간이 필요하세요?"
-                  className="me-2"
-                  aria-label="Search"
-                  style={{ width: "220px" }}
-                />
-                <Button variant="outline-dark">
-                  <span className="bi bi-search"></span>
-                </Button>
-              </Form>
+
             </Container>
           </Navbar>
         </div>
