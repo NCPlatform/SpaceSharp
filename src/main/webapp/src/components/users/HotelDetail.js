@@ -299,6 +299,11 @@ const Detail = () => {
                                 <p style={{ fontSize: '12px' }}>루프탑 보유</p>
                               </div>
                             )}&nbsp;&nbsp;
+                            {hotelDTO.TV === true && (
+                              <div>
+                                <p style={{ fontSize: '12px' }}>TV 있음</p>
+                              </div>
+                            )}&nbsp;&nbsp;
                           </React.Fragment>
                         )}
                       </div>

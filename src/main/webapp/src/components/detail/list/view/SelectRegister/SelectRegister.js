@@ -5,6 +5,7 @@ import moment from "moment";
 import "react-calendar/dist/Calendar.css";
 import InputGroup from "react-bootstrap/InputGroup";
 import axios from "axios";
+import Swal from 'sweetalert2';
 
 const inputNumberViewStyle = {
   width: "100%",
@@ -27,7 +28,7 @@ function formatDateTime(date) {
   return `${year}. ${month}. ${day}. (${dayOfWeek}) ${hours}시`;
 }
 const SelectRegister = ({ data, room }) => {
-  //KMONG: 기존 예약된 정보 -> 예약 불가능한 시간
+  //기존 예약된 정보 -> 예약 불가능한 시간
   const [reservations, setReservations] = useState([]);
   // react-calendar를 위한 state 선언
   const [calendarData, setCalendarData] = useState(new Date());
@@ -166,45 +167,70 @@ const SelectRegister = ({ data, room }) => {
   // 시간 선택 이벤트용 함수
   // -1 : 초기 화면 (선택 안함), 0 : 시작 버튼 클릭 대기, 1 : 종료 버튼 클릭 대기 (이이상 은 다시 1로 시작)
   const [clickCount, setClickCount] = useState(-1);
+  
   const toggleTime = (index) => {
     // 초기 화면 시작
     let tempClickCount = clickCount;
     if (tempClickCount === -1) {
       tempClickCount = 0;
     }
-
+  
     // 이후, 로직 시작
     if (tempClickCount === 0) {
       // 시작 시간 클릭 시
       setStartHour(index);
       setEndHour(index + 1);
-
+  
       let isArrSelect = Array(24).fill(false);
       isArrSelect[index] = true;
       setIsSelectedTime(isArrSelect);
     } else {
       // 종료 시간 클릭시
-      if (startHour > index) {
-        alert("종료시간이 시작시간이전을 선택할 수 없습니다.");
+      if (startHour === index) {
+        // 같은 시간을 다시 클릭하면 선택을 해제합니다.
+        setStartHour(null);
+        setEndHour(null);
+        setIsSelectedTime(Array(24).fill(false));
+        setClickCount(-1);
         return;
       }
-      // KMONG
-      // if (reservations.length > 0) {
-      // if (startHour <= reservations[0] && endHour >= reservations[0]) {
-      // alert("예약 불가능한 시간이 포함되어있습니다.");
-      // return;
-      // }
-      // }
+  
+      if (startHour > index) {
+        // Use SweetAlert for the alert
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: '종료시간이 시작시간보다 이전을 선택할 수 없습니다.',
+        });
+        return;
+      }
+  
+      // 선택한 시간 범위가 24시간을 초과하는지 확인합니다.
+      if (index - startHour + 1 > 24) {
+        // Use SweetAlert for the alert
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: '예약 가능한 최대 시간은 24시간입니다.\n24시간을 초과하는 예약에 대해서는 1:1 문의 부탁드립니다.',
+        });
+        return;
+      }
+  
       const range = Array.from(
         { length: index - startHour + 1 },
         (_, index) => startHour + index
       );
       const commonHour = range.filter((hour) => reservations.includes(hour));
       if (commonHour.length > 0) {
-        alert("예약 불가능한 시간이 포함되어있습니다.");
+        // Use SweetAlert for the alert
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: '예약 불가능한 시간이 포함되어 있습니다.',
+        });
         return;
       }
-
+  
       setEndHour(index + 1);
       let isArrSelect = isSelectedTime;
       for (
@@ -216,7 +242,8 @@ const SelectRegister = ({ data, room }) => {
       }
       setIsSelectedTime(isArrSelect);
     }
-
+  
+    // 클릭 횟수를 조절하여 시작과 종료를 번갈아가며 선택할 수 있도록 합니다.
     if (tempClickCount % 2 === 0) {
       setClickCount(1);
     } else {
@@ -354,7 +381,7 @@ const SelectRegister = ({ data, room }) => {
       <span className="text-danger">
         <i className="bi bi-info-circle" />
         &nbsp;
-        {`24시간 이상 예약은 1:1 문의 부탁드립니다. 예약 도중 이탈하시는 경우, 결제 오류가 발생할 수 있습니다.`}
+        {`24시간을 초과하는 예약에 대해서는 1:1 문의 부탁드립니다. 예약 도중 이탈하시는 경우, 결제 오류가 발생할 수 있습니다.`}
       </span>
       <br />
       <br />
