@@ -63,7 +63,7 @@ function App() {
           </Route>
           <Route path="hotelInMap" element={<HotelInMap />} />
           <Route path="hotelReserve">
-            <Route path=":seqHotel" element={<HotelReserve />} />
+            <Route path=":seqRoom" element={<HotelReserve />} />
           </Route>
           <Route path="hotelReserveList" element={<HotelReserveList />} />
           <Route path="hotelReviewTest" element={<HotelReviewTest />} />

@@ -249,9 +249,26 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String hotelReserve(int seqHotel) {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String,Object> hotelReserve(int seqRoom) {
+		
+		StringBuffer sb = new StringBuffer("");
+		
+		RoomDTO room = roomDAO.findById(seqRoom).get();
+		HotelDTO hotel = hotelDAO.findById(room.getSeqHotel()).get();
+		
+		List<String> categories = Arrays.asList(hotel.getSeqHotelCategory().split(",")).stream().map(String::trim).collect(Collectors.toList());
+	    for(String category : categories) {
+	    	sb.append(hotelCategoryDAO.findById(Integer.parseInt(category)).get().getName() + ",");
+	    }
+	    sb.setLength(sb.length()-1);
+		
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("room", room);
+		map.put("hotel", hotel);
+		map.put("owner", userDAO.findById(hotel.getOwnerEmail()));
+		map.put("hotelCategory", sb.toString());
+		
+		return map;
 	}
 	
 	

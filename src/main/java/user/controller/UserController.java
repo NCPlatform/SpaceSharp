@@ -227,8 +227,7 @@ public class UserController {
 	}
 	
 	@GetMapping(value="hotelReserve")
-	public String hotelReserve(int seqHotel) {
-		
-		return userService.hotelReserve(seqHotel);
+	public Map<String,Object> hotelReserve(int seqRoom) {
+		return userService.hotelReserve(seqRoom);
 	}
 }
