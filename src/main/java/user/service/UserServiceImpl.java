@@ -1,11 +1,14 @@
 package user.service;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeSet;
 
-import jpa.bean.*;
-import jpa.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,15 +17,20 @@ import org.springframework.stereotype.Service;
 import jpa.bean.BoardDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.ReservationDTO;
+import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
 import jpa.dao.BoardDAO;
 import jpa.dao.HotelCategoryDAO;
 import jpa.dao.HotelDAO;
+import jpa.dao.ReservationDAO;
 import jpa.dao.RoomDAO;
 import jpa.dao.UserDAO;
 
 @Service
 public class UserServiceImpl implements UserService {
+	
+	
 	
 	@Autowired
 	private UserDAO userDAO;
@@ -41,6 +49,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private ReservationDAO reservationDAO;
+	
 
 	@Override
 	public String accountWrite(UserDTO userDTO) {
@@ -48,7 +57,7 @@ public class UserServiceImpl implements UserService {
 		userDAO.save(userDTO);
 		return "리턴 성공";
 	}
-		
+	
 	@Override
 	public boolean existsByEmail(String email) {
 		return userDAO.existsByEmail(email);
@@ -247,6 +256,19 @@ public class UserServiceImpl implements UserService {
 	public Page<BoardDTO> list (Pageable pageable, int seqRefSeqBoard) {
 		return boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
 	}
+
+	@Override
+	public boolean updateUserNaverStatus(String userEmail, boolean isnaver) {
+		 Optional<UserDTO> optionalUser = userDAO.findById(userEmail);
+        if (optionalUser.isPresent()) {
+            UserDTO user = optionalUser.get();
+            user.setIsnaver(isnaver);
+            userDAO.save(user);
+            return true;
+        }
+        return false;
+    }
+
 	
 	
 }

@@ -88,7 +88,9 @@ const Login = () => {
     'businessRegistrationNumber': 0,//
     'companyName': '',//
     'usergrade': 1,
-    'payment':''
+    'payment':'',
+    'isnaver' : '',
+    'iskakao' : ''
   }
   )
 
@@ -119,54 +121,115 @@ const Login = () => {
           nickname: usernickname
         });
       
-        console.log(naverLogin.user)
+        // console.log(naverLogin.user)
 
-        console.log(userid)
-        console.log(username)
-        console.log(usernickname)
+        // console.log(userid)
+        // console.log(username)
+        // console.log(usernickname)
 
         try {
-          const checkUserResponse = await axios.get(`/user/${userid}`);
-          
-          if (checkUserResponse.data.exists) {
-            const response = await axios.post('/user/login', {
-              email: userid,
-              name: username,
-              nickname: usernickname
-              // ... 기타 필요한 정보 추가
-            });
-            const existingUser = checkUserResponse.data.user;
-
-            const iskakao = existingUser.isKakao; // 기존 사용자가 카카오로 가입한 경우 플래그
-            const isnaver = existingUser.isNaver; // 기존 사용자가 네이버로 가입한 경우 플래그
-
-            if (isnaver && response.data) {
-              window.sessionStorage.setItem('user', JSON.stringify(response.data));
-              navigate('/'); // 로그인 완료 페이지로 이동
-              if (iskakao) {
-                // 네이버아이디가 아닌 카카오 아이디라면 네이버 아이디와 통합을 할 것인지 확인
-              } else {
-                alert('로그인에 실패했습니다.');
-                navigate('/login')
-              }
-            } } else {
-              localStorage.setItem('userInfo', JSON.stringify({
-                email: userid,
-                name: username,
-                nickname: usernickname
-                // ... 기타 필요한 정보 추가
+          const checkUserResponse = await axios.get(`/user/userid?email=${userid}`);
+          // userid 라는 이름으로 email 정보 가져오는 요청
+          if (checkUserResponse.data) {
+            // 가져온 데이터를 기준으로 if 절
+            const existingUser = checkUserResponse.data;
+            // 가져온 데이터의 이름을 existingUser 라고 지칭함
+            const iskakao = existingUser.iskakao; // 기존 사용자가 카카오로 가입한 경우 플래그
+            const isnaver = existingUser.isnaver; // 기존 사용자가 네이버로 가입한 경우 플래그
+            
+            if(isnaver) { // 네이버연동이 되어있는 아이디 라면
+              try{ //post 로 백엔드에 요청 (isnaver 값을 true로 바꾸는 것)
+                axios .post('/user/updateNaverStatus') 
+                      .then(res => {
+                        sessionStorage.setItem('user', JSON.stringify(existingUser)); // 세션스토리지에 저장
+                        Swal.fire({
+                          title: "로그인 성공",
+                          imageUrl:
+                            "https://item.kakaocdn.net/do/a7884a879ae30614290a1c20325e05e59cbcbe2de7f4969efc79ab353e0c19e8",
+                          imageWidth: 300,
+                          imageHeight: 200,
+                          imageAlt: "루피",
+                        })
+                        navigate('/') // 로그인완료하여 메인페이지로 이동
+                      })
+                      .catch(error => { //axios 의 catch
+                        console.log(error);
+                      }) 
+                }
+                catch (error) { // try 의 catch
+                  console.error('에러 발생:', error);
+                  // 에러 처리 로직 추가
+                }
+            
+            } else { // 네이버연동이 되어있는 아이디가 아니라면
+              
+              window.localStorage.setItem('user', JSON.stringify(existingUser)); //로컬스토리지에 데이터 저장
+              
+              if (iskakao) { // 카카오 연동이 되어있는 아이디 라면
+                console.log('카카오 통합할래요')
+                // 네이버 아이디와 통합을 할 것인지 확인
+                Swal.fire({
+                  title: '네이버 아이디와 카카오 아이디 통합',
+                  text: '네이버 아이디와 카카오 아이디를 통합하시겠습니까?',
+                  showCancelButton: true,
+                  confirmButtonText: '예',
+                  cancelButtonText: '아니오',
+                  icon: 'question'
+                }).then(async (result) => {
+                    if (result.isConfirmed) { // 통합을 한다면 
+                
+                    try{ // post로 백엔드에 요청 (isnaver 값을 true로 바꾸는 것)
+                      axios .post('/user/updateNaverStatus')
+                            .then(res => {
+                              sessionStorage.setItem('user', JSON.stringify(existingUser)); // 세션 스토리지에 저장
+                              Swal.fire({
+                                title: '통합이 성공되었습니다.',
+                                imageUrl: 'https://item.kakaocdn.net/do/d640911d600b52c55d356740537ae9569f5287469802eca457586a25a096fd31',
+                                imageWidth: 300,
+                                imageHeight: 200,
+                                imageAlt: '구데타마',
+                              })
+                              navigate('/') // 로그인 완료와 함께 메인 페이지로 이동
+                            })
+                            .catch(error => { // axios 에 대한 catch
+                              console.log(error);
+                            })
+                    } catch (error) { // try에 대한 catch
+                      console.error('로그인 요청 에러:', error);
+                      alert('로그인 요청 중 에러가 발생했습니다.');
+                    }
+                  } else { // 통합을 하지 않는다고 하면 로그인에 실패했습니다. 라는 알람과 함께 로그인 페이지로 이동
+                    Swal.fire({
+                      title: "로그인에 실패하였습니다.",
+                      imageUrl:
+                        "https://item.kakaocdn.net/do/58119590d6204ebd70e97763ca933baf82f3bd8c9735553d03f6f982e10ebe70",
+                      imageWidth: 300,
+                      imageHeight: 200,
+                      imageAlt: "루피",
+                    });
+                    navigate('/login')
+                  }
+              });  
+              } else { // 네이버와 카카오 모두 연동이 되어있는 아이디가 아니라면 네이버에서 email, name, nickname 정보를 받아와서 로컬 스토리지에 저장
+                localStorage.setItem('userInfo', JSON.stringify({
+                  email: userid,
+                  name: username,
+                  nickname: usernickname
+                  // 로컬스토리지에 저장된 데이터를 회원가입 페이지의 email, name, nickname 란에 전달하는 코드 필요 (예상)
               }));
               navigate('/signin'); // 회원가입 페이지로 이동
-            }
-          } catch (error) {
-            console.error('로그인 요청 에러:', error);
-            alert('로그인 요청 중 에러가 발생했습니다.');
-          }
+              }
+              }}
       
-      }
-
-    });
-  };
+        }
+        catch (error) {  // userid 라는 이름으로 email 정보 가져오는 요청 했던 try 문에 대한 catch
+          console.error('에러 발생:', error);
+          // 에러 처리 로직 추가
+        }
+       
+    }
+  });
+};
     let access_token;
     let regresh_token;
     let domain = 'naver';

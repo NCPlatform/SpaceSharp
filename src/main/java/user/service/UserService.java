@@ -77,4 +77,6 @@ public interface UserService {
 	
 	public Map<String, Object> mainPage();
 
+	public boolean updateUserNaverStatus(String userEmail, boolean isnaver);
+
 }
