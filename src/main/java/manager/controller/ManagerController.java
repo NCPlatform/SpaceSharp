@@ -35,6 +35,10 @@ public class ManagerController {
 	
 	private String bucketName = "spacesharpbucket";
 	
+	public void verifGrass(String a) {
+		System.out.println("good?");
+	}
+	
 	@PostMapping(value = "addedPlace")
 	@ResponseBody
 	public int addedPlace(@RequestPart HotelDTO hotelDTO,
