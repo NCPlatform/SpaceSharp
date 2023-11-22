@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import AddFinishModal from './AddFinishModal';
+import TextEditor from '../../TextEditor';
 
 const AddRoom = () => {
     // useState & variables ==========================================
@@ -15,7 +17,13 @@ const AddRoom = () => {
             reserveRule: ''
         })
 
+        const [imageList, setImageList] = useState([])
+
+        const [file, setFile] = useState('')
+
         const [isMeter, setIsMeter] = useState(true)
+
+        const [isFinished, setIsFinished] = useState(false)
 
     // functions =====================================================
 
@@ -27,34 +35,27 @@ const AddRoom = () => {
             })
         }
 
-        const addImage = () => {
-            const newImg = document.createElement('input')
-            newImg.setAttribute('type', 'text')
-            newImg.setAttribute('name', 'img')
-            newImg.setAttribute('style', 'width: 350px')
-            newImg.addEventListener('change', () => {
-                console.log('이미지세팅===========')
-                settingImgs()
-            })
-            const imgAddBtn = document.getElementById('imgAddBtn')
-
-            const br = document.createElement('br')
-            imgAddBtn.after(br)
-            br.after(newImg)
+        const editorVal = (val) => {
             
+            setRoomDTO({...roomDTO, normalExplain:val})
         }
+        
+        const settingImages = (e) => {
+            const imageFiles = Array.from(e.target.files)
+            let imgArray = []
 
-        const settingImgs = () => {
-            const imgInfo = document.getElementsByName('img')
-            let img = "";
-            console.log(imgInfo)
-            imgInfo.forEach((eachTags)=>{
-                img += ","+eachTags.value
+            imageFiles.map(item => {
+                const objectURL = URL.createObjectURL(item)
+                imgArray.push(objectURL)
+
+                return null;
             })
 
-            console.log(img)
-            setRoomDTO({...roomDTO, img:img})
+            setImageList(imgArray)
+            setFile(e.target.files)
+
         }
+
         const settingPeople = () => {
             let people = '최소 '
             var min = document.getElementById('min')
@@ -89,10 +90,20 @@ const AddRoom = () => {
         }
 
         const submitVals = () => {
-            axios.post('http://localhost:8080/manager/addedRoom', null, {
-                params: roomDTO
-            }).then(res => 
-                console.log(res)
+            var formData = new FormData()
+            formData.append('roomDTO', new Blob([JSON.stringify(roomDTO)], {type: 'application/json'}))
+            
+            Object.values(file).map((item, index) => {
+                formData.append('img', item)
+                return null;
+            })
+
+            axios.post('http://localhost:8080/manager/addedRoom', formData, {
+                headers:{
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then( 
+                setIsFinished(true)
               //  window.location.href = '/manager/addRoom/'+res.data
                                     // 맨 앞에 /가 있느냐 없느냐에 따라 결과가 다름
             ).catch(e => console.log(e))
@@ -126,13 +137,21 @@ const AddRoom = () => {
                         </tr>
                         <tr>
                             <td>룸 소개</td>
-                            <td><input type = 'text' style = {styleB} name = 'normalExplain' onChange = {insertData} placeholder = '손님들에게 보여질 소개 멘트를 작성해 주세요.'/></td>
+                                <td>
+                                    <div>
+                                    <TextEditor func = {editorVal}/>
+                                    </div>
+                                </td>
                         </tr>
                         
                         <tr>
                             <td>룸 사진 등록</td>
                             <td>
-                                <input type = 'text' id = 'firstImage' style = {styleB} name = 'img' placeholder = "이미지 URL을 등록해 주세요" onChange = {insertData}/> <button type = 'button' id = 'imgAddBtn' onClick = {addImage}>+</button> 
+                                <input type = 'file' name = 'img[]' multiple = 'multiple' onChange = {settingImages}/>
+                                <br/>
+                                {
+                                    imageList.map((item, index) => <img key = {index} src = {item} style = {{width: '40px', height: '40px'}} alt = ''/>)
+                                }
                             </td>
                         </tr>
                         <tr>
@@ -173,6 +192,10 @@ const AddRoom = () => {
                 </table>
                         <button type = 'button' onClick = {confirmVals}>DTO 값 확인하기</button>
                         <button type = 'button' onClick = {submitVals}>새로운 룸 등록하기</button> 
+                        {
+                            isFinished && <AddFinishModal value = {hotelSeq}/>
+
+                        }
             </form>
         </div>
     );

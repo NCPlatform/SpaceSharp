@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import axios from 'axios';
+import TextEditor from '../../TextEditor';
 
 const ManagerAddPlace = () => {
 
-
     // useState & variables ==========================================
+        
+        // Session
+        const session = JSON.parse(window.sessionStorage.getItem("user"))
+
         const [hotelDTO, setHotelDTO] = useState({
-            img: '',
+            
             name: '', subscribe: '', mainKeyword: '', seqHotelCategory: '',
-            keyword: '', addr: '', ownerEmail: '',
-            workinghour: '', holiday: '', placeEx: '', // placeEx -> <p></p> 태그에 싸야 함
+            keyword: '', addr: '', ownerEmail: session.email,
+            workinghour: '', holiday: '', placeEx: '', 
             facilities: '', alert: '', refund: '',
             coupon: false, TV: false, internet: false, 
             copy: false, whiteboard: false, mic: false, 
@@ -26,7 +30,7 @@ const ManagerAddPlace = () => {
 
         })
 
-        const {seqHotelCategory} = hotelDTO
+        const {seqHotelCategory, holiday, ownerEmail} = hotelDTO
 
         const [whenOn, setWhenOn]  = useState({
             openTime: 0,
@@ -41,14 +45,21 @@ const ManagerAddPlace = () => {
 
         const [exceptSelfHolidays, setExceptSelfHolidays] = useState('hidden')
 
-    
+        const { daum } = window;
 
+
+        // 231120 modified
+        const [imageList, setImageList] = useState([])
+
+        const [file, setFile] = useState('')
+
+        
     // functions =====================================================
         const doNothing = () => {}
 
         const insertData = (e) => { // input onchange
             let {name, value} = e.target
-            name === 'placeEx' ? value = '<p>'+value+'</p>' : value = value
+           // name === 'placeEx' ? value = '<p>'+value+'</p>' : value = value
          //   name === 'seqHotelCategory' ? seqHotelCategory!== '' ? value = seqHotelCategory+','+value : value = value : value = value
    // 1109 >>      //   name === 'holiday' ? value === 'no holidays' ? console.log('holiday 값이 변경되었으며 연중무휴입니다.') ? value === 'self-holiday' ? console.log('직접 입력 상태입니다.') : console.log('직접 입력 상태가 아닙니다') : console.log('holiday 값이 변경되었지만 no holidays가 아닙니다.') : console.log('holiday 값이 변경되지 않았습니다.')
          //   name === 'holiday' ? value === 'no holidays' || 'self-holiday' ? setExceptNoHolidays('hidden') : setExceptNoHolidays('visible') : value = value
@@ -57,6 +68,10 @@ const ManagerAddPlace = () => {
                 ...hotelDTO, [name]: value
             })
             
+        }
+
+        const editorVal = (val) => {
+            setHotelDTO({...hotelDTO, placeEx:val})
         }
 
         const settingHashTags = (e) => {
@@ -85,41 +100,53 @@ const ManagerAddPlace = () => {
            setHotelDTO({...hotelDTO, keyword:tags})
         }
 
-        const addImage = () => {
-            const newImg = document.createElement('input')
-            newImg.setAttribute('type', 'text')
-            newImg.setAttribute('name', 'img')
-            newImg.setAttribute('style', 'width: 350px')
-            newImg.addEventListener('change', () => {
-                console.log('이미지세팅===========')
-                settingImgs()
-            })
-            const imgAddBtn = document.getElementById('imgAddBtn')
+       
+       
+        // 231120 modified ============================
 
-            const br = document.createElement('br')
-            imgAddBtn.after(br)
-            br.after(newImg)
-            
-        }
+        const settingImages = (e) => {
+            const imageFiles = Array.from(e.target.files)
+            let imgArray = []
 
-        const settingImgs = () => {
-            const imgInfo = document.getElementsByName('img')
-            let img = "";
-            console.log(imgInfo)
-            imgInfo.forEach((eachTags)=>{
-                img += ","+eachTags.value
+            imageFiles.map(item => {
+                const objectURL = URL.createObjectURL(item)
+                imgArray.push(objectURL)
+
+                return null;
             })
 
-            console.log(img)
-            setHotelDTO({...hotelDTO, img:img})
+            setImageList(imgArray)
+            setFile(e.target.files)
+
         }
+
+
 
         const settingVals = () => { // 주소창 입력하려 눌렀을 때 해시태그, 이미지 확정
-            settingImgs()
+    
             insertTags()
         }
 
-        const settingHolidays = (e) => {
+        const searchAddr = () => {
+            settingVals()
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    var roadAddr = data.roadAddress; // 도로명 주소 변수
+                    document.getElementById("roadAddr").value = roadAddr;
+                }
+            }).open();
+        }
+
+        const settingAddr = (e) => {
+            const {value} = e.target
+            const detailAddr = value;
+            const roadAddr = document.getElementById('roadAddr').value
+            const entireAddr = roadAddr + " " + detailAddr
+            setHotelDTO({...hotelDTO, addr: entireAddr})
+        }
+
+
+        const settingHolidays = (e) => { // [FIX] 여기도 수정 필요
             let {name, value} = e.target
             value === 'no holidays' ? setExceptNoHolidays('hidden') : setExceptNoHolidays('visible') 
             value === 'self-holiday' ? setExceptSelfHolidays('visible') : doNothing()
@@ -141,9 +168,11 @@ const ManagerAddPlace = () => {
             console.log('name is : ' + name + ' value is : '+ value + ' checked is : '+checked)
 
             // 이미 지정된 값이 있다면 ? 쉼표를 추가해서 복수 값으로 만들고 : 지정된 값이 없다면 그냥 놔두기
-            seqHotelCategory!== '' ? value = seqHotelCategory+','+value : value = value
+            name === 'seqHotelCategory' ? seqHotelCategory!== '' ? value = seqHotelCategory+','+value : value = value : value = value
 
-            // 체크된 상태라면 ? DTO 안에 값을 넣고 : 아니면 console.log
+            name === 'holiday' ? holiday !== '' ? value = holiday + ',' + value : value = value : value = value
+
+            // 체크된 상태라면 ? DTO 안에 값을 넣고 : 아니면(체크되어 있던 것을 해제한 경우) 빈 칸으로 대체하기
             checked === true ? setHotelDTO({ ...hotelDTO, [name]:value }) : setHotelDTO({ ... hotelDTO, [name]:value.replaceAll(origin, '')})
         }
 
@@ -161,6 +190,7 @@ const ManagerAddPlace = () => {
 
         
     // CSS ===========================================================
+
         const styleA = {fontSize: '1.2em', fontWeight: 'bold'} // style = {styleA}
         const styleB = {width: '350px'} // style = {styleB}
         const styleC = {fontSize: '0.8em', color: 'gray'}
@@ -168,25 +198,47 @@ const ManagerAddPlace = () => {
         const styleE = {width: '45px'} 
         const styleF = {visibility: exceptNoHolidays}
         const styleG = {visibility: exceptSelfHolidays}
-        
+        const styleH = {width: '253px'}   
+
     // API, etc ======================================================
         const confirmVals = () => {
             console.log(hotelDTO)
+            
+
         }
 
         const submitVals = () => {
-            axios.post('http://localhost:8080/manager/addedPlace', null, {
-                params: hotelDTO
-            }).then(res => 
-               // console.log(res)
-                window.location.href = '/manager/addRoom/'+res.data
-                                    // 맨 앞에 /가 있느냐 없느냐에 따라 결과가 다름
-            ).catch(e => console.log(e))
+            // axios.post('http://localhost:8080/manager/addedPlace', null, {
+            //     params: hotelDTO
+            // }).then(res => 
+            //    // console.log(res)
+            //     window.location.href = '/manager/addRoom/'+res.data
+            //                         // 맨 앞에 /가 있느냐 없느냐에 따라 결과가 다름
+            // ).catch(e => console.log(e))
+            var formData = new FormData()
+            formData.append('hotelDTO', new Blob([JSON.stringify(hotelDTO)], {type: 'application/json'}))
+            
+            Object.values(file).map((item, index) => {
+                formData.append('img', item)
+                return null;
+            })
+
+            console.log(formData)
+           
+            axios.post('http://localhost:8080/manager/addedPlace', formData, {
+                headers:{
+                    'Content-Type': 'multipart/form-data'
+                }
+    
+            }).then(res=>{alert('플레이스 등록이 완료되었어요! 호실 등록으로 이동합니다.');  window.location.href = '/manager/addRoom/'+res.data
+            }).catch(e => console.log(e))
+    
         }
 
     // NOTE ========================================================== 231107 ~ 추가중
         /*
             1. [TO DO] addr을 카카오맵 불러와서 찍어볼까 생각 중에 있음. 기본 구현 다 되면 진행해볼 예정
+            1-1. 도로명주소 찾기 기능을 이용해 유저가 넣는 값 통제하기 
 
             2. 이 단계에서 유저가 집어넣으면 안 되는 값들
                  -> seq_hotel(AI), ownerEmail(세션에서 줌)
@@ -198,7 +250,8 @@ const ManagerAddPlace = () => {
             4-1. [TO DO] 사용자는 hashtag의 # 제외한 value만 입력할 수 있도록 하기  (완료)
             4-2. [TO DO] 해시태그 객체가 동적으로 추가되게 하려면? 방법 생각해 보기  (완료)
 
-           
+            5. [FIX] 공휴일 설정 바꾸기
+
         */
 
     return (
@@ -208,9 +261,9 @@ const ManagerAddPlace = () => {
                 <table>
                     <tbody>
                         <tr>
-                            <td>[임시]OwnerEmail</td>
+                            <td>[확인용]OwnerEmail</td>
                             <td>
-                            <input type = 'text' name = 'ownerEmail' onChange = {insertData}/>
+                            <input type = 'text' readOnly name = 'ownerEmail' value = {ownerEmail}/>
                             </td>
                         </tr>
                         <tr>
@@ -219,11 +272,15 @@ const ManagerAddPlace = () => {
                         </tr>
                         <tr>
                             <td>한 마디 소개</td>
-                            <td><input type = 'text' style = {styleB} name = 'placeEx' onChange = {insertData} placeholder = '손님들에게 보여질 소개 멘트를 작성해 주세요.'/></td>
+                            <td><input type = 'text' style = {styleB} name = 'subscribe' onChange = {insertData} placeholder = '손님들에게 보여질 소개 멘트를 작성해 주세요.'/></td>
                         </tr>
                         <tr>
                             <td>소개</td>
-                            <td><textarea rows = '5' cols = '45' name = 'subscribe' onChange = {insertData} placeholder = '플레이스 소개를 작성해 주세요.'></textarea></td>
+                            <td>
+                                <div>
+                                <TextEditor func = {editorVal}/>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td>해시태그</td>
@@ -236,7 +293,11 @@ const ManagerAddPlace = () => {
                         <tr>
                             <td>숙소 사진 등록</td>
                             <td>
-                                <input type = 'text' id = 'firstImage' style = {styleB} name = 'img' placeholder = "이미지 URL을 등록해 주세요" onChange = {insertData}/> <button type = 'button' id = 'imgAddBtn' onClick = {addImage}>+</button> 
+                                <input type = 'file' name = 'img[]' multiple = 'multiple' onChange = {settingImages}/>
+                                <br/>
+                                {
+                                    imageList.map((item, index) => <img key = {index} src = {item} style = {{width: '40px', height: '40px'}} alt = ''/>)
+                                }
                             </td>
                         </tr>
                         <tr>
@@ -249,21 +310,38 @@ const ManagerAddPlace = () => {
                         </tr>
                         <tr>
                             <td>주소</td>
-                            <td><input type = 'text' style = {styleB} name = 'addr' placeholder = '주소를 입력해 주세요.' onChange = {insertData} onFocus = {settingVals}/></td>
+                            <td>
+                                <div>
+                                    <input type = 'text' readOnly style = {styleH} id = 'roadAddr' placeholder = '우측 버튼 클릭'/>
+                                    &nbsp; <button type = 'button' id = 'mapBtn' onClick = {searchAddr} >주소 검색</button>
+                                    <br/><input type = 'text' style = {styleH} id = 'detailAddr' onChange = {settingAddr} placeholder = '상세주소 입력'/>
+                                   
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td>영업시간 & 휴무일</td>
                             <td>
                                 <input style = {styleE} type = 'number' name = 'openTime' onChange = {settingOn}/>시부터 <input style = {styleE} type = 'number' name =  'closeTime' onChange = {settingOn} onBlur = {fixWorkTime}/>시까지
                                 <br/>
-                                <select name = 'holiday' onChange = {settingHolidays}>휴무일 선택하기
-                                    <option value = 'every Sun, holidays'>매주 일요일, 공휴일</option>
-                                    <option value = 'only Sundays' >매주 일요일</option>
-                                    <option value = 'only Mondays'>매주 월요일</option>
-                                    <option value = 'only holidays'>공휴일에만</option>
-                                    <option value = 'no holidays'>연중무휴</option>
-                                    <option value = 'self-holiday'>직접입력</option>
-                                    </select><span style = {styleF}>에 쉬어요</span><span style = {styleG}>&emsp;<input type = 'text' name = 'holiday' onChange = {settingHolidays} placeholder = '휴무일 직접 입력'/></span>
+                                <div>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' value = 'law' onChange = {setCate}/>법정공휴일</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' value = 'Sun' onChange = {setCate}/>매주 일요일</label></td>
+                                                <td style = {styleD}> <label><input type = 'checkbox' name = 'holiday' value = 'Mon' onChange = {setCate}/>매주 월요일</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' value = 'Tue' onChange = {setCate}/>매주 화요일</label></td>
+                                            </tr>
+                                            <tr>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' value = 'Wed' onChange = {setCate}/>매주 수요일</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' value = 'Thu' onChange = {setCate}/>매주 목요일</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' value = 'Fri' onChange = {setCate}/>매주 금요일</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' value = 'Sat' onChange = {setCate}/>매주 토요일</label></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                     </div>
                             </td>
                         </tr>
                         <tr>
@@ -272,9 +350,6 @@ const ManagerAddPlace = () => {
                         </tr>
                         <tr>
                             <td>쿠폰 가능 여부</td> 
-                            {
-                                // 슬라이드 스위치로 진행 
-                            }
                             <td><label><input type = 'checkbox' name = 'coupon' onChange = {setBooleans} />&nbsp; 체크하시면 이용자가 결제 시 쿠폰을 사용할 수 있습니다.</label></td>
                         </tr>
                         <tr>

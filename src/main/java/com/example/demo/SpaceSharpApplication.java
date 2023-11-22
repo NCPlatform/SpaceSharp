@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.example.demo","user.*","admin.*","manager.*"})
+@ComponentScan(basePackages = {"com.example.demo","naver.conf","user.*","admin.*","manager.*"})
 @EnableJpaRepositories("jpa.dao")
 @EntityScan("jpa.bean")
 @MapperScan("mybatis.dao")

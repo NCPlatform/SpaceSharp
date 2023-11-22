@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jpa.bean.BoardDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
@@ -38,6 +39,8 @@ public interface UserService {
 
 	public List<HotelDTO> getHotelList(String seqHotelCategory);
 	
+	boolean existsByEmail(String email);
+	
 	public String getMainKeyword(int seqHotel);
 
 	public Page<BoardDTO> list(Pageable pageable, int seqRefSeqBoard);
@@ -62,6 +65,7 @@ public interface UserService {
 	
 	public UserDTO getUserByEmail(String email);
 
+
 	public List<RoomDTO> getRoomListByHotel(int seqHotel);
 
 	public List<ReservationDTO> getReservationListByRoom(int seqRoom, Date startDate, Date endDate);
@@ -71,6 +75,7 @@ public interface UserService {
 	public String getAlert(int seqHotel);
 
 	public String getRefund(int seqHotel);
+	
 	public Map<String, Object> mainPage();
 
 }

@@ -10,6 +10,18 @@ import jpa.bean.UserDTO;
 import java.util.List;
 
 public interface UserDAO extends JpaRepository<UserDTO, String> {
+	
+	boolean existsByEmail(String email);
+
+
+
+
+	
+
+
+
+
+
 
 	Page<UserDTO> findAllByUsergradeLessThan(Pageable pageable, int i);
 
