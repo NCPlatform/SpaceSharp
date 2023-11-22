@@ -45,9 +45,19 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<HotelDTO> getHotelList(String seqHotelCategory) {
-		return hotelDAO.findBySeqHotelCategoryContaining(seqHotelCategory);
+	    // ','로 구분된 값을 분리하여 리스트로 만듭니다.
+	    List<String> categories = Arrays.asList(seqHotelCategory.split(", "));
+	    // 각 카테고리에 대해 trim을 사용하여 앞뒤의 공백을 제거합니다.
+	    categories = categories.stream().map(String::trim).collect(Collectors.toList());
+
+	    if (categories.size() > 1) {
+	        // ','가 포함되었거나 하나의 값이 비어있지 않은 경우
+	        return hotelDAO.findBySeqHotelCategoryIn(categories);
+	    } else {
+	        // ','가 없는 경우 또는 하나의 값이 비어있는 경우
+	        return hotelDAO.findBySeqHotelCategoryContaining(seqHotelCategory);
+	    }
 	}
-	
 	@Override
 	public Optional<UserDTO> login(UserDTO userDTO) {
 		return userDAO.findById(userDTO.getEmail());

@@ -19,7 +19,7 @@ const NavTest = () => {
     <div>
       {[false].map((expand) => (
         <div key={expand} className="mb-5 my-navbar bg-body-tertiary">
-          <Navbar expand={expand} className="">
+          <Navbar expand={expand} className="" style={{backgroundColor: "#FFF"}}>
             <Container fluid>
               <Navbar.Toggle
                 aria-controls={`offcanvasNavbar-expand-${expand}`}
