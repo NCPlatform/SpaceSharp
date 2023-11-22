@@ -48,6 +48,9 @@ public class ManagerController {
 		hotelDTO.setSeqHotelCategory(commaClearInt(hotelDTO.getSeqHotelCategory()));
 		hotelDTO.setKeyword(commaClearStr(hotelDTO.getKeyword()));
 		hotelDTO.setImg(imgValue);
+		hotelDTO.setFacilities(commaClearStr(hotelDTO.getFacilities()));
+		hotelDTO.setAlert(commaClearStr(hotelDTO.getAlert()));
+		hotelDTO.setRefund(commaClearStr(hotelDTO.getRefund()));
 		String holiday = commaClearStr(hotelDTO.getHoliday());
 		if(holiday.equals("")) {
 			hotelDTO.setHoliday("없음");
@@ -113,12 +116,14 @@ public class ManagerController {
 	}
 	
 	public String uploadObject(List<MultipartFile> list, String path) {
-		String fileName = "https://kr.object.ncloudstorage.com/spacesharpbucket/storage/"+path+"/";
+		String fileName;
 		ArrayList<String> fileNames = new ArrayList<>();
 		
 		for(MultipartFile img : list) {
+				fileName = "https://kr.object.ncloudstorage.com/spacesharpbucket/storage/"+path+"/";
 				fileName += ncpService.uploadFile(bucketName, "storage/"+path+"/", img);
 				fileNames.add(fileName);
+				
 			}
 		
 		String imgValue = "";
@@ -127,7 +132,7 @@ public class ManagerController {
 			if(imgValue.equals("")) {
 				imgValue += img;
 			}else {
-				imgValue +=","+img;
+				imgValue +=", "+img;
 			}
 		}
 		
