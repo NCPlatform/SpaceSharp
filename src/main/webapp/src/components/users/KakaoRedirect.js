@@ -20,9 +20,9 @@ function KakaoRedirect() {
     companyName: '',
     usergrade: 1,     //회원 기본 등급
     payment: '',
-    passwordChk: '',
-    isKaKao: '',
-    isNaver: '', 
+    // passwordChk: '',
+    iskakao: false,
+    isnaver: false, 
   });
 
   //로컬스토리지에 토큰 저장
@@ -59,7 +59,6 @@ function KakaoRedirect() {
       )
         .then((res) => {
           const { access_token } = res.data;
-
           // 그런 다음 액세스 토큰을 사용하여 사용자 정보를 가져옴
           axios.post(
             'https://kapi.kakao.com/v2/user/me',
@@ -120,11 +119,8 @@ function KakaoRedirect() {
   }, [userInfo]);
 
 
-
-
   return (
     <div>
-      {/* <h1>KakaoRedirect에서 작성된 글</h1> */}
 
       {userDTO && <AccountSignIn userInfo={userDTO} />}
      

@@ -41,8 +41,8 @@ public class UserDTO {
 	private String tel;
 	
 	@Column
-	private boolean isKaKao;
+	private boolean iskakao;
 	
 	@Column
-	private boolean isNaver;
+	private boolean isnaver;
 }

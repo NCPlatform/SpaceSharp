@@ -31,12 +31,11 @@ const SignIn = ({ userInfo }) => {
     companyName: '',
     usergrade: 1,     //회원 기본 등급
     payment: '',
-    passwordChk: '',
-    isKaKao: '',
-    isNaver: '', 
+    iskakao: false,
+    isnaver: false, 
   });
 
-
+  const [passwordChk, setPasswordChk] = useState(''); // 비밀번호 확인
   const [readCheck, setReadCheck] = useState(''); //유효성검사 div영역
 
 
@@ -58,31 +57,20 @@ const SignIn = ({ userInfo }) => {
       // userInfo 객체에서 이메일 속성이 있는지 확인  //userInfo의 이메일과 닉네임값을 가져옴
       const userEmail = userInfo.kakao_account?.email; 
       const userNickname = userInfo.kakao_account?.profile?.nickname;
-      const userIsKaKao = 1;  
+      const useriskakao = 1;  
 
       // userEmail이 존재하면 해당 값을 userDTO.email에 할당하고, 그렇지 않으면 빈 문자열로 설정합니다.
       setUserDTO((prevUserDTO) => ({
         ...prevUserDTO,
         email: userEmail || '',
         nickname: userNickname || '',
-        isKaKao: userIsKaKao || '',
+        iskakao: useriskakao || '',
       //nickname: userInfo.properties.nickname,
       }));
     }
   }, [userInfo]);
 
   console.log(userDTO);
-
-
-
-  const NAVER_CLIENT_ID ="ojl3HmuVcwz9uJHJPQr0";
-    const REDIRECT_URI1 = "http://localhost:3000/NaverRedirect";
-    const STATE = "false";
-    const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${STATE}&redirect_uri=${REDIRECT_URI1}`;
-
-    const NaverLogin = () =>{
-        window.location.href = NAVER_AUTH_URL;
-    };
 
   //비밀번호 정규식 유효성 검사
   const [passwordValidationError, setPasswordValidationError] = useState(''); // 비밀번호 유효성 에러 메시지
@@ -135,18 +123,25 @@ const SignIn = ({ userInfo }) => {
     console.log('Selected Address:', data);
   
     // Destructure the data to get address and postalCode
-    const { address, postalCode } = data;
+    const { fullAddress, postalCode } = data;
     // 주소 선택 후의 로직을 여기에 구현
     console.log('Selected Address:', data);
     setUserDTO({
       ...userDTO,
-      addr: `${postalCode}`, 
+      //우편번호 addr: `${postalCode}`, 
+       addr: `${fullAddress}`,//풀주소
     });
   };
   
 
   const onChange = (e) => {
     setUserDTO({ ...userDTO, [e.target.name]: e.target.value });
+    // 비밀번호 확인 입력란이면 별도로 관리
+    if (e.target.name === 'passwordChk') {
+      setPasswordChk(e.target.value);
+    } else {
+      setUserDTO({ ...userDTO, [e.target.name]: e.target.value });
+    }
   };
 
 
@@ -174,9 +169,9 @@ const SignIn = ({ userInfo }) => {
 
 
     // 비밀번호와 비밀번호 확인이 일치하는지 확인
-    if (userDTO.password !== userDTO.passwordChk) {
+    if (userDTO.password !== passwordChk) {
       setReadCheck('비밀번호와 비밀번호 확인이 일치하지 않습니다. 다시 확인해주세요!');
-      return; // 회원가입을 중지하고 함수를 빠져나감
+      return;
     }
 
     // 추가적인 유효성 검사 로직은 여기에 추가
@@ -214,7 +209,7 @@ const SignIn = ({ userInfo }) => {
       <div className="WriteBox">
         <h2 className="h2Title">회 원 가 입</h2>
         <div>
-          <button className="WriteInputBtn" onClick={ NaverLogin }>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+          <button className="WriteInputBtn" >&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
             <img src={naverBtn} style={{ width: '40px', height: '40px' }} alt="네이버 로그인" />
             네이버 로그인
           </button>
@@ -239,7 +234,14 @@ const SignIn = ({ userInfo }) => {
           -문자/숫자/특수문자 중 2가지 이상 조합(8~30자)
           <br />-3개 이상 키보드 상 배열이 연속되거나 동일한 문자/숫자 제외
         </pre>
-        <input type="password" className="WriteInputBox" name="passwordChk" id="pwd2" onChange={(e) => onChange(e)} placeholder="비밀번호 확인" />
+        <input
+          type="password"
+          className="WriteInputBox"
+          value={userDTO.passwordChk}
+          name="passwordChk"
+          id="pwd2"
+          onChange={(e) => onChange(e)}
+          placeholder="비밀번호 확인" />
         <br />
 
         <input type="text" className="WriteAddrInputBox" name="addr" value={userDTO.addr}
