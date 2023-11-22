@@ -1,14 +1,19 @@
 import React, { useRef, useState } from 'react';
 import axios from 'axios';
+import TextEditor from '../../TextEditor';
 
 const ManagerAddPlace = () => {
 
     // useState & variables ==========================================
+        
+        // Session
+        const session = JSON.parse(window.sessionStorage.getItem("user"))
+
         const [hotelDTO, setHotelDTO] = useState({
-            img: '',
+            
             name: '', subscribe: '', mainKeyword: '', seqHotelCategory: '',
-            keyword: '', addr: '', ownerEmail: '',
-            workinghour: '', holiday: '', placeEx: '', // placeEx -> <p></p> 태그에 싸야 함
+            keyword: '', addr: '', ownerEmail: session.email,
+            workinghour: '', holiday: '', placeEx: '', 
             facilities: '', alert: '', refund: '',
             coupon: false, TV: false, internet: false, 
             copy: false, whiteboard: false, mic: false, 
@@ -25,7 +30,7 @@ const ManagerAddPlace = () => {
 
         })
 
-        const {seqHotelCategory, holiday} = hotelDTO
+        const {seqHotelCategory, holiday, ownerEmail} = hotelDTO
 
         const [whenOn, setWhenOn]  = useState({
             openTime: 0,
@@ -54,7 +59,7 @@ const ManagerAddPlace = () => {
 
         const insertData = (e) => { // input onchange
             let {name, value} = e.target
-            name === 'placeEx' ? value = '<p>'+value+'</p>' : value = value
+           // name === 'placeEx' ? value = '<p>'+value+'</p>' : value = value
          //   name === 'seqHotelCategory' ? seqHotelCategory!== '' ? value = seqHotelCategory+','+value : value = value : value = value
    // 1109 >>      //   name === 'holiday' ? value === 'no holidays' ? console.log('holiday 값이 변경되었으며 연중무휴입니다.') ? value === 'self-holiday' ? console.log('직접 입력 상태입니다.') : console.log('직접 입력 상태가 아닙니다') : console.log('holiday 값이 변경되었지만 no holidays가 아닙니다.') : console.log('holiday 값이 변경되지 않았습니다.')
          //   name === 'holiday' ? value === 'no holidays' || 'self-holiday' ? setExceptNoHolidays('hidden') : setExceptNoHolidays('visible') : value = value
@@ -63,6 +68,10 @@ const ManagerAddPlace = () => {
                 ...hotelDTO, [name]: value
             })
             
+        }
+
+        const editorVal = (val) => {
+            setHotelDTO({...hotelDTO, placeEx:val})
         }
 
         const settingHashTags = (e) => {
@@ -91,35 +100,8 @@ const ManagerAddPlace = () => {
            setHotelDTO({...hotelDTO, keyword:tags})
         }
 
-        const addImage = () => {
-            const newImg = document.createElement('input')
-            newImg.setAttribute('type', 'text')
-            newImg.setAttribute('name', 'img')
-            newImg.setAttribute('style', 'width: 350px')
-            newImg.addEventListener('change', () => {
-                console.log('이미지세팅===========')
-                settingImgs()
-            })
-            const imgAddBtn = document.getElementById('imgAddBtn')
-
-            const br = document.createElement('br')
-            imgAddBtn.after(br)
-            br.after(newImg)
-            
-        }
-
-        const settingImgs = () => {
-            const imgInfo = document.getElementsByName('img')
-            let img = "";
-            console.log(imgInfo)
-            imgInfo.forEach((eachTags)=>{
-                img += ","+eachTags.value
-            })
-
-            console.log(img)
-            setHotelDTO({...hotelDTO, img:img})
-        }
-
+       
+       
         // 231120 modified ============================
 
         const settingImages = (e) => {
@@ -138,10 +120,10 @@ const ManagerAddPlace = () => {
 
         }
 
-        // ============================================
+
 
         const settingVals = () => { // 주소창 입력하려 눌렀을 때 해시태그, 이미지 확정
-            settingImgs()
+    
             insertTags()
         }
 
@@ -279,9 +261,9 @@ const ManagerAddPlace = () => {
                 <table>
                     <tbody>
                         <tr>
-                            <td>[임시]OwnerEmail</td>
+                            <td>[확인용]OwnerEmail</td>
                             <td>
-                            <input type = 'text' name = 'ownerEmail' onChange = {insertData}/>
+                            <input type = 'text' readOnly name = 'ownerEmail' value = {ownerEmail}/>
                             </td>
                         </tr>
                         <tr>
@@ -290,11 +272,15 @@ const ManagerAddPlace = () => {
                         </tr>
                         <tr>
                             <td>한 마디 소개</td>
-                            <td><input type = 'text' style = {styleB} name = 'placeEx' onChange = {insertData} placeholder = '손님들에게 보여질 소개 멘트를 작성해 주세요.'/></td>
+                            <td><input type = 'text' style = {styleB} name = 'subscribe' onChange = {insertData} placeholder = '손님들에게 보여질 소개 멘트를 작성해 주세요.'/></td>
                         </tr>
                         <tr>
                             <td>소개</td>
-                            <td><textarea rows = '5' cols = '45' name = 'subscribe' onChange = {insertData} placeholder = '플레이스 소개를 작성해 주세요.'></textarea></td>
+                            <td>
+                                <div>
+                                <TextEditor func = {editorVal}/>
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td>해시태그</td>
@@ -307,8 +293,6 @@ const ManagerAddPlace = () => {
                         <tr>
                             <td>숙소 사진 등록</td>
                             <td>
-                                <input type = 'text' id = 'firstImage' style = {styleB} name = 'img' placeholder = "이미지 URL을 등록해 주세요" onChange = {insertData}/> <button type = 'button' id = 'imgAddBtn' onClick = {addImage}>+</button> 
-                                <br/>
                                 <input type = 'file' name = 'img[]' multiple = 'multiple' onChange = {settingImages}/>
                                 <br/>
                                 {

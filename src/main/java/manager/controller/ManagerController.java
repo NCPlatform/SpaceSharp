@@ -27,7 +27,6 @@ import manager.service.ObjectStorageService;
 @RequestMapping(value = "manager")
 public class ManagerController {
 	
-	
 	@Autowired
 	private ManagerService managerService;
 
@@ -38,30 +37,11 @@ public class ManagerController {
 	
 	@PostMapping(value = "addedPlace")
 	@ResponseBody
-//	public int addedPlace(@ModelAttribute HotelDTO hotelDTO) {
 	public int addedPlace(@RequestPart HotelDTO hotelDTO,
 				@RequestPart("img") List<MultipartFile> list,
 				HttpSession session ) {
 		
-		String originalFileName, fileName;
-		ArrayList<String> fileNames = new ArrayList<>();
-		
-		for(MultipartFile img : list) {
-				originalFileName = img.getOriginalFilename();
-				System.out.println(originalFileName);
-				fileName = ncpService.uploadFile(bucketName, "storage/hotel/", img);
-				fileNames.add(fileName);
-			}
-		
-		String imgValue = "";
-		
-		for(String img : fileNames) {
-			if(imgValue.equals("")) {
-				imgValue += img;
-			}else {
-				imgValue +=","+img;
-			}
-		}
+		String imgValue = uploadObject(list, "hotel");
 		
 		// 쉼표 빼기 작업
 		hotelDTO.setSeqHotelCategory(commaClearInt(hotelDTO.getSeqHotelCategory()));
@@ -75,18 +55,21 @@ public class ManagerController {
 		System.out.println(hotelDTO.toString());
 		
 		// DB Action
-	//	managerService.addPlace(hotelDTO);
-	//	int result = managerService.importSeq(hotelDTO.getOwnerEmail(), hotelDTO.getName(), hotelDTO.getAddr());
-	//	return result; // 값 확인, 배포 시 void로 변경
-		
-		return 0; // test
+		managerService.addPlace(hotelDTO);
+		int result = managerService.importSeq(hotelDTO.getOwnerEmail(), hotelDTO.getName(), hotelDTO.getAddr());
+		return result; // 값 확인, 배포 시 void로 변경
 	}
 	
 	@PostMapping(value = "addedRoom")
 	@ResponseBody
-	public void addedRoom(@ModelAttribute RoomDTO roomDTO){
+	public void addedRoom(@RequestPart RoomDTO roomDTO,
+			@RequestPart("img") List<MultipartFile> list,
+			HttpSession session ) {
+	
+		String imgValue = uploadObject(list, "room");
+		
 		System.out.println(roomDTO.toString());
-		roomDTO.setImg(commaClearStr(roomDTO.getImg()));
+		roomDTO.setImg(imgValue);
 		managerService.addRoom(roomDTO);
 		
 	}
@@ -127,8 +110,27 @@ public class ManagerController {
 		System.out.println(value);
 		return value;
 	}
-	public String redirectSystem(int callType) {
-		return "";
+	
+	public String uploadObject(List<MultipartFile> list, String path) {
+		String fileName = "https://kr.object.ncloudstorage.com/spacesharpbucket/storage/"+path+"/";
+		ArrayList<String> fileNames = new ArrayList<>();
+		
+		for(MultipartFile img : list) {
+				fileName += ncpService.uploadFile(bucketName, "storage/"+path+"/", img);
+				fileNames.add(fileName);
+			}
+		
+		String imgValue = "";
+		
+		for(String img : fileNames) {
+			if(imgValue.equals("")) {
+				imgValue += img;
+			}else {
+				imgValue +=","+img;
+			}
+		}
+		
+		return imgValue;
 	}
 	
 }
