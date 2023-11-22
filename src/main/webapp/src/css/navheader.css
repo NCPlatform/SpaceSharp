@@ -8,9 +8,9 @@
     --bs-bg-opacity: 1;
     background-color: #fff !important;
 }
-.navbar-brand {
+/* .navbar-brand {
     margin-left: 210px; 
-}
+} */
 .transparent-bg {
     background: transparent !important;
     border: none !important;

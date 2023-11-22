@@ -1,15 +1,21 @@
 package user.controller;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,11 +23,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jpa.bean.BoardDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
 import user.service.UserService;
 
@@ -60,6 +67,21 @@ public class UserController {
 	    return userService.getPlaceEx(seqHotel);
 	}
 	
+	@GetMapping("/getFacilities")
+	public String getFacilities(@RequestParam int seqHotel) {
+	    return userService.getFacilities(seqHotel);
+	}
+	
+	@GetMapping("/getAlert")
+	public String getAlert(@RequestParam int seqHotel) {
+	    return userService.getAlert(seqHotel);
+	}
+	
+	@GetMapping("/getRefund")
+	public String getRefund(@RequestParam int seqHotel) {
+	    return userService.getRefund(seqHotel);
+	}
+	
 	@GetMapping("/getWorkinghour")
 	public String getWorkinghour(@RequestParam int seqHotel) {
 	    return userService.getWorkinghour(seqHotel);
@@ -90,6 +112,15 @@ public class UserController {
 	    return userService.getUserByEmail(email);
 	}
 	
+	@GetMapping("/getRoom")
+	public List<RoomDTO> getRoomListByHotel(@RequestParam int seqHotel){
+		return userService.getRoomListByHotel(seqHotel);
+	}
+
+	@GetMapping("/getReservation")
+	public  List<Integer> getReservationListByRoom(@RequestParam int seqRoom, @RequestParam Date date){
+		return userService.getReservationListByRoom(seqRoom, date);
+	}
 	
 	@PostMapping(value="login")
 	@ResponseBody
@@ -138,15 +169,22 @@ public class UserController {
 	@PostMapping(value = "accountWrite")
 	@ResponseBody
 	public String accountWrite(@ModelAttribute UserDTO userDTO ){
-		System.out.println(userDTO.getEmail());
-		System.out.println("부트 찍힘");
 		return userService.accountWrite(userDTO);
 	}
-		
-	@PostMapping(value = "getHotelCategoryList")
+	
+	@PostMapping(value = "existsByEmail")
 	@ResponseBody
-	public List<HotelCategoryDTO> getHotelCategoryList(){
-		return userService.getHotelCategoryList();
+	public boolean existsByEmail(@RequestParam String email) {
+
+		boolean exists = userService.existsByEmail(email);
+		return userService.existsByEmail(email);
+	
+    }
+				
+	@PostMapping(value = "mainPage")
+	@ResponseBody
+	public Map<String, Object> mainPage(){
+		return userService.mainPage();
 	}
 	
 	@PostMapping(value = "getHotelList")

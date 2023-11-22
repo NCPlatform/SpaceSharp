@@ -19,7 +19,7 @@ const responseData = [
       registerPoint: "4명 초과시 10,000원/인",
       option: "",    // 이부분은 아이콘
       registerIsView: "Y", // 이부분 시간 단위 예약하기 일때 설정
-      registerSelectTitle: "시간 단위 예약하기(최소 4시간 부터)"
+      registerSelectTitle: "시간 단위 예약하기(최소 4시)"
     },
     {
       no: 2,

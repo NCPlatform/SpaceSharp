@@ -1,0 +1,5 @@
+.HotelListAccordionItem .HotelListAccordionHeader {
+    max-height: 50% !important; /* 높이를 조절하고자 하는 값으로 설정 */
+    overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; 
+  }

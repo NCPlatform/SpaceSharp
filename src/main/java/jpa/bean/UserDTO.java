@@ -39,4 +39,10 @@ public class UserDTO {
 	
 	@Column
 	private String tel;
+	
+	@Column
+	private boolean iskakao;
+	
+	@Column
+	private boolean isnaver;
 }
