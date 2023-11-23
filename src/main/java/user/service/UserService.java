@@ -65,7 +65,6 @@ public interface UserService {
 	
 	public UserDTO getUserByEmail(String email);
 
-
 	public List<RoomDTO> getRoomListByHotel(int seqHotel);
 
 	public List<ReservationDTO> getReservationListByRoom(int seqRoom, Date startDate, Date endDate);
