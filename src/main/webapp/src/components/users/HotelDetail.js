@@ -11,7 +11,33 @@ import HotelContentMap from "./HotelContentMap";
 import HotelSameSpace from "./HotelSameSpace";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+function formatFacilities(facilities) {
+  // 쉼표로 문자열을 나누고 <br />로 연결하여 줄 바꿈을 만듭니다
+  const formattedFacilities = facilities.split(',').map((facility, index) => (
+    `<strong>${index + 1}.</strong> ${facility}<br />`
+  )).join('');
+  return formattedFacilities;
+}
+function formatAlert(alert) {
+  // 쉼표로 문자열을 나누고 <br />로 연결하여 줄 바꿈을 만듭니다
+  const formattedAlert = alert.split(',').map((item, index) => (
+    `<strong>${index + 1}.</strong> ${item.trim()}<br />`
+  )).join('');
+  return formattedAlert;
+}
+function formatRefund(refund) {
+  // 환불 조건을 줄바꿈을 기준으로 나눕니다
+  const refundConditions = refund.split(',');
 
+  // 각 환불 조건을 원하는 형식으로 변환합니다
+  const formattedRefund = refundConditions.map((condition, index) => {
+    const daysBefore = refundConditions.length - index; // 현재 일수를 계산합니다
+    const daysBeforeText = daysBefore === 1 ? '이용 당일' : `이용 ${daysBefore - 1}일 전`; // 일수에 맞게 텍스트를 설정합니다
+    return `<strong>${daysBeforeText}</strong> ${condition.trim()}<br /><br />`; // Added extra <br /> for more separation
+  }).join('');
+
+  return formattedRefund;
+}
 const Detail = () => {
   const [hotelDTO, setHotelDTO] = useState(null);
   const [hotelName, setHotelName] = useState('');
@@ -191,9 +217,7 @@ const Detail = () => {
   return (
     <>
       <Nav />
-      <div style={{ backgroundColor: "#f6f6f6" }}>
-        <br />
-        <br />
+      <div style={{padding: "20px 0" }}>
         <Container>
           <Row>
             <Col xs={12} md={8}>
@@ -228,7 +252,7 @@ const Detail = () => {
                 id="fill-tab-example"
                 className="mb-3"
                 fill
-                style={{ width: "60%" }}
+                style={{ width: "100%" }}
               >
                 <Tab
                   eventKey="home"
@@ -275,6 +299,11 @@ const Detail = () => {
                                 <p style={{ fontSize: '12px' }}>루프탑 보유</p>
                               </div>
                             )}&nbsp;&nbsp;
+                            {hotelDTO.TV === true && (
+                              <div>
+                                <p style={{ fontSize: '12px' }}>TV 있음</p>
+                              </div>
+                            )}&nbsp;&nbsp;
                           </React.Fragment>
                         )}
                       </div>
@@ -299,7 +328,7 @@ const Detail = () => {
                     <hr
                       style={{ width: "20px", border: "4px solid #ff7402" }}
                     />
-                    <div dangerouslySetInnerHTML={{ __html: facilities }} />
+                    <div dangerouslySetInnerHTML={{ __html: formatFacilities(facilities) }} />
                   </div>
                 </Tab>
                 <Tab
@@ -316,7 +345,8 @@ const Detail = () => {
                     <hr
                       style={{ width: "20px", border: "4px solid #ff7402" }}
                     />
-                    <div dangerouslySetInnerHTML={{ __html: alert }} />
+                    {/* <div dangerouslySetInnerHTML={{ __html: alert }} /> */}
+                    <div dangerouslySetInnerHTML={{ __html: formatAlert(alert) }} />
                   </div>
                 </Tab>
                 <Tab
@@ -328,12 +358,13 @@ const Detail = () => {
                   }
                 >
                   <div style={{ color: "#656565" }}>
-                    <strong style={{ color: "black" }}>유의사항</strong>
+                    <strong style={{ color: "black" }}>환불정책</strong>
                     <br />
                     <hr
                       style={{ width: "20px", border: "4px solid #ff7402" }}
                     />
-                    <div dangerouslySetInnerHTML={{ __html: refund }} />
+                    {/* <div dangerouslySetInnerHTML={{ __html: refund }} /> */}
+                    <div dangerouslySetInnerHTML={{ __html: formatRefund(refund) }} />
                   </div>
                 </Tab>
                 <Tab
@@ -361,7 +392,12 @@ const Detail = () => {
           </Row>
           <br />
           <br />
-          <HotelSameSpace />
+          {hotelDTO && (
+            <HotelSameSpace
+              hotel={seqHotel}
+              hotelCategory={hotelDTO.seqHotelCategory}
+            />
+          )}
         </Container>
         <br />
         <br />

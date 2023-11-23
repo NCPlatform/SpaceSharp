@@ -36,7 +36,7 @@
     "slick-carousel": "^1.8.1",
     "source-map-loader": "^4.0.1",
     "socket.io-client": "^4.7.2",
-    "sweetalert2": "^11.9.0",
+    "sweetalert2": "^11.10.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
