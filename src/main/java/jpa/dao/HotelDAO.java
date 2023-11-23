@@ -16,6 +16,10 @@ public interface HotelDAO extends JpaRepository<HotelDTO, Integer> {
 	public int importSeq(@Param("email") String ownerEmail, @Param("addr") String addr, @Param("name") String name);
 
 	List<HotelDTO> findBySeqHotelCategoryContaining(String seqHotelCategory);
+	
+	@Query("SELECT h FROM HotelDTO h WHERE h.seqHotelCategory IN :categories")
+    List<HotelDTO> findBySeqHotelCategoryIn(@Param("categories") List<String> seqHotelCategories);
+	
 
 	public List<HotelDTO> findTop3SeqHotelBy();
 

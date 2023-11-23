@@ -1,0 +1,152 @@
+[
+  {
+    "key": "TV",
+    "name": "텔레비전",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "internet",
+    "name": "컴퓨터",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "copy",
+    "name": "복합기",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "whiteboard",
+    "name": "화이트보드",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "mic",
+    "name": "마이크",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "cooking",
+    "name": "텔레비전",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "food",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "alcohol",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "washing",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "parking",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "smoke",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "animal",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "pc",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "socket",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "open24",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "noHoliday",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "restaurant",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "freeFood",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "locker",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "mailService",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "kitchen",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "waterFurifier",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "catering",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "heater",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "airConditioner",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "fax",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "wareHouse",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "percelService",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "privateToilet",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "fittingRoom",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "roofTop",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "rounge",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "mirror",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "bbq",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "doorlock",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  },
+  {
+    "key": "isAccept",
+    "icon": "<i class=\"bi bi-tv\"></i>"
+  }
+]

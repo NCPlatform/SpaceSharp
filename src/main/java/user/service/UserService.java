@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jpa.bean.BoardDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
 import jpa.bean.HotelCategoryDTO;
@@ -67,7 +68,7 @@ public interface UserService {
 
 	public List<RoomDTO> getRoomListByHotel(int seqHotel);
 
-	public List<Integer> getReservationListByRoom(int seqRoom, Date date);
+	public List<ReservationDTO> getReservationListByRoom(int seqRoom, Date startDate, Date endDate);
 
 	public String getFacilities(int seqHotel);
 
@@ -76,5 +77,7 @@ public interface UserService {
 	public String getRefund(int seqHotel);
 	
 	public Map<String, Object> mainPage();
+
+	public Map<String,Object> hotelReserve(int seqRoom);
 
 }

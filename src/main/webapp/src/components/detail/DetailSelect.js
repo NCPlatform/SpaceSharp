@@ -4,7 +4,7 @@ import DetailHeader from "./Header/DetailHeader";
 import DetailList from "./list/DetailList";
 import axios from "axios";
 
-const DetailSelect = ({ hotel}) => {
+const DetailSelect = ({hotel}) => {
   const [rooms, setRooms] = useState([]); //rooms state 추가
   const [checkedRoom, setCheckedRoom] = useState(null);
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
