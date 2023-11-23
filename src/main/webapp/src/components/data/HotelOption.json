@@ -1,0 +1,177 @@
+[
+    {
+      "key": "TV",
+      "name": "TV/프로젝터",
+      "icon": "<i class=\"bi bi-tv\"></i>"
+    },
+    {
+      "key": "internet",
+      "name": "인터넷/WIFI",
+      "icon": "<i class=\"bi bi-wifi\"></i>"
+    },
+    {
+      "key": "copy",
+      "name": "복사/인쇄기",
+      "icon": "<i class=\"bi bi-printer\"></i>"
+    },
+    {
+      "key": "whiteboard",
+      "name": "화이트보드",
+      "icon": "<i class=\"bi bi-easel2\"></i>"
+    },
+    {
+      "key": "mic",
+      "name": "음향/마이크",
+      "icon": "<i class=\"bi bi-mic\"></i>"
+    },
+    {
+      "key": "cooking",
+      "name": "취사시설",
+      "icon": "<i class=\"bi bi-egg-fried\"></i>"
+    },
+    {
+      "key": "food",
+      "name": "음식물 반입",
+      "icon": "<i class=\"bi bi-basket\"></i>"
+    },
+    {
+      "key": "alcohol",
+      "name": "주류 반입",
+      "icon": "<i class=\"bi bi-basket2-fill\"></i>"
+    },
+    {
+      "key": "washing",
+      "name": "샤워시설",
+      "icon": "<i class=\"bi bi-droplet\"></i>"
+    },
+    {
+      "key": "parking",
+      "name": "주차",
+      "icon": "<i class=\"bi bi-p-square\"></i>"
+    },
+    {
+      "key": "smoke",
+      "name": "금연",
+      "icon": "<i class=\"bi bi-x-circle\"></i>"
+    },
+    {
+      "key": "animal",
+      "name": "반려동물 동반",
+      "icon": "<i class=\"bi bi-android\"></i>"
+    },
+    {
+      "key": "pc",
+      "name": "PC/노트북",
+      "icon": "<i class=\"bi bi-pc-display-horizontal\"></i>"
+    },
+    {
+      "key": "socket",
+      "name": "콘센트",
+      "icon": "<i class=\"bi bi-plug\"></i>"
+    },
+    {
+      "key": "open24",
+      "name": "24시 운영",
+      "icon": "<i class=\"bi bi-clock\"></i>"
+    },
+    {
+      "key": "noHoliday",
+      "name": "연중무휴",
+      "icon": "<i class=\"bi bi-clock-history\"></i>"
+    },
+    {
+      "key": "restaurant",
+      "name": "카페/레스토랑",
+      "icon": "<i class=\"bi bi-cup-hot\"></i>"
+    },
+    {
+      "key": "freeFood",
+      "name": "간단한 다과/음료",
+      "icon": "<i class=\"bi bi-cup-straw\"></i>"
+    },
+    {
+      "key": "locker",
+      "name": "개인락커",
+      "icon": "<i class=\"bi bi-person-fill-lock\"></i>"
+    },
+    {
+      "key": "mailService",
+      "name": "메일 서비스",
+      "icon": "<i class=\"bi bi-envelope-at\"></i>"
+    },
+    {
+      "key": "kitchen",
+      "name": "공용 주방",
+      "icon": "<i class=\"bi bi-egg\"></i>"
+    },
+    {
+      "key": "waterFurifier",
+      "name": "정수기",
+      "icon": "<i class=\"bi bi-droplet-half\"></i>"
+    },
+    {
+      "key": "catering",
+      "name": "케이터링",
+      "icon": "<i class=\"bi bi-person-lines-fill\"></i>"
+    },
+    {
+      "key": "heater",
+      "name": "난방기",
+      "icon": "<i class=\"bi bi-brightness-high\"></i>"
+    },
+    {
+      "key": "airConditioner",
+      "name": "에어컨",
+      "icon": "<i class=\"bi bi-fan\"></i>"
+    },
+    {
+      "key": "fax",
+      "name": "팩스",
+      "icon": "<i class=\"bi bi-printer-fill\"></i>"
+    },
+    {
+      "key": "wareHouse",
+      "name": "창고서비스",
+      "icon": "<i class=\"bi bi-house-lock\"></i>"
+    },
+    {
+      "key": "percelService",
+      "name": "택배발송서비스",
+      "icon": "<i class=\"bi bi-truck\"></i>"
+    },
+    {
+      "key": "privateToilet",
+      "name": "내부화장실",
+      "icon": "<i class=\"bi bi-gender-ambiguous\"></i>"
+    },
+    {
+      "key": "fittingRoom",
+      "name": "탈의실",
+      "icon": "<i class=\"bi bi-door-open\"></i>"
+    },
+    {
+      "key": "roofTop",
+      "name": "테라스/루프탑",
+      "icon": "<i class=\"bi bi-bricks\"></i>"
+    },
+    {
+      "key": "rounge",
+      "name": "공용라운지",
+      "icon": "<i class=\"bi bi-chat\"></i>"
+    },
+    {
+      "key": "mirror",
+      "name": "전신거울",
+      "icon": "<i class=\"bi bi-symmetry-vertical\"></i>"
+    },
+    {
+      "key": "bbq",
+      "name": "바베큐시설",
+      "icon": "<i class=\"bi bi-fire\"></i>"
+    },
+    {
+      "key": "doorlock",
+      "name": "도어락",
+      "icon": "<i class=\"bi bi-file-lock\"></i>"
+    }
+  ]

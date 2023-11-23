@@ -11,6 +11,7 @@ import HotelContentMap from "./HotelContentMap";
 import HotelSameSpace from "./HotelSameSpace";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import HotelOption from "../data/HotelOption.json";
 function formatFacilities(facilities) {
   // 쉼표로 문자열을 나누고 <br />로 연결하여 줄 바꿈을 만듭니다
   const formattedFacilities = facilities.split(',').map((facility, index) => (
@@ -201,7 +202,7 @@ const Detail = () => {
     axios.get(`/user/getHotelInfo?seqHotel=${seqHotel}`)
       .then(response => {
         const data = response.data;
-        console.log(data)
+        console.log(data);
         if (data) {
           setHotelDTO(data);
         } else {
@@ -214,10 +215,40 @@ const Detail = () => {
         setLoading(false);
       });
   }, [seqHotel]);
+  // TRUE인 항목들을 6개씩 그룹화하여 반환하는 함수
+  const groupTrueOptions = () => {
+    if (!hotelDTO) {
+      return [];
+    }
+
+    // HotelOption.json 파일을 사용하여 TRUE인 항목들을 필터링
+    const trueOptions = HotelOption.filter(option => hotelDTO[option.key] === true);
+
+    // 6개씩 그룹화
+    const groupedOptions = [];
+    for (let i = 0; i < trueOptions.length; i += 6) {
+      groupedOptions.push(trueOptions.slice(i, i + 6));
+    }
+
+    return groupedOptions;
+  };
+  // 그룹화된 아이콘을 렌더링하는 함수
+  const renderGroupedIcons = () => {
+    return groupTrueOptions().map((group, groupIndex) => (
+      <div key={groupIndex} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', height: '60px' }}>
+        {group.map((option, iconIndex) => (
+          <div key={iconIndex} style={{padding: '25px', fontSize: '25px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {React.createElement('div', { dangerouslySetInnerHTML: { __html: option.icon } })}
+            <div style={{ fontSize: '10px', textAlign: 'center' }}>{option.name}</div>
+          </div>
+        ))}
+      </div>
+    ));
+  };
   return (
     <>
       <Nav />
-      <div style={{padding: "20px 0" }}>
+      <div style={{ padding: "20px 0" }}>
         <Container>
           <Row>
             <Col xs={12} md={8}>
@@ -281,31 +312,10 @@ const Detail = () => {
                       </h5>
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h5 style={{ display: 'inline' }}>{holiday}</h5>
                       <br />
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        {hotelDTO && (
-                          <React.Fragment>
-                            {hotelDTO.animal === true && (
-                              <div>
-                                <p style={{ fontSize: '12px' }}>반려동물 가능</p>
-                              </div>
-                            )}&nbsp;&nbsp;
-                            {hotelDTO.parking === true && (
-                              <div>
-                                <p style={{ fontSize: '12px' }}>주차 가능</p>
-                              </div>
-                            )}&nbsp;&nbsp;
-                            {hotelDTO.roofTop === true && (
-                              <div>
-                                <p style={{ fontSize: '12px' }}>루프탑 보유</p>
-                              </div>
-                            )}&nbsp;&nbsp;
-                            {hotelDTO.TV === true && (
-                              <div>
-                                <p style={{ fontSize: '12px' }}>TV 있음</p>
-                              </div>
-                            )}&nbsp;&nbsp;
-                          </React.Fragment>
-                        )}
+                      <br />
+
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        {renderGroupedIcons()}
                       </div>
                     </div>
                     <br />
@@ -381,7 +391,7 @@ const Detail = () => {
                     <hr
                       style={{ width: "20px", border: "4px solid #ff7402" }}
                     />
-                    
+
                   </div>
                 </Tab>
               </Tabs>
