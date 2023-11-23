@@ -19,6 +19,8 @@ const inputNumberViewStyle = {
 };
 
 function formatDateTime(date) {
+  date = new Date(date);
+
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 월은 0부터 시작하므로 1을 더하고, 두 자리로 표현
   const day = date.getDate().toString().padStart(2, "0");
@@ -27,6 +29,7 @@ function formatDateTime(date) {
 
   return `${year}. ${month}. ${day}. (${dayOfWeek}) ${hours}시`;
 }
+
 const SelectRegister = ({ data, room }) => {
   //기존 예약된 정보 -> 예약 불가능한 시간
   const [reservations, setReservations] = useState([]);
@@ -136,27 +139,27 @@ const SelectRegister = ({ data, room }) => {
   };
 
   // 숫자로 된 날짜 변환
-  const dayViewText = () => {
-    if (calendarData.getDay() === 0) {
+  const dayViewText = (startDate) => {
+    if (startDate.getDay() === 0) {
       return "(일)";
-    } else if (calendarData.getDay() === 1) {
+    } else if (startDate.getDay() === 1) {
       return "(월)";
-    } else if (calendarData.getDay() === 2) {
+    } else if (startDate.getDay() === 2) {
       return "(화)";
-    } else if (calendarData.getDay() === 3) {
+    } else if (startDate.getDay() === 3) {
       return "(수)";
-    } else if (calendarData.getDay() === 4) {
+    } else if (startDate.getDay() === 4) {
       return "(목)";
-    } else if (calendarData.getDay() === 5) {
+    } else if (startDate.getDay() === 5) {
       return "(금)";
-    } else if (calendarData.getDay() === 6) {
+    } else if (startDate.getDay() === 6) {
       return "(토)";
     }
   };
 
   // calendarData 변경 시 로직 실행 (즉, 날짜 클릭 시)
   useEffect(() => {
-    dayViewText();
+    dayViewText(new Date(calendarData));
     // 아래는 시간 관련된 데이터 모두 초기화
     setStartHour(0);
     setEndHour(0);
@@ -255,12 +258,12 @@ const SelectRegister = ({ data, room }) => {
     const currentDateTime = new Date();
     const currentHour = currentDateTime.getHours();
 
-    // 선택한 날짜가 오늘인 경우, 현재 시간 이전의 시간 비활성화
-    if (calendarData.getDate() === currentDateTime.getDate()) {
-      return reservations.includes(index) || index < currentHour;
+    // 선택한 날짜가 오늘이고, 현재 시간보다 이전이면 '예약불가' 상태로 만듭니다.
+    if (calendarData.getDate() === currentDateTime.getDate() && index < currentHour) {
+      return true;
     }
 
-    // 선택한 날짜가 미래인 경우, 그대로.
+    // 그 외에는 예약된 시간인지 여부를 확인하여 '예약불가' 상태로 만듭니다.
     return reservations.includes(index);
   };
   return (
@@ -401,8 +404,9 @@ const SelectRegister = ({ data, room }) => {
       </Row>
       <div>
 
-        {formatDateTime(new Date(calendarData.setHours(startHour)))}~
-        {formatDateTime(new Date(calendarData.setHours(endHour)))}
+      {`${formatDateTime(new Date(calendarData).setHours(startHour))} ~
+${formatDateTime(new Date(calendarData).setHours(endHour))}`}
+
         {/* {`${calendarData.getFullYear()}. ${
 calendarData.getMonth() + 1
 }. ${calendarData.getDate()}. ${dayViewText()} ` +

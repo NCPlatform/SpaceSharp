@@ -3,6 +3,7 @@ import { Button, Col, Modal, Row } from "react-bootstrap";
 import DetailHeader from "./Header/DetailHeader";
 import DetailList from "./list/DetailList";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const DetailSelect = ({hotel}) => {
   const [rooms, setRooms] = useState([]); //rooms state 추가
@@ -11,6 +12,7 @@ const DetailSelect = ({hotel}) => {
   const [location, setLocation] = useState(''); // 상세 위치 정보를 저장할 상태
   const [tel, setTel] = useState('');
   const [ownerEmail, setOwnerEmail] = useState('');
+  const navigate = useNavigate();
 
   const modalContent = (
     <div>
@@ -85,6 +87,13 @@ const DetailSelect = ({hotel}) => {
   const handleClosePhoneModal = () => {
     setIsPhoneModalOpen(false);
   };
+  const handleReservationButtonClick = () => {
+    if (checkedRoom === null) {
+      alert('방을 선택해주세요.');
+    } else {
+      navigate(`/hotelReserve/${hotel}`);
+    }
+  };
   return (
     <div style={{ backgroundColor: "#fff" }}>
       <DetailHeader />
@@ -131,7 +140,7 @@ const DetailSelect = ({hotel}) => {
           </Button>
         </Col>
         <Col sm={6}>
-          <Button variant="success" className="w-100">
+          <Button variant="success" className="w-100" onClick={handleReservationButtonClick}>
             예약하기
           </Button>
         </Col>
