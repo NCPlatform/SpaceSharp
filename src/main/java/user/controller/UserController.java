@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,6 +30,7 @@ import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
+import jpa.dao.UserDAO;
 import user.service.UserService;
 
 
@@ -38,6 +41,8 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	
+	private UserDAO userDAO;
 
 
 	@GetMapping("/getHotelName")
@@ -178,6 +183,32 @@ public class UserController {
 		return userService.existsByEmail(email);
 	
     }
+	
+	@PostMapping("/checkNickname")
+    public ResponseEntity<String> checkNickname(@RequestBody Map<String, String> data) {
+        String email = data.get("email");
+        String newNickname = data.get("newNickname");
+
+        boolean isNicknameAvailable = userService.isNicknameAvailable(email, newNickname);
+
+        if (isNicknameAvailable) {
+            return ResponseEntity.ok("사용 가능한 닉네임입니다.");
+        } else {
+            return ResponseEntity.ok("이미 사용 중인 닉네임입니다.");
+        }
+    }
+
+    @PostMapping("/updateNickname")
+    public ResponseEntity<String> updateNickname(@RequestBody Map<String, String> data) {
+        String email = data.get("email");
+        String newNickname = data.get("newNickname");
+
+        userService.updateNickname(email, newNickname);
+
+        return ResponseEntity.ok("회원님의 닉네임이 수정되었습니다.");
+    }
+
+	
 				
 	@PostMapping(value = "mainPage")
 	@ResponseBody

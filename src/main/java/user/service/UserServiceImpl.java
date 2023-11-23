@@ -236,5 +236,20 @@ public class UserServiceImpl implements UserService {
 	public Page<BoardDTO> list (Pageable pageable, int seqRefSeqBoard) {
 		return boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
 	}
+
+	@Override
+	public boolean isNicknameAvailable(String email, String newNickname) {
+		UserDTO userDTO = userDAO.findByEmail(email);
+        return userDTO == null || !userDTO.getNickname().equals(newNickname);
+	}
+
+	public void updateNickname(String email, String newNickname) {
+		UserDTO userDTO = userDAO.findByEmail(email);
+        if (userDTO != null) {
+        	userDTO.setNickname(newNickname);
+        	userDAO.save(userDTO);
+        }
+    }
+
 	
 }

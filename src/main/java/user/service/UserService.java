@@ -75,4 +75,9 @@ public interface UserService {
 	
 	public Map<String, Object> mainPage();
 
+	public boolean isNicknameAvailable(String email, String newNickname);
+
+	public void updateNickname(String email, String newNickname);
+
+
 }
