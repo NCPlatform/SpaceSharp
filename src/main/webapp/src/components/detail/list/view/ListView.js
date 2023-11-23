@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Col, Row } from "react-bootstrap";
-import "react-calendar/dist/Calendar.css";
-import SelectRegister from "./SelectRegister/SelectRegister";
-import ModalPicture from "./modal/ModalPicture";
+import React, { useEffect, useState } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import 'react-calendar/dist/Calendar.css';
+import SelectRegister from './SelectRegister/SelectRegister';
+import ModalPicture from './modal/ModalPicture';
 
 const ListView = ({ data, room }) => {
   console.log(data);
@@ -28,40 +28,42 @@ const ListView = ({ data, room }) => {
     if (data?.img) {
       const images = data.img.split(', ');
       const firstImageUrl = images[0];
-      console.log("Image Clicked", firstImageUrl);
+      console.log('Image Clicked', firstImageUrl);
       modalShow();
     }
   };
 
   return (
-    <div className="p-3" style={{ border: "1px solid #6d3afb" }}>
-      <div className="p-3" style={{ display: `${true ? "block" : "none"}` }}>
+    <div className="p-3" style={{ border: '1px solid #6d3afb' }}>
+      <div className="p-3" style={{ display: `${true ? 'block' : 'none'}` }}>
         <Row className="pt-3 pb-3">
           <button
             className="btn justify-content-end"
             onClick={handleImageClick}
             style={{
-              backgroundSize: "100% 100%",
-              backgroundImage: `url(${data?.img ? data?.img.split(', ')[0] : "https://adventure.co.kr/wp-content/uploads/2020/09/no-image.jpg"})`,
-              height: "300px",
-              textAlign: "end",
-              display: "flex",
-              flexDirection: "column",
-              pointerEvents: data?.img === "https://adventure.co.kr/wp-content/uploads/2020/09/no-image.jpg" ? "none" : "auto"
-            }}
-          >
+              backgroundSize: '100% 100%',
+              backgroundImage: `url(${
+                data?.img ? data?.img.split(', ')[0] : 'https://adventure.co.kr/wp-content/uploads/2020/09/no-image.jpg'
+              })`,
+              height: '300px',
+              textAlign: 'end',
+              display: 'flex',
+              flexDirection: 'column',
+              pointerEvents:
+                data?.img === 'https://adventure.co.kr/wp-content/uploads/2020/09/no-image.jpg' ? 'none' : 'auto',
+            }}>
             {/* FIXME: */}
             {/* <em className="bg-white" style={{ marginLeft: "98%" }}>
               이미지
             </em> */}
             {data?.img?.length > 1 && (
-              <em className="bg-white" style={{ marginLeft: "98%" }}>
+              <em className="bg-white" style={{ marginLeft: '98%' }}>
                 +{data?.img?.split(', ').length - 1}
               </em>
             )}
           </button>
         </Row>
-        <Row className="pt-3 pb-3" style={{ whiteSpace: "pre-line" }}>
+        <Row className="pt-3 pb-3" style={{ whiteSpace: 'pre-line' }}>
           {/* ☆ 시간제 예약은 평일만 가능합니다. :)
           <br />
           <br />
@@ -123,12 +125,8 @@ const ListView = ({ data, room }) => {
       {/* )} */}
 
       {/* FIXME: 모달 */}
-      
-      <ModalPicture
-        data={data}
-        isModalView={isModalView}
-        modalClose={modalClose}
-      />
+
+      <ModalPicture data={data} isModalView={isModalView} modalClose={modalClose} />
     </div>
   );
 };

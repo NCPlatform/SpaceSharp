@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import AddFinishModal from './AddFinishModal';
+import TextEditor from '../../TextEditor';
+import Button from 'react-bootstrap/Button';
+import Disp_topNav from './Disp_topNav';
+
 
 const AddRoom = () => {
     // useState & variables ==========================================
@@ -10,12 +15,20 @@ const AddRoom = () => {
         const [roomDTO, setRoomDTO] = useState({
             seqHotel: hotelSeq, //<< 이 값은 추후 hotelSeq로 줄 것
             name: '', 
-            price: 0, img: '', normalExplain: '',
+            price: 0, normalExplain: '',
             placeSize: '', people: '', datetime: '', // << 최소 예약 시간
             reserveRule: ''
         })
 
+        const [imageList, setImageList] = useState([])
+
+        const [file, setFile] = useState('')
+
         const [isMeter, setIsMeter] = useState(true)
+
+        const [isFinished, setIsFinished] = useState(false)
+
+        const fileRef = useRef()
 
     // functions =====================================================
 
@@ -27,34 +40,30 @@ const AddRoom = () => {
             })
         }
 
-        const addImage = () => {
-            const newImg = document.createElement('input')
-            newImg.setAttribute('type', 'text')
-            newImg.setAttribute('name', 'img')
-            newImg.setAttribute('style', 'width: 350px')
-            newImg.addEventListener('change', () => {
-                console.log('이미지세팅===========')
-                settingImgs()
-            })
-            const imgAddBtn = document.getElementById('imgAddBtn')
-
-            const br = document.createElement('br')
-            imgAddBtn.after(br)
-            br.after(newImg)
-            
+        const editorVal = (val) => {
+            setRoomDTO({...roomDTO, normalExplain:val})
+        }
+        
+        const findClk = (e) => {
+            fileRef.current.click()
         }
 
-        const settingImgs = () => {
-            const imgInfo = document.getElementsByName('img')
-            let img = "";
-            console.log(imgInfo)
-            imgInfo.forEach((eachTags)=>{
-                img += ","+eachTags.value
+        const settingImages = (e) => {
+            const imageFiles = Array.from(e.target.files)
+            let imgArray = []
+
+            imageFiles.map(item => {
+                const objectURL = URL.createObjectURL(item)
+                imgArray.push(objectURL)
+
+                return null;
             })
 
-            console.log(img)
-            setRoomDTO({...roomDTO, img:img})
+            setImageList(imgArray)
+            setFile(e.target.files)
+
         }
+
         const settingPeople = () => {
             let people = '최소 '
             var min = document.getElementById('min')
@@ -78,10 +87,17 @@ const AddRoom = () => {
             setRoomDTO({...roomDTO, placeSize:value})
         }
     // CSS ===========================================================
+
         const styleA = {fontSize: '1.2em', fontWeight: 'bold'} // style = {styleA}
-        const styleB = {width: '350px'} // style = {styleB}
-        const styleC = {width: '50px'} // style = {styleC}
-        const styleD = {width: '110px'}
+        const styleB = {width: '60%'} // style = {styleB}
+        const styleC = {width: '15%'} // style = {styleC}
+        const styleD = {width: '25%'}
+        const styleE = {display: 'none'}
+        const styleF = {width: '30%'}
+
+        // layout 관련
+        const styleZ = {marginLeft: '10%', marginTop: '3%'}
+
     // API, etc ======================================================
         
         const confirmVals = () => {
@@ -89,12 +105,20 @@ const AddRoom = () => {
         }
 
         const submitVals = () => {
-            axios.post('http://localhost:8080/manager/addedRoom', null, {
-                params: roomDTO
-            }).then(res => 
-                console.log(res)
-              //  window.location.href = '/manager/addRoom/'+res.data
-                                    // 맨 앞에 /가 있느냐 없느냐에 따라 결과가 다름
+            var formData = new FormData()
+            formData.append('roomDTO', new Blob([JSON.stringify(roomDTO)], {type: 'application/json'}))
+            
+            Object.values(file).map((item, index) => {
+                formData.append('img', item)
+                return null;
+            })
+
+            axios.post('http://localhost:8080/manager/addedRoom', formData, {
+                headers:{
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then( 
+                setIsFinished(true)
             ).catch(e => console.log(e))
         }
     // NOTE ========================================================== 231115 ~ 추가중
@@ -115,65 +139,81 @@ const AddRoom = () => {
         */
     return (
         <div>
-            {/* <h3>등록 진행 중인 숙소의 Seq Number는 {roomSeq} 입니다.</h3> */}
-            <form>
-                <span style = {styleA}>새로운 룸 추가하기</span>
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>룸 이름</td>
-                            <td><input type = 'text'  style = {styleB} name = 'name' onChange = {insertData}/></td>
-                        </tr>
-                        <tr>
-                            <td>룸 소개</td>
-                            <td><input type = 'text' style = {styleB} name = 'normalExplain' onChange = {insertData} placeholder = '손님들에게 보여질 소개 멘트를 작성해 주세요.'/></td>
-                        </tr>
-                        
-                        <tr>
-                            <td>룸 사진 등록</td>
-                            <td>
-                                <input type = 'text' id = 'firstImage' style = {styleB} name = 'img' placeholder = "이미지 URL을 등록해 주세요" onChange = {insertData}/> <button type = 'button' id = 'imgAddBtn' onClick = {addImage}>+</button> 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>수용 가능 인원</td>
-                            <td>
-                                <div style = {styleB} id = 'peopleMinMax'>
-                                    <input type = 'number' id = 'min' style = {styleC}/>명부터 <input type = 'number' id = 'max' style = {styleC} onBlur = {settingPeople}/>명까지
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>룸 면적</td>
-                            <td>
-                                <div>
-                                    <input type = 'number' style = {styleD} placeholder = '숫자만 입력' onBlur = {setSize}/>&nbsp;{
-                                        isMeter === true ? '제곱미터' : '평'
-                                    }&nbsp;<button type = 'button' onClick = {convertMeter}>{
-                                        isMeter === true ? '평수로 입력하기' : '제곱미터로 입력하기'
-                                    }</button> 
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>장소 대여료</td>
-                            <td><input type = 'number' style = {styleB} name = 'price' placeholder = '시간당 대여료를 입력해 주세요.' onChange = {insertData}/></td>
-                        </tr>
-                        
-                        <tr>
-                            <td>최소 대여 가능 시간&emsp;</td>
-                            <td><input type = 'number' style = {styleB} name = 'datetime' placeholder = '숫자만 입력 가능합니다.' onChange = {insertData}/></td>
-                        </tr>
+            <Disp_topNav/>
+            <div id = 'disp' style = {styleZ}>
+                <form>
+                    <span style = {styleA}>새로운 룸 추가하기</span>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>룸 이름</td>
+                                <td><input type = 'text'  style = {styleB} name = 'name' onChange = {insertData}/></td>
+                            </tr>
+                            <tr>
+                                <td>룸 소개</td>
+                                <td>
+                                    <div>
+                                    <TextEditor func = {editorVal}/>
+                                    </div>
+                                    <br/><br/>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>룸 사진 등록</td>
+                                <td>
+                                    <input type = 'file' name = 'img[]' multiple = 'multiple' onChange = {settingImages} ref = {fileRef} style = {styleE}/>
+                                    <Button variant="outline-dark" onClick = {findClk} >파일 찾아보기</Button> &nbsp;
+                                    
+                                    {
+                                        imageList.map((item, index) => <img key = {index} src = {item} style = {{width: '40px', height: '40px'}} alt = ''/>)
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>수용 가능 인원</td>
+                                <td>
+                                    <div style = {styleB} id = 'peopleMinMax'>
+                                        <input type = 'number' id = 'min' style = {styleC}/>명부터 <input type = 'number' id = 'max' style = {styleC} onBlur = {settingPeople}/>명까지
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>룸 면적</td>
+                                <td>
+                                    <div>
+                                        <input type = 'number' style = {styleD} placeholder = '숫자만 입력' onBlur = {setSize}/>&nbsp;{
+                                            isMeter === true ? '제곱미터' : '평'
+                                        }&nbsp;<Button variant="outline-dark" type = 'button' onClick = {convertMeter}>{
+                                            isMeter === true ? '평수로 입력하기' : '제곱미터로 입력하기'
+                                        }</Button> 
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>장소 대여료</td>
+                                <td><input type = 'number' style = {styleB} name = 'price' placeholder = '시간당 대여료를 입력해 주세요.' onChange = {insertData}/></td>
+                            </tr>
+                            
+                            <tr>
+                                <td>최소 대여 가능 시간&emsp;</td>
+                                <td><input type = 'number' style = {styleB} name = 'datetime' placeholder = '숫자만 입력 가능합니다.' onChange = {insertData}/></td>
+                            </tr>
 
-                        <tr>
-                            <td>예약 시 유의사항</td>
-                            <td><textarea rows = '5' cols = '45' name = 'reserveRule' onChange = {insertData} placeholder = '이용자가 유의해야 할 사항을 적어 주세요.'></textarea></td>
-                        </tr>
-                    </tbody>
-                </table>
-                        <button type = 'button' onClick = {confirmVals}>DTO 값 확인하기</button>
-                        <button type = 'button' onClick = {submitVals}>새로운 룸 등록하기</button> 
-            </form>
+                            <tr>
+                                <td>총 예약인원</td>
+                                <td><input type = 'text' style = {styleB} name = 'reserveRule' onChange = {insertData} placeholder = '이용 인원 관련 규칙을 작성해 주세요.'/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <Button variant="outline-dark" type = 'button' onClick = {confirmVals}>DTO 값 확인하기</Button>&nbsp;
+                    <Button variant="outline-dark" type = 'button' onClick = {submitVals}>새로운 룸 등록하기</Button> 
+                    {
+                        isFinished && <AddFinishModal value = {hotelSeq}/>
+                    }
+                </form>
+            </div>
         </div>
     );
 };

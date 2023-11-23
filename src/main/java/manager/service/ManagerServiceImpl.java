@@ -1,6 +1,8 @@
 package manager.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jpa.bean.HotelDTO;
@@ -32,6 +34,14 @@ public class ManagerServiceImpl implements ManagerService {
 	public void addRoom(RoomDTO roomDTO) {
 		roomDAO.save(roomDTO);
 		
+	}
+
+	@Override
+	public Page<HotelDTO> getMyPlace(String email, Pageable pageable) {
+		
+	//	Page<HotelDTO> list = hotelDAO.findAllByOwnerEmail(email, pageable);
+		Page<HotelDTO> list = hotelDAO.getMyPlace(email, pageable);
+		return list;
 	}
 
 }

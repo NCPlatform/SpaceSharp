@@ -2,12 +2,14 @@ package user.service;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -71,9 +73,19 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<HotelDTO> getHotelList(String seqHotelCategory) {
-		return hotelDAO.findBySeqHotelCategoryContaining(seqHotelCategory);
+	    // ','로 구분된 값을 분리하여 리스트로 만듭니다.
+	    List<String> categories = Arrays.asList(seqHotelCategory.split(", "));
+	    // 각 카테고리에 대해 trim을 사용하여 앞뒤의 공백을 제거합니다.
+	    categories = categories.stream().map(String::trim).collect(Collectors.toList());
+
+	    if (categories.size() > 1) {
+	        // ','가 포함되었거나 하나의 값이 비어있지 않은 경우
+	        return hotelDAO.findBySeqHotelCategoryIn(categories);
+	    } else {
+	        // ','가 없는 경우 또는 하나의 값이 비어있는 경우
+	        return hotelDAO.findBySeqHotelCategoryContaining(seqHotelCategory);
+	    }
 	}
-	
 	@Override
 	public Optional<UserDTO> login(UserDTO userDTO) {
 		return userDAO.findById(userDTO.getEmail());
@@ -199,24 +211,9 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public List<Integer> getReservationListByRoom(int seqRoom, Date date) {
-//		return reservationDAO.findAll();
-		List<ReservationDTO> reservations =  reservationDAO.findReservationsByRoomAndDate(seqRoom,date);
-
-		TreeSet<Integer> uniqueTimes = new TreeSet<>();
-		SimpleDateFormat timeFormat = new SimpleDateFormat("HH");
-
-		for (ReservationDTO reservation : reservations) {
-			Date currentTime = reservation.getTravelStartDate();
-			Date endTime = reservation.getTravelEndDate();
-
-			while (!currentTime.after(endTime) && currentTime.before(endTime)) {
-				uniqueTimes.add(Integer.parseInt(timeFormat.format(currentTime)));
-				currentTime.setTime(currentTime.getTime() + 60 * 60 * 1000); // Add 1 hour
-			}
-		}
-
-		return new ArrayList<>(uniqueTimes);
+	public List<ReservationDTO> getReservationListByRoom(int seqRoom, Date startDate, Date endDate) {
+		List<ReservationDTO> reservations =  reservationDAO.findReservationsByRoomAndDate(seqRoom,startDate, endDate);
+		return  reservations;
 	}
 
 	@Override
@@ -269,6 +266,27 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+	public Map<String,Object> hotelReserve(int seqRoom) {
+		
+		StringBuffer sb = new StringBuffer("");
+		
+		RoomDTO room = roomDAO.findById(seqRoom).get();
+		HotelDTO hotel = hotelDAO.findById(room.getSeqHotel()).get();
+		
+		List<String> categories = Arrays.asList(hotel.getSeqHotelCategory().split(",")).stream().map(String::trim).collect(Collectors.toList());
+	    for(String category : categories) {
+	    	sb.append(hotelCategoryDAO.findById(Integer.parseInt(category)).get().getName() + ",");
+	    }
+	    sb.setLength(sb.length()-1);
+		
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("room", room);
+		map.put("hotel", hotel);
+		map.put("owner", userDAO.findById(hotel.getOwnerEmail()));
+		map.put("hotelCategory", sb.toString());
+		
+		return map;
+	}
 	
 	
 }
