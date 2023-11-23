@@ -78,4 +78,6 @@ public interface UserService {
 	
 	public Map<String, Object> mainPage();
 
+	public Map<String,Object> hotelReserve(int seqRoom);
+
 }

@@ -242,6 +242,29 @@ public class UserServiceImpl implements UserService {
 	public Page<BoardDTO> list (Pageable pageable, int seqRefSeqBoard) {
 		return boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
 	}
+
+	@Override
+	public Map<String,Object> hotelReserve(int seqRoom) {
+		
+		StringBuffer sb = new StringBuffer("");
+		
+		RoomDTO room = roomDAO.findById(seqRoom).get();
+		HotelDTO hotel = hotelDAO.findById(room.getSeqHotel()).get();
+		
+		List<String> categories = Arrays.asList(hotel.getSeqHotelCategory().split(",")).stream().map(String::trim).collect(Collectors.toList());
+	    for(String category : categories) {
+	    	sb.append(hotelCategoryDAO.findById(Integer.parseInt(category)).get().getName() + ",");
+	    }
+	    sb.setLength(sb.length()-1);
+		
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("room", room);
+		map.put("hotel", hotel);
+		map.put("owner", userDAO.findById(hotel.getOwnerEmail()));
+		map.put("hotelCategory", sb.toString());
+		
+		return map;
+	}
 	
 	
 }

@@ -232,4 +232,9 @@ public class UserController {
 		
 		return "redirect:http://127.0.0.1:3000/login";
 	}
+	
+	@GetMapping(value="hotelReserve")
+	public Map<String,Object> hotelReserve(int seqRoom) {
+		return userService.hotelReserve(seqRoom);
+	}
 }

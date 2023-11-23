@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from "react";
-import styles from "../../css/HotelList.module.css";
-import Nav from "./Nav";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import Button from "react-bootstrap/Button";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import moment from "moment";
-import Slider, { Range } from "rc-slider";
-import "rc-slider/assets/index.css";
+import React, { useEffect, useState } from 'react';
+import styles from '../../css/HotelList.module.css';
+import Nav from './Nav';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import Button from 'react-bootstrap/Button';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import moment from 'moment';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
-import { Card, Carousel, Col, Row } from "react-bootstrap";
-import { Link, useParams } from "react-router-dom";
-import axios from "axios";
-import HotelItemCard from "./HotelItemCard";
+import { Card, Carousel, Col, Row } from 'react-bootstrap';
+import { Link, useParams } from 'react-router-dom';
+import axios from 'axios';
+import HotelItemCard from './HotelItemCard';
+import HotelOptionData from '../data/HotelOption.json';
+import Footer from './Footer';
 
 const List = () => {
   const [priceRange, setPriceRange] = useState({
@@ -23,15 +25,15 @@ const List = () => {
     value: [0, 300000],
   });
 
-  const [selectedOption1, setSelectedOption1] = useState("");
-  const [selectedOption2, setSelectedOption2] = useState("");
+  const [selectedOption1, setSelectedOption1] = useState('');
+  const [selectedOption2, setSelectedOption2] = useState('');
 
-  const handleOption1Change = (e) => {
+  const handleOption1Change = e => {
     setSelectedOption1(e.target.value);
-    setSelectedOption2(""); // 상위 드롭다운이 변경될 때 하위 드롭다운을 초기화
+    setSelectedOption2(''); // 상위 드롭다운이 변경될 때 하위 드롭다운을 초기화
   };
 
-  const handleOption2Change = (e) => {
+  const handleOption2Change = e => {
     setSelectedOption2(e.target.value);
   };
 
@@ -42,25 +44,21 @@ const List = () => {
 
   useEffect(() => {
     axios
-      .post("/user/getHotelList", null, { params: { seqHotelCategory } })
-      .then((res) => {
+      .post('/user/getHotelList', null, { params: { seqHotelCategory } })
+      .then(res => {
         setHotelList(res.data);
       })
-      .catch((error) => console.log(error));
+      .catch(error => console.log(error));
   }, []);
 
   return (
     <div>
       <Nav />
-      <div className="container">
+      <div className="container" style={{ minHeight: '100vh' }}>
         <Row xl={4} lg={2} md={1} sm={1} xs={1}>
           <Col className="mb-3" xl={3} lg={6} md={12} sm={12} xs={12}>
             <div>
-              <select
-                className="form-select ms-auto location"
-                value={selectedOption1}
-                onChange={handleOption1Change}
-              >
+              <select className="form-select ms-auto location" value={selectedOption1} onChange={handleOption1Change}>
                 <option value="default" readOnly>
                   지역
                 </option>
@@ -83,15 +81,11 @@ const List = () => {
               </select>
 
               {selectedOption1 && (
-                <select
-                  className="form-select ms-auto"
-                  value={selectedOption2}
-                  onChange={handleOption2Change}
-                >
+                <select className="form-select ms-auto" value={selectedOption2} onChange={handleOption2Change}>
                   <option value="default" readOnly>
                     선택하세요
                   </option>
-                  {selectedOption1 === "seoul" && (
+                  {selectedOption1 === 'seoul' && (
                     <>
                       <option value="seoul1">서울 전체</option>
                       <option value="seoul2">홍대, 합정, 상수, 연남</option>
@@ -102,9 +96,7 @@ const List = () => {
                       <option value="seoul7">서초, 교대, 방배</option>
                       <option value="seoul8">명동, 을지로, 동대문역</option>
                       <option value="seoul9">성수, 왕십리, 서울숲</option>
-                      <option value="seoul10">
-                        영등포, 여의도, 당산, 문래
-                      </option>
+                      <option value="seoul10">영등포, 여의도, 당산, 문래</option>
                       <option value="seoul11">종로, 광화문, 대학로</option>
                       <option value="seoul12">송파, 잠실, 방이</option>
                       <option value="seoul13">용산, 이태원, 한남</option>
@@ -127,13 +119,11 @@ const List = () => {
                       <option value="seoul30">도봉, 쌍문, 창동</option>
                     </>
                   )}
-                  {selectedOption1 === "gyung-gi" && (
+                  {selectedOption1 === 'gyung-gi' && (
                     <>
                       <option value="gyung-gi1">경기 전체</option>
                       <option value="gyung-gi2">고양 일산</option>
-                      <option value="gyung-gi3">
-                        수원역, 팔달, 권선, 장안
-                      </option>
+                      <option value="gyung-gi3">수원역, 팔달, 권선, 장안</option>
                       <option value="gyung-gi4">동수원 영통, 광교</option>
                       <option value="gyung-gi5">성남 분당, 판교</option>
                       <option value="gyung-gi6">부천 역곡, 상동</option>
@@ -151,7 +141,7 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === "incheon" && (
+                  {selectedOption1 === 'incheon' && (
                     <>
                       <option value="incheon1">인천 전체</option>
                       <option value="incheon2">부평역, 부평구청</option>
@@ -166,7 +156,7 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === "busan" && (
+                  {selectedOption1 === 'busan' && (
                     <>
                       <option value="busan1">부산 전체</option>
                       <option value="busan2">부산진구 서면, 전포</option>
@@ -183,62 +173,44 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === "gwang-ju" && (
+                  {selectedOption1 === 'gwang-ju' && (
                     <>
                       <option value="gwang-ju1">광주 전체</option>
                       <option value="gwang-ju2">북구 전대후문, 일곡</option>
-                      <option value="gwang-ju3">
-                        동구 동명로, 충장로, 금남로
-                      </option>
-                      <option value="gwang-ju4">
-                        광산구 수완지구, 첨단, 송정역
-                      </option>
+                      <option value="gwang-ju3">동구 동명로, 충장로, 금남로</option>
+                      <option value="gwang-ju4">광산구 수완지구, 첨단, 송정역</option>
                       <option value="gwang-ju5">남구 양림, 봉선, 진월</option>
-                      <option value="gwang-ju6">
-                        서구 상무지구, 풍암, 금호
-                      </option>
+                      <option value="gwang-ju6">서구 상무지구, 풍암, 금호</option>
                     </>
                   )}
 
-                  {selectedOption1 === "daegu" && (
+                  {selectedOption1 === 'daegu' && (
                     <>
                       <option value="daegu1">대구 전체</option>
-                      <option value="daegu2">
-                        중구 동성로, 반월당, 중앙로
-                      </option>
+                      <option value="daegu2">중구 동성로, 반월당, 중앙로</option>
                       <option value="daegu3">수성구 수성못, 범어, 시지</option>
-                      <option value="daegu4">
-                        달서구 월성, 성서, 죽전네거리
-                      </option>
-                      <option value="daegu5">
-                        북구 칠곡, 경북대, 산격, 대현
-                      </option>
+                      <option value="daegu4">달서구 월성, 성서, 죽전네거리</option>
+                      <option value="daegu5">북구 칠곡, 경북대, 산격, 대현</option>
                       <option value="daegu6">남구 명덕네거리, 대명동</option>
-                      <option value="daegu7">
-                        동구 동대구역, 팔공산, 신서
-                      </option>
+                      <option value="daegu7">동구 동대구역, 팔공산, 신서</option>
                       <option value="daegu8">달성군 현풍, 다사</option>
-                      <option value="daegu9">
-                        서구 비산, 두류, 내당, 평리
-                      </option>
+                      <option value="daegu9">서구 비산, 두류, 내당, 평리</option>
                       <option value="daegu10">군위군</option>
                     </>
                   )}
 
-                  {selectedOption1 === "daegeon" && (
+                  {selectedOption1 === 'daegeon' && (
                     <>
                       <option value="daegeon1">대전 전체</option>
                       <option value="daegeon2">서구 둔산, 도안</option>
-                      <option value="daegeon3">
-                        유성구 궁동, 대덕연구단지
-                      </option>
+                      <option value="daegeon3">유성구 궁동, 대덕연구단지</option>
                       <option value="daegeon4">중구 서대전네거리, 은행</option>
                       <option value="daegeon5">동구 소제, 용전, 동구청</option>
                       <option value="daegeon6">대덕구 송촌</option>
                     </>
                   )}
 
-                  {selectedOption1 === "woolsan" && (
+                  {selectedOption1 === 'woolsan' && (
                     <>
                       <option value="woolsan1">울산 전체</option>
                       <option value="woolsan2">남구 무거, 삼산, 신정</option>
@@ -249,7 +221,7 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === "jeju" && (
+                  {selectedOption1 === 'jeju' && (
                     <>
                       <option value="jeju1">제주 전체</option>
                       <option value="jeju2">제주시 전체</option>
@@ -262,15 +234,11 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === "gangwon" && (
+                  {selectedOption1 === 'gangwon' && (
                     <>
                       <option value="gangwon1">강원 전체</option>
-                      <option value="gangwon2">
-                        강릉 교동, 경포대, 주문진
-                      </option>
-                      <option value="gangwon3">
-                        춘천 명동, 강원대, 남춘천
-                      </option>
+                      <option value="gangwon2">강릉 교동, 경포대, 주문진</option>
+                      <option value="gangwon3">춘천 명동, 강원대, 남춘천</option>
                       <option value="gangwon4">원주 중앙, 무실, 반곡</option>
                       <option value="gangwon5">속초 영랑, 조양, 노학</option>
                       <option value="gangwon6">동해 묵호, 망상</option>
@@ -279,20 +247,16 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === "gyung-nam" && (
+                  {selectedOption1 === 'gyung-nam' && (
                     <>
                       <option value="gyung-nam1">경남 전체</option>
                       <option value="gyung-nam2">창원 상남, 용호</option>
                       <option value="gyung-nam3">창원 마산, 진해</option>
                       <option value="gyung-nam4">양산 물금, 하북, 서창</option>
-                      <option value="gyung-nam5">
-                        진주 신안, 초전, 충무공
-                      </option>
+                      <option value="gyung-nam5">진주 신안, 초전, 충무공</option>
                       <option value="gyung-nam6">김해 장유, 봉황</option>
                       <option value="gyung-nam7">사천 삼천포, 사천읍</option>
-                      <option value="gyung-nam8">
-                        밀양 위양지, 산외, 단장
-                      </option>
+                      <option value="gyung-nam8">밀양 위양지, 산외, 단장</option>
                       <option value="gyung-nam9">거제 고현, 옥포</option>
                       <option value="gyung-nam10">통영, 고성</option>
                       <option value="gyung-nam11">남해, 하동, 산청</option>
@@ -301,12 +265,10 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === "gyung-book" && (
+                  {selectedOption1 === 'gyung-book' && (
                     <>
                       <option value="gyung-book1">경북 전체</option>
-                      <option value="gyung-book2">
-                        포항 육거리, 구룡포, 흥해
-                      </option>
+                      <option value="gyung-book2">포항 육거리, 구룡포, 흥해</option>
                       <option value="gyung-book3">구미 인동, 원평</option>
                       <option value="gyung-book4">경산 임당, 하양</option>
                       <option value="gyung-book5">경주 보문, 황남, 양남</option>
@@ -314,13 +276,9 @@ const List = () => {
                       <option value="gyung-book7">김천 교동, 율곡</option>
                       <option value="gyung-book8">영천 시청, 임고</option>
                       <option value="gyung-book9">영주 가흥, 풍기, 무섬</option>
-                      <option value="gyung-book10">
-                        문경 점촌, 산양, 마성
-                      </option>
+                      <option value="gyung-book10">문경 점촌, 산양, 마성</option>
                       <option value="gyung-book11">상주 무향, 함창</option>
-                      <option value="gyung-book12">
-                        청도 화양, 이서, 각북
-                      </option>
+                      <option value="gyung-book12">청도 화양, 이서, 각북</option>
                       <option value="gyung-book13">울릉도</option>
                       <option value="gyung-book14">봉화, 영양, 울진</option>
                       <option value="gyung-book15">칠곡, 성주, 고령</option>
@@ -329,7 +287,7 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === "jeon-nam" && (
+                  {selectedOption1 === 'jeon-nam' && (
                     <>
                       <option value="jeon-nam1">전남 전체</option>
                       <option value="jeon-nam2">여수 돌산, 종화, 부삼</option>
@@ -347,12 +305,10 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === "jeon-book" && (
+                  {selectedOption1 === 'jeon-book' && (
                     <>
                       <option value="jeon-book1">전북 전체</option>
-                      <option value="jeon-book2">
-                        전주 객사, 전북대, 중동
-                      </option>
+                      <option value="jeon-book2">전주 객사, 전북대, 중동</option>
                       <option value="jeon-book3">익산 영등, 모현, 신동</option>
                       <option value="jeon-book4">군산 영동, 나운, 수송</option>
                       <option value="jeon-book5">완주 소양, 삼례</option>
@@ -365,66 +321,32 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === "choong-nam/ sejong" && (
+                  {selectedOption1 === 'choong-nam/ sejong' && (
                     <>
-                      <option value="choong-nam/ sejong1">
-                        충남/세종 전체
-                      </option>
-                      <option value="choong-nam/ sejong2">
-                        세종 정부청사, 조치원
-                      </option>
-                      <option value="choong-nam/ sejong3">
-                        천안 목천, 성환, 직산, 성거
-                      </option>
-                      <option value="choong-nam/ sejong4">
-                        아산 온양온천, 배방
-                      </option>
-                      <option value="choong-nam/ sejong5">
-                        공주 제민천, 신관
-                      </option>
-                      <option value="choong-nam/ sejong6">
-                        서산 해미, 성연, 호수공원
-                      </option>
-                      <option value="choong-nam/ sejong7">
-                        보령 대천, 동대, 웅천, 청라
-                      </option>
-                      <option value="choong-nam/ sejong8">
-                        태안 안면도, 만리포
-                      </option>
-                      <option value="choong-nam/ sejong9">
-                        당진 송악, 고대, 신평, 합덕
-                      </option>
-                      <option value="choong-nam/ sejong10">
-                        논산 취암, 내동, 연무, 가야곡
-                      </option>
-                      <option value="choong-nam/ sejong11">
-                        계룡 금암, 엄사, 두마
-                      </option>
-                      <option value="choong-nam/ sejong12">
-                        금산 상리, 추부
-                      </option>
+                      <option value="choong-nam/ sejong1">충남/세종 전체</option>
+                      <option value="choong-nam/ sejong2">세종 정부청사, 조치원</option>
+                      <option value="choong-nam/ sejong3">천안 목천, 성환, 직산, 성거</option>
+                      <option value="choong-nam/ sejong4">아산 온양온천, 배방</option>
+                      <option value="choong-nam/ sejong5">공주 제민천, 신관</option>
+                      <option value="choong-nam/ sejong6">서산 해미, 성연, 호수공원</option>
+                      <option value="choong-nam/ sejong7">보령 대천, 동대, 웅천, 청라</option>
+                      <option value="choong-nam/ sejong8">태안 안면도, 만리포</option>
+                      <option value="choong-nam/ sejong9">당진 송악, 고대, 신평, 합덕</option>
+                      <option value="choong-nam/ sejong10">논산 취암, 내동, 연무, 가야곡</option>
+                      <option value="choong-nam/ sejong11">계룡 금암, 엄사, 두마</option>
+                      <option value="choong-nam/ sejong12">금산 상리, 추부</option>
                       <option value="choong-nam/ sejong13">예산, 홍성</option>
-                      <option value="choong-nam/ sejong14">
-                        청양, 부여, 서천
-                      </option>
+                      <option value="choong-nam/ sejong14">청양, 부여, 서천</option>
                     </>
                   )}
 
-                  {selectedOption1 === "choong-book" && (
+                  {selectedOption1 === 'choong-book' && (
                     <>
                       <option value="choong-book1">충북 전체</option>
-                      <option value="choong-book2">
-                        청주 수암골, 율량, 흥덕, 사창
-                      </option>
-                      <option value="choong-book3">
-                        충주 연수, 호암, 성서
-                      </option>
-                      <option value="choong-book4">
-                        제천 의림지, 청풍, 하소
-                      </option>
-                      <option value="choong-book5">
-                        단양 대강, 영춘, 단양읍
-                      </option>
+                      <option value="choong-book2">청주 수암골, 율량, 흥덕, 사창</option>
+                      <option value="choong-book3">충주 연수, 호암, 성서</option>
+                      <option value="choong-book4">제천 의림지, 청풍, 하소</option>
+                      <option value="choong-book5">단양 대강, 영춘, 단양읍</option>
                       <option value="choong-book6">진천, 음성</option>
                       <option value="choong-book7">증평, 괴산</option>
                       <option value="choong-book8">보은, 옥천, 영동</option>
@@ -449,23 +371,18 @@ const List = () => {
               />
             </div>
           </Col>
-          
+
           <Col className="mb-3" xl={5} lg={10} md={12} sm={12} xs={12}>
             <div className="accordion">
-              <div
-                className={`${styles.HotelListAccordionItem} accordion-item`}
-              >
-                <h2
-                  className={`${styles.HotelListAccordionHeader} accordion-header`}
-                >
+              <div className={`${styles.HotelListAccordionItem} accordion-item`}>
+                <h2 className={`${styles.HotelListAccordionHeader} accordion-header`}>
                   <button
                     className="accordion-button collapsed py-2"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#collapseOne"
                     aria-expanded="false"
-                    aria-controls="collapseOne"
-                  >
+                    aria-controls="collapseOne">
                     예약 날짜
                   </button>
                 </h2>
@@ -473,13 +390,10 @@ const List = () => {
                   <div
                     id="collapseOne"
                     className="accordion-collapse collapse text-center"
-                    data-bs-parent="#accordionExample"
-                  >
+                    data-bs-parent="#accordionExample">
                     <div className="accordion-body hotelListNav">
                       <Calendar onChange={onDate} value={date} />
-                      <div className="text-gray-500 mt-4">
-                        {moment(date).format("YYYY년 MM월 DD일")}
-                      </div>
+                      <div className="text-gray-500 mt-4">{moment(date).format('YYYY년 MM월 DD일')}</div>
                     </div>
                   </div>
                 </div>
@@ -487,39 +401,32 @@ const List = () => {
             </div>
           </Col>
 
-          <Col className="d-flex justify-content-between mb-3" xl={2} lg={2} md={12} sm={12} xs={12}>
+          <Col className="d-flex justify-content-end mb-3" xl={2} lg={2} md={12} sm={12} xs={12}>
             <div>
+              <Link to="/hotelInMap">
+                <button className="btn btn-outline-dark">지도</button>
+              </Link>
               <button
                 type="button"
                 className="btn btn-outline-dark"
                 data-bs-toggle="dropdown"
-                data-bs-auto-close="false"
-              >
+                data-bs-auto-close="false">
                 필터
               </button>
-              <div className="dropdown-menu p-3">
+              <div className="dropdown-menu">
                 <form>
                   <div className="p-3 border">
                     <p>결제 유형</p>
                     <div className="row">
-                      <button
-                        type="button"
-                        className="btn btn btn-outline-secondary col mx-2"
-                        data-bs-toggle="button"
-                      >
+                      <button type="button" className="btn btn btn-outline-secondary col mx-2" data-bs-toggle="button">
                         바로 결제
                       </button>
-                      <button
-                        className="btn btn btn-outline-secondary col mx-2"
-                        data-bs-toggle="button"
-                      >
+                      <button className="btn btn btn-outline-secondary col mx-2" data-bs-toggle="button">
                         승인 결제
                       </button>
                     </div>
                     <p className="mt-5">가격</p>
-                    <span style={{ fontSize: "0.6rem" }}>
-                      가격 검색의 최소 단위는 5,000원입니다.
-                    </span>
+                    <span style={{ fontSize: '0.6rem' }}>가격 검색의 최소 단위는 5,000원입니다.</span>
                     <div className="row">
                       <div className="col form-floating mb-3">
                         <input
@@ -529,17 +436,14 @@ const List = () => {
                           placeholder="0"
                           value={priceRange.lowerBound}
                           name="lowerBound"
-                          onChange={(e) =>
+                          onChange={e =>
                             setPriceRange({
                               ...priceRange,
                               [e.target.name]: [e.target.value],
                             })
                           }
                         />
-                        <label
-                          htmlFor="floatingInput"
-                          style={{ fontSize: "0.6rem" }}
-                        >
+                        <label htmlFor="floatingInput" style={{ fontSize: '0.6rem' }}>
                           최소가격
                         </label>
                       </div>
@@ -552,17 +456,14 @@ const List = () => {
                           placeholder="Password"
                           value={priceRange.upperBound}
                           name="upperBound"
-                          onChange={(e) =>
+                          onChange={e =>
                             setPriceRange({
                               ...priceRange,
                               [e.target.name]: [e.target.value],
                             })
                           }
                         />
-                        <label
-                          htmlFor="floatingPassword"
-                          style={{ fontSize: "0.6rem" }}
-                        >
+                        <label htmlFor="floatingPassword" style={{ fontSize: '0.6rem' }}>
                           최대가격
                         </label>
                       </div>
@@ -572,7 +473,7 @@ const List = () => {
                       min={0}
                       max={300000}
                       defaultValue={priceRange.value}
-                      onChange={(e) => {
+                      onChange={e => {
                         setPriceRange({
                           lowerBound: [e[0]],
                           upperBound: [e[1]],
@@ -582,51 +483,21 @@ const List = () => {
                     />
 
                     <p className="mt-5">편의 시설</p>
-                    <div className="row row-cols-3">
-                      <div className="col p-2">
-                        <button
-                          className="btn btn-outline-dark container-fluid"
-                          data-bs-toggle="button"
-                        >
-                          TV
-                        </button>
-                      </div>
-                      <div className="col p-2">
-                        <button
-                          className="btn btn-outline-dark container-fluid"
-                          data-bs-toggle="button"
-                        >
-                          TV
-                        </button>
-                      </div>
-                      <div className="col p-2">
-                        <button
-                          className="btn btn-outline-dark container-fluid"
-                          data-bs-toggle="button"
-                        >
-                          TV
-                        </button>
-                      </div>
-                      <div className="col p-2">
-                        <button
-                          className="btn btn-outline-dark container-fluid"
-                          data-bs-toggle="button"
-                        >
-                          TV
-                        </button>
-                      </div>
+                    <div className="container-xxl row row-cols-3 row-cols-lg-6 row-cols-md-4">
+                      {HotelOptionData.map((item, index) => (
+                        <div className="col p-2" key={index}>
+                          <button className="btn btn-outline-dark container-fluid" data-bs-toggle="button">
+                            {item.key}
+                            {/* <span dangerouslySetInnerHTML={{ __html: item.icon }}></span> */}
+                          </button>
+                        </div>
+                      ))}
                     </div>
                     <div className="row">
-                      <button
-                        type="reset"
-                        className="col-5 btn btn-warning border-0"
-                      >
+                      <button type="reset" className="col-5 btn btn-warning border-0">
                         초기화
                       </button>
-                      <button
-                        type="button"
-                        className="col-7 btn btn-warning border-0"
-                      >
+                      <button type="button" className="col-7 btn btn-warning border-0">
                         필터 적용하기
                       </button>
                     </div>
@@ -634,9 +505,6 @@ const List = () => {
                 </form>
               </div>
             </div>
-            <Link to="/hotelInMap">
-              <button className="btn btn-outline-dark">지도</button>
-            </Link>
           </Col>
         </Row>
 
@@ -689,12 +557,9 @@ const List = () => {
               {hotelList.length !== 0 ? (
                 hotelList.map((item, idx) => (
                   <div className="col-xl-4 col-lg-6" key={idx}>
-                    <Link
-                      to={"/detail/" + item.seqHotel}
-                      style={{ textDecoration: "none" }}
-                    >
+                    <Link to={'/detail/' + item.seqHotel} style={{ textDecoration: 'none' }}>
                       <Col>
-                        <HotelItemCard item={item}/>
+                        <HotelItemCard item={item} />
                       </Col>
                     </Link>
                   </div>
@@ -709,6 +574,7 @@ const List = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
