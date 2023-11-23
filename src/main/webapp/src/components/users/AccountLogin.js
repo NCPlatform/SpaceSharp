@@ -217,7 +217,7 @@ const Login = () => {
                   nickname: usernickname
                   // 로컬스토리지에 저장된 데이터를 회원가입 페이지의 email, name, nickname 란에 전달하는 코드 필요 (예상)
               }));
-              navigate('/signin'); // 회원가입 페이지로 이동
+              navigate('/'); // 메인 페이지로 이동
               }
               }}
       
