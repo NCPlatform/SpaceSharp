@@ -30,7 +30,7 @@ function formatDateTime(date) {
   return `${year}. ${month}. ${day}. (${dayOfWeek}) ${hours}시`;
 }
 
-const SelectRegister = ({ data, room }) => {
+const SelectRegister = ({ data, room, handleTimeChange }) => {
   //기존 예약된 정보 -> 예약 불가능한 시간
   const [reservations, setReservations] = useState([]);
   // react-calendar를 위한 state 선언
@@ -44,6 +44,31 @@ const SelectRegister = ({ data, room }) => {
 
   const [startHour, setStartHour] = useState(null);
   const [endHour, setEndHour] = useState(null);
+
+  const reservationTimeText = calculateTotalReservationTime();
+  function calculateTotalReservationTime() {
+    if (startHour !== null && endHour !== null) {
+      const totalHours = endHour - startHour;
+      const startDate = new Date(calendarData).setHours(startHour);
+      const endDate = new Date(calendarData).setHours(endHour);
+  
+      return `${formatDateTime(startDate)} ~ ${formatDateTime(endDate)} (총 ${totalHours}시간)`;
+    } else {
+      return "예약된 시간이 없습니다.";
+    }
+  }
+  // 현재 날짜와 시간을 저장하는 상태 변수 추가
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
+
+  // 현재 날짜와 시간을 원하는 형식으로 포맷하는 함수
+  const formatCurrentDateTime = () => {
+    return moment(currentDateTime).format("YYYY.MM.DD HH:mm:ss");
+  };
+
+  // calendarData가 변경될 때마다 currentDateTime을 업데이트
+  useEffect(() => {
+    setCurrentDateTime(new Date());
+  }, [calendarData]);
 
   useEffect(() => {
     // 선택한 날짜와 비교해 같은 날일 경우 시간을,
@@ -115,7 +140,28 @@ const SelectRegister = ({ data, room }) => {
       .catch((error) => {
         console.error("데이터를 불러오는 중 에러 발생:", error);
       });
-  }, [calendarData]);
+      sessionStorage.setItem(
+        "selectedDateTime",
+        JSON.stringify({
+          date: moment(calendarData).format("YYYY.MM.DD"),
+          startHour,
+          endHour,
+        })
+      );
+
+    const storedDateTime = JSON.stringify({
+      date: calendarData.toDateString(),
+      startHour,
+      endHour,
+    });
+
+    sessionStorage.setItem("selectedDateTime", storedDateTime);
+
+    // reservationTimeText을 sessionStorage에 저장
+    sessionStorage.setItem("reservationTimeText", reservationTimeText);
+ // 현재 날짜와 시간을 sessionStorage에 저장
+    sessionStorage.setItem("currentDateTime", formatCurrentDateTime());
+  }, [calendarData, startHour, endHour, reservationTimeText]);
 
   // 예약 인원 수 증가
   const toggleIncreasePeopleNumber = () => {
@@ -195,11 +241,14 @@ const SelectRegister = ({ data, room }) => {
         setEndHour(null);
         setIsSelectedTime(Array(24).fill(false));
         setClickCount(-1);
+
+        // 선택 취소 시에도 handleTimeChange 함수 호출하여 정보 업데이트
+        handleTimeChange(null, null);
         return;
       }
 
       if (startHour > index) {
-        // Use SweetAlert for the alert
+        //SweetAlert
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -210,7 +259,7 @@ const SelectRegister = ({ data, room }) => {
 
       // 선택한 시간 범위가 24시간을 초과하는지 확인합니다.
       if (index - startHour + 1 > 24) {
-        // Use SweetAlert for the alert
+        //SweetAlert
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -225,7 +274,7 @@ const SelectRegister = ({ data, room }) => {
       );
       const commonHour = range.filter((hour) => reservations.includes(hour));
       if (commonHour.length > 0) {
-        // Use SweetAlert for the alert
+        // SweetAlert
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -252,6 +301,8 @@ const SelectRegister = ({ data, room }) => {
     } else {
       setClickCount(0);
     }
+    // handleTimeChange 함수를 호출하여 변경된 값들을 부모 컴포넌트로 전달
+    handleTimeChange(startHour, endHour);
   };
   // 시간 선택 이벤트용 함수
   const checkDisabledTime = (index) => {
@@ -394,7 +445,7 @@ const SelectRegister = ({ data, room }) => {
       <span className="text-danger">
         <i className="bi bi-info-circle" />
         &nbsp;
-        {`24시간을 초과하는 예약은 1:1 문의 부탁드립니다. 예약 도중 이탈하시는 경우, 결제 오류가 발생할 수 있습니다.`}
+        {`최대 인원을 초과하거나 24시간을 초과하는 예약은 1:1 문의 또는 연락 부탁드립니다. 예약 도중 이탈하시는 경우, 결제 오류가 발생할 수 있습니다.`}
       </span>
       <br />
       <br />
@@ -402,18 +453,7 @@ const SelectRegister = ({ data, room }) => {
       <Row>
         <h4>예약일시</h4>
       </Row>
-      <div>
-
-      {`${formatDateTime(new Date(calendarData).setHours(startHour))} ~
-${formatDateTime(new Date(calendarData).setHours(endHour))}`}
-
-        {/* {`${calendarData.getFullYear()}. ${
-calendarData.getMonth() + 1
-}. ${calendarData.getDate()}. ${dayViewText()} ` +
-`${
-!!startHour || !!endHour ? startHour + "시 ~ " + endHour + "시" : ""
-}`} */}
-      </div>
+      <div>{reservationTimeText}</div>
       <br />
       <br />
 
