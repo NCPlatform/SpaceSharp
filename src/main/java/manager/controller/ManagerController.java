@@ -50,13 +50,13 @@ public class ManagerController {
 		String imgValue = uploadObject(list, "hotel");
 		
 		// 쉼표 빼기 작업
-		hotelDTO.setSeqHotelCategory(commaClearInt(hotelDTO.getSeqHotelCategory()));
-		hotelDTO.setKeyword(commaClearStr(hotelDTO.getKeyword()));
+		hotelDTO.setSeqHotelCategory(commaClearStr(hotelDTO.getSeqHotelCategory(), true));
+		hotelDTO.setKeyword(commaClearStr(hotelDTO.getKeyword(), false));
 		hotelDTO.setImg(imgValue);
-		hotelDTO.setFacilities(commaClearStr(hotelDTO.getFacilities()));
-		hotelDTO.setAlert(commaClearStr(hotelDTO.getAlert()));
-		hotelDTO.setRefund(commaClearStr(hotelDTO.getRefund()));
-		String holiday = commaClearStr(hotelDTO.getHoliday());
+		hotelDTO.setFacilities(commaClearStr(hotelDTO.getFacilities(), false));
+		hotelDTO.setAlert(commaClearStr(hotelDTO.getAlert(), false));
+		hotelDTO.setRefund(commaClearStr(hotelDTO.getRefund(), false));
+		String holiday = commaClearStr(hotelDTO.getHoliday(), true);
 		if(holiday.equals("")) {
 			hotelDTO.setHoliday("없음");
 		}
@@ -111,7 +111,7 @@ public class ManagerController {
 		System.out.println(value);
 		return value;
 	}
-	public String commaClearStr(String sample) {
+	public String commaClearStr(String sample, boolean blank) {
 		ArrayList<String> list = new ArrayList<>();
 		StringTokenizer st = new StringTokenizer(sample, ",");
 		while(st.hasMoreTokens()) {
@@ -123,7 +123,10 @@ public class ManagerController {
 			if(value.equals("")) {
 				value += a;
 			}else {
-				value +=","+a;
+				if(blank)
+					value +=", "+a;
+				else
+					value +=","+a;
 			}
 		}
 		System.out.println(value);

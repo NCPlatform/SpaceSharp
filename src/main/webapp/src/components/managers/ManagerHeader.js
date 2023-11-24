@@ -7,6 +7,10 @@ const ManagerHeader = () => {
     JSON.parse(sessionStorage.getItem("user"))
   );
 
+  // const toAddMyPlace = () => {
+  //   window.location.href = '/manager/addPlace'
+  // }
+
   return (
     <>
       <nav className="navbar navbar-dark bg-dark fixed-top">
@@ -64,7 +68,10 @@ const ManagerHeader = () => {
                     MY PLACE
                   </Link>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item" >
+                  {
+                    // onClick
+                  }
                   <Link to="/manager/addPlace" className="nav-link">
                     ADD MY PLACE
                   </Link>
