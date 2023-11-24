@@ -30,7 +30,6 @@ dependencies {
 	implementation 'javax.servlet:jstl:1.2'
 	implementation 'org.json:json:20230227'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	implementation 'javax.servlet:jstl:1.2'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'

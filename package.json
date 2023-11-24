@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "react-naver-login": "^0.1.4",
-    "react-router-dom": "^6.18.0"
-  }
-}
