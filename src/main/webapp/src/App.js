@@ -48,6 +48,7 @@ import AdminUser from './components/admins/AdminUser';
 // import KakaoLogin from "./components/users/KaKaoLogin";
 import KakaoRedirect from './components/users/KakaoRedirect';
 import PopupPostCode from './components/users/PopupPostCode';
+import ManagerPlaceInfo from './components/managers/ManagerPlaceInfo';
 
 function App() {
   return (
@@ -92,6 +93,8 @@ function App() {
           <Route path="reservation" element={<ManagerReservation />} />
           <Route path="addPlace" element={<ManagerAddPlace />} />
           <Route path="addRoom/:hotelSeq" element={<ManagerAddRoom />} />
+          <Route path="placeInfo/:hotelSeq" element={<ManagerPlaceInfo/>}/>
+
           <Route path="review" element={<ManagerReview />} />
           <Route path="myPlace" element={<ManagerMyPlace />} />
         </Route>

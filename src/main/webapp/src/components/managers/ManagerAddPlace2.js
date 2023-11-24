@@ -49,9 +49,6 @@ const ManagerAddPlace = () => {
         const [file, setFile] = useState('')
 
         const fileRef = useRef()
-
-        // Component Loading
-        const [ready, setReady] = useState(false)
         
     // functions =====================================================
 
@@ -189,6 +186,8 @@ const ManagerAddPlace = () => {
             setHotelDTO({...hotelDTO, workinghour: workingvalue })
         }
 
+        
+
     // CSS ===========================================================
 
         const styleA = {fontSize: '1.2em', fontWeight: 'bold'} // style = {styleA}
@@ -198,7 +197,7 @@ const ManagerAddPlace = () => {
         const styleE = {width: '7%'} 
         const styleF = {width: '175%' } // refund
         const styleH = {width: '60%'}   
-        const styleI = {width: '30%'}
+        const styleI = {width: '50%'}
         const styleJ = {width: '20%'} // td 
         const styleK = {display: 'none'}
 
@@ -231,12 +230,8 @@ const ManagerAddPlace = () => {
     
         }
         
-        // 컴포넌트 조금 늦게 불러오기(스크롤바 문제 해결)
-        const isReady = () => {
-            console.log('isReady is comming ... ')
-            setReady(true)
-            console.log(ready)
-        }
+
+
 
     // NOTE ========================================================== 231107 ~ 추가중
         /*
@@ -255,6 +250,8 @@ const ManagerAddPlace = () => {
 
             5. [FIX] 공휴일 설정 바꾸기 (완료)
 
+            6. 폼 작성 중 사용자가 화면 떠날 때 window.onunload 옵션 사용하여 confirm('입력 중인 페이지에서 정말 나가시겠어요?') 출력 
+
         */
 
     return (
@@ -267,7 +264,7 @@ const ManagerAddPlace = () => {
                     <table>
                         <tbody>
                             <tr>
-                                <td style = {styleJ}>[확인용]OwnerEmail</td>
+                                <td style = {styleJ}>내 이메일 주소</td>
                                 <td>
                                 <input type = 'text' readOnly name = 'ownerEmail' value = {ownerEmail} style = {styleI}/>
                                 </td>
