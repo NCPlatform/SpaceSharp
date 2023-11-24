@@ -104,9 +104,10 @@ public class ManagerController {
 			if(value.equals("")) {
 				value += a;
 			}else {
-				value +=","+a;
+				value +=", "+a;
 			}
 		}
+		value += ",";
 		System.out.println(value);
 		return value;
 	}
