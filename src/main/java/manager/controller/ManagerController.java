@@ -12,9 +12,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpSession;
 import jpa.bean.HotelDTO;
 import jpa.bean.RoomDTO;
-import jpa.dao.HotelDAO;
 import manager.service.ManagerService;
 import manager.service.ObjectStorageService;
 
@@ -89,6 +88,15 @@ public class ManagerController {
 		System.out.println("email value is " + email);
 		
 		Page<HotelDTO> list = managerService.getMyPlace(email, pageable);
+		return list;
+	}
+	
+	@PostMapping(value = "getMyRoom")
+	@ResponseBody
+	public List<RoomDTO> getMyRoom(@RequestParam String seqHotel){
+		System.out.println(seqHotel);
+		
+		List<RoomDTO> list = managerService.getMyroom(seqHotel);
 		return list;
 	}
 	

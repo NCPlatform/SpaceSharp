@@ -1,5 +1,7 @@
 package manager.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,5 +17,7 @@ public interface ManagerService {
 	public void addRoom(RoomDTO roomDTO);
 
 	public Page<HotelDTO> getMyPlace(String email, Pageable pageable);
+
+	public List<RoomDTO> getMyroom(String seqHotel);
 
 }

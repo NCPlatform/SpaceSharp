@@ -27,7 +27,7 @@ public interface HotelDAO extends JpaRepository<HotelDTO, Integer> {
 
 	//public Page<HotelDTO> findAllByOwnerEmail(String email, Pageable pageable);
 	
-	@Query("select hotelDTO.seqHotel, hotelDTO.name, hotelDTO.addr, hotelDTO.img from HotelDTO hotelDTO where hotelDTO.ownerEmail like :email")
+	@Query("select hotelDTO.seqHotel, hotelDTO.name, hotelDTO.addr, hotelDTO.img from HotelDTO hotelDTO where hotelDTO.ownerEmail like :email order by hotelDTO.seqHotel")
 	public Page<HotelDTO> getMyPlace(@Param("email") String email, Pageable pageable);
 	
 

@@ -1,5 +1,7 @@
 package manager.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +43,14 @@ public class ManagerServiceImpl implements ManagerService {
 		
 	//	Page<HotelDTO> list = hotelDAO.findAllByOwnerEmail(email, pageable);
 		Page<HotelDTO> list = hotelDAO.getMyPlace(email, pageable);
+		return list;
+	}
+
+	@Override
+	public List<RoomDTO> getMyroom(String seqHotel) {
+		int param = Integer.parseInt(seqHotel);
+		 // List<RoomDTO> list = roomDAO.getMyRoom(param);
+		List<RoomDTO> list = roomDAO.findBySeqHotel(param); 
 		return list;
 	}
 
