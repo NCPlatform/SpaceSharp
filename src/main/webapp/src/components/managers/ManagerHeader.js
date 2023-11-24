@@ -7,6 +7,14 @@ const ManagerHeader = () => {
     JSON.parse(sessionStorage.getItem("user"))
   );
 
+  // const toAddMyPlace = () => {
+  //   window.location.href = '/manager/addPlace'
+  // }
+
+  const locate = (sitename) => { // location.href를 바꾸는 함수
+    window.location.href = '/manager/'+sitename
+  }
+
   return (
     <>
       <nav className="navbar navbar-dark bg-dark fixed-top">
@@ -59,22 +67,22 @@ const ManagerHeader = () => {
                     DASHBOARD
                   </Link>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item" onClick = {() => locate('myplace')}>
                   <Link to="/manager/myplace" className="nav-link">
                     MY PLACE
                   </Link>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item" onClick = {() => locate('addPlace')} >
                   <Link to="/manager/addPlace" className="nav-link">
                     ADD MY PLACE
                   </Link>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item" onClick = {() => locate('reservation')}>
                   <Link to="/manager/reservation" className="nav-link">
                     RESERVATION
                   </Link>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item" onClick = {() => locate('review')}>
                   <Link to="/manager/review" className="nav-link">
                     REVIEW
                   </Link>

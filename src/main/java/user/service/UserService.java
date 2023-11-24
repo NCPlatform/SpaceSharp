@@ -65,7 +65,6 @@ public interface UserService {
 	
 	public UserDTO getUserByEmail(String email);
 
-
 	public List<RoomDTO> getRoomListByHotel(int seqHotel);
 
 	public List<ReservationDTO> getReservationListByRoom(int seqRoom, Date startDate, Date endDate);
@@ -78,6 +77,8 @@ public interface UserService {
 	
 	public Map<String, Object> mainPage();
 
+	public boolean updateUserNaverStatus(String userEmail, boolean isnaver);
+	
 	public Map<String,Object> hotelReserve(int seqRoom);
 
 }

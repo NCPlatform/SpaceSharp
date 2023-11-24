@@ -129,6 +129,15 @@ public class UserController {
 		return userService.getReservationListByRoom(seqRoom, startDate, endDate);
 	}
 	
+  @GetMapping("/updateNaverStatus")
+	public String updateNaverStatus(@RequestParam String userEmail) {
+	    boolean updated = userService.updateUserNaverStatus(userEmail, true); // 여기에서 true 또는 false로 변경 가능
+	    if (updated) {
+	        return "네이버 성공";
+	    }
+	    return "네이버 실패";
+	}
+
 	@PostMapping(value="login")
 	@ResponseBody
 	public UserDTO login(@ModelAttribute UserDTO userDTO) {
@@ -152,6 +161,12 @@ public class UserController {
 	public Page<BoardDTO> list(@PageableDefault(page=0, size=10, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable) {
 		int seqRefSeqBoard = 0;
 		return userService.list(pageable, seqRefSeqBoard);
+	}
+	
+	@GetMapping(path = "userid")
+	@ResponseBody
+	public UserDTO userid(@RequestParam String email) {
+		return userService.getUserByEmail(email);
 	}
 	
 	@GetMapping(path = "getBoard")

@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
 const Disp_topNav = () => {
+	
   const styleA = { fontSize: '0.7em' };
   const styleB = { width: '20%' };
   return (
