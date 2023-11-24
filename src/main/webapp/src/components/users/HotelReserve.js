@@ -15,6 +15,7 @@ const HotelReserve = () => {
   const [roomDTO, setRoomDTO] = useState(null);
   const [hotelCategory, setHotelCategory] = useState();
   const [reservationDate, setReservationDate] = useState('');
+  const [currentDateTime, setCurrentDateTime] = useState('');
 
   const navigate = useNavigate();
 
@@ -37,9 +38,12 @@ const HotelReserve = () => {
         setOwnerDTO(res.data.owner);
         setHotelDTO(res.data.hotel);
         setHotelCategory(res.data.hotelCategory);
-  
+
         const storedReservationTimeText = sessionStorage.getItem('reservationTimeText');
         setReservationDate(storedReservationTimeText || '');
+
+        const storedCurrentDateTime = sessionStorage.getItem('currentDateTime');
+        setCurrentDateTime(storedCurrentDateTime || '');
       })
       .catch(err => {
         console.log(err);
@@ -202,7 +206,7 @@ const HotelReserve = () => {
                     <ul className="list-group list-group-flush me-0">
                       <li className="list-group-item me-0" style={{ fontSize: '0.8rem' }}>
                         <span className="fw-bold me-1">예약시각</span>
-                        <span>YYYY.MM.DD</span>
+                        <span>{currentDateTime}</span>
                       </li>
                       <li className="list-group-item me-0" style={{ fontSize: '0.8rem' }}>
                         <span className="fw-bold me-1">예약날짜</span>
