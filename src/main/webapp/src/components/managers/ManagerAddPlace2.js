@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import TextEditor from '../../TextEditor';
 import Disp_topNav from './Disp_topNav';
@@ -49,6 +49,9 @@ const ManagerAddPlace = () => {
         const [file, setFile] = useState('')
 
         const fileRef = useRef()
+
+        // Component Loading
+        const [ready, setReady] = useState(false)
         
     // functions =====================================================
 
@@ -227,6 +230,13 @@ const ManagerAddPlace = () => {
             }).catch(e => console.log(e))
     
         }
+        
+        // 컴포넌트 조금 늦게 불러오기(스크롤바 문제 해결)
+        const isReady = () => {
+            console.log('isReady is comming ... ')
+            setReady(true)
+            console.log(ready)
+        }
 
     // NOTE ========================================================== 231107 ~ 추가중
         /*
@@ -250,6 +260,7 @@ const ManagerAddPlace = () => {
     return (
         <div>
             <Disp_topNav/>
+            
             <div style = {styleZ}>
                 <form>
                     <span style = {styleA}>새로운 플레이스 추가하기</span>

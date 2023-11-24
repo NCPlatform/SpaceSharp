@@ -1,5 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import axios from 'axios';
+import Disp_topNav from './Disp_topNav';
 
 
 
@@ -41,13 +42,13 @@ const MyPlace = () => {
     }, []); 
     // ===================================================== CSS
         const {styleA} = {width: '80%', border: 'solid 1px black'}
+        const {styleB} = {textAlign: 'center'}
+
+        // layout
+        const styleZ = {marginLeft: '10%', marginTop: '1%'}
 
     // ===================================================== test, API, etc.
-    const printEmail = () => {
-   
-     console.log(dataList)
-
-    }
+    
 
 
 
@@ -55,32 +56,45 @@ const MyPlace = () => {
     
     return (
         <div>
-            <button onClick = {printEmail}>fkffk</button>
-            <table>
-                <tbody>
-                    <tr>
-                        <th>
-                           고유번호
-                        </th>
-                        <th>
-                            플레이스명
-                        </th>
-                        <th>
-                            이미지
-                        </th>
-                        <th>
-                            주소
-                        </th>
-                    </tr>
-                    {
-                        // dataList.map((item, index) => {
-                        //     <tr>
-                        //         <td></td>
-                        //     </tr>
-                        // })
-                    }
-                </tbody>
-            </table>
+             <Disp_topNav/>
+            <div style = {styleZ}>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                            고유번호
+                            </th>
+                            <th>
+                                플레이스명
+                            </th>
+                            <th>
+                                이미지
+                            </th>
+                            <th>
+                                주소
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            // dataList.map((item, index) => {
+                            //     <tr>
+                            //         <td></td>
+                            //     </tr>
+                            // })
+                            dataList.map(item => <tr key = {item.seqHotel}>
+                                <td style = {styleB}>{item.seqHotel}</td>
+                            
+                                <td><img src = {item.img} 
+                                
+                                    alt = {item.name} style = {{width: 100}} /></td>
+                                <td>{item.name}</td>
+                                <td>{item.addr}</td>
+                            </tr>)
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };
