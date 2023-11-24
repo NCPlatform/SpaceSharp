@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Nav, Navbar, Row } from "react-bootstrap";
 import "../../../css/navheader.css";
 import ShortURL from "./ShortURL";
@@ -12,8 +12,10 @@ const openUrlInNewTab = () => {
 const headerStyle = {
   margin: "-10px", // '세부공간 선택' 문구와 아이콘 사이의 간격을 조절
 };
+  
 
-const DetailHeader = () => {
+const DetailHeader = ({name, img1, img2, img3, path}) => {
+                    // shareKakao parameters
   return (
     <div className="box_form p-3 pt-1 pb-1">
       <div className="collapse" id="collapseExample">
@@ -26,7 +28,7 @@ const DetailHeader = () => {
             justifyContent: "center",
           }}
         >
-          <Sharekakao /> &nbsp;&nbsp;&nbsp;
+          <Sharekakao name={name} img1={img1} img2={img2} img3={img3} url={path}/> &nbsp;&nbsp;&nbsp;
           <ShortURL />
         </div>
       </div>
