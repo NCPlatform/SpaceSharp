@@ -129,7 +129,7 @@ public class UserController {
 		return userService.getReservationListByRoom(seqRoom, startDate, endDate);
 	}
 	
-  @PostMapping("/updateNaverStatus")
+  @GetMapping("/updateNaverStatus")
 	public String updateNaverStatus(@RequestParam String userEmail) {
 	    boolean updated = userService.updateUserNaverStatus(userEmail, true); // 여기에서 true 또는 false로 변경 가능
 	    if (updated) {

@@ -53,6 +53,9 @@ const Detail = () => {
   const [holiday, setHoliday] = useState('');
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
+  // 컴포넌트 파라메터 세팅
+  const [isReady, setIsReady] = useState(false)
+
   // useParams를 통해 동적인 URL 파라미터 값을 가져옴
   const { seqHotel } = useParams();
 
@@ -214,6 +217,171 @@ const Detail = () => {
         console.error('데이터를 불러오는 중 에러 발생:', error);
         setLoading(false);
       });
+    .then(response => {
+      const data = response.data;
+      if (data) {
+        setHotelName(data);
+      } else {
+        console.error('해당 공간을 찾을 수 없습니다.');
+      }
+      setLoading(false);
+    })
+    .catch(error => {
+      console.error('데이터를 불러오는 중 에러 발생:', error);
+      setLoading(false);
+    });
+    
+        // 새로운 요청을 통해 이미지 가져오기
+        axios.get(`/user/getImages?seqHotel=${seqHotel}`)
+          .then(response => {
+            const data = response.data;
+            if (data) {
+              // 이미지 경로를 콤마로 나누어 배열로 저장
+              setImages(data.split(','));
+              
+            } else {
+              console.error('해당 공간을 찾을 수 없습니다.');
+            }
+            setLoading(false);
+            setIsReady(true)
+          })
+          .catch(error => {
+            console.error('데이터를 불러오는 중 에러 발생:', error);
+            setLoading(false);
+          });
+         
+        
+      // 새로운 요청을 통해 main_keyword 가져오기
+      axios.get(`/user/getMainKeyword?seqHotel=${seqHotel}`)
+        .then(response => {
+          const data = response.data;
+          if (data) {
+            setMainKeyword(data);
+          } else {
+            console.error('해당 공간의 키워드를 찾을 수 없습니다.');
+          }
+        })
+        .catch(error => {
+          console.error('데이터를 불러오는 중 에러 발생:', error);
+        });
+      // 새로운 요청을 통해 subscribe 가져오기
+      axios.get(`/user/getSubscribe?seqHotel=${seqHotel}`)
+        .then(response => {
+          const data = response.data;
+          if (data) {
+            setSubscribe(data);
+          } else {
+            console.error('해당 공간의 키워드를 찾을 수 없습니다.');
+          }
+        })
+        .catch(error => {
+          console.error('데이터를 불러오는 중 에러 발생:', error);
+        });
+      // 새로운 요청을 통해 키워드 가져오기
+      axios.get(`/user/getTags?seqHotel=${seqHotel}`)
+        .then(response => {
+          const data = response.data;
+          if (data) {
+            setTags(data);
+          } else {
+            console.error('해당 공간의 키워드를 찾을 수 없습니다.');
+          }
+        })
+        .catch(error => {
+          console.error('데이터를 불러오는 중 에러 발생:', error);
+        });
+      // 새로운 요청을 통해 공간소개 가져오기
+      axios.get(`/user/getPlaceEx?seqHotel=${seqHotel}`)
+        .then(response => {
+          const data = response.data;
+          if (data) {
+            setPlaceEx(data);
+          } else {
+            console.error('해당 공간의 소개를 찾을 수 없습니다.');
+          }
+        })
+        .catch(error => {
+          console.error('데이터를 불러오는 중 에러 발생:', error);
+        });
+      // 새로운 요청을 통해 시설안내 가져오기
+      axios.get(`/user/getFacilities?seqHotel=${seqHotel}`)
+        .then(response => {
+          const data = response.data;
+          if (data) {
+            setFacilities(data);
+          } else {
+            console.error('해당 공간의 소개를 찾을 수 없습니다.');
+          }
+        })
+        .catch(error => {
+          console.error('데이터를 불러오는 중 에러 발생:', error);
+        });
+      // 새로운 요청을 통해 유의사항 가져오기
+      axios.get(`/user/getAlert?seqHotel=${seqHotel}`)
+        .then(response => {
+          const data = response.data;
+          if (data) {
+            setAlert(data);
+          } else {
+            console.error('해당 공간의 소개를 찾을 수 없습니다.');
+          }
+        })
+        .catch(error => {
+          console.error('데이터를 불러오는 중 에러 발생:', error);
+        });
+      // 새로운 요청을 통해 환불정책 가져오기
+      axios.get(`/user/getRefund?seqHotel=${seqHotel}`)
+        .then(response => {
+          const data = response.data;
+          if (data) {
+            setRefund(data);
+          } else {
+            console.error('해당 공간의 소개를 찾을 수 없습니다.');
+          }
+        })
+        .catch(error => {
+          console.error('데이터를 불러오는 중 에러 발생:', error);
+        });
+      // 새로운 요청을 통해 영업시간 가져오기
+      axios.get(`/user/getWorkinghour?seqHotel=${seqHotel}`)
+        .then(response => {
+          const data = response.data;
+          if (data) {
+            setWorkinghour(data);
+          } else {
+            console.error('해당 공간의 소개를 찾을 수 없습니다.');
+          }
+        })
+      // 새로운 요청을 통해 휴무 가져오기
+      axios.get(`/user/getHoliday?seqHotel=${seqHotel}`)
+        .then(response => {
+          const data = response.data;
+          if (data) {
+            setHoliday(data);
+          } else {
+            console.error('해당 공간의 소개를 찾을 수 없습니다.');
+          }
+        })
+      //공간 정보 아이콘 넣어야함
+      axios.get(`/user/getHotelInfo?seqHotel=${seqHotel}`)
+        .then(response => {
+          const data = response.data;
+          console.log(data)
+          if (data) {
+            setHotelDTO(data);
+          } else {
+            console.error('해당 공간 정보를 찾을 수 없습니다.');
+          }
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('데이터를 불러오는 중 에러 발생:', error);
+          setLoading(false);
+        });
+
+       
+
+    
   }, [seqHotel]);
   // TRUE인 항목들을 6개씩 그룹화하여 반환하는 함수
   const groupTrueOptions = () => {
@@ -397,7 +565,8 @@ const Detail = () => {
               </Tabs>
             </Col>
             <Col xs={12} md={4} className="fixed-col">
-              <DetailSelect hotel={seqHotel} />
+             { isReady && <DetailSelect hotel={seqHotel} name = {hotelName} img1={images[0]} img2={images[1] === undefined ? images[0] : images[1]} img3 = {images[2] === undefined? images[1] === undefined? images[0]:images[1]:images[2]} path = {'detail/'+seqHotel}/>
+              }
             </Col>
           </Row>
           <br />

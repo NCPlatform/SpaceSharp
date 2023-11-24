@@ -1,58 +1,54 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import axios from 'axios';
+import Disp_topNav from './Disp_topNav';
 
 
 
 const MyPlace = () => {
     
-    const [email, setEmail] = useState('')
-    const [res, setRes] = useState()
-    const [dataList, setDataList] = useState([])
+    // ================================= variables
 
+    const [dataList, setDataList] = useState([])
     
+    // ================================= functions
     useEffect(() => {
         const fetchData = async () => {
-            const session = window.sessionStorage.getItem("user");
-            const userEmail = JSON.parse(session).email;
-            setEmail(userEmail);
-            const response = await axios.post('http://localhost:8080/manager/getMyPlace', null, {
-                params: {
-                    email: userEmail
-                }
-            }).then(res => {
-                setRes(res);
-                console.log('res.data : ' + res.data)
-                console.log('res.data.content : ' + res.data.content)
-                console.log(res.data.content[1][1])
+            try {
+                const session = window.sessionStorage.getItem('user');
+                const userEmail = JSON.parse(session).email;
+                
 
-            }).catch(e => console.log(e))
-            
-            console.log('response.data = ' + response)
+                const response = await axios.post('http://localhost:8080/manager/getMyPlace', null, {
+                    params: {
+                        email: userEmail
+                    }
+                });
+
+                const content = response.data.content;
+
+                setDataList(prevDataList => [...prevDataList, ...content.map(item => ({
+                    seqHotel: item[0],
+                    name: item[1],
+                    addr: item[2],
+                    
+                   img: item[3].substr(0,item[3].indexOf(',')) === '' ? item[3] : item[3].substr(0,item[3].indexOf(','))
+                }))]);
+            } catch (error) {
+                console.error("데이터를 가져오는 도중 에러 발생:", error);
+            }
         };
 
         fetchData();
-    }, []);
+    }, []); 
+    // ===================================================== CSS
+        const {styleA} = {width: '80%', border: 'solid 1px black'}
+        const {styleB} = {textAlign: 'center'}
 
-    const printEmail = () => {
-        console.log(email)
-        console.log(res)
+        // layout
+        const styleZ = {marginLeft: '10%', marginTop: '1%'}
 
-        console.log(res.data.content[1])    
-        console.log('length  : '+res.data.content.length)
-
-        const list = []
-        const length = res.data.content.length
-        for(let i = 0; i<length; i++){
-            list[i] = res.data.content[i]
-            setDataList({...dataList, i:res.data.content[i]})
-        }
-        console.log(list)
-        list.map((item) => {
-            console.log(item)
-        })
-       // setDataList(list)
-        console.log(dataList)
-    }
+    // ===================================================== test, API, etc.
+    
 
 
 
@@ -60,7 +56,45 @@ const MyPlace = () => {
     
     return (
         <div>
-            <button onClick = {printEmail}>fkffk</button>
+             <Disp_topNav/>
+            <div style = {styleZ}>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                            고유번호
+                            </th>
+                            <th>
+                                플레이스명
+                            </th>
+                            <th>
+                                이미지
+                            </th>
+                            <th>
+                                주소
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            // dataList.map((item, index) => {
+                            //     <tr>
+                            //         <td></td>
+                            //     </tr>
+                            // })
+                            dataList.map(item => <tr key = {item.seqHotel}>
+                                <td style = {styleB}>{item.seqHotel}</td>
+                            
+                                <td><img src = {item.img} 
+                                
+                                    alt = {item.name} style = {{width: 100}} /></td>
+                                <td>{item.name}</td>
+                                <td>{item.addr}</td>
+                            </tr>)
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };

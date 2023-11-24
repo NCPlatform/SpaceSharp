@@ -5,7 +5,8 @@ import DetailList from "./list/DetailList";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const DetailSelect = ({ hotel }) => {
+
+const DetailSelect = ({hotel, name, img1, img2, img3, path}) => {
   const [rooms, setRooms] = useState([]); //rooms state 추가
   const [checkedRoom, setCheckedRoom] = useState(null);
   const [isPhoneModalOpen, setIsPhoneModalOpen] = useState(false);
@@ -112,7 +113,7 @@ const DetailSelect = ({ hotel }) => {
   };
   return (
     <div style={{ backgroundColor: "#fff" }}>
-      <DetailHeader />
+      <DetailHeader name={name} img1 = {img1} img2 = {img2} img3 = {img3} path = {path}/>
       <hr />
       {/* 상세 내역 추가 */}
       <div className="box_form w-100">
