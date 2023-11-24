@@ -11,7 +11,6 @@ import HotelContentMap from "./HotelContentMap";
 import HotelSameSpace from "./HotelSameSpace";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import HotelOption from "../data/HotelOption.json";
 function formatFacilities(facilities) {
   // 쉼표로 문자열을 나누고 <br />로 연결하여 줄 바꿈을 만듭니다
   const formattedFacilities = facilities.split(',').map((facility, index) => (
@@ -61,162 +60,6 @@ const Detail = () => {
 
   useEffect(() => {
     axios.get(`/user/getHotelName?seqHotel=${seqHotel}`)
-      .then(response => {
-        const data = response.data;
-        if (data) {
-          setHotelName(data);
-        } else {
-          console.error('해당 공간을 찾을 수 없습니다.');
-        }
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('데이터를 불러오는 중 에러 발생:', error);
-        setLoading(false);
-      });
-    // 새로운 요청을 통해 main_keyword 가져오기
-    axios.get(`/user/getMainKeyword?seqHotel=${seqHotel}`)
-      .then(response => {
-        const data = response.data;
-        if (data) {
-          setMainKeyword(data);
-        } else {
-          console.error('해당 공간의 키워드를 찾을 수 없습니다.');
-        }
-      })
-      .catch(error => {
-        console.error('데이터를 불러오는 중 에러 발생:', error);
-      });
-    // 새로운 요청을 통해 subscribe 가져오기
-    axios.get(`/user/getSubscribe?seqHotel=${seqHotel}`)
-      .then(response => {
-        const data = response.data;
-        if (data) {
-          setSubscribe(data);
-        } else {
-          console.error('해당 공간의 키워드를 찾을 수 없습니다.');
-        }
-      })
-      .catch(error => {
-        console.error('데이터를 불러오는 중 에러 발생:', error);
-      });
-    // 새로운 요청을 통해 키워드 가져오기
-    axios.get(`/user/getTags?seqHotel=${seqHotel}`)
-      .then(response => {
-        const data = response.data;
-        if (data) {
-          setTags(data);
-        } else {
-          console.error('해당 공간의 키워드를 찾을 수 없습니다.');
-        }
-      })
-      .catch(error => {
-        console.error('데이터를 불러오는 중 에러 발생:', error);
-      });
-    // 새로운 요청을 통해 공간소개 가져오기
-    axios.get(`/user/getPlaceEx?seqHotel=${seqHotel}`)
-      .then(response => {
-        const data = response.data;
-        if (data) {
-          setPlaceEx(data);
-        } else {
-          console.error('해당 공간의 소개를 찾을 수 없습니다.');
-        }
-      })
-      .catch(error => {
-        console.error('데이터를 불러오는 중 에러 발생:', error);
-      });
-    // 새로운 요청을 통해 시설안내 가져오기
-    axios.get(`/user/getFacilities?seqHotel=${seqHotel}`)
-      .then(response => {
-        const data = response.data;
-        if (data) {
-          setFacilities(data);
-        } else {
-          console.error('해당 공간의 소개를 찾을 수 없습니다.');
-        }
-      })
-      .catch(error => {
-        console.error('데이터를 불러오는 중 에러 발생:', error);
-      });
-    // 새로운 요청을 통해 유의사항 가져오기
-    axios.get(`/user/getAlert?seqHotel=${seqHotel}`)
-      .then(response => {
-        const data = response.data;
-        if (data) {
-          setAlert(data);
-        } else {
-          console.error('해당 공간의 소개를 찾을 수 없습니다.');
-        }
-      })
-      .catch(error => {
-        console.error('데이터를 불러오는 중 에러 발생:', error);
-      });
-    // 새로운 요청을 통해 환불정책 가져오기
-    axios.get(`/user/getRefund?seqHotel=${seqHotel}`)
-      .then(response => {
-        const data = response.data;
-        if (data) {
-          setRefund(data);
-        } else {
-          console.error('해당 공간의 소개를 찾을 수 없습니다.');
-        }
-      })
-      .catch(error => {
-        console.error('데이터를 불러오는 중 에러 발생:', error);
-      });
-    // 새로운 요청을 통해 영업시간 가져오기
-    axios.get(`/user/getWorkinghour?seqHotel=${seqHotel}`)
-      .then(response => {
-        const data = response.data;
-        if (data) {
-          setWorkinghour(data);
-        } else {
-          console.error('해당 공간의 소개를 찾을 수 없습니다.');
-        }
-      })
-    // 새로운 요청을 통해 휴무 가져오기
-    axios.get(`/user/getHoliday?seqHotel=${seqHotel}`)
-      .then(response => {
-        const data = response.data;
-        if (data) {
-          setHoliday(data);
-        } else {
-          console.error('해당 공간의 소개를 찾을 수 없습니다.');
-        }
-      })
-    // 새로운 요청을 통해 이미지 가져오기
-    axios.get(`/user/getImages?seqHotel=${seqHotel}`)
-      .then(response => {
-        const data = response.data;
-        if (data) {
-          // 이미지 경로를 콤마로 나누어 배열로 저장
-          setImages(data.split(','));
-        } else {
-          console.error('해당 공간을 찾을 수 없습니다.');
-        }
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('데이터를 불러오는 중 에러 발생:', error);
-        setLoading(false);
-      });
-    //공간 정보 아이콘 넣어야함
-    axios.get(`/user/getHotelInfo?seqHotel=${seqHotel}`)
-      .then(response => {
-        const data = response.data;
-        console.log(data);
-        if (data) {
-          setHotelDTO(data);
-        } else {
-          console.error('해당 공간 정보를 찾을 수 없습니다.');
-        }
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('데이터를 불러오는 중 에러 발생:', error);
-        setLoading(false);
-      });
     .then(response => {
       const data = response.data;
       if (data) {
@@ -383,40 +226,10 @@ const Detail = () => {
 
     
   }, [seqHotel]);
-  // TRUE인 항목들을 6개씩 그룹화하여 반환하는 함수
-  const groupTrueOptions = () => {
-    if (!hotelDTO) {
-      return [];
-    }
-
-    // HotelOption.json 파일을 사용하여 TRUE인 항목들을 필터링
-    const trueOptions = HotelOption.filter(option => hotelDTO[option.key] === true);
-
-    // 6개씩 그룹화
-    const groupedOptions = [];
-    for (let i = 0; i < trueOptions.length; i += 6) {
-      groupedOptions.push(trueOptions.slice(i, i + 6));
-    }
-
-    return groupedOptions;
-  };
-  // 그룹화된 아이콘을 렌더링하는 함수
-  const renderGroupedIcons = () => {
-    return groupTrueOptions().map((group, groupIndex) => (
-      <div key={groupIndex} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', height: '60px' }}>
-        {group.map((option, iconIndex) => (
-          <div key={iconIndex} style={{padding: '25px', fontSize: '25px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            {React.createElement('div', { dangerouslySetInnerHTML: { __html: option.icon } })}
-            <div style={{ fontSize: '10px', textAlign: 'center' }}>{option.name}</div>
-          </div>
-        ))}
-      </div>
-    ));
-  };
   return (
     <>
       <Nav />
-      <div style={{ padding: "20px 0" }}>
+      <div style={{padding: "20px 0" }}>
         <Container>
           <Row>
             <Col xs={12} md={8}>
@@ -480,10 +293,31 @@ const Detail = () => {
                       </h5>
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<h5 style={{ display: 'inline' }}>{holiday}</h5>
                       <br />
-                      <br />
-
-                      <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        {renderGroupedIcons()}
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        {hotelDTO && (
+                          <React.Fragment>
+                            {hotelDTO.animal === true && (
+                              <div>
+                                <p style={{ fontSize: '12px' }}>반려동물 가능</p>
+                              </div>
+                            )}&nbsp;&nbsp;
+                            {hotelDTO.parking === true && (
+                              <div>
+                                <p style={{ fontSize: '12px' }}>주차 가능</p>
+                              </div>
+                            )}&nbsp;&nbsp;
+                            {hotelDTO.roofTop === true && (
+                              <div>
+                                <p style={{ fontSize: '12px' }}>루프탑 보유</p>
+                              </div>
+                            )}&nbsp;&nbsp;
+                            {hotelDTO.TV === true && (
+                              <div>
+                                <p style={{ fontSize: '12px' }}>TV 있음</p>
+                              </div>
+                            )}&nbsp;&nbsp;
+                          </React.Fragment>
+                        )}
                       </div>
                     </div>
                     <br />
@@ -559,7 +393,7 @@ const Detail = () => {
                     <hr
                       style={{ width: "20px", border: "4px solid #ff7402" }}
                     />
-
+                    
                   </div>
                 </Tab>
               </Tabs>
