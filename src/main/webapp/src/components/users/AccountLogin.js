@@ -27,6 +27,8 @@ const Login = () => {
   const [passwordDiv, setPasswordDiv] = useState('');
   const navigate = useNavigate();
 
+  const [isKakao, setIsKakao] = useState(false);
+
   const onChange = e => {
     setUserDTO({ ...userDTO, [e.target.name]: e.target.value });
   };
@@ -112,21 +114,31 @@ const Login = () => {
           name: username,
           nickname: usernickname,
         });
+
       
         try {
           const checkUserResponse = await axios.get(`/user/userid?email=${userid}`);
+          
           // userid 라는 이름으로 email 정보 가져오는 요청
           if (checkUserResponse.data) {
             // 가져온 데이터를 기준으로 if 절
             const existingUser = checkUserResponse.data;
+
+            window.localStorage.setItem('user', JSON.stringify(existingUser));
             // 가져온 데이터의 이름을 existingUser 라고 지칭함
             const iskakao = existingUser.iskakao; // 기존 사용자가 카카오로 가입한 경우 플래그
             const isnaver = existingUser.isnaver; // 기존 사용자가 네이버로 가입한 경우 플래그
+
+
             
             if(isnaver) { // 네이버연동이 되어있는 아이디 라면
               try{ 
                 // 이미 연동된 데이터기 때문에 isnaver를 true로 한번 더 바꿀 필요가 없음
                 window.sessionStorage.setItem("user", JSON.stringify(existingUser));
+
+                window.localStorage.removeItem('user')
+                window.localStorage.removeItem('com.naver.nid.oauth.state_token')
+                window.localStorage.removeItem('com.naver.nid.access_token')
                 navigate("/");
                 }
                 catch (error) { // try 의 catch
@@ -136,7 +148,9 @@ const Login = () => {
             
             } else { // 네이버연동이 되어있는 아이디가 아니라면
               
-              window.localStorage.setItem('user', JSON.stringify(existingUser)); //로컬스토리지에 데이터 저장
+              const isKakaoLinked = existingUser.iskakao; // 기존 사용자가 카카오로 연동된 여부
+
+              setIsKakao(isKakaoLinked); // 카카오 아이디 연동 여부를 상태에 설정
               
               if (iskakao) { // 카카오 연동이 되어있는 아이디 라면
                
@@ -153,67 +167,82 @@ const Login = () => {
                       try {
                         // post로 백엔드에 요청 (isnaver 값을 true로 바꾸는 것)
                         axios
-                          .post("/user/updateNaverStatus", { email: userid })
+                          .get(`/user/updateNaverStatus?userEmail=${userid}`)
                           .then((res) => {
-                          Swal.fire({
+                          window.sessionStorage.setItem('user', JSON.stringify(existingUser));
+                            Swal.fire({
                                       title: "로그인 성공",
                                       imageUrl:
                                         "https://item.kakaocdn.net/do/a7884a879ae30614290a1c20325e05e59cbcbe2de7f4969efc79ab353e0c19e8",
                                       imageWidth: 300,
                                       imageHeight: 200,
                                       imageAlt: "루피",
-                                    });
-                                    navigate("/");
-                                  })
+                                     });
+                                     window.localStorage.removeItem('user')
+                                     window.localStorage.removeItem('com.naver.nid.oauth.state_token')
+                                     window.localStorage.removeItem('com.naver.nid.access_token')
+                                      navigate("/");
+                                    })
                           .catch((error) => {
                                   //axios 의 catch
                                   console.log(error);
                                 });
-                        } catch (error) {
-                          // try에 대한 catch
-                          console.error("로그인 요청 에러:", error);
-                          alert("로그인 요청 중 에러가 발생했습니다.");
-                        }
+                      } catch (error) {
+                        // try에 대한 catch
+                        console.error("로그인 요청 에러:", error);
+                        alert("로그인 요청 중 에러가 발생했습니다.");
+                      }
     
                  
-              } else { // 통합을 하지 않는다고 하면 로그인에 실패했습니다. 라는 알람과 함께 로그인 페이지로 이동
-                Swal.fire({
-                  title: "로그인에 실패하였습니다.",
-                  imageUrl:
-                    "https://item.kakaocdn.net/do/58119590d6204ebd70e97763ca933baf82f3bd8c9735553d03f6f982e10ebe70",
-                  imageWidth: 300,
-                  imageHeight: 200,
-                  imageAlt: "루피",
-                });
-                navigate('/login')
-                }
-              });  
-              } else { // 네이버와 카카오 모두 연동이 되어있는 아이디가 아니라면 네이버에서 email, name, nickname 정보를 받아와서 로컬 스토리지에 저장
-                try{ // post로 백엔드에 요청 (isnaver 값을 true로 바꾸는 것)
-                  axios .post('/user/updateNaverStatus', { email: userid })
-                        .then(res => {
-                          window.localStorage.setItem('user', JSON.stringify(existingUser));
-                          Swal.fire({
-                            title: '회원가입 페이지로 이동합니다.',
-                            imageUrl: 'https://item.kakaocdn.net/do/d640911d600b52c55d356740537ae9569f5287469802eca457586a25a096fd31',
-                            imageWidth: 300,
-                            imageHeight: 200,
-                            imageAlt: '구데타마'
-                          })
-                          navigate('/signin') 
-                        })
-                        .catch(error => { // axios 에 대한 catch
-                          console.log(error);
-                        })
-                } catch (error) { // try에 대한 catch
-                  console.error('로그인 요청 에러:', error);
-                  alert('로그인 요청 중 에러가 발생했습니다.');
-                }
-              }
-              }}else {
-                //가져온 데이터가 없다면
-                navigate('/signin')
-              }
+                    } else { // 통합을 하지 않는다고 하면 로그인에 실패했습니다. 라는 알람과 함께 로그인 페이지로 이동
+                      Swal.fire({
+                        title: "로그인에 실패하였습니다.",
+                        imageUrl:
+                          "https://item.kakaocdn.net/do/58119590d6204ebd70e97763ca933baf82f3bd8c9735553d03f6f982e10ebe70",
+                        imageWidth: 300,
+                        imageHeight: 200,
+                        imageAlt: "루피",
+                      });
+                      window.localStorage.removeItem('user')
+                      window.localStorage.removeItem('com.naver.nid.oauth.state_token')
+                      window.localStorage.removeItem('com.naver.nid.access_token')
+                      navigate('/login')
+                      }
+                        });  
+                        } else { // 네이버와 카카오 모두 연동이 되어있는 아이디가 아니라면 네이버에서 email, name, nickname 정보를 받아와서 로컬 스토리지에 저장
+                          try{ // post로 백엔드에 요청 (isnaver 값을 true로 바꾸는 것)
+                            axios .get(`/user/updateNaverStatus?userEmail=${userid}`)
+                                  .then(res => {
+                                    window.sessionStorage.setItem('user', JSON.stringify(existingUser));
+                                    Swal.fire({
+                                      title: '로그인 완료.',
+                                      imageUrl: 'https://item.kakaocdn.net/do/d640911d600b52c55d356740537ae9569f5287469802eca457586a25a096fd31',
+                                      imageWidth: 300,
+                                      imageHeight: 200,
+                                      imageAlt: '구데타마'
+                                    })
+                                    window.localStorage.removeItem('user')
+                                    window.localStorage.removeItem('com.naver.nid.oauth.state_token')
+                                    window.localStorage.removeItem('com.naver.nid.access_token')
+                                    navigate('/') 
+                                  })
+                                  .catch(error => { // axios 에 대한 catch
+                                    console.log(error);
+                                  })
+                          } catch (error) { // try에 대한 catch
+                            console.error('로그인 요청 에러:', error);
+                            alert('로그인 요청 중 에러가 발생했습니다.');
+                          }
+                        }
+          }}else  {
+            //가져온 데이터가 없다면
+            const existingUser = checkUserResponse.data;
+
+            window.localStorage.setItem('user', JSON.stringify(existingUser));
+            window.localStorage.removeItem('com.naver.nid.oauth.state_token')
+            window.localStorage.removeItem('com.naver.nid.access_token')
+            navigate('/signin')
+          }
       
         }
         catch (error) {  // userid 라는 이름으로 email 정보 가져오는 요청 했던 try 문에 대한 catch
