@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import jpa.bean.BoardDTO;
 import jpa.bean.UserDTO;
 import jpa.dao.UserDAO;
 

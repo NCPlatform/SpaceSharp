@@ -52,6 +52,7 @@ const SignIn = ({ userInfo }) => {
 
   //카카오 소셜로그인 닉네임 속성 불러오기
   useEffect(() => {
+    console.log(window.localStorage.getItem("user"))
     if (userInfo) {
       setUserDTO({ ...userDTO, nickname: userInfo.properties.nickname });
     }
