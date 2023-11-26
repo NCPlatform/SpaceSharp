@@ -38,7 +38,10 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
 
   // 예약 인원에 관련된 state 값
   const [registerPeopleNumber, setRegisterPeopleNumber] = useState(1);
-
+  useEffect(() => {
+    //sessionStorage에 registerPeopleNumber값 저장
+    sessionStorage.setItem("registerPeopleNumber", registerPeopleNumber.toString());
+  }, [registerPeopleNumber]);
   // 시간 선택된 거 설정 여부
   const [isSelectedTime, setIsSelectedTime] = useState(Array(24).fill(false));
 
@@ -161,6 +164,14 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
     sessionStorage.setItem("reservationTimeText", reservationTimeText);
  // 현재 날짜와 시간을 sessionStorage에 저장
     sessionStorage.setItem("currentDateTime", formatCurrentDateTime());
+
+    const totalHours = endHour - startHour;
+
+    // Calculate the total cost by multiplying the price with the total number of hours
+    const totalCost = data?.price * totalHours;
+
+    // Store the total cost in sessionStorage
+    sessionStorage.setItem("totalReservationCost", totalCost);
   }, [calendarData, startHour, endHour, reservationTimeText]);
 
   // 예약 인원 수 증가
@@ -174,7 +185,10 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
   const toggleDecreasePeopleNumber = () => {
     let number = registerPeopleNumber;
     number--;
+    // 숫자가 1보다 작아지지 않도록 보장합니다.
+    number = Math.max(1, number);
     setRegisterPeopleNumber(number);
+
   };
 
   // 인원수 이벤트 변경
@@ -301,8 +315,9 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
     } else {
       setClickCount(0);
     }
+    const totalHours = endHour - startHour;
     // handleTimeChange 함수를 호출하여 변경된 값들을 부모 컴포넌트로 전달
-    handleTimeChange(startHour, endHour);
+    handleTimeChange(startHour, endHour, totalHours, `${data?.datetime}`);
   };
   // 시간 선택 이벤트용 함수
   const checkDisabledTime = (index) => {

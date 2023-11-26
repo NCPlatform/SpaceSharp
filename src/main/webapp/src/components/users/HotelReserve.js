@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
-import HotelOptionData from '../data/HotelOption.json';
+import HotelOption from "../data/HotelOption.json";
 
 const HotelReserve = () => {
   const [sessionUserDTO, setSessionUserDTO] = useState(JSON.parse(sessionStorage.getItem('user')));
@@ -16,6 +16,12 @@ const HotelReserve = () => {
   const [hotelCategory, setHotelCategory] = useState();
   const [reservationDate, setReservationDate] = useState('');
   const [currentDateTime, setCurrentDateTime] = useState('');
+
+  // useParams를 통해 동적인 URL 파라미터 값을 가져옴
+  const { seqHotel } = useParams();
+  const [loading, setLoading] = useState(true);
+
+
 
   const navigate = useNavigate();
 
@@ -51,6 +57,75 @@ const HotelReserve = () => {
       });
   }, [seqRoom]);
 
+
+  useEffect(() => {
+    //공간 정보 아이콘 넣어야함
+    axios.get(`/user/getHotelInfo?seqHotel=${seqHotel}`)
+      .then(response => {
+        const data = response.data;
+        console.log(data)
+        if (data) {
+          setHotelDTO(data);
+        } else {
+          console.error('해당 공간 정보를 찾을 수 없습니다.');
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('데이터를 불러오는 중 에러 발생:', error);
+        setLoading(false);
+      });
+  }, [seqHotel]);
+
+  const requestPay = () => {
+    // 라이브러리 스크립트가 정상적으로 로딩되었는지 확인
+    if (window.IMP) {
+      const userCode = "imp14397622";
+      window.IMP.init(userCode);
+
+      window.IMP.request_pay({
+        pg: "html5_inicis",
+        pay_method: "card",
+        merchant_uid: "test_lpfkv0f2",
+        name: "SPACE SHARP",
+        amount: Number(sessionStorage.getItem('totalReservationCost')),
+        buyer_tel: "010-0000-0000",
+      });
+    } else {
+      console.error("IMP 객체가 정의되지 않았습니다. 라이브러리를 올바르게 로딩했는지 확인하세요.");
+    }
+  };
+
+  // TRUE인 항목들을 6개씩 그룹화하여 반환하는 함수
+  const groupTrueOptions = () => {
+    if (!hotelDTO) {
+      return [];
+    }
+  
+    // HotelOption.json 파일을 사용하여 TRUE인 항목들을 필터링
+    const trueOptions = HotelOption.filter(option => hotelDTO[option.key] === true);
+  
+    // 5개씩 그룹화
+    const groupedOptions = [];
+    for (let i = 0; i < trueOptions.length; i += 5) {
+      groupedOptions.push(trueOptions.slice(i, i + 5));
+    }
+  
+    return groupedOptions;
+  };
+  // 그룹화된 아이콘을 렌더링하는 함수
+  const renderGroupedIcons = () => {
+    return groupTrueOptions().map((group, groupIndex) => (
+      <div key={groupIndex} className="row">
+        {group.map((option, iconIndex) => (
+          <div key={iconIndex} className="col-md-2 col-sm-2 mb-3">
+            {React.createElement('div', { dangerouslySetInnerHTML: { __html: option.icon } })}
+            <div>{option.name}</div>
+          </div>
+        ))}
+      </div>
+    ));
+  };
   return (
     <>
       {sessionUserDTO !== null
@@ -84,7 +159,7 @@ const HotelReserve = () => {
                     <hr />
                     <p className="row" style={{ paddingBottom: '1rem' }}>
                       <span className="col-sm-2">아이콘</span>
-                      <span className="col-sm-10">*TV~doorlock</span>
+                      <span className="col-sm-10" >{renderGroupedIcons()}</span>
                     </p>
                   </div>
                   <div className="mt-5">
@@ -101,7 +176,7 @@ const HotelReserve = () => {
                       <li className="list-group-item">
                         <div className="d-flex justify-content-between">
                           <span className="fw-bold">예약인원</span>
-                          <span>n명</span>
+                          <span>{sessionStorage.getItem('registerPeopleNumber')}명</span>
                         </div>
                       </li>
                     </ul>
@@ -214,12 +289,12 @@ const HotelReserve = () => {
                       </li>
                       <li className="list-group-item me-0" style={{ fontSize: '0.8rem' }}>
                         <span className="fw-bold me-1">예약인원</span>
-                        <span>n명</span>
+                        <span>{sessionStorage.getItem('registerPeopleNumber')}명</span>
                       </li>
                       <li className="list-group-item" style={{ borderTop: '5px solid rgb(244, 132, 132)' }}>
                         <h3 className="fw-bold d-flex justify-content-between" style={{ color: 'rgb(245, 80, 80)' }}>
                           <span>￦</span>
-                          <span>n</span>
+                          <span>{Number(sessionStorage.getItem('totalReservationCost')).toLocaleString()}</span>
                         </h3>
                       </li>
                     </ul>
@@ -228,7 +303,9 @@ const HotelReserve = () => {
                       style={{
                         backgroundColor: 'rgb(244, 132, 132)',
                         borderRadius: 0,
-                      }}>
+                        fontWeight: 'bold',
+                      }}
+                      onClick={() => requestPay()}>
                       결제하기
                     </button>
                   </div>
