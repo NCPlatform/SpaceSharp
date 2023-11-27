@@ -11,9 +11,10 @@ const ManagerHeader = () => {
   //   window.location.href = '/manager/addPlace'
   // }
 
-  const locate = (sitename) => { // location.href를 바꾸는 함수
-    window.location.href = '/manager/'+sitename
-  }
+  const locate = (sitename) => {
+    // location.href를 바꾸는 함수
+    window.location.href = "/manager/" + sitename;
+  };
 
   return (
     <>
@@ -51,7 +52,7 @@ const ManagerHeader = () => {
               ></button>
             </div>
             <div className="offcanvas-body">
-              <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
+              <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 manager-nav">
                 <li className="nav-item bg-white bg-opacity-25">
                   <p>
                     <span className="fw-bold">{sessionUserDTO.name}사장님</span>
@@ -67,29 +68,29 @@ const ManagerHeader = () => {
                     DASHBOARD
                   </Link>
                 </li>
-                <li className="nav-item" onClick = {() => locate('myplace')}>
+                <li className="nav-item" onClick={() => locate("myplace")}>
                   <Link to="/manager/myplace" className="nav-link">
                     MY PLACE
                   </Link>
                 </li>
-                <li className="nav-item" onClick = {() => locate('addPlace')} >
+                <li className="nav-item" onClick={() => locate("addPlace")}>
                   <Link to="/manager/addPlace" className="nav-link">
                     ADD MY PLACE
                   </Link>
                 </li>
-                <li className="nav-item" onClick = {() => locate('reservation')}>
+                <li className="nav-item" onClick={() => locate("reservation")}>
                   <Link to="/manager/reservation" className="nav-link">
                     RESERVATION
                   </Link>
                 </li>
-                <li className="nav-item" onClick = {() => locate('review')}>
+                <li className="nav-item" onClick={() => locate("review")}>
                   <Link to="/manager/review" className="nav-link">
                     REVIEW
                   </Link>
                 </li>
               </ul>
             </div>
-            <div className="offcanvas-footer text-center mb-5">
+            <div className="offcanvas-footer text-center mb-5 managerNavFooter">
               <Link to="/" className="nav-link">
                 Main
               </Link>

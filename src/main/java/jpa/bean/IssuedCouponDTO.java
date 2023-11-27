@@ -29,4 +29,19 @@ public class IssuedCouponDTO {
 	@Column
 	private Date endOfUse;
 	
+	@Column
+	private boolean isUse;
+	
+	@Column
+	private String title;
+	
+	@Column
+	private String content;
+	
+	@Column
+	private String couponType;
+	
+	@Column
+	private int discount;
+	
 }
