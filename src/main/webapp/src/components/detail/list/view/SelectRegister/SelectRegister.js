@@ -54,7 +54,7 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
       const totalHours = endHour - startHour;
       const startDate = new Date(calendarData).setHours(startHour);
       const endDate = new Date(calendarData).setHours(endHour);
-  
+
       return `${formatDateTime(startDate)} ~ ${formatDateTime(endDate)} (총 ${totalHours}시간)`;
     } else {
       return "예약된 시간이 없습니다.";
@@ -143,14 +143,14 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
       .catch((error) => {
         console.error("데이터를 불러오는 중 에러 발생:", error);
       });
-      sessionStorage.setItem(
-        "selectedDateTime",
-        JSON.stringify({
-          date: moment(calendarData).format("YYYY.MM.DD"),
-          startHour,
-          endHour,
-        })
-      );
+    sessionStorage.setItem(
+      "selectedDateTime",
+      JSON.stringify({
+        date: moment(calendarData).format("YYYY.MM.DD"),
+        startHour,
+        endHour,
+      })
+    );
 
     const storedDateTime = JSON.stringify({
       date: calendarData.toDateString(),
@@ -162,15 +162,15 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
 
     // reservationTimeText을 sessionStorage에 저장
     sessionStorage.setItem("reservationTimeText", reservationTimeText);
- // 현재 날짜와 시간을 sessionStorage에 저장
+    // 현재 날짜와 시간을 sessionStorage에 저장
     sessionStorage.setItem("currentDateTime", formatCurrentDateTime());
-
+    // totalHours값 계산
     const totalHours = endHour - startHour;
 
-    // Calculate the total cost by multiplying the price with the total number of hours
+    // totalHours값 계산
     const totalCost = data?.price * totalHours;
 
-    // Store the total cost in sessionStorage
+    //sessionStorage에 totalHours값 저장
     sessionStorage.setItem("totalReservationCost", totalCost);
   }, [calendarData, startHour, endHour, reservationTimeText]);
 

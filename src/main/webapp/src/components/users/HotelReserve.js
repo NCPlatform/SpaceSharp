@@ -59,7 +59,7 @@ const HotelReserve = () => {
 
 
   useEffect(() => {
-    //공간 정보 아이콘 넣어야함
+    //아이콘 넣기 위함
     axios.get(`/user/getHotelInfo?seqHotel=${seqHotel}`)
       .then(response => {
         const data = response.data;
@@ -90,27 +90,61 @@ const HotelReserve = () => {
         name: "SPACE SHARP",
         amount: Number(sessionStorage.getItem('totalReservationCost')),
         buyer_tel: "010-0000-0000",
+      }).then(response => {
+        if (response.success) {
+          // 성공 시 처리
+          // 예약 테이블 업데이트
+          const reservationData = {
+            userId: sessionUserDTO.id,
+            roomId: roomDTO.id,
+            reservationDate: reservationDate,
+            // 필요한 다른 필드 추가
+          };
+
+          axios.post('/user/reservation', reservationData)
+            .then(res => {
+              console.log('Reservation data added:', res.data);
+            })
+            .catch(err => {
+              console.error('Error adding reservation data:', err);
+            });
+
+          // receipt 테이블 업데이트
+          const receiptData = {
+            reservationId: response.data.id, // 응답에서 가져온 예약 ID 사용
+            // 필요한 다른 필드 추가
+          };
+
+          axios.post('/api/receipt', receiptData)
+            .then(res => {
+              console.log('Receipt data added:', res.data);
+            })
+            .catch(err => {
+              console.error('Error adding receipt data:', err);
+            });
+        } else {
+          // 실패 시 처리
+          console.error('Payment failed:', response.error_msg);
+        }
       });
-    } else {
-      console.error("IMP 객체가 정의되지 않았습니다. 라이브러리를 올바르게 로딩했는지 확인하세요.");
     }
   };
 
-  // TRUE인 항목들을 6개씩 그룹화하여 반환하는 함수
+  // TRUE인 항목들을 5개씩 그룹화하여 반환하는 함수
   const groupTrueOptions = () => {
     if (!hotelDTO) {
       return [];
     }
-  
+
     // HotelOption.json 파일을 사용하여 TRUE인 항목들을 필터링
     const trueOptions = HotelOption.filter(option => hotelDTO[option.key] === true);
-  
+
     // 5개씩 그룹화
     const groupedOptions = [];
     for (let i = 0; i < trueOptions.length; i += 5) {
       groupedOptions.push(trueOptions.slice(i, i + 5));
     }
-  
+
     return groupedOptions;
   };
   // 그룹화된 아이콘을 렌더링하는 함수
