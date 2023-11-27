@@ -9,4 +9,6 @@ public interface ChatService {
 
 	public Map<String, Object> getChatList(String email);
 
+	public void addChat(ChattingDTO chatDto);
+
 }

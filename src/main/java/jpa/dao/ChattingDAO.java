@@ -10,7 +10,7 @@ import jpa.bean.ChattingRoomDTO;
 
 public interface ChattingDAO extends JpaRepository<ChattingDTO,Integer> {
 
-	Collection<? extends ChattingDTO> findAllBySenderemailAndReceiveremail(String email, String email2);
+	Collection<? extends ChattingDTO> findAllBySenderemail(String email);
 
 	Collection<? extends ChattingDTO> findAllByChannelId(int channelId);
 

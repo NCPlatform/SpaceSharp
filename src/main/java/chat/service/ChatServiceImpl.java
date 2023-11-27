@@ -9,43 +9,61 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jpa.bean.ChattingDTO;
+import jpa.bean.ChattingParticipantDTO;
 import jpa.bean.ChattingRoomDTO;
 import jpa.bean.UserDTO;
 import jpa.dao.ChattingDAO;
+import jpa.dao.ChattingParticipantDAO;
 import jpa.dao.ChattingRoomDAO;
+import jpa.dao.UserDAO;
 
 @Service
 public class ChatServiceImpl implements ChatService {
+	
+	@Autowired
+	UserDAO userDAO;
 	
 	@Autowired
 	ChattingDAO chattingDAO;
 
 	@Autowired
 	ChattingRoomDAO chattingRoomDAO;
+	
+	@Autowired
+	ChattingParticipantDAO chattingParticipantDAO;
 
 	@Override
 	public Map<String, Object> getChatList(String email) {
 		
-		List<ChattingRoomDTO> roomList = chattingRoomDAO.findAllByUsersContaining(email);
+		List<ChattingParticipantDTO> participantList = chattingParticipantDAO.findAllByMemberemail(email);
+		List<ChattingRoomDTO> roomList = new ArrayList<ChattingRoomDTO>();
 		List<ChattingDTO> chatList = new ArrayList<ChattingDTO>();
-		List<UserDTO> userDTO = new ArrayList<UserDTO>();
+		List<UserDTO> userList = new ArrayList<UserDTO>();
+		List<ChattingParticipantDTO> otherParticipantList = new ArrayList<ChattingParticipantDTO>();
 		
-		for(ChattingRoomDTO dto : roomList) {
+		for(ChattingParticipantDTO dto : participantList) {
+			roomList.addAll(chattingRoomDAO.findAllByChannelId(dto.getChannelId()));
 			chatList.addAll(chattingDAO.findAllByChannelId(dto.getChannelId()));
+			otherParticipantList.addAll(chattingParticipantDAO.findAllByChannelId(dto.getChannelId()));
 		}
 		
-		for(ChattingDTO dto : chatList) {
-			
+		for(ChattingParticipantDTO dto : otherParticipantList) {
+			userList.addAll(userDAO.findAllByEmail(dto.getMemberemail()));
 		}
-		
-		System.out.println(roomList);
-		System.out.println(chatList);
 		
 		Map<String, Object> map = new HashMap<String,Object>();
 		map.put("roomList", roomList);
 		map.put("chatList", chatList);
+		map.put("userList", userList);
 		
 		return map;
+	}
+
+	@Override
+	public void addChat(ChattingDTO chatDto) {
+		System.out.println("글 쓰기");
+		chattingDAO.save(chatDto);
+		
 	}
 
 }

@@ -27,9 +27,6 @@ public class ChattingDTO {
 	private String senderemail;
 	
 	@Column
-	private String receiveremail;
-	
-	@Column
 	private String content;
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd")
