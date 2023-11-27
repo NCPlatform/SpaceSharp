@@ -184,20 +184,6 @@ public class UserController {
 	
     }
 	
-	@PostMapping("/checkNickname")
-    public ResponseEntity<String> checkNickname(@RequestBody Map<String, String> data) {
-        String email = data.get("email");
-        String newNickname = data.get("newNickname");
-
-        boolean isNicknameAvailable = userService.isNicknameAvailable(email, newNickname);
-
-        if (isNicknameAvailable) {
-            return ResponseEntity.ok("사용 가능한 닉네임입니다.");
-        } else {
-            return ResponseEntity.ok("이미 사용 중인 닉네임입니다.");
-        }
-    }
-
     @PostMapping("/updateNickname")
     public ResponseEntity<String> updateNickname(@RequestBody Map<String, String> data) {
         String email = data.get("email");
@@ -207,9 +193,19 @@ public class UserController {
 
         return ResponseEntity.ok("회원님의 닉네임이 수정되었습니다.");
     }
-
-	
-				
+    
+    @PostMapping("updateIsKakao")
+    public ResponseEntity<String> updateIsKakao(
+    		@RequestParam String email,
+            @RequestParam boolean iskakao) {
+        try {
+            userService.updateIsKakao(email, iskakao);
+            return ResponseEntity.ok("업데이트 성공");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 실패");
+        }
+    }
+    
 	@PostMapping(value = "mainPage")
 	@ResponseBody
 	public Map<String, Object> mainPage(){

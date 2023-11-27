@@ -18,7 +18,7 @@ public class CommentDTO {
 	private int seqComment;
 	
 	@Column(nullable=false)
-	private int email;
+	private String email;
 	
 	@Column
 	private int rating;

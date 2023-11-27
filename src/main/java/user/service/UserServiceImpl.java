@@ -9,7 +9,12 @@ import jpa.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -44,6 +49,22 @@ public class UserServiceImpl implements UserService {
 		return userDAO.existsByEmail(email);
 	}
 
+	public void updateNickname(String email, String newNickname) {
+		UserDTO userDTO = userDAO.findByEmail(email);
+		if (userDTO != null) {
+			userDTO.setNickname(newNickname);
+			userDAO.save(userDTO);
+		}
+	}
+	
+	@Override
+	public void updateIsKakao(String email, boolean iskakao) {
+        UserDTO userDTO = userDAO.findByEmail(email);
+                
+
+        userDTO.setIskakao(iskakao);
+        userDAO.save(userDTO);
+    }
 	
 	@Override
 	public List<HotelCategoryDTO> getHotelCategoryList() {
@@ -236,20 +257,10 @@ public class UserServiceImpl implements UserService {
 	public Page<BoardDTO> list (Pageable pageable, int seqRefSeqBoard) {
 		return boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
 	}
-
-	@Override
-	public boolean isNicknameAvailable(String email, String newNickname) {
-		UserDTO userDTO = userDAO.findByEmail(email);
-        return userDTO == null || !userDTO.getNickname().equals(newNickname);
-	}
-
-	public void updateNickname(String email, String newNickname) {
-		UserDTO userDTO = userDAO.findByEmail(email);
-        if (userDTO != null) {
-        	userDTO.setNickname(newNickname);
-        	userDAO.save(userDTO);
-        }
-    }
+	
+	
+	
+	
 
 	
 }
