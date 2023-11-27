@@ -48,6 +48,7 @@ import AdminUser from "./components/admins/AdminUser";
 // import KakaoLogin from "./components/users/KaKaoLogin";
 import KakaoRedirect from "./components/users/KakaoRedirect";
 import PopupPostCode from "./components/users/PopupPostCode";
+import ManagerChat from "./components/managers/ManagerChat";
 
 function App() {
   return (
@@ -97,6 +98,7 @@ function App() {
           <Route path="addRoom/:hotelSeq" element={<ManagerAddRoom />} />
           <Route path="review" element={<ManagerReview />} />
           <Route path="myPlace" element={<ManagerMyPlace />} />
+          <Route path="chat" element={<ManagerChat />} />
         </Route>
         <Route path="/admin">
           <Route index element={<AdminDashBoard />} />
