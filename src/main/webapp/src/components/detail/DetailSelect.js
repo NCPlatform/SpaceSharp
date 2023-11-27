@@ -3,6 +3,8 @@ import { Button, Col, Modal, Row } from "react-bootstrap";
 import DetailHeader from "./Header/DetailHeader";
 import DetailList from "./list/DetailList";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 const DetailSelect = ({hotel, name, img1, img2, img3, path}) => {
   const [rooms, setRooms] = useState([]); //rooms state 추가
@@ -11,6 +13,10 @@ const DetailSelect = ({hotel, name, img1, img2, img3, path}) => {
   const [location, setLocation] = useState(''); // 상세 위치 정보를 저장할 상태
   const [tel, setTel] = useState('');
   const [ownerEmail, setOwnerEmail] = useState('');
+  const navigate = useNavigate();
+  const [startHour, setStartHour] = useState(null);
+  const [endHour, setEndHour] = useState(null);
+  const [selectedDateTime, setSelectedDateTime] = useState(null);
 
   const modalContent = (
     <div>
@@ -71,6 +77,11 @@ const DetailSelect = ({hotel, name, img1, img2, img3, path}) => {
         .catch(error => {
           console.error('데이터를 불러오는 중 에러 발생:', error);
         });
+      const storedDateTime = sessionStorage.getItem("selectedDateTime");
+      if (storedDateTime) {
+        const parsedDateTime = JSON.parse(storedDateTime);
+        setSelectedDateTime(parsedDateTime);
+      }
     }
   }, [hotel, ownerEmail]);
 
@@ -84,6 +95,21 @@ const DetailSelect = ({hotel, name, img1, img2, img3, path}) => {
 
   const handleClosePhoneModal = () => {
     setIsPhoneModalOpen(false);
+  };
+  const handleTimeChange = (newStartHour, newEndHour) => {
+    // Implement the logic for handling time change here
+    setStartHour(newStartHour);
+    setEndHour(newEndHour);
+  };
+  const handleReservationButtonClick = () => {
+    if (checkedRoom === null) {
+      alert('방을 선택해주세요.');
+    } else if (startHour === null || endHour === null) {
+      alert('시작시간과 종료시간을 선택해주세요.');
+      window.location.reload();
+    } else {
+      navigate(`/hotelReserve/${hotel}`);
+    }
   };
   return (
     <div style={{ backgroundColor: "#fff" }}>
@@ -109,6 +135,7 @@ const DetailSelect = ({hotel, name, img1, img2, img3, path}) => {
             data={room}
             onChange={handleRadioButtonClick}
             isChecked={checkedRoom === index}
+            handleTimeChange={handleTimeChange}
           />
         ))}
 
@@ -131,7 +158,7 @@ const DetailSelect = ({hotel, name, img1, img2, img3, path}) => {
           </Button>
         </Col>
         <Col sm={6}>
-          <Button variant="success" className="w-100">
+          <Button variant="success" className="w-100" onClick={handleReservationButtonClick} >
             예약하기
           </Button>
         </Col>

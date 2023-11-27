@@ -4,7 +4,7 @@ import 'react-calendar/dist/Calendar.css';
 import SelectRegister from './SelectRegister/SelectRegister';
 import ModalPicture from './modal/ModalPicture';
 
-const ListView = ({ data, room }) => {
+const ListView = ({ data, room, handleTimeChange }) => {
   console.log(data);
   // 캘린더 표시를 위한 state 값
   const [isCalendarView, setIsCalendarView] = useState(false);
@@ -120,7 +120,7 @@ const ListView = ({ data, room }) => {
       {/* {isCalendarView && ( */}
       <>
         <br />
-        <SelectRegister data={data} room={room} />
+        <SelectRegister data={data} room={room} handleTimeChange={handleTimeChange}/>
       </>
       {/* )} */}
 

@@ -2,6 +2,9 @@ package jpa.bean;
 
 import java.util.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -18,7 +21,7 @@ public class CommentDTO {
 	private int seqComment;
 	
 	@Column(nullable=false)
-	private int email;
+	private String email;
 	
 	@Column
 	private int rating;
@@ -27,8 +30,13 @@ public class CommentDTO {
 	private int seqRefComment;
 	
 	@Column
+	private String comment;
+	
+	@Column
 	private int seqReservation;
 	
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@CreationTimestamp
 	@Column
 	private Date commentDate;
 	

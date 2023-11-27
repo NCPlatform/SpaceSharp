@@ -1,6 +1,7 @@
 package user.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +22,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jpa.bean.BoardDTO;
+import jpa.bean.CommentDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.ReservationDTO;
@@ -33,6 +38,7 @@ import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
 import jpa.dao.ReservationDAO;
 import jpa.dao.UserDAO;
+import manager.service.ObjectStorageService;
 import user.service.UserService;
 
 
@@ -44,9 +50,9 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private ReservationDAO reservationDAO;
-	@Autowired
-	private UserDAO userDAO;
+	private ObjectStorageService ncpService;
+	
+	private String bucketName = "spacesharpbucket";
 
 
 	@GetMapping("/getHotelName")
@@ -129,7 +135,7 @@ public class UserController {
 		return userService.getReservationListByRoom(seqRoom, startDate, endDate);
 	}
 	
-  @PostMapping("/updateNaverStatus")
+  @GetMapping("/updateNaverStatus")
 	public String updateNaverStatus(@RequestParam String userEmail) {
 	    boolean updated = userService.updateUserNaverStatus(userEmail, true); // 여기에서 true 또는 false로 변경 가능
 	    if (updated) {
@@ -251,5 +257,54 @@ public class UserController {
 	@GetMapping(value="hotelReserve")
 	public Map<String,Object> hotelReserve(int seqRoom) {
 		return userService.hotelReserve(seqRoom);
+	}
+	
+	@GetMapping(value="setReviewTab")
+	public Map<String,Object> setReviewTab(int seqHotel){
+		return userService.setReviewTab(seqHotel);
+	}
+	
+	@PostMapping(value="writeHotelComment")
+	@ResponseBody
+	public void  writeHotelComment (@RequestPart CommentDTO commentDTO, @RequestPart(required = false) List<MultipartFile> list, HttpSession session) {
+		
+		if(list != null) {
+			String imgValue = uploadObject(list, "comment");
+			commentDTO.setPicture(imgValue);
+		}
+		
+		userService.writeHotelComment(commentDTO);
+		
+	}
+	
+	@GetMapping(value="getHotelDetailCard")
+	public Map<String,Object> getHotelDetailCard(int seqHotel){
+		return userService.getHotelDetailCard(seqHotel);
+	}
+	
+	@GetMapping(value="getHotelList")
+	public Map<String,Object> getHotelList(){
+		return userService.getHotelList();
+	}
+	
+	public String uploadObject(List<MultipartFile> list, String path) {
+		String fileName;
+		ArrayList<String> fileNames = new ArrayList<>();
+		
+		for(MultipartFile img : list) {
+				fileName = "https://kr.object.ncloudstorage.com/spacesharpbucket/storage/"+path+"/";
+				fileName += ncpService.uploadFile(bucketName, "storage/"+path+"/", img);
+				fileNames.add(fileName);
+			}
+		String imgValue = "";
+		
+		for(String img : fileNames) {
+			if(imgValue.equals("")) {
+				imgValue += img;
+			}else {
+				imgValue +=", "+img;
+			}
+		}
+		return imgValue;
 	}
 }

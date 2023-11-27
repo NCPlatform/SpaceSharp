@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Navbar from "react-bootstrap/Navbar";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import "../../css/navheader.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../../css/mainColor.css";
@@ -15,11 +15,17 @@ const NavTest = () => {
     JSON.parse(sessionStorage.getItem("user"))
   );
 
+  const navigator = useNavigate();
+
   return (
     <div>
       {[false].map((expand) => (
         <div key={expand} className="mb-5 my-navbar bg-body-tertiary">
-          <Navbar expand={expand} className="" style={{backgroundColor: "#FFF"}}>
+          <Navbar
+            expand={expand}
+            className=""
+            style={{ backgroundColor: "#FFF" }}
+          >
             <Container fluid>
               <Navbar.Toggle
                 aria-controls={`offcanvasNavbar-expand-${expand}`}
@@ -76,10 +82,10 @@ const NavTest = () => {
                         </Link>
                       </div>
                     ) : (
-                      <Link
-                        to="/login"
+                      <div
                         style={{ textDecoration: "none", color: "black" }}
                         className="text-center"
+                        onClick={() => navigator("/login")}
                       >
                         <p
                           className="offcanvas-title fw-bold"
@@ -89,7 +95,7 @@ const NavTest = () => {
                           <br />
                           로그인 / 회원가입
                         </p>
-                      </Link>
+                      </div>
                     )}
                   </div>
                 </Offcanvas.Header>
@@ -292,7 +298,7 @@ const NavTest = () => {
                         로그아웃
                       </span>
                     ) : (
-                      <Link to="login">로그인</Link>
+                      <div onClick={() => navigator("/login")}>로그인</div>
                     )}
                     <br />
                     powered by &#9426; Netflex Corp
