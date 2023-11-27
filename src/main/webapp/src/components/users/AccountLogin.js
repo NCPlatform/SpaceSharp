@@ -274,34 +274,21 @@ const Login = () => {
   const handleNaverLogin = () => {};
 
   return (
-    <div className={styles.Login0}>
+    <div className={`container ${styles.Login0}`}>
       <div className={styles.Login1}>
-        <div className={styles.Login2}>
+        <div className="text-center">
           <h1 className={styles.loginH1}> 로그인 화면 </h1>
-          <div className="d-grid gap-2 styles.Login3">
-            <Button
-              variant="primary"
-              size="lg"
-              style={{
-                color: 'black',
-                fontWeight: 'bold',
-                background: '#2db400',
-                border: 'none',
-              }}
-              id="naverIdLogin">
-              네이버로 로그인하기
-            </Button>
-            <Button
-              variant="secondary"
-              size="lg"
-              style={{
-                color: 'black',
-                fontWeight: 'bold',
-                background: '#FFEB00',
-                border: 'none',
-              }}>
-              카카오로 로그인하기
-            </Button>
+          <div className={`d-flex flex-column align-items-center ${styles.loginButtons}`}>
+            <p id="naverIdLogin"  className={`${styles.naverLoginBtn} my-2`}>
+              네이버 로그인
+            </p>
+          </div>
+          <div className={`d-flex flex-column align-items-center ${styles.loginButtons}`}>
+            <div style={{width: "17rem"}}>
+              <p className={`${styles.kakaoLoginBtn} my-2`}>
+                카카오로 로그인
+              </p>
+            </div>
           </div>
         </div>
         <hr />
@@ -328,13 +315,13 @@ const Login = () => {
             <div id="passwordDiv">{passwordDiv}</div>
           </FloatingLabel>
 
-          <label
+          <label className={styles.AccountLoginLabel}
             style={{
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center'}}>
               <input type="checkbox" />
               아이디 기억하기
             </div>

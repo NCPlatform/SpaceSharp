@@ -1,5 +1,143 @@
+@media only screen and (min-width: 375px) {
+
 .Login0 {display: flex; justify-content: center; align-items: center;}
 .Login1 {width: 50%; margin: 0;}
 
 .loginH1{text-align: center; margin-top: 30%; margin-bottom: 15%;}
-.loginH5{text-align: center; margin-top: 10%; margin-bottom: 5%}
+.loginH5{text-align: center; margin-top: 10%; margin-bottom: 5%;}
+
+.kakaoLoginBtn {
+    display: inline-block;
+    width: 100%; /* 이미지 너비에 맞게 조절 */
+    height: 60px; /* 이미지 높이에 맞게 조절 */
+    border-radius: 12px;
+    background-image: url('../image/kakaoLogin3.png');
+    background-repeat: no-repeat;
+    background-size: contain; /* 이미지 크기에 맞게 조절 */
+    text-indent: -9999px; /* 텍스트 감추기 */
+  }
+  
+.kakaoLoginBtn:hover {
+  display: inline-block;
+  width: 100%; /* 이미지 너비에 맞게 조절 */
+  height: 60px; /* 이미지 높이에 맞게 조절 */
+  border-radius: 12px;
+  background-image: url('../image/kakaoLogin3.png');
+  background-repeat: no-repeat;
+  background-size: contain; /* 이미지 크기에 맞게 조절 */
+  text-indent: -9999px; /* 텍스트 감추기 */
+  cursor: pointer;
+}
+  .AccountLoginLabel {
+   
+  }
+}
+
+@media only screen and (max-width: 375px) {
+
+.Login0 {display: flex; justify-content: center; align-items: center; margin: 0;}
+.Login1 {width: 100%; margin: 0;}
+
+.loginH1{text-align: center; margin-top: 30%; margin-bottom: 15%;}
+.loginH5{text-align: center; margin-top: 10%; margin-bottom: 5%;}
+
+.kakaoLoginBtn {
+    display: inline-block;
+    width: 100%; /* 이미지 너비에 맞게 조절 */
+    height: 60px; /* 이미지 높이에 맞게 조절 */
+    border-radius: 12px;
+    background-image: url('../image/kakaoLogin3.png');
+    background-repeat: no-repeat;
+    background-size: contain; /* 이미지 크기에 맞게 조절 */
+    text-indent: -9999px; /* 텍스트 감추기 */
+  }
+
+.kakaoLoginBtn:hover {
+  display: inline-block;
+  width: 100%; /* 이미지 너비에 맞게 조절 */
+  height: 60px; /* 이미지 높이에 맞게 조절 */
+  border-radius: 12px;
+  background-image: url('../image/kakaoLogin3.png');
+  background-repeat: no-repeat;
+  background-size: contain; /* 이미지 크기에 맞게 조절 */
+  text-indent: -9999px; /* 텍스트 감추기 */
+  cursor: pointer;
+}
+  
+  .AccountLoginLabel {
+   
+  }
+}
+
+
+@media only screen and (max-width: 440px){
+
+.Login0 {display: flex; justify-content: center; align-items: center;}
+.Login1 {width: 95%; margin: 0;}
+
+.loginH1{text-align: center; margin-top: 30%; margin-bottom: 15%;}
+.loginH5{text-align: center; margin-top: 10%; margin-bottom: 5%;}
+
+.kakaoLoginBtn {
+    display: inline-block;
+    width: 100%; /* 이미지 너비에 맞게 조절 */
+    height: 60px; /* 이미지 높이에 맞게 조절 */
+    border-radius: 12px;
+    background-image: url('../image/kakaoLogin3.png');
+    background-repeat: no-repeat;
+    background-size: contain; /* 이미지 크기에 맞게 조절 */
+    text-indent: -9999px; /* 텍스트 감추기 */
+  }
+
+.kakaoLoginBtn:hover {
+    display: inline-block;
+    width: 100%; /* 이미지 너비에 맞게 조절 */
+    height: 60px; /* 이미지 높이에 맞게 조절 */
+    border-radius: 12px;
+    background-image: url('../image/kakaoLogin3.png');
+    background-repeat: no-repeat;
+    background-size: contain; /* 이미지 크기에 맞게 조절 */
+    text-indent: -9999px; /* 텍스트 감추기 */
+    cursor: pointer;
+  }
+  
+  .AccountLoginLabel {
+   
+  }
+}
+
+@media only screen and (max-width: 800px){
+
+.Login0 {display: flex; justify-content: center; align-items: center;}
+.Login1 {width: 75%; margin: 0;}
+
+.loginH1{text-align: center; margin-top: 30%; margin-bottom: 15%;}
+.loginH5{text-align: center; margin-top: 10%; margin-bottom: 5%;}
+
+.kakaoLoginBtn {
+    display: inline-block;
+    width: 100%; /* 이미지 너비에 맞게 조절 */
+    height: 60px; /* 이미지 높이에 맞게 조절 */
+    border-radius: 12px;
+    background-image: url('../image/kakaoLogin3.png');
+    background-repeat: no-repeat;
+    background-size: contain; /* 이미지 크기에 맞게 조절 */
+    text-indent: -9999px; /* 텍스트 감추기 */
+  }
+
+.kakaoLoginBtn:hover {
+  display: inline-block;
+  width: 100%; /* 이미지 너비에 맞게 조절 */
+  height: 60px; /* 이미지 높이에 맞게 조절 */
+  border-radius: 12px;
+  background-image: url('../image/kakaoLogin3.png');
+  background-repeat: no-repeat;
+  background-size: contain; /* 이미지 크기에 맞게 조절 */
+  text-indent: -9999px; /* 텍스트 감추기 */
+  cursor: pointer;
+}
+
+.AccountLoginLabel {
+  
+ }
+}
