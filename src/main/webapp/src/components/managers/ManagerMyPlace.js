@@ -61,18 +61,8 @@ const MyPlace = () => {
         setSeq(seq)
         setRoomListOn(true)
 
-        axios.post('http://localhost:8080/manager/getMyRoom', null, {
-                    params: {
-                        seqHotel: seq
-                    }
-                }).then(res => 
-                    console.log(res) //  여기까지 했다! settingData 컴포넌트를 재활용할 건데 파라메터를 하나 더 주는 걸로 ~ 
-                ).catch(e => console.log(e));
     }
 
-    const settingRoomData = (content) => {
-
-    }
 
     const roomListToggle = () => {
         setRoomListOn(!roomListOn)

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import axios from 'axios'
 
-const ViewRoomList = ({seq, func}) => {
+const ViewRoomList = ({seq, func, roomContent}) => {
     // ================================== modal CSS
     
     const bg = {width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, backgroundColor: 'black', opacity: 0.6} 
@@ -15,6 +16,8 @@ const ViewRoomList = ({seq, func}) => {
         func()
     }
 
+   
+
     // ================================== NOTE
     
     return (
@@ -24,6 +27,10 @@ const ViewRoomList = ({seq, func}) => {
                 <h2 style = {subject}>룸 리스트</h2>
                 <a onClick = {closeAction}><span style = {close}>X</span></a>
                 <div style = {space}></div>
+                <table>
+
+
+                </table>
                 
                 
             </div>
