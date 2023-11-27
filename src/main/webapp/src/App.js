@@ -49,6 +49,7 @@ import AdminUser from "./components/admins/AdminUser";
 import KakaoRedirect from './components/users/KakaoRedirect';
 import PopupPostCode from './components/users/PopupPostCode';
 import ManagerPlaceInfo from './components/managers/ManagerPlaceInfo';
+import ManagerRoomInfo from "./components/managers/ManagerRoomInfo";
 
 function App() {
   return (
@@ -97,6 +98,7 @@ function App() {
           <Route path="addPlace" element={<ManagerAddPlace />} />
           <Route path="addRoom/:hotelSeq" element={<ManagerAddRoom />} />
           <Route path="placeInfo/:hotelSeq" element={<ManagerPlaceInfo/>}/>
+          <Route path="roomInfo/:roomSeq" element={<ManagerRoomInfo/>}/>
 
           <Route path="review" element={<ManagerReview />} />
           <Route path="myPlace" element={<ManagerMyPlace />} />

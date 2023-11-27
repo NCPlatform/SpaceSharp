@@ -9,7 +9,7 @@ import ViewRoomList from './ViewRoomList';
 const MyPlace = () => {
     
     // ================================= variables
-
+    const [sessionEmail, setSessionEmail] = useState(JSON.parse(window.sessionStorage.getItem('user')).email)
     const [dataList, setDataList] = useState([])
     const [available, setAvailable] = useState(true) // 데이터가 있는지 없는지
     const [roomListOn, setRoomListOn] = useState(false)
@@ -22,9 +22,10 @@ const MyPlace = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const session = window.sessionStorage.getItem('user');
-                const userEmail = JSON.parse(session).email;
-                
+                // const session = window.sessionStorage.getItem('user');
+                // const userEmail = JSON.parse(session).email;
+                // setSessionEmail(userEmail)
+                const userEmail = sessionEmail;
 
                 const response = await axios.post('http://localhost:8080/manager/getMyPlace', null, {
                     params: {
@@ -34,23 +35,37 @@ const MyPlace = () => {
                 
                 response.data.totalElements === 0 && setAvailable(false) 
                 const content = response.data.content;
+                console.log(content)
 
-                available === true && settingData(content)
+                available === true && settingData(content, 'hotel')
             } catch (error) {
                 console.error("데이터를 가져오는 도중 에러 발생:", error);
             }
         };
 
         fetchData();
-    }, []); 
+    }, [sessionEmail]); 
     
-    const settingData = (content) => { // 여기 수정 필요 
+    const settingData = (content, type) => { // 여기 수정 필요 
+        type === 'hotel' ? 
         setDataList(prevDataList => [...prevDataList, ...content.map(item => ({
             seqHotel: item[0],
             name: item[1],
             addr: item[2],
            img: item[3].substr(0,item[3].indexOf(',')) === '' ? item[3] : item[3].substr(0,item[3].indexOf(','))
-        }))]);
+        }))]) 
+        :
+        content.length === 0 ? setRoomAvailable(false) : 
+        content.forEach((item) => {
+            setRoomList(prevRoomList => [
+                ...prevRoomList,
+                { seqRoom: item.seqRoom, name: item.name, people: item.people, 
+                  img: item.img.substr(0, item.img.indexOf(',')) === '' ? item.img : item.img.substr(0, item.img.indexOf(',')) }
+              ])
+            setRoomAvailable(true)
+        })
+        
+        
     }
 
     const locate = (seq, namespace) => {
@@ -58,16 +73,29 @@ const MyPlace = () => {
     }
 
     const viewRoomList = (seq) => {
+        console.log(seq)
         setSeq(seq)
-        setRoomListOn(true)
-
+        setRoomListOn(true) // 모달 창 열기 
+        window.scrollTo(0,0)
+        axios.post('http://localhost:8080/manager/getMyRoom', null, {
+                    params: {
+                        seqHotel: seq
+                    }
+                }).then(res => {
+                    
+                    settingData(res.data, 'room')
+               //  console.log(res.data.length)
+                }
+                   // settingData(res, 'room') 
+                ).catch(e => console.log(e));
     }
 
-
-    const roomListToggle = () => {
+    const roomListToggle = () => { // 컴포넌트에 모달창 닫기 용도로 전달되는 함수다. 
         setRoomListOn(!roomListOn)
+        setRoomList([]) // 닫으면 가져왔던 룸 리스트 정보가 초기화된다.
+        // 위 라인이 없으면 이전에 조회했던 룸 리스트에 새롭게 조회하는 룸 리스트가 더해진다.
     }
-
+    
     const newPlace = () => {
         window.location.href = '/manager/addPlace'
     }
@@ -143,7 +171,7 @@ const MyPlace = () => {
                 </table>
                 {
                     // RoomList 모달
-                    roomListOn && <ViewRoomList seq = {seq} func = {roomListToggle}/>
+                    roomListOn && <ViewRoomList seq = {seq} roomList = {roomList} func = {roomListToggle} roomAvailable = {roomAvailable}/>
                 }
             </div>
         </div>

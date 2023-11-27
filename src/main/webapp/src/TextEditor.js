@@ -2,7 +2,7 @@ import React from "react";
 import 'quill/dist/quill.snow.css'
 import ReactQuill from 'react-quill'
 
-const TextEditor = (func) => {
+const TextEditor = ({func, readOnly}) => { 
 
   
   var modules = {
@@ -31,7 +31,7 @@ const TextEditor = (func) => {
 
   const handleProcedureContentChange = (content) => {
     
-    func.func(content)
+    func(content)
   };
 
   return (
@@ -44,6 +44,7 @@ const TextEditor = (func) => {
           placeholder="플레이스 소개를 작성해 주세요."
           onChange={handleProcedureContentChange}
           style={{ height: "200px" }}
+          readOnly = {readOnly}
         >
         </ReactQuill>
       </div>
