@@ -12,6 +12,9 @@ const BoardReply = ( {seqRefSeqBoard} ) => {
     const [commentEmail, setCommentEmail] = useState('');
     const [commentTitle, setCommentTitle] = useState('');
 
+    const storedUser = JSON.parse(window.sessionStorage.getItem('user'));
+    const usergrade = storedUser ? storedUser.usergrade : null;
+
     const[boardDTO, setBoardDTO] = useState(
         {
             "seqBoardCategory" : 7,
@@ -149,7 +152,9 @@ const BoardReply = ( {seqRefSeqBoard} ) => {
                 </div>
             </div>
                         <div>
+                        {storedUser && usergrade === 10 ? (
                             <button className={`btn btn-success ${styles.overlayButton}`} onClick={ onWriteSuccess }>등록</button>
+                          ) : null }
                         </div>
         </div>
     );

@@ -23,6 +23,10 @@ const Login = () => {
 
   const { email, password } = userDTO;
   
+
+
+
+
   const [emailDiv, setEmailDiv] = useState('');
   const [passwordDiv, setPasswordDiv] = useState('');
   const navigate = useNavigate();
@@ -73,8 +77,15 @@ const Login = () => {
   };
 
   const [sessionUserDTO, setSessionUserDTO] = useState(
-    window.sessionStorage.getItem('user')
+    JSON.parse(window.sessionStorage.getItem('user')) || {} // 기본값으로 빈 객체 설정
   );
+
+  useEffect(() => {
+    const storedUser = JSON.parse(window.sessionStorage.getItem('user'));
+    if (storedUser && storedUser.email) {
+      setUserDTO({ ...userDTO, email: storedUser.email });
+    }
+  }, []);
   const { naver } = window;
 
    const [userInfo, setUserInfo] = useState({

@@ -11,13 +11,15 @@ import { Navigate,  useNavigate } from 'react-router-dom';
 
 const BoardWrite = () => {
 
+    const storedUser = JSON.parse(window.sessionStorage.getItem('user'));
+
     const[boardDTO, setBoardDTO] = useState(
         {
             "seqBoardCategory" : 7,
             "title" : '',
             "content" : '',
             "seqRefSeqBoard" : 0,
-            "email" : 'user'
+            "email" : (storedUser && storedUser.email)
         }
     )
 
