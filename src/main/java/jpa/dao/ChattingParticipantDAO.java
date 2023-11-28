@@ -15,4 +15,8 @@ public interface ChattingParticipantDAO extends JpaRepository<ChattingParticipan
 
 	List<ChattingParticipantDTO> findAllByChannelId(int channelId);
 
+	void deleteByChannelIdAndMemberemail(int channelId, String email);
+
+	ChattingParticipantDTO findByChannelIdAndMemberemail(int channelId, String email);
+
 }
