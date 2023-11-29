@@ -281,7 +281,7 @@ const ManagerAddPlace = () => {
                                 <td>소개</td>
                                 <td>
                                     <div>
-                                    <TextEditor func = {editorVal} readOnly = {false}/>
+                                    <TextEditor func = {editorVal} readOnly = {false} texthold = 'placeEx'/>
                                     
                                     </div>
                                     <br/><br/>

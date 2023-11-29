@@ -14,6 +14,7 @@ const ManagerPlaceInfo = () => {
     const [hotelDTO, setHotelDTO] = useState({
             
         name: '', subscribe: '', mainKeyword: '', seqHotelCategory: '',
+        seqHotel: hotelSeq,
         keyword: '', addr: '', ownerEmail: session.email,
         workinghour: '', holiday: '', placeEx: '', 
         facilities: '', alert: '', refund: '',
@@ -52,6 +53,8 @@ const ManagerPlaceInfo = () => {
 
     // 수정 전용
     const [modifyBit, setModifyBit] = useState(false)
+
+
     // ======================================== functions 
 
     const insertData = (e) => { // input onchange
@@ -62,7 +65,7 @@ const ManagerPlaceInfo = () => {
         })
     }
 
-    const editorVal = (val) => {
+    const editorVal_placeEx = (val) => {
         
         setHotelDTO({...hotelDTO, placeEx:val})
     }
@@ -196,8 +199,15 @@ const ManagerPlaceInfo = () => {
         const elements = document.getElementsByClassName('DTOs');
 
         for (const element of elements) {
-            element.disabled = false;
+            element.disabled = modifyBit === true ? false : true
         }
+
+        axios.post('http://localhost:8080/manager/viewPlaceInfo', null, {
+            params: {
+                seq: hotelSeq
+            }
+        }).then(res => console.log(res)).catch(e => console.log(e))
+       
     },[])
 
     const settingModifyBit = () => {
@@ -211,6 +221,11 @@ const ManagerPlaceInfo = () => {
         for (const element of elements) {
             element.disabled = false;
         }
+
+        // const delValue = document.getElementsByClassName('EditVals')
+        // for (const element of delValue){
+        //     element.value = false;
+        // }
       }
 
       const isDelete = () => {
@@ -231,10 +246,18 @@ const ManagerPlaceInfo = () => {
         const elements = document.getElementsByClassName('DTOs');
 
         for (const element of elements) {
-            element.disabled = true;
+            element.disabled = null;
         }
       }
     
+      const editorVal_alert = (val) => {
+        
+        setHotelDTO({...hotelDTO, placeEx:val})
+      }
+
+      const editorVal_facilities = (val) => {
+        setHotelDTO({...hotelDTO, facilities: val})
+      }
     // ======================================== CSS
     const styleA = {fontSize: '1.2em', fontWeight: 'bold'} // style = {styleA}
     const styleB = {width: '75%'} // style = {styleB}
@@ -312,7 +335,7 @@ const ManagerPlaceInfo = () => {
                                 <td>소개</td>
                                 <td>
                                     <div>
-                                    <TextEditor func = {editorVal} readOnly = {!modifyBit} />
+                                    <TextEditor func = {editorVal_placeEx} readOnly = {!modifyBit} texthold = 'placeEx' />
                                     
                                     </div>
                                     <br/><br/>
@@ -339,10 +362,12 @@ const ManagerPlaceInfo = () => {
                             <tr>
                                 <td>시설</td>
                                 <td>
-                                    <input type = 'text' style = {styleB} name = 'facilities' placeholder = '시설 소개를 작성해 주세요.' onChange = {insertData}  className = 'DTOs'/>
-                                    <Button variant="outline-dark" type = 'button' id = 'facilAddBtn' onClick = {() => addInput('facilities', 'facil')}  style = {{display: modifyBit || 'none'}}>+</Button>
-                    
-                                    <br/>
+                                    {/* <TextEditor func = {editorVal_facilities} readOnly = {!modifyBit} texthold = 'facilities' /> */}
+                                    {/* <br/><br/> */}
+                                    <textarea rows = '10' cols = '60'
+                                        name = 'facilities' onChange = {insertData} className = 'DTOs EditVals'>
+                                        고양이 갑자기 왈왈
+                                    </textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -389,11 +414,14 @@ const ManagerPlaceInfo = () => {
                             <tr>
                                 <td>유의사항</td>
                                 <td>
-                                    <input type = 'text' style = {styleB} name = 'alert' placeholder = '예약시 주의사항을 적어 주세요.' onChange = {insertData}  className = 'DTOs'/>
-                                    <Button variant="outline-dark" type = 'button' id = 'alertAddBtn' onClick = {() => addInput('alert', 'alert')}  style = {{display: modifyBit || 'none'}}>+</Button>
-                    
-                                    <br/>
+                                        {/* <TextEditor func = {editorVal_alert} readOnly = {!modifyBit} texthold = {'alert'} /> */}
+                                        {/* <br/><br/> */}
+                                        <textarea rows = '10' cols = '60'
+                                        
+                                        name = 'alert' onChange = {insertData}  className = 'DTOs EditVals'
+                                    ></textarea>
                                 </td>
+
                             </tr>
                             <tr>
                                 <td>쿠폰 가능 여부</td> 
