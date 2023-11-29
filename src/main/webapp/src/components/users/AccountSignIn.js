@@ -261,9 +261,9 @@ const SignIn = ({ userInfo }) => {
     const STATE = "false";
     const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${STATE}&redirect_uri=${REDIRECT_URI1}`;
 
-    const NaverLogin = () =>{
-        window.location.href = NAVER_AUTH_URL;
-    };
+    // const NaverLogin = () =>{
+    //     window.location.href = NAVER_AUTH_URL;
+    // };
 
   //비밀번호 정규식 유효성 검사
   const [passwordValidationError, setPasswordValidationError] = useState(''); // 비밀번호 유효성 에러 메시지
@@ -392,7 +392,7 @@ const SignIn = ({ userInfo }) => {
       <div className="WriteBox">
         <h2 className="h2Title">회 원 가 입</h2>
        
-          <div className={`d-flex flex-column align-items-center ${styles.loginButtons}`}>
+          {/* <div className={`d-flex flex-column align-items-center ${styles.loginButtons}`}>
             <p id="naverIdLogin"  className={`${styles.naverLoginBtn} my-2`}>
               네이버 로그인
             </p>
@@ -403,7 +403,7 @@ const SignIn = ({ userInfo }) => {
                 카카오로 로그인
               </p>
             </div>
-          </div>
+          </div> */}
 
         <p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
           또는

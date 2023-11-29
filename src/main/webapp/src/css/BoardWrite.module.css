@@ -15,7 +15,6 @@
 }
 .overlayButton {
     position: relative;
-    bottom: 200%;
-    left: 10%;
+    left: 0%;
     z-index: 10;
   }

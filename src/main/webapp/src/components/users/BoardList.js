@@ -79,7 +79,7 @@ const BoardList = () => {
             <table className={styles.table}>
             <thead>
                 <tr className=''>
-                    <th className={styles.BoardListTh1}>글번호</th>
+                    <th className={styles.BoardListTh1}></th>
                     <th className={styles.BoardListTh2}>제목</th>
                     <th className={styles.BoardListTh3}>이메일</th>
                     <th className={styles.BoardListTh4}>등록일</th>
@@ -94,9 +94,9 @@ const BoardList = () => {
                         return(
                             <tr key={ item.seqBoard } className={styles.BoardListTr2}>
                                 <td>{ item.seqBoard }</td>
-                                <td><Link className={styles.BoardListTitle } to={`/boardDetail/${item.seqBoard}`}>{ item.title }</Link></td>
-                                <td className={styles.BoardListTd3}>{ item.email }</td>
-                                <td>{ formattedReleaseDate }</td>
+                                <td><Link className={`col-2 text-truncate ${styles.BoardListTitle}`} to={`/boardDetail/${item.seqBoard}`}>{ item.title }</Link></td>
+                                <td className={`col-2 text-truncate ${styles.BoardListTd3}`}>{ item.email }</td>
+                                <td className={styles.BoardListTd4}>{ formattedReleaseDate }</td>
                             </tr>
                             
                 

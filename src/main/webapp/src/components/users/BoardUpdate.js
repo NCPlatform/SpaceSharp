@@ -8,6 +8,7 @@ import axios from 'axios';
 import ReactQuill from 'react-quill';
 import Swal from "sweetalert2";
 import { Navigate } from 'react-router-dom';
+import  Nav  from './Nav';
 
 
 const BoardUpdate = () => {
@@ -131,6 +132,8 @@ const BoardUpdate = () => {
 
 
     return (
+    <div>
+        <Nav />
         <div className='container'>
             <div>
                 <div className={styles.BoardWriteHeader}>
@@ -172,6 +175,7 @@ const BoardUpdate = () => {
                 </div>
             </div>
         </div>
+    </div>
     );
 };
 
