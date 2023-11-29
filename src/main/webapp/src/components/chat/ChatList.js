@@ -103,11 +103,11 @@ const ChatList = ({ backColor }) => {
   const onChatRoomDelete = () => {
     Swal.fire({
       title: '채팅방 나가기',
-      text: '채팅 내용이 삭제되지 않습니다.',
+      text: '삭제된 채팅방은 복구할 수 없습니다.',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소',
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       reverseButtons: true,
@@ -121,8 +121,9 @@ const ChatList = ({ backColor }) => {
               Swal.fire({
                 icon: 'success',
                 title: '성공적으로 삭제했습니다.',
+              }).then(result => {
+                window.location.reload();
               });
-              setChatRoomList(chatRoomList.filter(item => item.channelId !== opponent));
             }
           })
           .catch(err => console.log(err));

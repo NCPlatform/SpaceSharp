@@ -58,7 +58,7 @@ const NavTest = () => {
                       <div style={{ textDecoration: 'none', color: 'black' }} className="text-center">
                         <p className="fw-bold mb-0">{sessionUserDTO.name}</p>
                         <Link
-                          to=""
+                          to="/update"
                           style={{
                             fontSize: '0.8rem',
                             color: 'black',
@@ -109,7 +109,7 @@ const NavTest = () => {
                   </div>
 
                   {/* list */}
-                  <Link to="/chat">
+                  <Link to="/chat" className="text-decoration-none">
                     <div className="py-3 ps-3 pe-3 mb-3 text-white fw-bold d-flex justify-content-between firstBackColor">
                       <span className="py-0">채팅</span>
                       <svg
@@ -173,8 +173,8 @@ const NavTest = () => {
                       />
                     </svg>
                   </div>
-                  <Link to="/boardList/0">
-                    <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border">
+                  <Link to="/boardList/0" className="text-decoration-none text-black">
+                    <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border ">
                       <span className="py-0">1:1 문의</span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -275,7 +275,7 @@ const NavTest = () => {
                 </div>
 
                 {sessionUserDTO && sessionUserDTO.usergrade * 1 > 5 ? (
-                  <Link to="/manager" style={{ textDecoration: 'none' }}>
+                  <Link to="/manager" className="text-decoration-none">
                     <div className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor">
                       <span className="py-0 me-2">호스트센터로 이동</span>
                       <svg
@@ -314,7 +314,7 @@ const NavTest = () => {
                   </div>
                 )}
                 {sessionUserDTO && sessionUserDTO.usergrade * 1 === 10 ? (
-                  <Link to="/admin" style={{ textDecoration: 'none' }}>
+                  <Link to="/admin" className="text-decoration-none">
                     <div className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor">
                       <span className="py-0 me-2">최고 관리자 페이지로 이동</span>
                       <svg

@@ -41,7 +41,7 @@ const DetailHeader = ({ hotel, name, img1, img2, img3, path }) => {
         })
         .catch(err => console.log(err));
     } else {
-      Swal.fire({ icon: 'error', title: 'ERROR', text: '로그인은 회원 전용 기능입니다.' });
+      Swal.fire({ icon: 'error', title: 'ERROR', text: '채팅은 회원 전용 기능입니다.' });
     }
   };
 
