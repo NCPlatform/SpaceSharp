@@ -83,6 +83,8 @@ public interface UserService {
 	public String getRefund(int seqHotel);
 	
 	public Map<String, Object> mainPage();
+	
+	public boolean updateUserNaverStatus(String userEmail, boolean isnaver);
 
 
 

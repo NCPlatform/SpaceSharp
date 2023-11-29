@@ -187,6 +187,18 @@ public class UserServiceImpl implements UserService {
 	            .map(hotelDTO -> hotelDTO.getAddr())
 	            .orElse(null);
 	}
+	
+	@Override
+	public boolean updateUserNaverStatus(String userEmail, boolean isnaver) {
+		 Optional<UserDTO> optionalUser = userDAO.findById(userEmail);
+        if (optionalUser.isPresent()) {
+            UserDTO user = optionalUser.get();
+            user.setIsnaver(isnaver);
+            userDAO.save(user);
+            return true;
+        }
+        return false;
+    }
 
 	@Override
 	public UserDTO getUserByEmail(String email) {
@@ -195,7 +207,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<RoomDTO> getRoomListByHotel(int seqHotel) {
-		return roomDAO.findBySeqHotel( seqHotel);
+		return roomDAO.findBySeqHotel(seqHotel);
 	}
 
 

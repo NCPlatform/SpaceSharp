@@ -49,20 +49,6 @@ const AccountUpdate = ({ userInfo }) => {
     }
     }, [userInfo]);
   
-  
-    //   window.sessionStorage.setItem('user', JSON.stringify(userDTO));
-    //   setShowKakaoModal(true);
-
-
-  // useEffect(() => {
-  
-  //   if(userInfo){
-  //   window.sessionStorage.setItem('user', JSON.stringify(userDTO));
-  //   setShowKakaoModal(true);
-  //   }
-  
-  // }, []);
-  
 
   console.log('마이페이지1');
   console.log(userDTO);
@@ -79,6 +65,8 @@ const AccountUpdate = ({ userInfo }) => {
   const loginHandler = () => {
     window.location.href = link;
   };
+
+  
 
 
   useEffect(() => {
@@ -165,6 +153,11 @@ const AccountUpdate = ({ userInfo }) => {
   }, [userDTO.iskakao, kakaoConnected]);
 
   console.log(userDTO);
+
+  //네이버소셜연동
+  
+
+
 
     return (
         <>
