@@ -3,6 +3,7 @@ package manager.controller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,15 @@ public class ManagerController {
 	
 	private String bucketName = "spacesharpbucket";
 	
-	
+	@PostMapping(value = "viewPlaceInfo")
+	@ResponseBody
+	public Optional<HotelDTO> viewPlaceInfo(@RequestParam String seq) {
+		System.out.println("viewPlaceInfo requested : "+seq);
+		Optional<HotelDTO> returnDTO = managerService.viewPlaceInfo(seq);
+		
+		return returnDTO;
+	}
+ 	
 	@PostMapping(value = "addedPlace")
 	@ResponseBody
 	public int addedPlace(@RequestPart HotelDTO hotelDTO,
@@ -99,7 +108,7 @@ public class ManagerController {
 		List<RoomDTO> list = managerService.getMyroom(seqHotel);
 		return list;
 	}
-	
+
 	public String commaClearInt(String sample) {
 		ArrayList<Integer> list = new ArrayList<>();
 		StringTokenizer st = new StringTokenizer(sample, ",");

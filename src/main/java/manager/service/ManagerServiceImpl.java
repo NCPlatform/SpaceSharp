@@ -1,6 +1,7 @@
 package manager.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,6 +53,12 @@ public class ManagerServiceImpl implements ManagerService {
 		 // List<RoomDTO> list = roomDAO.getMyRoom(param);
 		List<RoomDTO> list = roomDAO.findBySeqHotel(param); 
 		return list;
+	}
+
+	@Override
+	public Optional<HotelDTO> viewPlaceInfo(String seq) {
+		Optional<HotelDTO> resultDTO = hotelDAO.findById(Integer.parseInt(seq));
+		return resultDTO;
 	}
 
 }
