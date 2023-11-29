@@ -35,7 +35,7 @@ public class ReceiptDTO {
 	@Column(nullable = false)
 	private int paidAmount;
 	
-	@Column(nullable = false)
+	@Column
 	private Date payDate;
 	
 	@Column
