@@ -61,4 +61,9 @@ public class ManagerServiceImpl implements ManagerService {
 		return resultDTO;
 	}
 
+	@Override
+	public void deletePlace(String seqHotel) {
+		hotelDAO.deleteById(Integer.parseInt(seqHotel));
+	}
+
 }

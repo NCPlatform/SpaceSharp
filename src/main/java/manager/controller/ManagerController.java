@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,6 +76,15 @@ public class ManagerController {
 		managerService.addPlace(hotelDTO);
 		int result = managerService.importSeq(hotelDTO.getOwnerEmail(), hotelDTO.getName(), hotelDTO.getAddr());
 		return result; // 값 확인, 배포 시 void로 변경
+		
+	}
+	
+	@PostMapping(value = "addedPlaceWithoutImage")
+	@ResponseBody
+	public void addedRoomWithoutImage(@RequestPart HotelDTO hotelDTO) {
+		System.out.println("requested addedPlaceWithoutImage : only HotelDTO");
+		System.out.println(hotelDTO.toString());
+		managerService.addPlace(hotelDTO);
 	}
 	
 	@PostMapping(value = "addedRoom")
@@ -107,6 +117,13 @@ public class ManagerController {
 		
 		List<RoomDTO> list = managerService.getMyroom(seqHotel);
 		return list;
+	}
+	
+	@PostMapping(value = "deletePlace")
+	@ResponseBody
+	public void deletePlace(@RequestParam String seqHotel) {
+		System.out.println("deletePlace requested : "+seqHotel);
+		managerService.deletePlace(seqHotel);
 	}
 
 	public String commaClearInt(String sample) {
