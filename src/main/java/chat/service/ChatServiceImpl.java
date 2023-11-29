@@ -62,7 +62,6 @@ public class ChatServiceImpl implements ChatService {
 
 	@Override
 	public void addChat(ChattingDTO chatDto) {
-		System.out.println("글 쓰기");
 		chattingDAO.save(chatDto);
 		
 	}
@@ -130,7 +129,6 @@ public class ChatServiceImpl implements ChatService {
 	public String deleteRoom(int channelId, String email) {
 		
 		ChattingParticipantDTO dto = chattingParticipantDAO.findByChannelIdAndMemberemail(channelId, email);
-		System.out.println(dto);
 		
 		UserDTO user = userDAO.findByEmail(email);
 		
