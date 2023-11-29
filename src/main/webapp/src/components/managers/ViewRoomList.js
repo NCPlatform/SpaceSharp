@@ -30,6 +30,9 @@ const ViewRoomList = ({seq, func, roomList, roomAvailable}) => {
     const styleE = {width: '100%'}
     const styleF = {borderBottom: '1px solid gray'}
     const styleG = {cursor: 'pointer'}
+    const styleH = {color: '#5AA2E1', cursor: 'pointer'}
+    const styleI = {fontSize: '1.3em'}
+    const styleJ = {textAlign: 'center'}
     
     return (
         <>
@@ -65,8 +68,10 @@ const ViewRoomList = ({seq, func, roomList, roomAvailable}) => {
                             ) :
 
                             <tr>
-                                <td colSpan = '5'>
-                                    아직 등록된 룸이 없습니다. <span style = {{color: 'blue'}}>새로운 룸을 추가</span>해 볼까요?
+                                <td colSpan = '5' style = {styleJ}>
+                                    <br/>
+                                    <span style = {styleI}>아직 등록된 룸이 없습니다. <span style = {styleH} onClick = {() => locate(seq, 'addRoom')}>새로운 룸을 추가</span>해 볼까요?</span>
+                                    
                                 </td>
                             </tr>
                             

@@ -2,7 +2,7 @@ import React from "react";
 import 'quill/dist/quill.snow.css'
 import ReactQuill from 'react-quill'
 
-const TextEditor = ({func, readOnly, texthold}) => { 
+const TextEditor = ({func, readOnly, texthold, value}) => { 
 
   
   var modules = {
@@ -45,6 +45,7 @@ const TextEditor = ({func, readOnly, texthold}) => {
           onChange={handleProcedureContentChange}
           style={{ height: "200px" }}
           readOnly = {readOnly}
+          value = {value}
         >
         </ReactQuill>
       </div>
