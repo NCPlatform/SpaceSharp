@@ -49,6 +49,14 @@ public class ManagerController {
 		
 		return returnDTO;
 	}
+	
+	@PostMapping(value = "viewRoomInfo")
+	@ResponseBody
+	public Optional<RoomDTO> viewRoomInfo(@RequestParam String seq){
+		System.out.println("viewRoomInfo requested : "+seq);
+		Optional<RoomDTO> returnDTO = managerService.viewRoomInfo(seq);
+		return returnDTO;
+	}
  	
 	@PostMapping(value = "addedPlace")
 	@ResponseBody
