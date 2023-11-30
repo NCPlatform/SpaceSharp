@@ -46,7 +46,7 @@ public interface UserService {
 	
 	public String getMainKeyword(int seqHotel);
 
-	public Page<BoardDTO> list(Pageable pageable, int seqRefSeqBoard);
+	public Map<String,Object> list(Pageable pageable, int seqRefSeqBoard);
 
 	public Optional<BoardDTO> getReply(int seqRefSeqBoard);
 	

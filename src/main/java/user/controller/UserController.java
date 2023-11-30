@@ -208,7 +208,7 @@ public class UserController {
 	
 	@GetMapping(value="list")
 	@ResponseBody
-	public Page<BoardDTO> list(@PageableDefault(page=0, size=10, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable) {
+	public Map<String,Object> list(@PageableDefault(page=0, size=10, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable) {
 		int seqRefSeqBoard = 0;
 		return userService.list(pageable, seqRefSeqBoard);
 	}
