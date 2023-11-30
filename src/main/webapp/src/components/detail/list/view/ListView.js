@@ -42,9 +42,8 @@ const ListView = ({ data, room, handleTimeChange }) => {
             onClick={handleImageClick}
             style={{
               backgroundSize: '100% 100%',
-              backgroundImage: `url(${
-                data?.img ? data?.img.split(', ')[0] : 'https://adventure.co.kr/wp-content/uploads/2020/09/no-image.jpg'
-              })`,
+              backgroundImage: `url(${data?.img ? data?.img.split(', ')[0] : 'https://adventure.co.kr/wp-content/uploads/2020/09/no-image.jpg'
+                })`,
               height: '300px',
               textAlign: 'end',
               display: 'flex',
@@ -70,13 +69,11 @@ const ListView = ({ data, room, handleTimeChange }) => {
           1. 평일 낮 시간 당 12,000(10~17시)
           <br />
           2. 평일 저녁 시간 당 15,000(18~09시) */}
-          {data?.normalExplain}
+          {data?.normalExplain && (
+            <div dangerouslySetInnerHTML={{ __html: data.normalExplain }} />
+          )}
         </Row>
-        {/* <Row className="border-2 border-top  pt-2 pb-2">
-          <Col md={4}>● 공간 유형</Col>
-          <Col md={8}>파티룸</Col>
-          <Col md={8}>{data?.spaceType}</Col>
-        </Row> */}
+
         <Row className="border-2 border-top  pt-2 pb-2">
           <Col md={4}>● 공간 면적</Col>
           {/* <Col md={8}>53 m^3</Col> */}
@@ -92,10 +89,15 @@ const ListView = ({ data, room, handleTimeChange }) => {
           {/* <Col md={8}>최소 1명 ~ 최대 10명</Col> */}
           <Col md={8}>{data?.people}</Col>
         </Row>
-        <Row className="border-2 border-top  pt-2 pb-2">
+        <Row className="border-2 border-top pt-2 pb-2">
           <Col md={4}>● 예약 기준</Col>
-          {/* <Col md={8}>4명 초과시 10,000원/인</Col> */}
-          <Col md={8}>{data?.reserveRule}</Col>
+          <Col md={8}>
+            {data?.reserveRule ? (
+              data.reserveRule
+            ) : (
+              '문의 부탁드립니다'
+            )}
+          </Col>
         </Row>
       </div>
       {/* 아래는 예약 선택 시 */}
@@ -120,7 +122,7 @@ const ListView = ({ data, room, handleTimeChange }) => {
       {/* {isCalendarView && ( */}
       <>
         <br />
-        <SelectRegister data={data} room={room} handleTimeChange={handleTimeChange}/>
+        <SelectRegister data={data} room={room} handleTimeChange={handleTimeChange} />
       </>
       {/* )} */}
 

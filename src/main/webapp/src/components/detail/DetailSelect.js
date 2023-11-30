@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Col, Modal, Row } from 'react-bootstrap';
-import DetailHeader from './Header/DetailHeader';
-import DetailList from './list/DetailList';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Button, Col, Modal, Row } from "react-bootstrap";
+import DetailHeader from "./Header/DetailHeader";
+import DetailList from "./list/DetailList";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+
 
 const DetailSelect = ({ hotel, name, img1, img2, img3, path }) => {
   const [rooms, setRooms] = useState([]); //rooms state 추가
@@ -12,11 +13,16 @@ const DetailSelect = ({ hotel, name, img1, img2, img3, path }) => {
   const [location, setLocation] = useState(''); // 상세 위치 정보를 저장할 상태
   const [tel, setTel] = useState('');
   const [ownerEmail, setOwnerEmail] = useState('');
+  
   const navigate = useNavigate();
   const [startHour, setStartHour] = useState(null);
   const [endHour, setEndHour] = useState(null);
   const [selectedDateTime, setSelectedDateTime] = useState(null);
-
+  // 추가된 부분: 선택한 시간 정보를 저장할 상태
+  const [selectedTime, setSelectedTime] = useState({
+    startHour: null,
+    endHour: null,
+  });
   const modalContent = (
     <div>
       "스페이스 샵을 통해
@@ -101,10 +107,21 @@ const DetailSelect = ({ hotel, name, img1, img2, img3, path }) => {
   const handleClosePhoneModal = () => {
     setIsPhoneModalOpen(false);
   };
-  const handleTimeChange = (newStartHour, newEndHour) => {
-    // Implement the logic for handling time change here
+  const handleTimeChange = (newStartHour, newEndHour, datetime) => {
+    // 시간 변경에 대한 로직을 여기에 구현합니다.
     setStartHour(newStartHour);
     setEndHour(newEndHour);
+
+    // 추가된 부분: 선택한 시간 정보를 상태로 관리
+    setSelectedTime({
+      startHour: newStartHour,
+      endHour: newEndHour,
+    });
+
+    // totalHours와 datetime을 필요에 따라 사용할 수 있습니다.
+    const totalHours = newEndHour - newStartHour;
+    // console.log('총 시간:', totalHours);
+    // console.log('날짜 및 시간:', datetime);
   };
   const handleReservationButtonClick = () => {
     if (checkedRoom === null) {
@@ -113,11 +130,12 @@ const DetailSelect = ({ hotel, name, img1, img2, img3, path }) => {
       alert('시작시간과 종료시간을 선택해주세요.');
       window.location.reload();
     } else {
-      navigate(`/hotelReserve/${hotel}`);
+      // Use seqRoom as the parameter for navigation
+      navigate(`/hotelReserve/${rooms[checkedRoom].seqRoom}`);
     }
   };
   return (
-    <div style={{ backgroundColor: '#fff' }}>
+    <div style={{ backgroundColor: "#fff" }}>
       <DetailHeader hotel={hotel} name={name} img1={img1} img2={img2} img3={img3} path={path} />
       <hr />
       {/* 상세 내역 추가 */}
