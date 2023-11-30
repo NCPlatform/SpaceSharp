@@ -17,4 +17,6 @@ public interface AdminService {
 
 	public void addCoupon(CouponDTO couponDTO);
 
+	public Map<String, Object> getEventList(Pageable pageable, String searchKey);
+
 }

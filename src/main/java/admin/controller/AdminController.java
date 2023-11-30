@@ -48,4 +48,10 @@ public class AdminController {
 		adminService.addCoupon(couponDTO);
 	}
 	
+	@GetMapping("getEventList")
+	@ResponseBody
+	public Map<String, Object> getEventList(@PageableDefault(page=0, size=10, sort="seqEvent", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String searchKey){
+		return adminService.getEventList(pageable,searchKey);
+	}
+	
 }
