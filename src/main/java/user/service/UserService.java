@@ -10,9 +10,11 @@ import org.springframework.data.domain.Pageable;
 import jakarta.servlet.http.HttpServletResponse;
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
+import jpa.bean.CouponDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.HotelSearchDTO;
+import jpa.bean.IssuedCouponDTO;
 import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
@@ -97,7 +99,12 @@ public interface UserService {
 	public Integer saveReservation(ReservationDTO reservationDTO);
 
 	public String saveReceipt(ReceiptDTO receiptDTO);
-	
+
+	//public List<IssuedCouponDTO> getCouponInfo(String email);
+
+	//public List<CouponDTO> getUserCoupons();
+
+	//public List<CouponDTO> getCoupons();
 
 
 }

@@ -189,7 +189,7 @@ const List = () => {
                   {mainAddress === "seoul" && (
                     <>
                       <option value="서울">서울 전체</option>
-                      <option value="홍대, 합정, 상수, 연남">
+                      <option value="홍대, 합정, 상수, 연남, 마포">
                         홍대, 합정, 상수, 연남
                       </option>
                       <option value="강남, 역삼, 선릉, 삼성">
@@ -242,7 +242,7 @@ const List = () => {
                   )}
                   {mainAddress === "gyung-gi" && (
                     <>
-                      <option value="gyung-gi1">경기 전체</option>
+                      <option value="경기">경기 전체</option>
                       <option value="gyung-gi2">고양 일산</option>
                       <option value="gyung-gi3">
                         수원역, 팔달, 권선, 장안

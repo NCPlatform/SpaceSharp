@@ -11,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
-
 @Entity
 @Table(name = "Receipt")
 @Data
@@ -21,7 +20,7 @@ public class ReceiptDTO {
 	@Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int apply_num;
-	
+
 	@Column
 	private String email;
 	
@@ -39,15 +38,11 @@ public class ReceiptDTO {
 	
 	@Column(nullable = false)
 	private int paidAmount;
-	
-<<<<<<< HEAD
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
 	@Column(nullable = false)
-=======
-	@Column
->>>>>>> refs/remotes/origin/user
 	private Date payDate;
-	
+
 	@Column
 	private String couponDiscount;
 	

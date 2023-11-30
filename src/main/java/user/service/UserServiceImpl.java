@@ -20,9 +20,11 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
+import jpa.bean.CouponDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.HotelSearchDTO;
+import jpa.bean.IssuedCouponDTO;
 import jpa.bean.LikedDTO;
 import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
@@ -32,6 +34,7 @@ import jpa.dao.BoardDAO;
 import jpa.dao.CommentDAO;
 import jpa.dao.HotelCategoryDAO;
 import jpa.dao.HotelDAO;
+import jpa.dao.IssuedCouponDAO;
 import jpa.dao.LikedDAO;
 import jpa.dao.ReceiptDAO;
 import jpa.dao.ReservationDAO;
@@ -61,6 +64,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private ReceiptDAO receiptDAO;
+	
+	@Autowired
+	private IssuedCouponDAO issuedCouponDAO;
 	
 	@Autowired
 	private CommentDAO commentDAO;
@@ -451,5 +457,8 @@ public class UserServiceImpl implements UserService {
             return "Failed to save receipt";
         }
     }
-	
+   
+    //
+
+	//
 }

@@ -36,13 +36,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
+import jpa.bean.CouponDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.HotelSearchDTO;
+import jpa.bean.IssuedCouponDTO;
 import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
+import jpa.dao.CouponDAO;
+import jpa.dao.IssuedCouponDAO;
 import jpa.dao.ReceiptDAO;
 import jpa.dao.ReservationDAO;
 import jpa.dao.UserDAO;
@@ -61,9 +65,13 @@ public class UserController {
 	private ObjectStorageService ncpService;
 	@Autowired
 	private ReservationDAO reservationDAO;
-
 	@Autowired
 	private ReceiptDAO receiptDAO;
+	
+	@Autowired
+    private IssuedCouponDAO issuedCouponDAO;
+	@Autowired
+    private CouponDAO couponDAO;
 	
 	private String bucketName = "spacesharpbucket";
 
@@ -179,7 +187,16 @@ public class UserController {
 	      return new ResponseEntity<>("영수증 저장에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	  }
-  @GetMapping("/updateNaverStatus")
+	@GetMapping("/coupon")
+    public List<CouponDTO> getAllCoupons() {
+        return couponDAO.findAll();
+    }
+
+    @GetMapping("/issuedCoupon")
+    public List<IssuedCouponDTO> getAllIssuedCoupons() {
+        return issuedCouponDAO.findAll();
+    }
+	@GetMapping("/updateNaverStatus")
 	public String updateNaverStatus(@RequestParam String userEmail) {
 	    boolean updated = userService.updateUserNaverStatus(userEmail, true); // 여기에서 true 또는 false로 변경 가능
 	    if (updated) {
