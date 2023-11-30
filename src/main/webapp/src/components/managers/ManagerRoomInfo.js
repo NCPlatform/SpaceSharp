@@ -13,16 +13,18 @@ const ManagerRoomInfo = () => {
         const {roomSeq} = useParams()
 
         const [roomDTO, setRoomDTO] = useState({
-            seqHotel: roomSeq, //<< 이 값은 추후 hotelSeq로 줄 것
+            seqHotel: '', //<< 이 값은 추후 hotelSeq로 줄 것
             name: '', 
             price: 0, normalExplain: '',
             placeSize: '', people: '', datetime: '', // << 최소 예약 시간
             reserveRule: ''
         })
 
+        const {normalExplain, name, price, placeSize, people, datetime, reserveRule} = roomDTO
+
 
         const [retrieveDTO, setRetrieveDTO] = useState({
-            seqHotel: roomSeq, //<< 이 값은 추후 hotelSeq로 줄 것
+            seqHotel: '', //<< 이 값은 추후 hotelSeq로 줄 것
             name: '', 
             price: 0, normalExplain: '',
             placeSize: '', people: '', datetime: '', // << 최소 예약 시간
@@ -233,7 +235,7 @@ const ManagerRoomInfo = () => {
                             <tr>
                                 <td>룸 이름</td>
                                 <td>
-                                    <input type = 'text'  style = {styleB} name = 'name' onChange = {insertData}/>
+                                    <input type = 'text'  style = {styleB} name = 'name' value = {name} onChange = {insertData} className = 'DTOs'/>
                                     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                                     <Button variant="outline-dark" type = 'button' onClick = {isModify} style = {{display: modifyBit && 'none'}} >수정</Button>        
                                     <Button variant="outline-dark" type = 'button' onClick = {isDelete} style = {{display: modifyBit && 'none'}}>삭제</Button>
