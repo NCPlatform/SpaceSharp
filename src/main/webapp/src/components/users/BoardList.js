@@ -34,6 +34,19 @@ const BoardList = () => {
         }
     )
 
+    
+    const [userEmail, setUserEmail] = useState('');
+    const [userNickname, setUserNickname] = useState('');
+
+    useEffect(() => {
+        axios.get(`/user/${boardDTO.email}`)
+            .then(res => {
+                setUserEmail(res.data.email);
+                setUserNickname(res.data.nickname);
+            })
+            .catch(error => console.log(error));
+    }, [boardDTO.email]);
+
     const categoryTitles = {
         '7': '1:1 문의'
     };
@@ -90,12 +103,17 @@ const BoardList = () => {
                     list && list.map(item => {
                         const releaseDate = new Date(item.releaseDate);
                         const formattedReleaseDate = releaseDate.toLocaleDateString('ko-KR');
+                        let nicknameToShow = item.email;
+
+                        if (userEmail && userEmail === item.email) {
+                            nicknameToShow = userNickname;
+                        }
                 
                         return(
                             <tr key={ item.seqBoard } className={styles.BoardListTr2}>
                                 <td>{ item.seqBoard }</td>
                                 <td><Link className={`col-2 text-truncate ${styles.BoardListTitle}`} to={`/boardDetail/${item.seqBoard}`}>{ item.title }</Link></td>
-                                <td className={`col-2 text-truncate ${styles.BoardListTd3}`}>{ item.email }</td>
+                                <td className={`col-2 text-truncate ${styles.BoardListTd3}`}>{ nicknameToShow }</td>
                                 <td className={styles.BoardListTd4}>{ formattedReleaseDate }</td>
                             </tr>
                             
