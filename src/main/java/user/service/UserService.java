@@ -89,5 +89,10 @@ public interface UserService {
 	public Map<String, Object> getHotelDetailCard(int seqHotel);
 
 	public Map<String,Object> getHotelList();
+	
+	// mail
+	public String createToken(String userEmail);
+	
+	public String decodeToken(String token) throws Exception;
 
 }

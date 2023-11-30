@@ -20,6 +20,8 @@ const AddRoom = () => {
             reserveRule: ''
         })
 
+        const {normalExplain} = roomDTO
+
         const [imageList, setImageList] = useState([])
 
         const [file, setFile] = useState('')
@@ -153,7 +155,7 @@ const AddRoom = () => {
                                 <td>룸 소개</td>
                                 <td>
                                     <div>
-                                    <TextEditor func = {editorVal}/>
+                                    <TextEditor func = {editorVal} readOnly = {false} texthold = 'normalExplain' value = {normalExplain}/>
                                     </div>
                                     <br/><br/>
                                 </td>

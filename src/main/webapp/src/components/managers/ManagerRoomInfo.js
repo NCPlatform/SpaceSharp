@@ -5,6 +5,7 @@ import AddFinishModal from './AddFinishModal';
 import TextEditor from '../../TextEditor';
 import Button from 'react-bootstrap/Button';
 import Disp_topNav from './Disp_topNav';
+import Carousel from 'react-bootstrap/Carousel';
 
 
 const ManagerRoomInfo = () => {
@@ -17,10 +18,10 @@ const ManagerRoomInfo = () => {
             name: '', 
             price: 0, normalExplain: '',
             placeSize: '', people: '', datetime: '', // << 최소 예약 시간
-            reserveRule: ''
+            reserveRule: '', img: ''
         })
 
-        const {normalExplain, name, price, placeSize, people, datetime, reserveRule} = roomDTO
+        const {normalExplain, name, price, placeSize, people, datetime, reserveRule, img} = roomDTO
 
 
         const [retrieveDTO, setRetrieveDTO] = useState({
@@ -28,7 +29,7 @@ const ManagerRoomInfo = () => {
             name: '', 
             price: 0, normalExplain: '',
             placeSize: '', people: '', datetime: '', // << 최소 예약 시간
-            reserveRule: ''
+            reserveRule: '', img: ''
         })
 
         const [imageList, setImageList] = useState([])
@@ -45,12 +46,22 @@ const ManagerRoomInfo = () => {
 
         const [isReady, setIsReady] = useState(false) // TextEditor 컴포넌트 로드
 
+        const [numReady, setNumReady] = useState(false)
+
+        const [peopleMin, setPeopleMin] = useState(0)
+
+        const [peopleMax, setPeopleMax] = useState(0)
+
+        const [size, setSize] = useState(0)
+
+        const [forceRerender, setForceRerender] = useState(0);
 
     // functions =====================================================
 
         const insertData = (e) => { // input onChange
             let {name, value} = e.target
             
+            console.log(name+ 'value: '+ value )
             setRoomDTO({
                 ...roomDTO, [name]: value
             })
@@ -91,17 +102,6 @@ const ManagerRoomInfo = () => {
             setRoomDTO({...roomDTO, people:people})
         }
 
-        const convertMeter = (e) => {
-            setIsMeter(!isMeter)
-        }
-
-        const setSize = (e) => {
-            let {value} = e.target
-            isMeter === false ? value *= 3.05785 : value = value
-            value = Math.round(value * 100) / 100;
-            value += 'm2'
-            setRoomDTO({...roomDTO, placeSize:value})
-        }
 
     // MODIFY ACTION ================================================
 
@@ -119,11 +119,53 @@ const ManagerRoomInfo = () => {
         }).then(res => {setRoomDTO(res.data)
                         setRetrieveDTO(res.data)
                         setIsReady(true)
-
+                        console.log(res)
                         }).catch(e => console.log(e))
+   
 
-       
+        
     },[])
+
+    useEffect(() => {
+        const elements = document.getElementsByClassName('DTOs');
+
+        for (const element of elements) {
+            element.disabled = modifyBit === true ? false : true
+        }
+
+        axios.post('http://localhost:8080/manager/viewRoomInfo', null, {
+            params: {
+                seq: roomSeq
+            }
+        }).then(res => {setRoomDTO(res.data)
+                        setRetrieveDTO(res.data)
+                        setIsReady(true)
+                        console.log(res)
+                        }).catch(e => console.log(e))
+   
+
+        
+    },[forceRerender])
+
+    const handleForceRerender = () => {
+        setForceRerender(prev => prev + 1);
+      };
+
+    useEffect(() => {
+        console.log('changed isReady! ' + !isReady + ' => '+isReady)
+        console.log(roomDTO)
+        if(isReady){
+            doReadyAction(roomDTO)
+        }
+    },[isReady])
+
+    const doReadyAction = (dto) => {
+
+        setSize(dto.placeSize.slice(0, -2))
+        setPeopleMin(dto.people.split(' ~ ')[0].slice(3, -1))
+        setPeopleMax(dto.people.split(' ~ ')[1].slice(3, -1))
+        setNumReady(true)
+    }
 
     const settingModifyBit = () => {
         setModifyBit(true)
@@ -141,12 +183,12 @@ const ManagerRoomInfo = () => {
       }
 
       const isDelete = () => {
-        window.confirm('정말 플레이스를 삭제하시겠어요? \n룸도 함께 삭제되며, 삭제 후에는 취소할 수 없습니다.') && 
+        window.confirm('정말 해당 룸을 삭제하시겠어요? \n삭제 후에는 취소할 수 없습니다.') && 
             axios.post('http://localhost:8080/manager/deleteRoom', null, {
                 params: {
-                    seq: roomSeq
+                    seqRoom: roomSeq
                 }
-            }).then(() => {window.alert('플레이스 삭제가 완료되었습니다.'); window.location.href = '/manager/myplace'}).catch((e) => console.log(e))
+            }).then(() => {window.alert('룸 삭제가 완료되었습니다.'); window.location.href = '/manager/myplace'}).catch((e) => console.log(e))
       }
 
       const isFinish = () => {
@@ -192,21 +234,37 @@ const ManagerRoomInfo = () => {
         }
 
         const submitVals = () => {
-            var formData = new FormData()
-            formData.append('roomDTO', new Blob([JSON.stringify(roomDTO)], {type: 'application/json'}))
-            
-            Object.values(file).map((item, index) => {
-                formData.append('img', item)
-                return null;
-            })
+            if(imageList.length === 0){
 
-            axios.post('http://localhost:8080/manager/addedRoom', formData, {
-                headers:{
-                    'Content-Type': 'multipart/form-data'
-                }
-            }).then( 
-                setIsFinished(true)
-            ).catch(e => console.log(e))
+                var formData = new FormData()
+                formData.append('roomDTO', new Blob([JSON.stringify(roomDTO)], {type: 'application/json'}))
+    
+                axios.post('http://localhost:8080/manager/addedRoomWithoutImage', formData, {
+                    headers:{
+                        'Content-Type' : 'multipart/form-data'
+                    }
+                    
+                }).then(res => {window.alert('플레이스 수정이 완료되었어요!'); window.location.href = '/manager/myplace'}).catch(e => console.log(e))
+            }
+    
+            else{
+                var formData = new FormData()
+                formData.append('roomDTO', new Blob([JSON.stringify(roomDTO)], {type: 'application/json'}))
+    
+                Object.values(file).map((item, index) => {
+                    formData.append('img', item)
+                    return null;
+                })
+                console.log(formData)
+                // JPA에서 save 메서드를 쓰기 때문에 수정과 등록이 똑같은 주소로 가능하다.
+                axios.post('http://localhost:8080/manager/addedRoom', formData, {
+                    headers:{
+                        'Content-Type': 'multipart/form-data'
+                    }
+    
+                }).then(res=>{window.alert('플레이스 수정이 완료되었어요!');  window.location.href = '/manager/myplace'
+                }).catch(e => console.log(e))
+            }
         }
     // NOTE ========================================================== 231115 ~ 추가중
         /*
@@ -229,13 +287,13 @@ const ManagerRoomInfo = () => {
             <Disp_topNav/>
             <div id = 'disp' style = {styleZ}>
                 <form>
-                    <span style = {styleA}>룸 정보 상세보기</span>
+                    <span style = {styleA} onClick={handleForceRerender}>룸 정보 상세보기</span>
                     <table>
                         <tbody>
                             <tr>
                                 <td>룸 이름</td>
                                 <td>
-                                    <input type = 'text'  style = {styleB} name = 'name' value = {name} onChange = {insertData} className = 'DTOs'/>
+                                    <input type = 'text'  style = {styleB} name = 'name' value = {isReady === true && name} onChange = {insertData} className = 'DTOs'/>
                                     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                                     <Button variant="outline-dark" type = 'button' onClick = {isModify} style = {{display: modifyBit && 'none'}} >수정</Button>        
                                     <Button variant="outline-dark" type = 'button' onClick = {isDelete} style = {{display: modifyBit && 'none'}}>삭제</Button>
@@ -247,28 +305,36 @@ const ManagerRoomInfo = () => {
                                 <td>룸 소개</td>
                                 <td>
                                     <div>
-                                    <TextEditor func = {editorVal} readOnly = {!modifyBit} texthold = 'normalExplain' value = {normalExplain}/>
+                                    <TextEditor func = {editorVal} readOnly = {!modifyBit} texthold = 'normalExplain' value = {isReady === true && normalExplain}/>
                                     </div>
                                     <br/><br/>
                                 </td>
                             </tr>
                             
                             <tr>
-                                <td>룸 사진 등록</td>
+                                <td>룸 사진 등록 {modifyBit && '등록'}</td>
                                 <td>
                                     <input type = 'file' name = 'img[]' multiple = 'multiple' onChange = {settingImages} ref = {fileRef} style = {styleE}/>
-                                    <Button variant="outline-dark" onClick = {findClk} >파일 찾아보기</Button> &nbsp;
-                                    
-                                    {
-                                        imageList.map((item, index) => <img key = {index} src = {item} style = {{width: '40px', height: '40px'}} alt = ''/>)
-                                    }
+                                    <Button variant="outline-dark" onClick = {findClk} style = {{display: modifyBit || 'none'}}>파일 찾아보기</Button> &nbsp;
+                                    <br/><span style = {{fontSize: '0.9em'}}>이미지의 순서 변경이나 일부 이미지만 수정은 불가합니다. <br/>파일 추가 시 기존 이미지는 모두 사라집니다.</span>
+                                    <Carousel>
+                                        {isReady === true && imageList.length > 0 ? 
+                                                ( imageList.map((item, index) => (
+                                                    <Carousel.Item><img key={index} src={item} style={{ width: '100%', height: '300px', objectFit: 'cover' }} alt="" /></Carousel.Item>
+                                                    ))) 
+                                                : ( img.split(',').map((item, index) => (
+                                                    <Carousel.Item><img key={index} src={item} style={{ width: '100%', height: '300px', objectFit: 'cover'  }} alt="" /></Carousel.Item>
+                                                    )))
+                                        }
+                                   
+                                    </Carousel>
                                 </td>
                             </tr>
                             <tr>
                                 <td>수용 가능 인원</td>
                                 <td>
                                     <div style = {styleB} id = 'peopleMinMax'>
-                                        <input type = 'number' id = 'min' style = {styleC}/>명부터 <input type = 'number' id = 'max' style = {styleC} onBlur = {settingPeople}/>명까지
+                                        <input type = 'number' id = 'min' style = {styleC} className = 'DTOs' value = {numReady === true && peopleMin}/>명부터 <input type = 'number' id = 'max' style = {styleC} onBlur = {settingPeople} className = 'DTOs' value = {numReady === true && peopleMax}/>명까지
                                     </div>
                                 </td>
                             </tr>
@@ -276,32 +342,33 @@ const ManagerRoomInfo = () => {
                                 <td>룸 면적</td>
                                 <td>
                                     <div>
-                                        <input type = 'number' style = {styleD} placeholder = '숫자만 입력' onBlur = {setSize}/>&nbsp;{
+                                        <input type = 'number' style = {styleD} placeholder = '숫자만 입력' className = 'DTOs' name = 'placeSize' onChange = {insertData} value = { numReady === true && size} />&nbsp;제곱미터
+                                        {/* {
                                             isMeter === true ? '제곱미터' : '평'
-                                        }&nbsp;<Button variant="outline-dark" type = 'button' onClick = {convertMeter}>{
+                                        }&nbsp;<Button variant="outline-dark" type = 'button' onClick = {convertMeter} style = {{display : modifyBit === false && 'none'}}>{
                                             isMeter === true ? '평수로 입력하기' : '제곱미터로 입력하기'
-                                        }</Button> 
+                                        }</Button>  */}
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>장소 대여료</td>
-                                <td><input type = 'number' style = {styleB} name = 'price' placeholder = '시간당 대여료를 입력해 주세요.' onChange = {insertData}/></td>
+                                <td><input type = 'number' style = {styleB} name = 'price' className = 'DTOs' value = {isReady === true && price} placeholder = '시간당 대여료를 입력해 주세요.' onChange = {insertData}/></td>
                             </tr>
                             
                             <tr>
                                 <td>최소 대여 가능 시간&emsp;</td>
-                                <td><input type = 'number' style = {styleB} name = 'datetime' placeholder = '숫자만 입력 가능합니다.' onChange = {insertData}/></td>
+                                <td><input type = 'number' style = {styleB} name = 'datetime' className = 'DTOs' value = {isReady === true && datetime} placeholder = '숫자만 입력 가능합니다.' onChange = {insertData}/></td>
                             </tr>
 
                             <tr>
                                 <td>총 예약인원</td>
-                                <td><input type = 'text' style = {styleB} name = 'reserveRule' onChange = {insertData} placeholder = '이용 인원 관련 규칙을 작성해 주세요.'/></td>
+                                <td><input type = 'text' style = {styleB} name = 'reserveRule' className = 'DTOs' value = {isReady === true && reserveRule} onChange = {insertData} placeholder = '이용 인원 관련 규칙을 작성해 주세요.'/></td>
                             </tr>
                         </tbody>
                     </table>
                     <br/>
-                    <Button variant="outline-dark" type = 'button' onClick = {confirmVals}>DTO 값 확인하기</Button>&nbsp;
+                    <Button variant="outline-dark" type = 'button' onClick = {confirmVals} style = {{display : modifyBit === false && 'none'}}>DTO 값 확인하기</Button>&nbsp;
                     {
                         isFinished && <AddFinishModal value = {roomSeq}/>
                     }

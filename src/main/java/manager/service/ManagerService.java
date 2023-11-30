@@ -27,4 +27,6 @@ public interface ManagerService {
 
 	public Optional<RoomDTO> viewRoomInfo(String seq);
 
+	public void deleteRoom(String seqRoom);
+
 }

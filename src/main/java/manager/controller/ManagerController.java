@@ -89,10 +89,19 @@ public class ManagerController {
 	
 	@PostMapping(value = "addedPlaceWithoutImage")
 	@ResponseBody
-	public void addedRoomWithoutImage(@RequestPart HotelDTO hotelDTO) {
+	public void addedPlaceWithoutImage(@RequestPart HotelDTO hotelDTO) {
 		System.out.println("requested addedPlaceWithoutImage : only HotelDTO");
 		System.out.println(hotelDTO.toString());
 		managerService.addPlace(hotelDTO);
+	}
+	
+	@PostMapping(value = "addedRoomWithoutImage")
+	@ResponseBody
+	public void addedRoomWithoutImage(@RequestPart RoomDTO roomDTO) {
+		System.out.println("requested addedRoomWithoutImage : only roomDTO");
+		System.out.println(roomDTO.toString());
+		managerService.addRoom(roomDTO);
+		
 	}
 	
 	@PostMapping(value = "addedRoom")
@@ -132,6 +141,14 @@ public class ManagerController {
 	public void deletePlace(@RequestParam String seqHotel) {
 		System.out.println("deletePlace requested : "+seqHotel);
 		managerService.deletePlace(seqHotel);
+	}
+	
+	@PostMapping(value = "deleteRoom")
+	@ResponseBody
+	public void deleteRoom(@RequestParam String seqRoom) {
+		System.out.println("deleteRoom requested : " + seqRoom);
+		managerService.deleteRoom(seqRoom);
+		
 	}
 
 	public String commaClearInt(String sample) {

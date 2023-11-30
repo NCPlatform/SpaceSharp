@@ -41,7 +41,7 @@ const TextEditor = ({func, readOnly, texthold, value}) => {
           theme="snow"
           modules={modules}
           formats={formats}
-          placeholder= { texthold === 'placeEx' ? "플레이스 소개를 작성해 주세요." : texthold === 'alert' ? '유의사항을 작성해 주세요' : '시설 소개를 작성해 주세요'}
+          placeholder= { texthold === 'placeEx' ? "플레이스 소개를 작성해 주세요." : texthold === 'alert' ? '유의사항을 작성해 주세요' : texthold === 'normalExplain' ? '룸 소개를 작성해 주세요' : '시설 소개를 작성해 주세요'}
           onChange={handleProcedureContentChange}
           style={{ height: "200px" }}
           readOnly = {readOnly}

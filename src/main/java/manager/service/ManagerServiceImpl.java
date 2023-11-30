@@ -74,4 +74,10 @@ public class ManagerServiceImpl implements ManagerService {
 		return resultDTO;
 	}
 
+	@Override
+	public void deleteRoom(String seqRoom) {
+		roomDAO.deleteById(Integer.parseInt(seqRoom));
+		
+	}
+
 }

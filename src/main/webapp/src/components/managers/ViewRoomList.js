@@ -33,6 +33,7 @@ const ViewRoomList = ({seq, func, roomList, roomAvailable}) => {
     const styleH = {color: '#5AA2E1', cursor: 'pointer'}
     const styleI = {fontSize: '1.3em'}
     const styleJ = {textAlign: 'center'}
+    const styleK = {position: 'absolute', bottom: '5%', left: '5%'}
     
     return (
         <>
@@ -79,6 +80,10 @@ const ViewRoomList = ({seq, func, roomList, roomAvailable}) => {
                     </tbody>
 
                 </table>
+                {
+                    roomAvailable === true && <Button variant = "outline-dark" type = 'button' onClick = {() => locate(seq, 'addRoom')} style = {styleK}>새로운 룸 추가하기</Button>
+                
+                }
                 
                 
             </div>

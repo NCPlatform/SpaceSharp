@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../../css/AccountUpdate.css';
 import naverBtn from '../../image/naverBtn.png';
 import kakaoBtn from '../../image/kakaoBtn.png';
 import unKnown from '../../image/unKnown.png';
+import EmailAuth from './EmailAuth';
 
 
 //회원정보 수정 페이지
 const AccountUpdate = () => {
+    const [goAuth, setGoAuth] = useState(false)
+    const [email, setEmail] = useState(JSON.parse(window.sessionStorage.getItem('user')).email)
+    const doAuth = () => {
+        console.log('doAuth');
+        setGoAuth(true)
+        console.log(email);
+        
+    }
+    const paramfunc = () => {
+        setGoAuth(false)
+    }
     return (
         <>
             <div class="container text-center">
@@ -130,7 +142,11 @@ const AccountUpdate = () => {
                                     <p className='profileTitle'>{/*비밀번호 변경자리 */}
                                     비빌번호&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  
                                             &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
-                                            <button className='updatebtn green mini'>변경하기</button>
+                                            <button className='updatebtn green mini' onClick = {doAuth} >변경하기</button>
+                                            {
+                                                goAuth === true &&  <EmailAuth userEmail = {email} func = {paramfunc}/>
+                                                
+                                            }
                                         <br />
                                     </p>
                                 <br/>

@@ -52,6 +52,7 @@ import ManagerPlaceInfo from './components/managers/ManagerPlaceInfo';
 import ManagerRoomInfo from "./components/managers/ManagerRoomInfo";
 import ManagerChat from './components/managers/ManagerChat';
 import UserChat from './components/users/UserChat';
+import AuthRequest from './components/users/AuthRequest';
 
 function App() {
   return (
@@ -109,6 +110,9 @@ function App() {
           <Route path="user" element={<AdminUser />} />
           <Route path="coupon" element={<AdminCoupon />} />
           <Route path="event" element={<AdminEvent />} />
+        </Route>
+        <Route path="/user">
+          <Route path = "authRequest/:token" element = {<AuthRequest/>} />
         </Route>
       </Routes>
     </BrowserRouter>
