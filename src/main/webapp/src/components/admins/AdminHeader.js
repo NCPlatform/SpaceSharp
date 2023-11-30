@@ -45,7 +45,7 @@ const AdminHeader = () => {
                 ></button>
               </div>
               <div className="offcanvas-body">
-                <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 manager-nav">
                   <li className="nav-item bg-white bg-opacity-25">
                     <p>
                       <span className="fw-bold">{sessionUserDTO.name}님</span>
@@ -74,7 +74,7 @@ const AdminHeader = () => {
                   </li>
                 </ul>
               </div>
-              <div className="offcanvas-footer text-center mb-5">
+              <div className="offcanvas-footer text-center mb-5 managerNavFooter">
                 <Link to="/" className="nav-link">
                   Main
                 </Link>

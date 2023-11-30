@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Nav from './Nav';
 import Footer from './Footer';
 import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-
-import HotelOptionData from '../data/HotelOption.json';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import HotelOption from "../data/HotelOption.json";
 
 const HotelReserve = () => {
   const [sessionUserDTO, setSessionUserDTO] = useState(JSON.parse(sessionStorage.getItem('user')));
@@ -14,6 +14,10 @@ const HotelReserve = () => {
   const [hotelDTO, setHotelDTO] = useState(null);
   const [roomDTO, setRoomDTO] = useState(null);
   const [hotelCategory, setHotelCategory] = useState();
+  const [reservationDate, setReservationDate] = useState('');
+  const [currentDateTime, setCurrentDateTime] = useState('');
+
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -28,6 +32,25 @@ const HotelReserve = () => {
     });
   };
 
+  // Declare formatDateString function before using it
+  const formatDateString = (dateString) => {
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      fractionalSecondDigits: 3,
+      timeZoneName: 'short',
+    };
+
+    const date = new Date(dateString);
+    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+
+    return formattedDate;
+  };
+
   useEffect(() => {
     axios
       .get(`/user/hotelReserve?seqRoom=${seqRoom}`)
@@ -36,196 +59,370 @@ const HotelReserve = () => {
         setOwnerDTO(res.data.owner);
         setHotelDTO(res.data.hotel);
         setHotelCategory(res.data.hotelCategory);
+
+        const storedReservationTimeText = sessionStorage.getItem('reservationTimeText');
+        setReservationDate(storedReservationTimeText || '');
+
+        const storedCurrentDateTime = sessionStorage.getItem('currentDateTime');
+        setCurrentDateTime(storedCurrentDateTime || '');
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        fail();
+      });
   }, [seqRoom]);
 
+  useEffect(() => {
+    // 아이콘 넣기 위함
+    if (roomDTO) {
+      axios.get(`/user/getHotelInfo?seqHotel=${roomDTO.seqHotel}`)
+        .then(response => {
+          const data = response.data;
+          console.log(data)
+          if (data) {
+            setHotelDTO(data);
+          } else {
+            console.error('해당 공간 정보를 찾을 수 없습니다.');
+          }
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('데이터를 불러오는 중 에러 발생:', error);
+          setLoading(false);
+        });
+    }
+  }, [roomDTO]);
+
+  // const [seqReservation, setSeqReservation] = useState();
+  // const seqReservationRef = useRef(seqReservation);
+
+  // useEffect(() => {
+  //   seqReservationRef.current = seqReservation;
+  // }, [seqReservation]);
+
+  // const updateSeqReservation = (value) => {
+  //   setSeqReservation(value);
+  //   seqReservationRef.current = value;
+  // };
+
+  const requestPay = async () => {
+    // 라이브러리 스크립트가 정상적으로 로딩되었는지 확인
+    if (window.IMP) {
+      const userCode = "imp14397622";
+      window.IMP.init(userCode);
+
+      try {
+        const response = await new Promise((resolve, reject) => {
+          window.IMP.request_pay({
+            pg: "html5_inicis",
+            pay_method: "card",
+            merchant_uid: new Date().getTime().toString(),
+            name: "SPACE SHARP",
+            amount: Number(sessionStorage.getItem('totalReservationCost')),
+            buyer_tel: "010-0000-0000",
+            // redirect_url: "http://localhost:3000/", //URL 교체
+          }, (response) => {
+            resolve(response);
+          });
+        });
+
+        if (response.success) {
+          // 성공 시 처리
+
+          // 예약 테이블 업데이트
+          const reservationData = {
+            email: sessionUserDTO.email,
+            seqRoom: roomDTO.seqRoom,
+            reservationDate: new Date(sessionStorage.getItem('currentDateTime')).toISOString(),
+            travelStartDate: new Date(sessionStorage.getItem('travelStartDate')).toISOString(),
+            travelEndDate: new Date(sessionStorage.getItem('travelEndDate')).toISOString(),
+            travelfulltime: parseInt(sessionStorage.getItem('travelfulltime'), 10),
+            active: null,
+            payment: sessionUserDTO.payment
+          };
+
+          axios.post('/user/reservation', reservationData)
+            .then(response => {
+
+              const seqReservation = response.data;
+
+              // Update reservationDTO with the obtained seqReservation
+              // updateSeqReservation(seqReservation);
+
+              const receiptData = {
+                email: sessionUserDTO.email,
+                bank_name: sessionUserDTO.payment,
+                seqReservation: seqReservation, // Use the updated value
+                receipt_url: null,
+                name: hotelDTO.name,
+                paidAmount: Number(sessionStorage.getItem('totalReservationCost')).toLocaleString(),
+                payDate: new Date(sessionStorage.getItem('currentDateTime')).toISOString(),
+                couponDiscount: null
+              };
+
+              axios.post('/user/receipt', receiptData)
+                .then(receiptResponse => {
+                  console.log(receiptResponse.data);
+                  window.location.href = "http://localhost:3000/"; //데이터 추가 완료 후 이동 URL
+                })
+                .catch(receiptError => {
+                  console.error('영수증 정보 전송 실패:', receiptError);
+                  alert('영수증 정보 전송에 실패했습니다.');
+                });
+            })
+            .catch(error => {
+              console.error('예약 정보 전송 실패:', error);
+              alert('예약 정보 전송에 실패했습니다.');
+            });
+        } else {
+          // 결제 실패 시 처리
+          console.error('결제 실패:', response.error_msg);
+          alert('결제에 실패했습니다.');
+        }
+      } catch (error) {
+        // 예외 처리
+        console.error('결제 오류:', error);
+        alert('결제 중 오류가 발생했습니다.');
+      }
+    } else {
+      // IMP 라이브러리가 로드되지 않은 경우 처리
+      alert('결제 라이브러리 로드에 실패했습니다.');
+    }
+  };
+  // TRUE인 항목들을 5개씩 그룹화하여 반환하는 함수
+  const groupTrueOptions = () => {
+    if (!hotelDTO) {
+      return [];
+    }
+
+    // HotelOption.json 파일을 사용하여 TRUE인 항목들을 필터링
+    const trueOptions = HotelOption.filter(option => hotelDTO[option.key] === true);
+
+    // 5개씩 그룹화
+    const groupedOptions = [];
+    for (let i = 0; i < trueOptions.length; i += 5) {
+      groupedOptions.push(trueOptions.slice(i, i + 5));
+    }
+
+    return groupedOptions;
+  };
+
+  // 그룹화된 아이콘을 렌더링하는 함수
+  const renderGroupedIcons = () => {
+    return groupTrueOptions().map((group, groupIndex) => (
+      <div key={groupIndex} className="row">
+        {group.map((option, iconIndex) => (
+          <div key={iconIndex} className="col-md-2 col-sm-2 mb-3">
+            {React.createElement('div', { dangerouslySetInnerHTML: { __html: option.icon } })}
+            <div>{option.name}</div>
+          </div>
+        ))}
+      </div>
+    ));
+  };
   return (
     <>
       {sessionUserDTO !== null
         ? hotelDTO !== null && (
-            <div className="bg-body-tertiary">
-              <Nav />
-              <div className="container mb-5">
-                <div className="row">
-                  <div className="col-md-8">
-                    <div className="mt-5">
-                      <h5 className="fw-bold pb-3" style={{ borderBottom: '5px solid rgb(244, 132, 132)' }}>
-                        예약 공간
-                      </h5>
-                      <p style={{ marginTop: '1rem' }}>{hotelDTO.subscribe}</p>
-                      <hr />
-                      <p className="row">
-                        <span className="col-sm-2">공간유형</span>
-                        <span className="col-sm-10">{hotelCategory}</span>
-                      </p>
-                      <hr />
-                      <p className="row">
-                        <span className="col-sm-2">예약인원</span>
-                        <span className="col-sm-10">{roomDTO.people}</span>
-                      </p>
-                      <hr />
-                      <p className="row">
-                        <span className="col-sm-2">추가인원</span>
-                        <span className="col-sm-10">{roomDTO.reserveRule}</span>
-                      </p>
-                      <hr />
-                      <p className="row" style={{ paddingBottom: '1rem' }}>
-                        <span className="col-sm-2">아이콘</span>
-                        <span className="col-sm-10">*TV~doorlock</span>
-                      </p>
+          <div className="bg-body-tertiary">
+            <Nav />
+            <div className="container mb-5">
+              <div className="row">
+                <div className="col-md-8">
+                  <div className="mt-5">
+                    <h5 className="fw-bold pb-3" style={{ borderBottom: '5px solid rgb(244, 132, 132)' }}>
+                      예약 공간
+                    </h5>
+                    <span style={{ marginTop: '1rem', fontWeight: 'bold', fontSize: '150%' }}>{hotelDTO.name} / </span> <span style={{ fontWeight: 'bold' }}>{roomDTO.name}</span>
+                    <p style={{ marginTop: '1rem' }}>{hotelDTO.subscribe}</p>
+                    <hr />
+                    <p className="row">
+                      <span className="col-sm-2">공간유형</span>
+                      <span className="col-sm-10">{hotelCategory}</span>
+                    </p>
+                    <hr />
+                    <p className="row">
+                      <span className="col-sm-2">예약인원</span>
+                      <span className="col-sm-10">{roomDTO.people}</span>
+                    </p>
+                    <hr />
+                    <p className="row">
+                      <span className="col-sm-2">추가인원</span>
+                      <span className="col-sm-10">{roomDTO.reserveRule}</span>
+                    </p>
+                    <hr />
+                    <p className="row" style={{ paddingBottom: '1rem' }}>
+                      <span className="col-sm-2">아이콘</span>
+                      <span className="col-sm-10" >{renderGroupedIcons()}</span>
+                    </p>
+                  </div>
+                  <div className="mt-5">
+                    <h5 className="fw-bold pb-3" style={{ borderBottom: '5px solid rgb(244, 132, 132)' }}>
+                      예약 정보
+                    </h5>
+                    <ul className="list-group list-group-flush">
+                      <li className="list-group-item">
+                        <div className="d-flex justify-content-between">
+                          <span className="fw-bold">예약날짜</span>
+                          <span id="reservationDate">{reservationDate}</span>
+                        </div>
+                      </li>
+                      <li className="list-group-item">
+                        <div className="d-flex justify-content-between">
+                          <span className="fw-bold">예약인원</span>
+                          <span>{sessionStorage.getItem('registerPeopleNumber')}명</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="mt-5">
+                    <h5 className="fw-bold pb-3" style={{ borderBottom: '5px solid rgb(244, 132, 132)' }}>
+                      예약자 정보
+                    </h5>
+                    <div className="mb-3 row">
+                      <label htmlFor="staticEmail" className="col-sm-2 col-form-label">
+                        Email
+                      </label>
+                      <div className="col-sm-10">
+                        <input type="text" className="form-control" value={sessionUserDTO.email} />
+                      </div>
                     </div>
-                    <div className="mt-5">
-                      <h5 className="fw-bold pb-3" style={{ borderBottom: '5px solid rgb(244, 132, 132)' }}>
-                        예약 정보
-                      </h5>
-                      <ul className="list-group list-group-flush">
-                        <li className="list-group-item">
-                          <div className="d-flex justify-content-between">
-                            <span className="fw-bold">공간유형</span>
-                            <span>YYYY.MM.DD</span>
-                          </div>
-                        </li>
-                        <li className="list-group-item">
-                          <div className="d-flex justify-content-between">
-                            <span className="fw-bold">예약인원</span>
-                            <span>n명</span>
-                          </div>
-                        </li>
-                      </ul>
+                    <div className="mb-3 row">
+                      <label htmlFor="inputPassword" className="col-sm-2 col-form-label">
+                        예약자
+                      </label>
+                      <div className="col-sm-10">
+                        <input type="text" className="form-control" value={sessionUserDTO.name} />
+                      </div>
                     </div>
-                    <div className="mt-5">
-                      <h5 className="fw-bold pb-3" style={{ borderBottom: '5px solid rgb(244, 132, 132)' }}>
-                        예약자 정보
-                      </h5>
-                      <div className="mb-3 row">
-                        <label htmlFor="staticEmail" className="col-sm-2 col-form-label">
-                          Email
-                        </label>
-                        <div className="col-sm-10">
-                          <input type="text" className="form-control" value={sessionUserDTO.email} />
-                        </div>
-                      </div>
-                      <div className="mb-3 row">
-                        <label htmlFor="inputPassword" className="col-sm-2 col-form-label">
-                          예약자
-                        </label>
-                        <div className="col-sm-10">
-                          <input type="text" className="form-control" value={sessionUserDTO.name} />
-                        </div>
-                      </div>
-                      <div className="mb-3 row">
-                        <label htmlFor="inputPassword" className="col-sm-2 col-form-label">
-                          연락처
-                        </label>
-                        <div className="col-sm-10">
-                          <div className="d-flex">
-                            {sessionUserDTO.tel.split('-').map((tag, index) => (
-                              <input key={index} className="col form-control" value={tag.trim()} />
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mb-3 row">
-                        <label htmlFor="inputPassword" className="col-sm-2 col-form-label">
-                          사용목적
-                        </label>
-                        <div className="col-sm-10">
-                          <input type="text" className="form-control" />
-                        </div>
-                      </div>
-                      <div className="mb-3 row">
-                        <label htmlFor="inputPassword" className="col-sm-2 col-form-label">
-                          요청사항
-                        </label>
-                        <div className="col-sm-10">
-                          <textarea type="text" className="form-control" />
+                    <div className="mb-3 row">
+                      <label htmlFor="inputPassword" className="col-sm-2 col-form-label">
+                        연락처
+                      </label>
+                      <div className="col-sm-10">
+                        <div className="d-flex">
+                          {sessionUserDTO.tel.split('-').map((tag, index) => (
+                            <input key={index} className="col form-control" value={tag.trim()} />
+                          ))}
                         </div>
                       </div>
                     </div>
-                    <div className="mt-5">
-                      <h5 className="fw-bold pb-3" style={{ borderBottom: '5px solid rgb(244, 132, 132)' }}>
-                        호스트 정보
-                      </h5>
-                      {ownerDTO.companyName && (
-                        <div className="my-3 row">
-                          <p htmlFor="staticEmail" className="col-sm-2">
-                            공간 상호
-                          </p>
-                          <p className="col-sm-10">{ownerDTO.companyName}</p>
-                        </div>
-                      )}
-                      <div className="mb-3 row">
-                        <p htmlFor="staticEmail" className="col-sm-2">
-                          대표자명
-                        </p>
-                        <p className="col-sm-10">{ownerDTO.name}</p>
+                    <div className="mb-3 row">
+                      <label htmlFor="inputPassword" className="col-sm-2 col-form-label">
+                        사용목적
+                      </label>
+                      <div className="col-sm-10">
+                        <input type="text" className="form-control" />
                       </div>
-                      <div className="mb-3 row">
-                        <p htmlFor="staticEmail" className="col-sm-2">
-                          소재지
-                        </p>
-                        <p className="col-sm-10">{ownerDTO.addr}</p>
-                      </div>
-                      {ownerDTO.businessRegistrationNumber !== 0 && (
-                        <div className="mb-3 row">
-                          <p htmlFor="staticEmail" className="col-sm-2">
-                            사업자번호
-                          </p>
-                          <p className="col-sm-10">{ownerDTO.businessRegistrationNumber}</p>
-                        </div>
-                      )}
-                      <div className="mb-3 row">
-                        <p htmlFor="staticEmail" className="col-sm-2">
-                          연락처
-                        </p>
-                        <p className="col-sm-10">
-                          <span className="me-3">{ownerDTO.tel}</span>
-                          <span>{ownerDTO.email}</span>
-                        </p>
+                    </div>
+                    <div className="mb-3 row">
+                      <label htmlFor="inputPassword" className="col-sm-2 col-form-label">
+                        요청사항
+                      </label>
+                      <div className="col-sm-10">
+                        <textarea type="text" className="form-control" />
                       </div>
                     </div>
                   </div>
-                  <div className="col-md-4">
-                    <div className="pt-5 row me-0 sticky-top">
-                      <h5 className="fw-bold pb-3" style={{ borderBottom: '5px solid rgb(244, 132, 132)' }}>
-                        결제예정금액
-                      </h5>
-                      <ul className="list-group list-group-flush me-0">
-                        <li className="list-group-item me-0" style={{ fontSize: '0.8rem' }}>
-                          <span className="fw-bold me-1">예약날짜</span>
-                          <span>YYYY.MM.DD</span>
-                        </li>
-                        <li className="list-group-item me-0" style={{ fontSize: '0.8rem' }}>
-                          <span className="fw-bold me-1">예약시간</span>
-                          <span>start시~end시,total시간</span>
-                        </li>
-                        <li className="list-group-item me-0" style={{ fontSize: '0.8rem' }}>
-                          <span className="fw-bold me-1">예약인원</span>
-                          <span>n명</span>
-                        </li>
-                        <li className="list-group-item" style={{ borderTop: '5px solid rgb(244, 132, 132)' }}>
-                          <h3 className="fw-bold d-flex justify-content-between" style={{ color: 'rgb(245, 80, 80)' }}>
-                            <span>￦</span>
-                            <span>n</span>
-                          </h3>
-                        </li>
-                      </ul>
-                      <button
-                        className="d-flex btn justify-content-center text-white"
-                        style={{
-                          backgroundColor: 'rgb(244, 132, 132)',
-                          borderRadius: 0,
-                        }}>
-                        결제하기
-                      </button>
+                  <div className="mt-5">
+                    <h5 className="fw-bold pb-3" style={{ borderBottom: '5px solid rgb(244, 132, 132)' }}>
+                      호스트 정보
+                    </h5>
+                    {ownerDTO.companyName && (
+                      <div className="my-3 row">
+                        <p htmlFor="staticEmail" className="col-sm-2">
+                          공간 상호
+                        </p>
+                        <p className="col-sm-10">{ownerDTO.companyName}</p>
+                      </div>
+                    )}
+                    <div className="mb-3 row">
+                      <p htmlFor="staticEmail" className="col-sm-2">
+                        대표자명
+                      </p>
+                      <p className="col-sm-10">{ownerDTO.name}</p>
+                    </div>
+                    <div className="mb-3 row">
+                      <p htmlFor="staticEmail" className="col-sm-2">
+                        소재지
+                      </p>
+                      <p className="col-sm-10">{ownerDTO.addr}</p>
+                    </div>
+                    {ownerDTO.businessRegistrationNumber !== 0 && (
+                      <div className="mb-3 row">
+                        <p htmlFor="staticEmail" className="col-sm-2">
+                          사업자번호
+                        </p>
+                        <p className="col-sm-10">{ownerDTO.businessRegistrationNumber}</p>
+                      </div>
+                    )}
+                    <div className="mb-3 row">
+                      <p htmlFor="staticEmail" className="col-sm-2">
+                        연락처
+                      </p>
+                      <p className="col-sm-10">
+                        <span className="me-3">{ownerDTO.tel}</span>
+                        <span>{ownerDTO.email}</span>
+                      </p>
                     </div>
                   </div>
                 </div>
+                <div className="col-md-4">
+                  <div className="pt-5 row me-0 sticky-top">
+                    <h5 className="fw-bold pb-3" style={{ borderBottom: '5px solid rgb(244, 132, 132)' }}>
+                      결제예정금액
+                    </h5>
+                    <ul className="list-group list-group-flush me-0">
+                      <li className="list-group-item me-0" style={{ fontSize: '0.8rem' }}>
+                        <span className="fw-bold me-1">예약시각</span>
+                        <span>{currentDateTime}</span>
+                      </li>
+                      <li className="list-group-item me-0" style={{ fontSize: '0.8rem' }}>
+                        <span className="fw-bold me-1">예약날짜</span>
+                        <span>{reservationDate}</span>
+                      </li>
+                      <li className="list-group-item me-0" style={{ fontSize: '0.8rem' }}>
+                        <span className="fw-bold me-1">예약인원</span>
+                        <span>{sessionStorage.getItem('registerPeopleNumber')}명</span>
+                      </li>
+                      <li className="list-group-item me-0" style={{ fontSize: '0.8rem', display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5%' }}>
+                          <span className="fw-bold me-1">할인쿠폰🎫</span>
+                          <span className="fw-bold me-1" style={{ color: '#aba1a1' }}>보유쿠폰()장</span>
+                        </div>
+                        <div style={{}}>
+                          <select className="form-select form-select-lg mb-3" aria-label="Large select example" style={{ color: '#aba1a1' }}>
+                            <option value="" selected disabled hidden>🎫 쿠폰을 선택하세요.</option>
+                            <option value="1">🎫One</option>
+                            <option value="2">🎫Two</option>
+                            <option value="3">🎫Three</option>
+                          </select>
+                        </div>
+                      </li>
+                      <li className="list-group-item" style={{ borderTop: '5px solid rgb(244, 132, 132)' }}>
+                        <h3 className="fw-bold d-flex justify-content-between" style={{ color: 'rgb(245, 80, 80)' }}>
+                          <span>￦</span>
+                          <span>{Number(sessionStorage.getItem('totalReservationCost')).toLocaleString()}</span>
+                        </h3>
+                      </li>
+                    </ul>
+                    <button
+                      className="d-flex btn justify-content-center text-white"
+                      style={{
+                        backgroundColor: 'rgb(244, 132, 132)',
+                        borderRadius: 0,
+                        fontWeight: 'bold',
+                      }}
+                      onClick={() => requestPay()}>
+                      결제하기
+                    </button>
+                  </div>
+                </div>
               </div>
-              <Footer />
             </div>
-          )
+            <Footer />
+          </div>
+        )
         : fail()}
     </>
   );

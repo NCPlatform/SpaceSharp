@@ -2,7 +2,7 @@ import React from "react";
 import 'quill/dist/quill.snow.css'
 import ReactQuill from 'react-quill'
 
-const TextEditor = (func) => {
+const TextEditor = ({func, readOnly, texthold}) => { 
 
   
   var modules = {
@@ -30,8 +30,8 @@ const TextEditor = (func) => {
   ];
 
   const handleProcedureContentChange = (content) => {
-    
-    func.func(content)
+    console.log(content)
+    func(content)
   };
 
   return (
@@ -41,9 +41,10 @@ const TextEditor = (func) => {
           theme="snow"
           modules={modules}
           formats={formats}
-          placeholder="플레이스 소개를 작성해 주세요."
+          placeholder= { texthold === 'placeEx' ? "플레이스 소개를 작성해 주세요." : texthold === 'alert' ? '유의사항을 작성해 주세요' : '시설 소개를 작성해 주세요'}
           onChange={handleProcedureContentChange}
           style={{ height: "200px" }}
+          readOnly = {readOnly}
         >
         </ReactQuill>
       </div>

@@ -48,6 +48,10 @@ import AdminUser from './components/admins/AdminUser';
 // import KakaoLogin from "./components/users/KaKaoLogin";
 import KakaoRedirect from './components/users/KakaoRedirect';
 import PopupPostCode from './components/users/PopupPostCode';
+import ManagerPlaceInfo from './components/managers/ManagerPlaceInfo';
+import ManagerRoomInfo from "./components/managers/ManagerRoomInfo";
+import ManagerChat from './components/managers/ManagerChat';
+import UserChat from './components/users/UserChat';
 
 function App() {
   return (
@@ -55,6 +59,9 @@ function App() {
       <Routes>
         <Route path="/">
           <Route index element={<Main />} />
+          <Route path="hotelSearch">
+            <Route path=":searchValue" element={<HotelList />} />
+          </Route>
           <Route path="hotelList">
             <Route path=":seqHotelCategory" element={<HotelList />} />
           </Route>
@@ -86,14 +93,19 @@ function App() {
           <Route path="info" element={<Info />} />
           <Route path="KakaoRedirect" element={<KakaoRedirect />} />
           <Route path="PopupPostCode" element={<PopupPostCode />} />
+          <Route path="chat" element={<UserChat />} />
         </Route>
         <Route path="/manager">
           <Route index element={<ManagerDashBoard />} />
           <Route path="reservation" element={<ManagerReservation />} />
           <Route path="addPlace" element={<ManagerAddPlace />} />
           <Route path="addRoom/:hotelSeq" element={<ManagerAddRoom />} />
+          <Route path="placeInfo/:hotelSeq" element={<ManagerPlaceInfo/>}/>
+          <Route path="roomInfo/:roomSeq" element={<ManagerRoomInfo/>}/>
+
           <Route path="review" element={<ManagerReview />} />
           <Route path="myPlace" element={<ManagerMyPlace />} />
+          <Route path="chat" element={<ManagerChat />} />
         </Route>
         <Route path="/admin">
           <Route index element={<AdminDashBoard />} />

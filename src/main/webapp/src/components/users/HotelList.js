@@ -1,64 +1,161 @@
-import React, { useEffect, useState } from 'react';
-import styles from '../../css/HotelList.module.css';
-import Nav from './Nav';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import Button from 'react-bootstrap/Button';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
-import moment from 'moment';
-import Slider, { Range } from 'rc-slider';
-import 'rc-slider/assets/index.css';
+import React, { useEffect, useState } from "react";
+import styles from "../../css/HotelList.module.css";
+import Nav from "./Nav";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import Button from "react-bootstrap/Button";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import moment from "moment";
+import Slider, { Range } from "rc-slider";
+import "rc-slider/assets/index.css";
 
-import { Card, Carousel, Col, Row } from 'react-bootstrap';
-import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
-import HotelItemCard from './HotelItemCard';
-import HotelOptionData from '../data/HotelOption.json';
-import Footer from './Footer';
+import { Card, Carousel, Col, Row } from "react-bootstrap";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
+import HotelItemCard from "./HotelItemCard";
+import HotelOptionData from "../data/HotelOption.json";
+import Footer from "./Footer";
+
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
 
 const List = () => {
   const [priceRange, setPriceRange] = useState({
     lowerBound: 0,
-    upperBound: 300000,
-    value: [0, 300000],
+    upperBound: 3000000,
   });
-
-  const [selectedOption1, setSelectedOption1] = useState('');
-  const [selectedOption2, setSelectedOption2] = useState('');
-
-  const handleOption1Change = e => {
-    setSelectedOption1(e.target.value);
-    setSelectedOption2(''); // 상위 드롭다운이 변경될 때 하위 드롭다운을 초기화
+  const [filterOn, setFilterOn] = useState(false);
+  const [mainAddress, setMainAddress] = useState(""); 
+  const [subAddress, setSubAddress] = useState(""); 
+  const [selectedOptions, setOptions] = useState([]); 
+  const handleOption1Change = (e) => {
+    setMainAddress(e.target.value);
+    setSubAddress("");
   };
 
-  const handleOption2Change = e => {
-    setSelectedOption2(e.target.value);
+  const handleOption2Change = (e) => {
+    setSubAddress(e.target.value);
   };
 
   const [date, onDate] = useState(new Date());
 
-  const { seqHotelCategory } = useParams();
+  const { seqHotelCategory } = useParams(); //이게 없으면 searchValue
   const [hotelList, setHotelList] = useState([]);
 
-  useEffect(() => {
-    axios
-      .post('/user/getHotelList', null, { params: { seqHotelCategory } })
-      .then(res => {
-        setHotelList(res.data);
-      })
-      .catch(error => console.log(error));
-  }, []);
+  
+  const fetchHotelList = async () => {
+    const selectedDate = formatDate(date);
+    if (subAddress === "") {
+      const { status, data } = await axios.post("/user/searchHotel", {
+        seqHotelCategory:
+          seqHotelCategory.length === 1
+            ? `0${seqHotelCategory}`
+            : seqHotelCategory, //이게 없으면 searchValue 값으로 가져오게 해야함
+        addr: subAddress,
+        date: selectedDate,
+        minPrice: filterOn ? priceRange.lowerBound : null,
+        maxPrice: filterOn ? priceRange.upperBound : null,
+      });
 
+      if (status === 200) {
+        return data;
+      }
+    } else {
+      const list = [];
+      const addrs = subAddress.split(",");
+      for (let addr of addrs) {
+        const { status, data } = await axios.post("/user/searchHotel", {
+          seqHotelCategory:
+            seqHotelCategory.length === 1
+              ? `0${seqHotelCategory}`
+              : seqHotelCategory,
+          addr: addr.trim(),
+          date: selectedDate,
+          minPrice: filterOn ? priceRange.lowerBound : null,
+          maxPrice: filterOn ? priceRange.upperBound : null,
+        });
+
+        if (status === 200) {
+          data.forEach((hotel) => list.push(hotel));
+        }
+      }
+      
+      return list;
+    }
+    return [];
+  };
+
+  const filterHotel = (hotelList) => {
+    const filtered = [];
+    for (let hotel of hotelList) {
+      let includeAllSelectedOptions = true;
+      for (let option of selectedOptions) {
+        console.log(option, hotel[option]);
+        if (hotel[option] === false) {
+          includeAllSelectedOptions = false;
+          break;
+        }
+      }
+
+      if (includeAllSelectedOptions) filtered.push(hotel);
+    }
+    return filtered;
+  };
+
+  const resetHotelList = async () => {
+    const list = await fetchHotelList();
+    if (filterOn) setHotelList(filterHotel(list));
+    else setHotelList(list);
+  };
+  useEffect(() => {
+    console.log(hotelList);
+  }, [hotelList]);
+  
+  useEffect(() => {
+    resetHotelList();
+  }, [seqHotelCategory, subAddress, date]);
+
+  const toggleOption = (e) => {
+    const { name } = e.target;
+    if (selectedOptions.includes(name)) {
+      setOptions((prev) => prev.filter((option) => option !== name));
+    } else {
+      setOptions((prev) => [...prev, name]);
+    }
+  };
+  
+  const resetOptions = () => {
+    setPriceRange({ lowerBound: 0, upperBound: 300000, value: [0, 300000] });
+    setOptions([]);
+  };
+  
+  const isActiveOption = (option) => {
+    if (selectedOptions.includes(option)) {
+    }
+    return selectedOptions.includes(option);
+  };
+  const applyFilter = () => {
+    resetHotelList();
+  };
   return (
     <div>
       <Nav />
-      <div className="container" style={{ minHeight: '100vh' }}>
+      <div className="container" style={{ minHeight: "100vh" }}>
         <Row xl={4} lg={2} md={1} sm={1} xs={1}>
           <Col className="mb-3" xl={3} lg={6} md={12} sm={12} xs={12}>
             <div>
-              <select className="form-select ms-auto location" value={selectedOption1} onChange={handleOption1Change}>
+              <select
+                className="form-select ms-auto location"
+                value={mainAddress}
+                onChange={handleOption1Change}
+              >
                 <option value="default" readOnly>
                   지역
                 </option>
@@ -80,50 +177,76 @@ const List = () => {
                 <option value="choong-book">충북</option>
               </select>
 
-              {selectedOption1 && (
-                <select className="form-select ms-auto" value={selectedOption2} onChange={handleOption2Change}>
+              {mainAddress && (
+                <select
+                  className="form-select ms-auto"
+                  value={subAddress}
+                  onChange={handleOption2Change}
+                >
                   <option value="default" readOnly>
                     선택하세요
                   </option>
-                  {selectedOption1 === 'seoul' && (
+                  {mainAddress === "seoul" && (
                     <>
-                      <option value="seoul1">서울 전체</option>
-                      <option value="seoul2">홍대, 합정, 상수, 연남</option>
-                      <option value="seoul3">강남역, 역삼, 선릉, 삼성</option>
-                      <option value="seoul4">신촌, 이대, 아현, 연희</option>
-                      <option value="seoul5">신사, 논현, 청담, 압구정</option>
-                      <option value="seoul6">망원, 성산, 상암</option>
-                      <option value="seoul7">서초, 교대, 방배</option>
-                      <option value="seoul8">명동, 을지로, 동대문역</option>
-                      <option value="seoul9">성수, 왕십리, 서울숲</option>
-                      <option value="seoul10">영등포, 여의도, 당산, 문래</option>
-                      <option value="seoul11">종로, 광화문, 대학로</option>
-                      <option value="seoul12">송파, 잠실, 방이</option>
-                      <option value="seoul13">용산, 이태원, 한남</option>
-                      <option value="seoul14">관악, 신림, 서울대입구</option>
-                      <option value="seoul15">광진, 건대, 구의, 군자</option>
-                      <option value="seoul16">동작, 사당, 이수</option>
-                      <option value="seoul17">성북, 성신여대, 안암</option>
-                      <option value="seoul18">강서, 마곡, 화곡</option>
-                      <option value="seoul19">도곡, 대치, 개포, 수서</option>
-                      <option value="seoul20">마포역, 공덕, 대흥</option>
-                      <option value="seoul21">구로, 신도림, 고척</option>
-                      <option value="seoul22">금천, 가산, 독산</option>
-                      <option value="seoul23">강동, 성내, 천호 길동</option>
-                      <option value="seoul24">동대문구, 청량리, 회기</option>
-                      <option value="seoul25">양천, 목동, 신정</option>
-                      <option value="seoul26">은평, 불광, 연신내</option>
-                      <option value="seoul27">노원, 상계, 공릉</option>
-                      <option value="seoul28">강북, 수유, 미아</option>
-                      <option value="seoul29">중랑, 상봉, 면목</option>
-                      <option value="seoul30">도봉, 쌍문, 창동</option>
+                      <option value="서울">서울 전체</option>
+                      <option value="홍대, 합정, 상수, 연남">
+                        홍대, 합정, 상수, 연남
+                      </option>
+                      <option value="강남, 역삼, 선릉, 삼성">
+                        강남, 역삼, 선릉, 삼성
+                      </option>
+                      <option value="신촌, 이대, 아현, 연희">
+                        신촌, 이대, 아현, 연희
+                      </option>
+                      <option value="신사, 논현, 청담, 압구정">
+                        신사, 논현, 청담, 압구정
+                      </option>
+                      <option value="망원, 성산, 상암">망원, 성산, 상암</option>
+                      <option value="서초, 교대, 방배">서초, 교대, 방배</option>
+                      <option value="명동, 을지로, 동대문역">
+                        명동, 을지로, 동대문역
+                      </option>
+                      <option value="성수, 왕십리, 서울숲">
+                        성수, 왕십리, 서울숲
+                      </option>
+                      <option value="영등포, 여의도, 당산, 문래">
+                        영등포, 여의도, 당산, 문래
+                      </option>
+                      <option value="종로, 광화문, 대학로">
+                        종로, 광화문, 대학로
+                      </option>
+                      <option value="송파, 잠실, 방이">송파, 잠실, 방이</option>
+                      <option value="용산, 이태원, 한남">
+                        용산, 이태원, 한남
+                      </option>
+                      <option value="관악, 신림, 서울대입구">
+                        관악, 신림, 서울대입구
+                      </option>
+                      <option value="광진, 건대, 구의, 군자">광진, 건대, 구의, 군자</option>
+                      <option value="동작, 사당, 이수">동작, 사당, 이수</option>
+                      <option value="성북, 성신여대, 안암">성북, 성신여대, 안암</option>
+                      <option value="강서, 마곡, 화곡">강서, 마곡, 화곡</option>
+                      <option value="도곡, 대치, 개포, 수서">도곡, 대치, 개포, 수서</option>
+                      <option value="마포역, 공덕, 대흥">마포역, 공덕, 대흥</option>
+                      <option value="구로, 신도림, 고척">구로, 신도림, 고척</option>
+                      <option value="금천, 가산, 독산">금천, 가산, 독산</option>
+                      <option value="강동, 성내, 천호 길동">강동, 성내, 천호 길동</option>
+                      <option value="동대문구, 청량리, 회기">동대문구, 청량리, 회기</option>
+                      <option value="양천, 목동, 신정">양천, 목동, 신정</option>
+                      <option value="은평, 불광, 연신내">은평, 불광, 연신내</option>
+                      <option value="노원, 상계, 공릉">노원, 상계, 공릉</option>
+                      <option value="강북, 수유, 미아">강북, 수유, 미아</option>
+                      <option value="중랑, 상봉, 면목">중랑, 상봉, 면목</option>
+                      <option value="도봉, 쌍문, 창동">도봉, 쌍문, 창동</option>
                     </>
                   )}
-                  {selectedOption1 === 'gyung-gi' && (
+                  {mainAddress === "gyung-gi" && (
                     <>
                       <option value="gyung-gi1">경기 전체</option>
                       <option value="gyung-gi2">고양 일산</option>
-                      <option value="gyung-gi3">수원역, 팔달, 권선, 장안</option>
+                      <option value="gyung-gi3">
+                        수원역, 팔달, 권선, 장안
+                      </option>
                       <option value="gyung-gi4">동수원 영통, 광교</option>
                       <option value="gyung-gi5">성남 분당, 판교</option>
                       <option value="gyung-gi6">부천 역곡, 상동</option>
@@ -141,7 +264,7 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === 'incheon' && (
+                  {mainAddress === "incheon" && (
                     <>
                       <option value="incheon1">인천 전체</option>
                       <option value="incheon2">부평역, 부평구청</option>
@@ -156,7 +279,7 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === 'busan' && (
+                  {mainAddress === "busan" && (
                     <>
                       <option value="busan1">부산 전체</option>
                       <option value="busan2">부산진구 서면, 전포</option>
@@ -173,44 +296,62 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === 'gwang-ju' && (
+                  {mainAddress === "gwang-ju" && (
                     <>
                       <option value="gwang-ju1">광주 전체</option>
                       <option value="gwang-ju2">북구 전대후문, 일곡</option>
-                      <option value="gwang-ju3">동구 동명로, 충장로, 금남로</option>
-                      <option value="gwang-ju4">광산구 수완지구, 첨단, 송정역</option>
+                      <option value="gwang-ju3">
+                        동구 동명로, 충장로, 금남로
+                      </option>
+                      <option value="gwang-ju4">
+                        광산구 수완지구, 첨단, 송정역
+                      </option>
                       <option value="gwang-ju5">남구 양림, 봉선, 진월</option>
-                      <option value="gwang-ju6">서구 상무지구, 풍암, 금호</option>
+                      <option value="gwang-ju6">
+                        서구 상무지구, 풍암, 금호
+                      </option>
                     </>
                   )}
 
-                  {selectedOption1 === 'daegu' && (
+                  {mainAddress === "daegu" && (
                     <>
                       <option value="daegu1">대구 전체</option>
-                      <option value="daegu2">중구 동성로, 반월당, 중앙로</option>
+                      <option value="daegu2">
+                        중구 동성로, 반월당, 중앙로
+                      </option>
                       <option value="daegu3">수성구 수성못, 범어, 시지</option>
-                      <option value="daegu4">달서구 월성, 성서, 죽전네거리</option>
-                      <option value="daegu5">북구 칠곡, 경북대, 산격, 대현</option>
+                      <option value="daegu4">
+                        달서구 월성, 성서, 죽전네거리
+                      </option>
+                      <option value="daegu5">
+                        북구 칠곡, 경북대, 산격, 대현
+                      </option>
                       <option value="daegu6">남구 명덕네거리, 대명동</option>
-                      <option value="daegu7">동구 동대구역, 팔공산, 신서</option>
+                      <option value="daegu7">
+                        동구 동대구역, 팔공산, 신서
+                      </option>
                       <option value="daegu8">달성군 현풍, 다사</option>
-                      <option value="daegu9">서구 비산, 두류, 내당, 평리</option>
+                      <option value="daegu9">
+                        서구 비산, 두류, 내당, 평리
+                      </option>
                       <option value="daegu10">군위군</option>
                     </>
                   )}
 
-                  {selectedOption1 === 'daegeon' && (
+                  {mainAddress === "daegeon" && (
                     <>
-                      <option value="daegeon1">대전 전체</option>
-                      <option value="daegeon2">서구 둔산, 도안</option>
-                      <option value="daegeon3">유성구 궁동, 대덕연구단지</option>
+                      <option value="대전">대전 전체</option>
+                      <option value="서구 둔산, 도안">서구 둔산, 도안</option>
+                      <option value="daegeon3">
+                        유성구 궁동, 대덕연구단지
+                      </option>
                       <option value="daegeon4">중구 서대전네거리, 은행</option>
                       <option value="daegeon5">동구 소제, 용전, 동구청</option>
                       <option value="daegeon6">대덕구 송촌</option>
                     </>
                   )}
 
-                  {selectedOption1 === 'woolsan' && (
+                  {mainAddress === "woolsan" && (
                     <>
                       <option value="woolsan1">울산 전체</option>
                       <option value="woolsan2">남구 무거, 삼산, 신정</option>
@@ -221,7 +362,7 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === 'jeju' && (
+                  {mainAddress === "jeju" && (
                     <>
                       <option value="jeju1">제주 전체</option>
                       <option value="jeju2">제주시 전체</option>
@@ -234,11 +375,15 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === 'gangwon' && (
+                  {mainAddress === "gangwon" && (
                     <>
                       <option value="gangwon1">강원 전체</option>
-                      <option value="gangwon2">강릉 교동, 경포대, 주문진</option>
-                      <option value="gangwon3">춘천 명동, 강원대, 남춘천</option>
+                      <option value="gangwon2">
+                        강릉 교동, 경포대, 주문진
+                      </option>
+                      <option value="gangwon3">
+                        춘천 명동, 강원대, 남춘천
+                      </option>
                       <option value="gangwon4">원주 중앙, 무실, 반곡</option>
                       <option value="gangwon5">속초 영랑, 조양, 노학</option>
                       <option value="gangwon6">동해 묵호, 망상</option>
@@ -247,16 +392,20 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === 'gyung-nam' && (
+                  {mainAddress === "gyung-nam" && (
                     <>
                       <option value="gyung-nam1">경남 전체</option>
                       <option value="gyung-nam2">창원 상남, 용호</option>
                       <option value="gyung-nam3">창원 마산, 진해</option>
                       <option value="gyung-nam4">양산 물금, 하북, 서창</option>
-                      <option value="gyung-nam5">진주 신안, 초전, 충무공</option>
+                      <option value="gyung-nam5">
+                        진주 신안, 초전, 충무공
+                      </option>
                       <option value="gyung-nam6">김해 장유, 봉황</option>
                       <option value="gyung-nam7">사천 삼천포, 사천읍</option>
-                      <option value="gyung-nam8">밀양 위양지, 산외, 단장</option>
+                      <option value="gyung-nam8">
+                        밀양 위양지, 산외, 단장
+                      </option>
                       <option value="gyung-nam9">거제 고현, 옥포</option>
                       <option value="gyung-nam10">통영, 고성</option>
                       <option value="gyung-nam11">남해, 하동, 산청</option>
@@ -265,10 +414,12 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === 'gyung-book' && (
+                  {mainAddress === "gyung-book" && (
                     <>
                       <option value="gyung-book1">경북 전체</option>
-                      <option value="gyung-book2">포항 육거리, 구룡포, 흥해</option>
+                      <option value="gyung-book2">
+                        포항 육거리, 구룡포, 흥해
+                      </option>
                       <option value="gyung-book3">구미 인동, 원평</option>
                       <option value="gyung-book4">경산 임당, 하양</option>
                       <option value="gyung-book5">경주 보문, 황남, 양남</option>
@@ -276,9 +427,13 @@ const List = () => {
                       <option value="gyung-book7">김천 교동, 율곡</option>
                       <option value="gyung-book8">영천 시청, 임고</option>
                       <option value="gyung-book9">영주 가흥, 풍기, 무섬</option>
-                      <option value="gyung-book10">문경 점촌, 산양, 마성</option>
+                      <option value="gyung-book10">
+                        문경 점촌, 산양, 마성
+                      </option>
                       <option value="gyung-book11">상주 무향, 함창</option>
-                      <option value="gyung-book12">청도 화양, 이서, 각북</option>
+                      <option value="gyung-book12">
+                        청도 화양, 이서, 각북
+                      </option>
                       <option value="gyung-book13">울릉도</option>
                       <option value="gyung-book14">봉화, 영양, 울진</option>
                       <option value="gyung-book15">칠곡, 성주, 고령</option>
@@ -287,7 +442,7 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === 'jeon-nam' && (
+                  {mainAddress === "jeon-nam" && (
                     <>
                       <option value="jeon-nam1">전남 전체</option>
                       <option value="jeon-nam2">여수 돌산, 종화, 부삼</option>
@@ -305,10 +460,12 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === 'jeon-book' && (
+                  {mainAddress === "jeon-book" && (
                     <>
                       <option value="jeon-book1">전북 전체</option>
-                      <option value="jeon-book2">전주 객사, 전북대, 중동</option>
+                      <option value="jeon-book2">
+                        전주 객사, 전북대, 중동
+                      </option>
                       <option value="jeon-book3">익산 영등, 모현, 신동</option>
                       <option value="jeon-book4">군산 영동, 나운, 수송</option>
                       <option value="jeon-book5">완주 소양, 삼례</option>
@@ -321,32 +478,66 @@ const List = () => {
                     </>
                   )}
 
-                  {selectedOption1 === 'choong-nam/ sejong' && (
+                  {mainAddress === "choong-nam/ sejong" && (
                     <>
-                      <option value="choong-nam/ sejong1">충남/세종 전체</option>
-                      <option value="choong-nam/ sejong2">세종 정부청사, 조치원</option>
-                      <option value="choong-nam/ sejong3">천안 목천, 성환, 직산, 성거</option>
-                      <option value="choong-nam/ sejong4">아산 온양온천, 배방</option>
-                      <option value="choong-nam/ sejong5">공주 제민천, 신관</option>
-                      <option value="choong-nam/ sejong6">서산 해미, 성연, 호수공원</option>
-                      <option value="choong-nam/ sejong7">보령 대천, 동대, 웅천, 청라</option>
-                      <option value="choong-nam/ sejong8">태안 안면도, 만리포</option>
-                      <option value="choong-nam/ sejong9">당진 송악, 고대, 신평, 합덕</option>
-                      <option value="choong-nam/ sejong10">논산 취암, 내동, 연무, 가야곡</option>
-                      <option value="choong-nam/ sejong11">계룡 금암, 엄사, 두마</option>
-                      <option value="choong-nam/ sejong12">금산 상리, 추부</option>
+                      <option value="choong-nam/ sejong1">
+                        충남/세종 전체
+                      </option>
+                      <option value="choong-nam/ sejong2">
+                        세종 정부청사, 조치원
+                      </option>
+                      <option value="choong-nam/ sejong3">
+                        천안 목천, 성환, 직산, 성거
+                      </option>
+                      <option value="choong-nam/ sejong4">
+                        아산 온양온천, 배방
+                      </option>
+                      <option value="choong-nam/ sejong5">
+                        공주 제민천, 신관
+                      </option>
+                      <option value="choong-nam/ sejong6">
+                        서산 해미, 성연, 호수공원
+                      </option>
+                      <option value="choong-nam/ sejong7">
+                        보령 대천, 동대, 웅천, 청라
+                      </option>
+                      <option value="choong-nam/ sejong8">
+                        태안 안면도, 만리포
+                      </option>
+                      <option value="choong-nam/ sejong9">
+                        당진 송악, 고대, 신평, 합덕
+                      </option>
+                      <option value="choong-nam/ sejong10">
+                        논산 취암, 내동, 연무, 가야곡
+                      </option>
+                      <option value="choong-nam/ sejong11">
+                        계룡 금암, 엄사, 두마
+                      </option>
+                      <option value="choong-nam/ sejong12">
+                        금산 상리, 추부
+                      </option>
                       <option value="choong-nam/ sejong13">예산, 홍성</option>
-                      <option value="choong-nam/ sejong14">청양, 부여, 서천</option>
+                      <option value="choong-nam/ sejong14">
+                        청양, 부여, 서천
+                      </option>
                     </>
                   )}
 
-                  {selectedOption1 === 'choong-book' && (
+                  {mainAddress === "choong-book" && (
                     <>
                       <option value="choong-book1">충북 전체</option>
-                      <option value="choong-book2">청주 수암골, 율량, 흥덕, 사창</option>
-                      <option value="choong-book3">충주 연수, 호암, 성서</option>
-                      <option value="choong-book4">제천 의림지, 청풍, 하소</option>
-                      <option value="choong-book5">단양 대강, 영춘, 단양읍</option>
+                      <option value="choong-book2">
+                        청주 수암골, 율량, 흥덕, 사창
+                      </option>
+                      <option value="choong-book3">
+                        충주 연수, 호암, 성서
+                      </option>
+                      <option value="choong-book4">
+                        제천 의림지, 청풍, 하소
+                      </option>
+                      <option value="choong-book5">
+                        단양 대강, 영춘, 단양읍
+                      </option>
                       <option value="choong-book6">진천, 음성</option>
                       <option value="choong-book7">증평, 괴산</option>
                       <option value="choong-book8">보은, 옥천, 영동</option>
@@ -374,15 +565,20 @@ const List = () => {
 
           <Col className="mb-3" xl={5} lg={10} md={12} sm={12} xs={12}>
             <div className="accordion">
-              <div className={`${styles.HotelListAccordionItem} accordion-item`}>
-                <h2 className={`${styles.HotelListAccordionHeader} accordion-header`}>
+              <div
+                className={`${styles.HotelListAccordionItem} accordion-item`}
+              >
+                <h2
+                  className={`${styles.HotelListAccordionHeader} accordion-header`}
+                >
                   <button
                     className="accordion-button collapsed py-2"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#collapseOne"
                     aria-expanded="false"
-                    aria-controls="collapseOne">
+                    aria-controls="collapseOne"
+                  >
                     예약 날짜
                   </button>
                 </h2>
@@ -390,10 +586,13 @@ const List = () => {
                   <div
                     id="collapseOne"
                     className="accordion-collapse collapse text-center"
-                    data-bs-parent="#accordionExample">
+                    data-bs-parent="#accordionExample"
+                  >
                     <div className="accordion-body hotelListNav">
                       <Calendar onChange={onDate} value={date} />
-                      <div className="text-gray-500 mt-4">{moment(date).format('YYYY년 MM월 DD일')}</div>
+                      <div className="text-gray-500 mt-4">
+                        {moment(date).format("YYYY년 MM월 DD일")}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -401,16 +600,25 @@ const List = () => {
             </div>
           </Col>
 
-          <Col className="d-flex justify-content-end mb-3" xl={2} lg={2} md={12} sm={12} xs={12}>
+          <Col
+            className="d-flex justify-content-end mb-3"
+            xl={2}
+            lg={2}
+            md={12}
+            sm={12}
+            xs={12}
+          >
             <div>
               <Link to="/hotelInMap">
                 <button className="btn btn-outline-dark">지도</button>
               </Link>
               <button
                 type="button"
-                className="btn btn-outline-dark"
+                className={`btn btn-outline-dark ${filterOn ? "active" : ""}`}
                 data-bs-toggle="dropdown"
-                data-bs-auto-close="false">
+                data-bs-auto-close="false"
+                onClick={() => setFilterOn((prev) => !prev)}
+              >
                 필터
               </button>
               <div className="dropdown-menu">
@@ -418,15 +626,24 @@ const List = () => {
                   <div className="p-3 border">
                     <p>결제 유형</p>
                     <div className="row">
-                      <button type="button" className="btn btn btn-outline-secondary col mx-2" data-bs-toggle="button">
+                      <button
+                        type="button"
+                        className="btn btn btn-outline-secondary col mx-2"
+                        data-bs-toggle="button"
+                      >
                         바로 결제
                       </button>
-                      <button className="btn btn btn-outline-secondary col mx-2" data-bs-toggle="button">
+                      <button
+                        className="btn btn btn-outline-secondary col mx-2"
+                        data-bs-toggle="button"
+                      >
                         승인 결제
                       </button>
                     </div>
                     <p className="mt-5">가격</p>
-                    <span style={{ fontSize: '0.6rem' }}>가격 검색의 최소 단위는 5,000원입니다.</span>
+                    <span style={{ fontSize: "0.6rem" }}>
+                      가격 검색의 최소 단위는 5,000원입니다.
+                    </span>
                     <div className="row">
                       <div className="col form-floating mb-3">
                         <input
@@ -436,14 +653,17 @@ const List = () => {
                           placeholder="0"
                           value={priceRange.lowerBound}
                           name="lowerBound"
-                          onChange={e =>
+                          onChange={(e) =>
                             setPriceRange({
                               ...priceRange,
                               [e.target.name]: [e.target.value],
                             })
                           }
                         />
-                        <label htmlFor="floatingInput" style={{ fontSize: '0.6rem' }}>
+                        <label
+                          htmlFor="floatingInput"
+                          style={{ fontSize: "0.6rem" }}
+                        >
                           최소가격
                         </label>
                       </div>
@@ -456,14 +676,17 @@ const List = () => {
                           placeholder="Password"
                           value={priceRange.upperBound}
                           name="upperBound"
-                          onChange={e =>
+                          onChange={(e) =>
                             setPriceRange({
                               ...priceRange,
                               [e.target.name]: [e.target.value],
                             })
                           }
                         />
-                        <label htmlFor="floatingPassword" style={{ fontSize: '0.6rem' }}>
+                        <label
+                          htmlFor="floatingPassword"
+                          style={{ fontSize: "0.6rem" }}
+                        >
                           최대가격
                         </label>
                       </div>
@@ -472,11 +695,15 @@ const List = () => {
                       range
                       min={0}
                       max={300000}
-                      defaultValue={priceRange.value}
-                      onChange={e => {
+                      defaultValue={[
+                        priceRange.lowerBound,
+                        priceRange.upperBound,
+                      ]}
+                      value={[priceRange.lowerBound, priceRange.upperBound]}
+                      onChange={(e) => {
                         setPriceRange({
-                          lowerBound: [e[0]],
-                          upperBound: [e[1]],
+                          lowerBound: e[0],
+                          upperBound: e[1],
                         });
                       }}
                       allowCross={false}
@@ -486,7 +713,14 @@ const List = () => {
                     <div className="container-xxl row row-cols-3 row-cols-lg-6 row-cols-md-4">
                       {HotelOptionData.map((item, index) => (
                         <div className="col p-2" key={index}>
-                          <button className="btn btn-outline-dark container-fluid" data-bs-toggle="button">
+                          <button
+                            className={`btn btn-outline-dark container-fluid ${
+                              isActiveOption(item.key) ? "active" : ""
+                            }`}
+                            data-bs-toggle="button"
+                            name={item.key}
+                            onClick={toggleOption}
+                          >
                             {item.key}
                             {/* <span dangerouslySetInnerHTML={{ __html: item.icon }}></span> */}
                           </button>
@@ -494,10 +728,18 @@ const List = () => {
                       ))}
                     </div>
                     <div className="row">
-                      <button type="reset" className="col-5 btn btn-warning border-0">
+                      <button
+                        type="reset"
+                        className="col-5 btn btn-warning border-0"
+                        onClick={resetOptions}
+                      >
                         초기화
                       </button>
-                      <button type="button" className="col-7 btn btn-warning border-0">
+                      <button
+                        type="button"
+                        className="col-7 btn btn-warning border-0"
+                        onClick={applyFilter}
+                      >
                         필터 적용하기
                       </button>
                     </div>
@@ -557,7 +799,10 @@ const List = () => {
               {hotelList.length !== 0 ? (
                 hotelList.map((item, idx) => (
                   <div className="col-xl-4 col-lg-6" key={idx}>
-                    <Link to={'/detail/' + item.seqHotel} style={{ textDecoration: 'none' }}>
+                    <Link
+                      to={"/detail/" + item.seqHotel}
+                      style={{ textDecoration: "none" }}
+                    >
                       <Col>
                         <HotelItemCard item={item} />
                       </Col>

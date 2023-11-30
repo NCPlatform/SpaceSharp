@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import ListView from "./view/ListView";
 
-const DetailList = ({ index, data, isChecked, onChange }) => {
+const DetailList = ({ index, data, isChecked, onChange, handleTimeChange }) => {
   return (
     <div className="">
       <Row className="m-1 mt-0 mb-0 pt-3 pb-3 border-top border-bottom">
@@ -28,7 +28,7 @@ const DetailList = ({ index, data, isChecked, onChange }) => {
       </Row>
       {/* <hr/> */}
       {/* 아래는 평소에 숨기고, 체크할 때만 보이게 하기 */}
-      {isChecked && <ListView data={data} room={data.seqRoom} />}
+      {isChecked && <ListView data={data} room={data.seqRoom} handleTimeChange={handleTimeChange} />}
     </div>
   );
 };

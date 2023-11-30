@@ -93,7 +93,7 @@ const AddRoom = () => {
         const styleC = {width: '15%'} // style = {styleC}
         const styleD = {width: '25%'}
         const styleE = {display: 'none'}
-        const styleF = {width: '30%'}
+       
 
         // layout 관련
         const styleZ = {marginLeft: '10%', marginTop: '3%'}
