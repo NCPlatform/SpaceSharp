@@ -212,13 +212,25 @@ public class UserController {
     @PostMapping("updateIsKakao")
     public ResponseEntity<String> updateIsKakao(
     		@RequestParam String email,
-            @RequestParam boolean iskakao) {
-        try {
-            userService.updateIsKakao(email, iskakao);
-            return ResponseEntity.ok("업데이트 성공");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 실패");
-        }
+    		@RequestParam boolean iskakao) {
+    	try {
+    		userService.updateIsKakao(email, iskakao);
+    		return ResponseEntity.ok("업데이트 성공");
+    	} catch (Exception e) {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 실패");
+    	}
+    }
+    
+    @PostMapping("updateIsNaver")
+    public ResponseEntity<String> updateIsNaver(
+    		@RequestParam String email,
+    		@RequestParam boolean isnaver) {
+    	try {
+    		userService.updateIsNaver(email, isnaver);
+    		return ResponseEntity.ok("업데이트 성공");
+    	} catch (Exception e) {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 실패");
+    	}
     }
     
 	@PostMapping(value = "mainPage")

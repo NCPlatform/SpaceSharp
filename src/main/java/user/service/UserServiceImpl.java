@@ -61,10 +61,19 @@ public class UserServiceImpl implements UserService {
 	public void updateIsKakao(String email, boolean iskakao) {
         UserDTO userDTO = userDAO.findByEmail(email);
                 
-
         userDTO.setIskakao(iskakao);
         userDAO.save(userDTO);
     }
+	
+	@Override
+	public void updateIsNaver(String email, boolean isnaver) {
+        UserDTO userDTO = userDAO.findByEmail(email);
+                
+        userDTO.setIsnaver(isnaver);
+        userDAO.save(userDTO);
+    }
+	
+	
 	
 	@Override
 	public List<HotelCategoryDTO> getHotelCategoryList() {

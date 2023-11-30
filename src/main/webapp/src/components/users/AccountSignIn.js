@@ -55,7 +55,7 @@ const SignIn = ({ userInfo }) => {
   const naverUserInfoRef = useRef(naverUserInfo);
   useEffect(()=>{
     naverUserInfoRef.current = naverUserInfo
-  },[naverUserInfo])
+  },[naverUserInfo]);
 
 
   const [readCheck, setReadCheck] = useState(''); //유효성검사 div영역
