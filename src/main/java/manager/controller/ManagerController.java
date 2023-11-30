@@ -3,6 +3,7 @@ package manager.controller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpSession;
 import jpa.bean.HotelDTO;
 import jpa.bean.RoomDTO;
-import jpa.dao.HotelDAO;
 import manager.service.ManagerService;
 import manager.service.ObjectStorageService;
 
@@ -40,7 +40,15 @@ public class ManagerController {
 	
 	private String bucketName = "spacesharpbucket";
 	
-	
+	@PostMapping(value = "viewPlaceInfo")
+	@ResponseBody
+	public Optional<HotelDTO> viewPlaceInfo(@RequestParam String seq) {
+		System.out.println("viewPlaceInfo requested : "+seq);
+		Optional<HotelDTO> returnDTO = managerService.viewPlaceInfo(seq);
+		
+		return returnDTO;
+	}
+ 	
 	@PostMapping(value = "addedPlace")
 	@ResponseBody
 	public int addedPlace(@RequestPart HotelDTO hotelDTO,
@@ -92,6 +100,15 @@ public class ManagerController {
 		return list;
 	}
 	
+	@PostMapping(value = "getMyRoom")
+	@ResponseBody
+	public List<RoomDTO> getMyRoom(@RequestParam String seqHotel){
+		System.out.println(seqHotel);
+		
+		List<RoomDTO> list = managerService.getMyroom(seqHotel);
+		return list;
+	}
+
 	public String commaClearInt(String sample) {
 		ArrayList<Integer> list = new ArrayList<>();
 		StringTokenizer st = new StringTokenizer(sample, ",");
