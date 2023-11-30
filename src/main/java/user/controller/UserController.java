@@ -1,6 +1,8 @@
 package user.controller;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,6 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -27,15 +31,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.mail.internet.ParseException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.HotelSearchDTO;
+import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
+import jpa.dao.ReceiptDAO;
 import jpa.dao.ReservationDAO;
 import jpa.dao.UserDAO;
 import manager.service.ObjectStorageService;
@@ -51,6 +59,11 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private ObjectStorageService ncpService;
+	@Autowired
+	private ReservationDAO reservationDAO;
+
+	@Autowired
+	private ReceiptDAO receiptDAO;
 	
 	private String bucketName = "spacesharpbucket";
 
@@ -134,7 +147,38 @@ public class UserController {
 	public  List<ReservationDTO> getReservationListByRoom(@RequestParam int seqRoom, @RequestParam Date startDate, @RequestParam Date endDate){
 		return userService.getReservationListByRoom(seqRoom, startDate, endDate);
 	}
-	
+	@PostMapping("/reservation")
+	  public ResponseEntity<String> saveReservation(@RequestBody ReservationDTO reservationDTO) {
+	    try {
+	      
+
+	      reservationDAO.save(reservationDTO);
+	      
+	      int seqReservation = reservationDAO.findTopByOrderBySeqReservationDesc().get().getSeqReservation();
+	      
+	      // 성공적으로 처리되었을 경우
+	      return new ResponseEntity<>(String.valueOf(seqReservation), HttpStatus.OK);
+	    } catch (Exception e) {
+	      // 처리 중 오류가 발생한 경우
+	      return new ResponseEntity<>("예약 저장에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	  }
+
+	  @PostMapping("/receipt")
+	  public ResponseEntity<String> saveReceipt(@RequestBody ReceiptDTO receiptDTO) {
+	    try {
+	      
+	      int seqReservation = receiptDTO.getSeqReservation();
+
+	      receiptDAO.save(receiptDTO);
+
+	      // 성공적으로 처리되었을 경우
+	      return new ResponseEntity<>("영수증이 성공적으로 저장되었습니다. seqReservation: " + seqReservation, HttpStatus.OK);
+	    } catch (Exception e) {
+	      // 처리 중 오류가 발생한 경우
+	      return new ResponseEntity<>("영수증 저장에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	  }
   @GetMapping("/updateNaverStatus")
 	public String updateNaverStatus(@RequestParam String userEmail) {
 	    boolean updated = userService.updateUserNaverStatus(userEmail, true); // 여기에서 true 또는 false로 변경 가능
@@ -220,7 +264,13 @@ public class UserController {
 	public List<HotelDTO> getHotelList(@ModelAttribute HotelDTO hotelDTO){
 		return userService.getHotelList(hotelDTO.getSeqHotelCategory());
 	}
-	
+	@PostMapping(value = "searchHotel")
+	@ResponseBody
+	public List<HotelDTO> searchHotel(@RequestBody HotelSearchDTO hotelDTO){
+		System.out.println(hotelDTO);
+
+		return userService.searchHotel(hotelDTO);
+	}
 	@PostMapping(path = "writeReply")
 	@ResponseBody
 	public String reply(@ModelAttribute BoardDTO boardDTO) {

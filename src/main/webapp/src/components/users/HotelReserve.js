@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Nav from './Nav';
 import Footer from './Footer';
 import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HotelOption from "../data/HotelOption.json";
 
 const HotelReserve = () => {
@@ -17,11 +17,7 @@ const HotelReserve = () => {
   const [reservationDate, setReservationDate] = useState('');
   const [currentDateTime, setCurrentDateTime] = useState('');
 
-  // useParams를 통해 동적인 URL 파라미터 값을 가져옴
-  const { seqHotel } = useParams();
   const [loading, setLoading] = useState(true);
-
-
 
   const navigate = useNavigate();
 
@@ -34,6 +30,25 @@ const HotelReserve = () => {
         navigate('/');
       }
     });
+  };
+
+  // Declare formatDateString function before using it
+  const formatDateString = (dateString) => {
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      fractionalSecondDigits: 3,
+      timeZoneName: 'short',
+    };
+
+    const date = new Date(dateString);
+    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+
+    return formattedDate;
   };
 
   useEffect(() => {
@@ -57,79 +72,123 @@ const HotelReserve = () => {
       });
   }, [seqRoom]);
 
-
   useEffect(() => {
-    //아이콘 넣기 위함
-    axios.get(`/user/getHotelInfo?seqHotel=${seqHotel}`)
-      .then(response => {
-        const data = response.data;
-        console.log(data)
-        if (data) {
-          setHotelDTO(data);
-        } else {
-          console.error('해당 공간 정보를 찾을 수 없습니다.');
-        }
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('데이터를 불러오는 중 에러 발생:', error);
-        setLoading(false);
-      });
-  }, [seqHotel]);
+    // 아이콘 넣기 위함
+    if (roomDTO) {
+      axios.get(`/user/getHotelInfo?seqHotel=${roomDTO.seqHotel}`)
+        .then(response => {
+          const data = response.data;
+          console.log(data)
+          if (data) {
+            setHotelDTO(data);
+          } else {
+            console.error('해당 공간 정보를 찾을 수 없습니다.');
+          }
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('데이터를 불러오는 중 에러 발생:', error);
+          setLoading(false);
+        });
+    }
+  }, [roomDTO]);
 
-  const requestPay = () => {
+  // const [seqReservation, setSeqReservation] = useState();
+  // const seqReservationRef = useRef(seqReservation);
+
+  // useEffect(() => {
+  //   seqReservationRef.current = seqReservation;
+  // }, [seqReservation]);
+
+  // const updateSeqReservation = (value) => {
+  //   setSeqReservation(value);
+  //   seqReservationRef.current = value;
+  // };
+
+  const requestPay = async () => {
     // 라이브러리 스크립트가 정상적으로 로딩되었는지 확인
     if (window.IMP) {
       const userCode = "imp14397622";
       window.IMP.init(userCode);
 
-      window.IMP.request_pay({
-        pg: "html5_inicis",
-        pay_method: "card",
-        merchant_uid: "test_lpfkv0f2",
-        name: "SPACE SHARP",
-        amount: Number(sessionStorage.getItem('totalReservationCost')),
-        buyer_tel: "010-0000-0000",
-      }).then(response => {
+      try {
+        const response = await new Promise((resolve, reject) => {
+          window.IMP.request_pay({
+            pg: "html5_inicis",
+            pay_method: "card",
+            merchant_uid: new Date().getTime().toString(),
+            name: "SPACE SHARP",
+            amount: Number(sessionStorage.getItem('totalReservationCost')),
+            buyer_tel: "010-0000-0000",
+            // redirect_url: "http://localhost:3000/", //URL 교체
+          }, (response) => {
+            resolve(response);
+          });
+        });
+
         if (response.success) {
           // 성공 시 처리
+
           // 예약 테이블 업데이트
           const reservationData = {
-            userId: sessionUserDTO.id,
-            roomId: roomDTO.id,
-            reservationDate: reservationDate,
-            // 필요한 다른 필드 추가
+            email: sessionUserDTO.email,
+            seqRoom: roomDTO.seqRoom,
+            reservationDate: new Date(sessionStorage.getItem('currentDateTime')).toISOString(),
+            travelStartDate: new Date(sessionStorage.getItem('travelStartDate')).toISOString(),
+            travelEndDate: new Date(sessionStorage.getItem('travelEndDate')).toISOString(),
+            travelfulltime: parseInt(sessionStorage.getItem('travelfulltime'), 10),
+            active: null,
+            payment: sessionUserDTO.payment
           };
 
           axios.post('/user/reservation', reservationData)
-            .then(res => {
-              console.log('Reservation data added:', res.data);
-            })
-            .catch(err => {
-              console.error('Error adding reservation data:', err);
-            });
+            .then(response => {
 
-          // receipt 테이블 업데이트
-          const receiptData = {
-            reservationId: response.data.id, // 응답에서 가져온 예약 ID 사용
-            // 필요한 다른 필드 추가
-          };
+              const seqReservation = response.data;
 
-          axios.post('/api/receipt', receiptData)
-            .then(res => {
-              console.log('Receipt data added:', res.data);
+              // Update reservationDTO with the obtained seqReservation
+              // updateSeqReservation(seqReservation);
+
+              const receiptData = {
+                email: sessionUserDTO.email,
+                bank_name: sessionUserDTO.payment,
+                seqReservation: seqReservation, // Use the updated value
+                receipt_url: null,
+                name: hotelDTO.name,
+                paidAmount: Number(sessionStorage.getItem('totalReservationCost')).toLocaleString(),
+                payDate: new Date(sessionStorage.getItem('currentDateTime')).toISOString(),
+                couponDiscount: null
+              };
+
+              axios.post('/user/receipt', receiptData)
+                .then(receiptResponse => {
+                  console.log(receiptResponse.data);
+                  window.location.href = "http://localhost:3000/"; //데이터 추가 완료 후 이동 URL
+                })
+                .catch(receiptError => {
+                  console.error('영수증 정보 전송 실패:', receiptError);
+                  alert('영수증 정보 전송에 실패했습니다.');
+                });
             })
-            .catch(err => {
-              console.error('Error adding receipt data:', err);
+            .catch(error => {
+              console.error('예약 정보 전송 실패:', error);
+              alert('예약 정보 전송에 실패했습니다.');
             });
         } else {
-          // 실패 시 처리
-          console.error('Payment failed:', response.error_msg);
+          // 결제 실패 시 처리
+          console.error('결제 실패:', response.error_msg);
+          alert('결제에 실패했습니다.');
         }
-      });
+      } catch (error) {
+        // 예외 처리
+        console.error('결제 오류:', error);
+        alert('결제 중 오류가 발생했습니다.');
+      }
+    } else {
+      // IMP 라이브러리가 로드되지 않은 경우 처리
+      alert('결제 라이브러리 로드에 실패했습니다.');
     }
   };
-
   // TRUE인 항목들을 5개씩 그룹화하여 반환하는 함수
   const groupTrueOptions = () => {
     if (!hotelDTO) {
@@ -147,6 +206,7 @@ const HotelReserve = () => {
 
     return groupedOptions;
   };
+
   // 그룹화된 아이콘을 렌더링하는 함수
   const renderGroupedIcons = () => {
     return groupTrueOptions().map((group, groupIndex) => (
@@ -324,6 +384,20 @@ const HotelReserve = () => {
                       <li className="list-group-item me-0" style={{ fontSize: '0.8rem' }}>
                         <span className="fw-bold me-1">예약인원</span>
                         <span>{sessionStorage.getItem('registerPeopleNumber')}명</span>
+                      </li>
+                      <li className="list-group-item me-0" style={{ fontSize: '0.8rem', display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5%' }}>
+                          <span className="fw-bold me-1">할인쿠폰🎫</span>
+                          <span className="fw-bold me-1" style={{ color: '#aba1a1' }}>보유쿠폰()장</span>
+                        </div>
+                        <div style={{}}>
+                          <select className="form-select form-select-lg mb-3" aria-label="Large select example" style={{ color: '#aba1a1' }}>
+                            <option value="" selected disabled hidden>🎫 쿠폰을 선택하세요.</option>
+                            <option value="1">🎫One</option>
+                            <option value="2">🎫Two</option>
+                            <option value="3">🎫Three</option>
+                          </select>
+                        </div>
                       </li>
                       <li className="list-group-item" style={{ borderTop: '5px solid rgb(244, 132, 132)' }}>
                         <h3 className="fw-bold d-flex justify-content-between" style={{ color: 'rgb(245, 80, 80)' }}>

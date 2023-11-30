@@ -3,6 +3,7 @@ package user.service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,11 +17,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.HotelSearchDTO;
 import jpa.bean.LikedDTO;
+import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
@@ -29,6 +33,7 @@ import jpa.dao.CommentDAO;
 import jpa.dao.HotelCategoryDAO;
 import jpa.dao.HotelDAO;
 import jpa.dao.LikedDAO;
+import jpa.dao.ReceiptDAO;
 import jpa.dao.ReservationDAO;
 import jpa.dao.RoomDAO;
 import jpa.dao.UserDAO;
@@ -53,6 +58,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private ReservationDAO reservationDAO;
+	
+	@Autowired
+	private ReceiptDAO receiptDAO;
 	
 	@Autowired
 	private CommentDAO commentDAO;
@@ -408,8 +416,40 @@ public class UserServiceImpl implements UserService {
 		map.put("minPrice", minPrice);
 		map.put("cntReview", commentList.size());
 		map.put("cntLike", likedList.size());
-		return map;
+		return map;		
+	}
+
+	@Override
+	public List<HotelDTO> searchHotel(HotelSearchDTO hotelDTO) {
+		return hotelDAO.searchHotel(hotelDTO.getSeqHotelCategory(), hotelDTO.getDate(), hotelDTO.getAddr(), hotelDTO.getMinPrice(), hotelDTO.getMaxPrice());
 	}
 	
+
+	@Override
+	public Integer saveReservation(ReservationDTO reservationDTO) {
+	    try {
+	        // 예약 정보 저장
+	        ReservationDTO savedReservation = reservationDAO.save(reservationDTO);
+
+	        // 예약 정보를 저장한 이후에 바로 조회
+	        Optional<ReservationDTO> optionalUpdatedReservation = reservationDAO.findByEmailAndReservationDate(savedReservation.getEmail(), savedReservation.getReservationDate());
+
+	        // 조회된 정보가 있으면 seqReservation 반환, 없으면 null 반환
+	        return optionalUpdatedReservation.get().getSeqReservation();//.map(ReservationDTO::getSeqReservation).orElse(null);
+	    } catch (Exception e) {
+	        // 예외를 처리하거나 로깅할 수 있습니다.
+	        return null;
+	    }
+	}
+
+    @Override
+    public String saveReceipt(ReceiptDTO receiptDTO) {
+        try {
+            receiptDAO.save(receiptDTO);
+            return "Receipt saved successfully";
+        } catch (Exception e) {
+            return "Failed to save receipt";
+        }
+    }
 	
 }

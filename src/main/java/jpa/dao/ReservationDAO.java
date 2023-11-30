@@ -20,5 +20,8 @@ public interface ReservationDAO extends JpaRepository<ReservationDTO, Integer> {
 
 	Optional<ReservationDTO> getBySeqReservation(int seqReservation);
 
+	Optional<ReservationDTO> findByEmailAndReservationDate(String email, Date reservationDate);
+
+	Optional<ReservationDTO> findTopByOrderBySeqReservationDesc();
 
 }

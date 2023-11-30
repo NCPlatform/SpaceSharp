@@ -65,7 +65,7 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
 
   // 현재 날짜와 시간을 원하는 형식으로 포맷하는 함수
   const formatCurrentDateTime = () => {
-    return moment(currentDateTime).format("YYYY.MM.DD HH:mm:ss");
+    return moment(currentDateTime).format("YYYY-MM-DD HH:mm:ss.SSSSSS");
   };
 
   // calendarData가 변경될 때마다 currentDateTime을 업데이트
@@ -160,10 +160,44 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
 
     sessionStorage.setItem("selectedDateTime", storedDateTime);
 
+    const travelStartDate = moment(calendarData)
+      .set({ hour: startHour, minute: 0, second: 0, millisecond: 0 })
+      .toISOString();
+
+    const travelEndDate = moment(calendarData)
+      .set({ hour: endHour, minute: 0, second: 0, millisecond: 0 })
+      .toISOString();
+
+    sessionStorage.setItem("travelStartDate", travelStartDate);
+    sessionStorage.setItem("travelEndDate", travelEndDate);
+
+    const storedTravelEndDate = sessionStorage.getItem("travelEndDate");
+    const storedTravelStartDate = sessionStorage.getItem("travelStartDate");
+
+    //travelfulltime값 구하기
+    if (storedTravelEndDate && storedTravelStartDate) {
+
+      const startDate = moment(storedTravelStartDate, "YYYY-MM-DD HH:mm:ss.SSSSSS");
+      const endDate = moment(storedTravelEndDate, "YYYY-MM-DD HH:mm:ss.SSSSSS");
+      const diffDuration = moment.duration(endDate.diff(startDate));
+
+      //travelfulltime값 시간 간격으로 저장하기
+      const diffHours = Math.floor(diffDuration.asHours());
+      const diffMinutes = Math.floor(diffDuration.asMinutes()) % 60;
+
+      //travelfulltime값 불러오기
+      const travelfulltime = `${diffHours}`;
+
+      //travelfulltime값 저장하기
+      sessionStorage.setItem("travelfulltime", travelfulltime);
+    }
+
     // reservationTimeText을 sessionStorage에 저장
     sessionStorage.setItem("reservationTimeText", reservationTimeText);
     // 현재 날짜와 시간을 sessionStorage에 저장
     sessionStorage.setItem("currentDateTime", formatCurrentDateTime());
+    const storedCurrentDateTime = sessionStorage.getItem("currentDateTime");
+    const parsedCurrentDateTime = new Date(storedCurrentDateTime);
     // totalHours값 계산
     const totalHours = endHour - startHour;
 

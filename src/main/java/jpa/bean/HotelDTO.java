@@ -177,4 +177,61 @@ public class HotelDTO {
 	@Column
 	private boolean isAccept;
 	
+	@Override
+	public String toString() {
+		return "HotelDTO{" +
+				"img='" + img + '\'' +
+				", seqHotel=" + seqHotel +
+				", seqHotelCategory='" + seqHotelCategory + '\'' +
+				", name='" + name + '\'' +
+				", subscribe='" + subscribe + '\'' +
+				", mainKeyword='" + mainKeyword + '\'' +
+				", keyword='" + keyword + '\'' +
+				", addr='" + addr + '\'' +
+				", ownerEmail='" + ownerEmail + '\'' +
+				", workinghour='" + workinghour + '\'' +
+				", holiday='" + holiday + '\'' +
+				", placeEx='" + placeEx + '\'' +
+				", facilities='" + facilities + '\'' +
+				", alert='" + alert + '\'' +
+				", refund='" + refund + '\'' +
+				", coupon=" + coupon +
+				", TV=" + TV +
+				", internet=" + internet +
+				", copy=" + copy +
+				", whiteboard=" + whiteboard +
+				", mic=" + mic +
+				", cooking=" + cooking +
+				", food=" + food +
+				", alcohol=" + alcohol +
+				", washing=" + washing +
+				", parking=" + parking +
+				", smoke=" + smoke +
+				", animal=" + animal +
+				", pc=" + pc +
+				", socket=" + socket +
+				", open24=" + open24 +
+				", noHoliday=" + noHoliday +
+				", restaurant=" + restaurant +
+				", freeFood=" + freeFood +
+				", locker=" + locker +
+				", mailService=" + mailService +
+				", kitchen=" + kitchen +
+				", waterFurifier=" + waterFurifier +
+				", catering=" + catering +
+				", heater=" + heater +
+				", airConditioner=" + airConditioner +
+				", fax=" + fax +
+				", wareHouse=" + wareHouse +
+				", percelService=" + percelService +
+				", privateToilet=" + privateToilet +
+				", fittingRoom=" + fittingRoom +
+				", roofTop=" + roofTop +
+				", rounge=" + rounge +
+				", mirror=" + mirror +
+				", bbq=" + bbq +
+				", doorlock=" + doorlock +
+				", isAccept=" + isAccept +
+				'}';
+	}
 }
