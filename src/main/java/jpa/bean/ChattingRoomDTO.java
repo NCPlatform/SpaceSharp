@@ -1,5 +1,7 @@
 package jpa.bean;
 
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,19 +11,15 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "Liked")
+@Table(name = "ChattingRoom")
 @Data
-public class LikedDTO {
-	
+public class ChattingRoomDTO {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false)
-	private int seqLiked;
+	private int channelId;
 	
-	@Column(nullable = false)
-	private String email;
-	
-	@Column(nullable = false)
-	private int seqHotel;
+	@Column
+	private String name;
 	
 }
