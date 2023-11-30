@@ -40,12 +40,8 @@ public class ReceiptDTO {
 	@Column(nullable = false)
 	private int paidAmount;
 	
-<<<<<<< HEAD
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
 	@Column(nullable = false)
-=======
-	@Column
->>>>>>> refs/remotes/origin/user
 	private Date payDate;
 	
 	@Column
