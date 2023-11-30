@@ -95,4 +95,10 @@ public class AdminServiceImpl implements AdminService {
 		return map;
 	}
 
+	@Override
+	public void addEvent(EventDTO eventDTO) {
+		eventDAO.save(eventDTO);
+		
+	}
+
 }

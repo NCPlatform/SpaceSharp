@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
+import jpa.bean.EventDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.HotelSearchDTO;
@@ -30,6 +31,7 @@ import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
 import jpa.dao.BoardDAO;
 import jpa.dao.CommentDAO;
+import jpa.dao.EventDAO;
 import jpa.dao.HotelCategoryDAO;
 import jpa.dao.HotelDAO;
 import jpa.dao.LikedDAO;
@@ -67,6 +69,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private LikedDAO likedDAO;
+	
+	@Autowired
+	private EventDAO eventDAO;
 	
 
 	@Override
@@ -270,6 +275,7 @@ public class UserServiceImpl implements UserService {
 		List<HotelDTO> hotelList = hotelDAO.findTop6ByOrderBySeqHotelDesc();
 		List<CommentDTO> reviewList = commentDAO.findTop6ByOrderBySeqCommentDesc();
 		List<Object> reviewCardList = new ArrayList<Object>();
+		List<EventDTO> eventList = eventDAO.findAll();
 		Map<String, Object> reviewCard = new HashMap<String, Object>();
 		
 		for(CommentDTO dto : reviewList) {
@@ -298,6 +304,7 @@ public class UserServiceImpl implements UserService {
 		map.put("categoryList", hotelCategoryList);
 		map.put("hotelList", hotelList);
 		map.put("reviewCardList", reviewCardList);
+		map.put("eventList", eventList);
 		return map;
 	}
 

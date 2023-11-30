@@ -20,6 +20,7 @@ const Main = () => {
   const [hotelCategoryList, setHotelCategoryList] = useState([]);
   const [newHotelList, setNewHotelList] = useState([]);
   const [reviewList, setReviewList] = useState([]);
+  const [eventList, setEventList] = useState([]);
 
   useEffect(() => {
     axios
@@ -28,6 +29,7 @@ const Main = () => {
         setNewHotelList(res.data.hotelList);
         setHotelCategoryList(res.data.categoryList);
         setReviewList(res.data.reviewCardList);
+        setEventList(res.data.eventList);
       })
       .catch((error) => console.log(error));
   }, []);
@@ -273,30 +275,29 @@ const Main = () => {
           data-bs-ride="carousel"
         >
           <div className="carousel-inner rounded">
-            <div className="carousel-item active" data-bs-interval="3000">
-              <img
-                src="https://tourimage.interpark.com/BBS/Tour/FckUpload/202011/6374206851388933880.jpg"
-                className="d-block w-100"
-                style={{ height: "25vw", objectFit: "cover" }}
-                alt=""
-              />
-            </div>
-            <div className="carousel-item" data-bs-interval="3000">
-              <img
-                src="https://joyparty.co.kr//data/goods/20/09/38/1000068206/1000068205_detail_048.jpg"
-                className="d-block w-100"
-                style={{ height: "25vw", objectFit: "cover" }}
-                alt=""
-              />
-            </div>
-            <div className="carousel-item" data-bs-interval="3000">
-              <img
-                src="https://t1.daumcdn.net/cfile/tistory/99CCBB455C46B97235"
-                className="d-block w-100"
-                style={{ height: "25vw", objectFit: "cover" }}
-                alt=""
-              />
-            </div>
+            {eventList &&
+              eventList
+                .filter(
+                  (item) =>
+                    new Date(item.finishDate).toLocaleDateString("ko-KR") >=
+                    new Date().toLocaleDateString("ko-KR")
+                )
+                .map((item, index) => (
+                  <div className="carousel-item active" data-bs-interval="3000">
+                    <img
+                      src={item.mainImg}
+                      className="d-block w-100"
+                      style={{ height: "25vw", objectFit: "cover" }}
+                      alt=""
+                    />
+                    <div
+                      className="carousel-caption d-none d-md-block bg-dark bg-opacity-25 w-100 px-0 mx-0"
+                      style={{ right: 0, left: 0 }}
+                    >
+                      <h3>{item.title}</h3>
+                    </div>
+                  </div>
+                ))}
           </div>
         </div>
       </div>

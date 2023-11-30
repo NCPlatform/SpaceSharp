@@ -57,8 +57,10 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	
 	@Autowired
 	private ObjectStorageService ncpService;
+	
 	@Autowired
 	private ReservationDAO reservationDAO;
 

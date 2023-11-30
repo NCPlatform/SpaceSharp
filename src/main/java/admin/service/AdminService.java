@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import jpa.bean.CouponDTO;
+import jpa.bean.EventDTO;
 import jpa.bean.UserDTO;
 
 public interface AdminService {
@@ -18,5 +19,7 @@ public interface AdminService {
 	public void addCoupon(CouponDTO couponDTO);
 
 	public Map<String, Object> getEventList(Pageable pageable, String searchKey);
+
+	public void addEvent(EventDTO eventDTO);
 
 }
