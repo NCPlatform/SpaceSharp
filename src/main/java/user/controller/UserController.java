@@ -1,5 +1,6 @@
 package user.controller;
 
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,12 +8,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,7 +26,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
@@ -332,7 +336,7 @@ public class UserController {
 			  content += tokenURL;
 			  content += "' target = '_blank'><img width = '150px' src = 				'https://me2.do/G87iQ5hN'></a> </div><a href = '";
 			  content += whenOops;
-			  content += "' id = 'oopsHref'> <span id = 'oops'>Oops! 인증을 요청하지 않았어요</span></a> <br> </td></tr> </table> </div> <span id = 'introduce'>Project Space#, 2023.</span> </body> </html>";
+			  content += "' id = 'oopsHref'> <span id = 'oops'>인증 링크는 꼭 5분 안에 클릭해 주세요!</span></a> <br> </td></tr> </table> </div> <span id = 'introduce'>Project Space#, 2023.</span> </body> </html>";
 			 
 			  break;
 		  }
@@ -378,13 +382,17 @@ public class UserController {
 	
 	@PostMapping(value = "emailAuth")
 	@ResponseBody
-	public String authEmail(@RequestParam String token) {
+	public String authEmail(@RequestParam String token, HttpServletRequest request, HttpServletResponse response) {
 		// 토큰 해금
 		System.out.println("인증 요청됨 : "+token);
 		try {
 			userService.decodeToken(token);}
+		catch(ExpiredJwtException e) {
+			return "E";
+		}
 		catch(Exception e) {
 			e.printStackTrace();
+			return "N";
 		}
 		return "Y";
 	}

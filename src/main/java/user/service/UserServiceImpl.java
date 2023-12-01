@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.DefaultJwtSignatureValidator;
@@ -474,6 +475,17 @@ public class UserServiceImpl implements UserService {
 		
 		System.out.println("header : " + header);
 		System.out.println("payload : " + payload);
+
+		// Payload 디코딩
+		Claims claims = Jwts.parser().setSigningKey(keyIn.getBytes()).parseClaimsJws(token).getBody();
+
+		// 토큰의 만료 시간 확인
+		Date expiration = claims.getExpiration();
+
+		// 현재 시간과 비교하여 토큰 만료 여부 판단
+		if (expiration != null && expiration.before(new Date())) {
+		    throw new Exception("JWT token has expired!");
+		}
 		SignatureAlgorithm sa = SignatureAlgorithm.HS256;
 		SecretKeySpec secretKeySpec = new SecretKeySpec(keyIn.getBytes(), sa.getJcaName());
 		String tokenWithoutSignature = chunks[0] + "." + chunks[1];
@@ -483,6 +495,6 @@ public class UserServiceImpl implements UserService {
 		if (!validator.isValid(tokenWithoutSignature, signature)) {
 		    throw new Exception("Could not verify JWT token integrity!");
 		}
-		return null;
+		return payload;
 	}
 }
