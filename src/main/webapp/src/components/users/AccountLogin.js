@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
@@ -14,6 +14,7 @@ import axios from 'axios';
 import styles from '../../css/Login.module.css';
 
 import KakaoLogin from 'react-kakao-login';
+import Nav from './Nav';
 
 const Login = () => {
   const [userDTO, setUserDTO] = useState({
@@ -22,7 +23,7 @@ const Login = () => {
   });
 
   const { email, password } = userDTO;
-  
+
   const [emailDiv, setEmailDiv] = useState('');
   const [passwordDiv, setPasswordDiv] = useState('');
   const navigate = useNavigate();
@@ -73,8 +74,17 @@ const Login = () => {
   };
 
   const [sessionUserDTO, setSessionUserDTO] = useState(
-    window.sessionStorage.getItem('user')
+    JSON.parse(window.sessionStorage.getItem('user')) || {} // 기본값으로 빈 객체 설정
   );
+
+  useEffect(() => {
+    const storedUser = JSON.parse(window.sessionStorage.getItem('user'));
+    if (storedUser && storedUser.email) {
+      setUserDTO({ ...userDTO, email: storedUser.email });
+    }
+  }, []);
+
+  const naverRef = useRef()
   const { naver } = window;
 
    const [userInfo, setUserInfo] = useState({
@@ -90,7 +100,15 @@ const Login = () => {
     payment: '',
   });
 
+
+  const userInfoRef = useRef(userInfo);
+
+  useEffect(()=>{
+    userInfoRef.current = userInfo
+  },[userInfo])
+
   const initializeNaverLogin = () => {
+    
     const naverLogin = new naver.LoginWithNaverId({
       clientId: '6ttVxktIhMD96aZLn_iu',
       callbackUrl: 'http://localhost:3000/login',
@@ -236,9 +254,10 @@ const Login = () => {
                         }
           }}else  {
             //가져온 데이터가 없다면
-            const existingUser = checkUserResponse.data;
 
-            window.localStorage.setItem('user', JSON.stringify(existingUser));
+            console.log(userInfoRef.current)
+
+            window.localStorage.setItem('userInfo', JSON.stringify(userInfoRef.current));
             window.localStorage.removeItem('com.naver.nid.oauth.state_token')
             window.localStorage.removeItem('com.naver.nid.access_token')
             navigate('/signin')
@@ -252,6 +271,7 @@ const Login = () => {
        
     }
   });
+  
 };
     let access_token;
     let regresh_token;
@@ -271,37 +291,31 @@ const Login = () => {
     window.location.href = KakaoUrl;
   };
 
-  const handleNaverLogin = () => {};
+  const handleNaverLogin = () => {
+    naverRef.current.children[0].click()
+  };
 
   return (
-    <div className={styles.Login0}>
+  <div>
+    <Nav />
+    <div className={`container ${styles.Login0}`}>
       <div className={styles.Login1}>
-        <div className={styles.Login2}>
-          <h1 className={styles.loginH1}> 로그인 화면 </h1>
-          <div className="d-grid gap-2 styles.Login3">
-            <Button
-              variant="primary"
-              size="lg"
-              style={{
-                color: 'black',
-                fontWeight: 'bold',
-                background: '#2db400',
-                border: 'none',
-              }}
-              id="naverIdLogin">
-              네이버로 로그인하기
-            </Button>
-            <Button
-              variant="secondary"
-              size="lg"
-              style={{
-                color: 'black',
-                fontWeight: 'bold',
-                background: '#FFEB00',
-                border: 'none',
-              }}>
-              카카오로 로그인하기
-            </Button>
+        <div className="text-center">
+          <h1 className={styles.loginH1}> 게스트 로그인 </h1>
+          <div className={`d-flex flex-column align-items-center ${styles.loginButtons}`}>
+            <p id="naverIdLogin" ref={naverRef} className={`${styles.naverLoginBtn} my-2`} style={{display : "none"}}>
+              네이버 로그인
+            </p>
+            <div className='w-100'> 
+            <button className={`${styles.naverLoginBtn1} my-2`} onClick={()=>handleNaverLogin()}>네이버 아이디로 로그인</button>
+            </div>
+          </div>
+          <div className={`d-flex flex-column align-items-center ${styles.loginButtons}`}>
+            <div className='w-100'>
+              <p className={`${styles.kakaoLoginBtn} my-2`}>
+                카카오 아이디로 로그인
+              </p>
+            </div>
           </div>
         </div>
         <hr />
@@ -328,13 +342,13 @@ const Login = () => {
             <div id="passwordDiv">{passwordDiv}</div>
           </FloatingLabel>
 
-          <label
+          <label className={styles.AccountLoginLabel}
             style={{
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center'}}>
               <input type="checkbox" />
               아이디 기억하기
             </div>
@@ -344,7 +358,7 @@ const Login = () => {
           </label>
         </>
         <div className="d-grid gap-2">
-          <button variant="primary" size="1g" onClick={onLoginSubmit} style={{ background: '#FFEB00', border: 'none' }}>
+          <button variant="primary" onClick={onLoginSubmit} style={{ background: '#FFEB00', border: 'none', height: '50px' }}>
             이메일로 로그인
           </button>
         </div>
@@ -356,6 +370,7 @@ const Login = () => {
         </h5>
       </div>
     </div>
+  </div>  
   );
 };
 

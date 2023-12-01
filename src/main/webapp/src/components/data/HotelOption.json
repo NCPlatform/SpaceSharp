@@ -1,152 +1,177 @@
 [
   {
     "key": "TV",
-    "name": "텔레비전",
+    "name": "TV/프로젝터",
     "icon": "<i class=\"bi bi-tv\"></i>"
   },
   {
     "key": "internet",
-    "name": "컴퓨터",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "인터넷/WIFI",
+    "icon": "<i class=\"bi bi-wifi\"></i>"
   },
   {
     "key": "copy",
-    "name": "복합기",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "복사/인쇄기",
+    "icon": "<i class=\"bi bi-printer\"></i>"
   },
   {
     "key": "whiteboard",
     "name": "화이트보드",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "icon": "<i class=\"bi bi-easel2\"></i>"
   },
   {
     "key": "mic",
-    "name": "마이크",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "음향/마이크",
+    "icon": "<i class=\"bi bi-mic\"></i>"
   },
   {
     "key": "cooking",
-    "name": "텔레비전",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "취사시설",
+    "icon": "<i class=\"bi bi-egg-fried\"></i>"
   },
   {
     "key": "food",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "음식물 반입",
+    "icon": "<i class=\"bi bi-basket\"></i>"
   },
   {
     "key": "alcohol",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "주류 반입",
+    "icon": "<i class=\"bi bi-basket2-fill\"></i>"
   },
   {
     "key": "washing",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "샤워시설",
+    "icon": "<i class=\"bi bi-droplet\"></i>"
   },
   {
     "key": "parking",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "주차",
+    "icon": "<i class=\"bi bi-p-square\"></i>"
   },
   {
     "key": "smoke",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "금연",
+    "icon": "<i class=\"bi bi-x-circle\"></i>"
   },
   {
     "key": "animal",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "반려동물 동반",
+    "icon": "<i class=\"bi bi-android\"></i>"
   },
   {
     "key": "pc",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "PC/노트북",
+    "icon": "<i class=\"bi bi-pc-display-horizontal\"></i>"
   },
   {
     "key": "socket",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "콘센트",
+    "icon": "<i class=\"bi bi-plug\"></i>"
   },
   {
     "key": "open24",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "24시 운영",
+    "icon": "<i class=\"bi bi-clock\"></i>"
   },
   {
     "key": "noHoliday",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "연중무휴",
+    "icon": "<i class=\"bi bi-clock-history\"></i>"
   },
   {
     "key": "restaurant",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "카페/레스토랑",
+    "icon": "<i class=\"bi bi-cup-hot\"></i>"
   },
   {
     "key": "freeFood",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "간단한 다과/음료",
+    "icon": "<i class=\"bi bi-cup-straw\"></i>"
   },
   {
     "key": "locker",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "개인락커",
+    "icon": "<i class=\"bi bi-person-fill-lock\"></i>"
   },
   {
     "key": "mailService",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "메일 서비스",
+    "icon": "<i class=\"bi bi-envelope-at\"></i>"
   },
   {
     "key": "kitchen",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "공용 주방",
+    "icon": "<i class=\"bi bi-egg\"></i>"
   },
   {
     "key": "waterFurifier",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "정수기",
+    "icon": "<i class=\"bi bi-droplet-half\"></i>"
   },
   {
     "key": "catering",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "케이터링",
+    "icon": "<i class=\"bi bi-person-lines-fill\"></i>"
   },
   {
     "key": "heater",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "난방기",
+    "icon": "<i class=\"bi bi-brightness-high\"></i>"
   },
   {
     "key": "airConditioner",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "에어컨",
+    "icon": "<i class=\"bi bi-fan\"></i>"
   },
   {
     "key": "fax",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "팩스",
+    "icon": "<i class=\"bi bi-printer-fill\"></i>"
   },
   {
     "key": "wareHouse",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "창고서비스",
+    "icon": "<i class=\"bi bi-house-lock\"></i>"
   },
   {
     "key": "percelService",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "택배발송서비스",
+    "icon": "<i class=\"bi bi-truck\"></i>"
   },
   {
     "key": "privateToilet",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "내부화장실",
+    "icon": "<i class=\"bi bi-gender-ambiguous\"></i>"
   },
   {
     "key": "fittingRoom",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "탈의실",
+    "icon": "<i class=\"bi bi-door-open\"></i>"
   },
   {
     "key": "roofTop",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "테라스/루프탑",
+    "icon": "<i class=\"bi bi-bricks\"></i>"
   },
   {
     "key": "rounge",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "공용라운지",
+    "icon": "<i class=\"bi bi-chat\"></i>"
   },
   {
     "key": "mirror",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "전신거울",
+    "icon": "<i class=\"bi bi-symmetry-vertical\"></i>"
   },
   {
     "key": "bbq",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "바베큐시설",
+    "icon": "<i class=\"bi bi-fire\"></i>"
   },
   {
     "key": "doorlock",
-    "icon": "<i class=\"bi bi-tv\"></i>"
-  },
-  {
-    "key": "isAccept",
-    "icon": "<i class=\"bi bi-tv\"></i>"
+    "name": "도어락",
+    "icon": "<i class=\"bi bi-file-lock\"></i>"
   }
 ]

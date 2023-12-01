@@ -9,8 +9,11 @@ import org.springframework.data.domain.Pageable;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jpa.bean.BoardDTO;
+import jpa.bean.CommentDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.HotelSearchDTO;
+import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
@@ -43,7 +46,7 @@ public interface UserService {
 	
 	public String getMainKeyword(int seqHotel);
 
-	public Page<BoardDTO> list(Pageable pageable, int seqRefSeqBoard);
+	public Map<String,Object> list(Pageable pageable, int seqRefSeqBoard);
 
 	public Optional<BoardDTO> getReply(int seqRefSeqBoard);
 	
@@ -80,5 +83,21 @@ public interface UserService {
 	public boolean updateUserNaverStatus(String userEmail, boolean isnaver);
 	
 	public Map<String,Object> hotelReserve(int seqRoom);
+
+	public Map<String, Object> setReviewTab(int seqHotel);
+
+	public void writeHotelComment(CommentDTO commentDTO);
+
+	public Map<String, Object> getHotelDetailCard(int seqHotel);
+
+	public Map<String,Object> getHotelList();
+
+	public List<HotelDTO> searchHotel(HotelSearchDTO hotelDTO);
+	
+	public Integer saveReservation(ReservationDTO reservationDTO);
+
+	public String saveReceipt(ReceiptDTO receiptDTO);
+	
+
 
 }

@@ -4,29 +4,22 @@ import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "IssuedCoupon")
+@Table(name = "ChattingRoom")
 @Data
-public class IssuedCoupon {
-	
+public class ChattingRoomDTO {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false)
-	private int seqIssuedCoupon;
-	
-	@Column(nullable = false)
-	private String email;
-	
-	@Column(nullable = false)
-	private int seqCoupon;
+	private int channelId;
 	
 	@Column
-	private Date IssuedDate;
-	
-	@Column
-	private Date endOfUse;
+	private String name;
 	
 }

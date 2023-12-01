@@ -1,0 +1,11 @@
+.chatList::-webkit-scrollbar {
+  width: 10px;
+}
+.chatList::-webkit-scrollbar-thumb {
+  background-color: #2f3542;
+  border-radius: 30px;
+}
+.chatList::-webkit-scrollbar-track {
+  background-color: grey;
+  border-radius: 30px;
+}
