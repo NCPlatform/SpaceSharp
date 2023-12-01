@@ -12,6 +12,7 @@ const BoardList = () => {
     const { page } = useParams()
 
     const [list, setList] = useState([])
+    const [userList, setUserList] = useState([])
     const [pagingArray, setPagingArray] = useState([])
 
     const [pageSize, setPageSize] = useState('10');
@@ -34,33 +35,18 @@ const BoardList = () => {
         }
     )
 
-    
-    const [userEmail, setUserEmail] = useState('');
-    const [userNickname, setUserNickname] = useState('');
-
-    useEffect(() => {
-        axios.get(`/user/${boardDTO.email}`)
-            .then(res => {
-                setUserEmail(res.data.email);
-                setUserNickname(res.data.nickname);
-            })
-            .catch(error => console.log(error));
-    }, [boardDTO.email]);
-
     const categoryTitles = {
         '7': '1:1 문의'
     };
 
-    const { seqBoard, seqBoardCategory, title, seqRefSeqBoard, email, release } = boardDTO
-
     useEffect(() => {
         axios.get(`/user/list?page=${page}&size=${pageSize}`)
-                .then(res => {
-                setList(res.data.content)
-
-                setPagingArray(Array.from({ length: res.data.totalPages }, (_, index) => index + 1))
-                })
-                .catch(error => console.log(error))
+            .then(res => {
+            setList(res.data.boardList.content)
+            setUserList(res.data.userList);
+            setPagingArray(Array.from({ length: res.data.totalPages }, (_, index) => index + 1))
+            })
+            .catch(error => console.log(error))
     }, [page, pageSize])
 
        
@@ -94,7 +80,7 @@ const BoardList = () => {
                 <tr className=''>
                     <th className={styles.BoardListTh1}></th>
                     <th className={styles.BoardListTh2}>제목</th>
-                    <th className={styles.BoardListTh3}>이메일</th>
+                    <th className={styles.BoardListTh3}>닉네임</th>
                     <th className={styles.BoardListTh4}>등록일</th>
                 </tr>
             </thead>
@@ -103,17 +89,14 @@ const BoardList = () => {
                     list && list.map(item => {
                         const releaseDate = new Date(item.releaseDate);
                         const formattedReleaseDate = releaseDate.toLocaleDateString('ko-KR');
-                        let nicknameToShow = item.email;
-
-                        if (userEmail && userEmail === item.email) {
-                            nicknameToShow = userNickname;
-                        }
+                        
+                       
                 
                         return(
                             <tr key={ item.seqBoard } className={styles.BoardListTr2}>
                                 <td>{ item.seqBoard }</td>
                                 <td><Link className={`col-2 text-truncate ${styles.BoardListTitle}`} to={`/boardDetail/${item.seqBoard}`}>{ item.title }</Link></td>
-                                <td className={`col-2 text-truncate ${styles.BoardListTd3}`}>{ nicknameToShow }</td>
+                                <td className={`col-2 text-truncate ${styles.BoardListTd3}`}>{ userList&&userList.filter(user=> user.email === item.email)[0].nickname }</td>
                                 <td className={styles.BoardListTd4}>{ formattedReleaseDate }</td>
                             </tr>
                             
