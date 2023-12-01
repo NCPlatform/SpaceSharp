@@ -233,6 +233,7 @@ public class UserController {
     	}
     }
     
+    
 	@PostMapping(value = "mainPage")
 	@ResponseBody
 	public Map<String, Object> mainPage(){
@@ -276,5 +277,5 @@ public class UserController {
 	public String goNotice() {
 		
 		return "redirect:http://127.0.0.1:3000/login";
-	}
+	}    
 }

@@ -37,10 +37,11 @@ public interface UserService {
 	
 	public void updateNickname(String email, String newNickname);
 	
-	
 	public void updateIsKakao(String email, boolean isKakao);
+	
 	public void updateIsNaver(String email, boolean isnaver);
 	
+
     
 	public String getHotelName(int seqHotel);
 
@@ -86,6 +87,8 @@ public interface UserService {
 	public Map<String, Object> mainPage();
 	
 	public boolean updateUserNaverStatus(String userEmail, boolean isnaver);
+
+
 
 
 

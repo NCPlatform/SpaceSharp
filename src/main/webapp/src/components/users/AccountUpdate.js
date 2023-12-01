@@ -23,7 +23,11 @@ const AccountUpdate = ({ userInfo }) => {
     payment: '',
     iskakao: false,
     isnaver: false,
-  }); 
+  });
+  
+  //회원탈퇴를 위한 모달에서의 상태 입력
+  const [deleteName, setDeleteName] = useState('');
+  const [deletePassword, setDeletePassword] = useState('');
 
   const [naverUserInfo, setNaverUserInfo] = useState({
     email: '',
@@ -115,6 +119,10 @@ const AccountUpdate = ({ userInfo }) => {
     }
   }, [userDTO.iskakao, kakaoConnected]);
 
+  // //네이버 연동 여부에 따라 naverConnected 갱신
+  // useEffect(() => {
+  //   setNaverConnected(userDTO.isnaver);
+  // }, [userDTO.isnaver]);
   
   // 네이버연동 비활성상태->활성화시 비연동계정일 경우 네이버로그인 실행
   useEffect(() => {
@@ -123,16 +131,12 @@ const AccountUpdate = ({ userInfo }) => {
     }
   }, [userDTO.isnaver, naverConnected]);
   
-  //네이버 연동 여부에 따라 naverConnected 갱신
-  useEffect(() => {
-    setNaverConnected(userDTO.isnaver);
-  }, [userDTO.isnaver]);
-  
-  
+ 
   console.log(naverUserInfo)
   console.log('네이버 유저인포')
   console.log(userDTO)
   console.log('유저DTO')
+  
 
   //닉네임 변경
   const [newNickname, setNewNickname] = useState('');
@@ -292,7 +296,7 @@ const initializeNaverLogin = () => {
       navigate('/update');
     } else {
       // 로그인 상태가 아니라면 처리
-      alert('네이버계정의 정보가 존재하지 않습니다.\n네이버계정으로 회원가입 진행바랍니다.');
+      // alert('네이버계정의 정보가 존재하지 않습니다.\n네이버계정으로 회원가입 진행바랍니다.');
     }
   });
 };
@@ -314,6 +318,58 @@ const initializeNaverLogin = () => {
   };
 
   //네이버 소셜 연동 끝
+
+
+  //연락처 변경 모달상태
+  const [newTel, setNewTel] = useState('');
+  const [showTelModal, setShowTelModal] = useState(false);
+  const [telValidationMsg, setTelValidationMsg] = useState('');
+
+  const openTelModal = () => setShowTelModal(true);
+  const closeTelModal = () => setShowTelModal(false);  
+
+
+  //비밀번호 변경 모달상태
+  const [newPassword, setNewPassword] = useState('');
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordValidationMsg, setPasswordValidationMsg] = useState('');
+
+  const openPasswordModal = () => setShowPasswordModal(true);
+  const closePasswordModal = () => setShowPasswordModal(false);
+  
+
+  //회원탈퇴 모달 상태
+  const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
+  const [deleteValidationMsg, setDeleteValidationMsg] = useState('');
+
+  const openDeleteUser = () => setShowDeleteUserModal(true);
+  const closeDeleteUser = () => setShowDeleteUserModal(false);
+
+  // 회원탈퇴
+const handleDeleteUser = () => {
+  if(userDTO.name === deleteName && userDTO.password === deletePassword ){
+  axios
+    // .post('/user/deleteUser', null, { params: userDTO })
+    .post('/user/deleteUser', userDTO, {
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+    })
+    .then((res) => {
+      window.sessionStorage.removeItem('user');
+      alert('회원탈퇴가 완료되었습니다. 그동안 스페이스샵을 이용해주셔서 감사합니다.');
+      closeModal();
+      navigate('/');
+    })
+    .catch((error) => console.log(error));
+  
+  }else{
+    alert('회원정보가 일치하지 않습니다. 다시 입력하세요!');
+    setDeleteName('');
+    setDeletePassword('');
+  }
+};//handleDeleteUser
+  
 
     return (
         <>
@@ -406,9 +462,31 @@ const initializeNaverLogin = () => {
                       <br/>    
                       <p className='profileTitle'>
                         연락처    
-                        {userDTO.tel ? <span>({userDTO.tel} 님)</span> : <span>(휴대폰정보-x휴대폰정보없음)</span>} {/* 휴대폰정보 출력자리 */}
+                        {userDTO.tel ? <span>({userDTO.tel} 님)</span> : <span>(휴대폰정보)</span>} {/* 휴대폰정보 출력자리 */}
                         &emsp;&emsp;&nbsp;
-                        <button className='updatebtn green mini'>변경하기</button>
+                        <button className='updatebtn green mini' onClick={ openTelModal }>변경하기</button>
+                        {/* 연락처 수정 모달*/}
+                        <Modal show={showTelModal} onHide={closeTelModal}>
+                            <Modal.Header closeButton>
+                            <Modal.Title>연락처 수정</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                            <label htmlFor="newTel">새 연락처:&nbsp;</label>
+                            <input type="text" id="newTel" value={newTel} onChange={(e) => setNewTel(e.target.value)}/>
+                            <div className="telValidationMsg">{telValidationMsg}</div>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <button className="updatebtn green mini" 
+                                // onClick={handlePasswordUpdate}
+                                >
+                                연락처 변경
+                                </button>
+                                <button className="updatebtn red mini" onClick={closeTelModal}>
+                                닫기
+                                </button>
+                            </Modal.Footer>
+                          </Modal>
+                          {/* 연락처 수정 모달 끝*/}
                       </p>
                       <br/>
                     </ul>
@@ -489,7 +567,34 @@ const initializeNaverLogin = () => {
                       <p className='profileTitle'>{/*비밀번호 변경자리 */}
                         비빌번호&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
-                        <button className='updatebtn green mini'>변경하기</button>
+                        <button className='updatebtn green mini' onClick={openPasswordModal}>변경하기</button>
+                        {/* 비밀번호 수정 모달*/}
+                        <Modal show={showPasswordModal} onHide={closePasswordModal}>
+                            <Modal.Header closeButton>
+                            <Modal.Title>비밀번호 수정</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                            <label>
+                              이메일 인증이 완료되었습니다.<br/>
+                              변경할 비밀번호를 입력하여주세요.
+                            </label>
+                            <br/>
+                            <br/>
+                            <label htmlFor="newPassword">새 비밀번호:&nbsp;</label>
+                            <input type="password" id="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}/>
+                            <div className="passwordValidationMsg">{passwordValidationMsg}</div>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <button className="updatebtn green mini" 
+                                // onClick={handlePasswordUpdate}
+                                >
+                                비밀번호 변경
+                                </button>
+                                <button className="updatebtn red mini" onClick={closePasswordModal}>
+                                닫기
+                                </button>
+                            </Modal.Footer>
+                          </Modal>
                         <br />
                       </p>
                       <br/>
@@ -519,8 +624,34 @@ const initializeNaverLogin = () => {
     
                   <div className='box2-4'>
                     <div class="profileCard" style={{width: '100%'}}>{/*회원탈퇴 버튼 */}
-                      <br />&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                      <button className='updatebtn red mini'>서비스 탈퇴하기</button>
+                      <br />&emsp;&emsp;
+                      <button className='updatebtn red mini' onClick={openDeleteUser} >서비스 탈퇴하기
+                      </button>{/* 회원탈퇴 모달*/}
+                      <Modal show={showDeleteUserModal} onHide={closeDeleteUser }>
+                            <Modal.Header closeButton>
+                            <Modal.Title>서비스 탈퇴</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                            <label>
+                              회원정보를 입력하여주세요. 입력 후 탈퇴하기 버튼을 누르면 탈퇴가 진행됩니다.
+                            </label>
+                            <label htmlFor="name">이 름:&nbsp;&nbsp;&nbsp;&emsp;&emsp;
+                            <input type="text" id="name" value={deleteName} onChange={(e) => setDeleteName(e.target.value)} />
+                            </label>
+                            <label htmlFor="name">비밀번호:&nbsp;&emsp;
+                            <input type="password" id="password" value={deletePassword} onChange={(e) => setDeletePassword(e.target.value)} />
+                            </label>
+                            <div className="deleteValidationMsg">{passwordValidationMsg}</div>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <button className="updatebtn green mini" onClick={handleDeleteUser}>
+                                탈퇴하기
+                                </button>
+                                <button className="updatebtn red mini" onClick={closeDeleteUser }>
+                                취소
+                                </button>
+                            </Modal.Footer>
+                          </Modal>
                       <br />
                       <br />
                     </div>
