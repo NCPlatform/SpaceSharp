@@ -120,7 +120,7 @@ const HotelReserve = () => {
       axios.get(`/user/getHotelInfo?seqHotel=${roomDTO.seqHotel}`)
         .then(response => {
           const data = response.data;
-          console.log(data)
+
           if (data) {
             setHotelDTO(data);
           } else {
@@ -205,7 +205,7 @@ const HotelReserve = () => {
 
               axios.post('/user/receipt', receiptData)
                 .then(receiptResponse => {
-                  console.log(receiptResponse.data);
+
                   Swal.fire({
                     title: '결제 완료',
                     text: '결제가 성공적으로 완료되었습니다.',
@@ -227,12 +227,24 @@ const HotelReserve = () => {
         } else {
           // 결제 실패 시 처리
           console.error('결제 실패:', response.error_msg);
-          alert('결제에 실패했습니다.');
+          Swal.fire({
+            icon: 'error',
+            title: '결제에 실패했습니다.',
+            confirmButtonText: '확인'
+          }).then(() => {
+            window.location.reload();
+          });
         }
       } catch (error) {
         // 예외 처리
         console.error('결제 오류:', error);
-        alert('결제 중 오류가 발생했습니다.');
+        Swal.fire({
+          icon: 'error',
+          title: '결제 중 오류가 발생했습니다.',
+          confirmButtonText: '확인'
+        }).then(() => {
+          window.location.reload();
+        });
       }
     } else {
       // IMP 라이브러리가 로드되지 않은 경우 처리
@@ -247,7 +259,7 @@ const HotelReserve = () => {
         setCouponDTO(response.data);
       })
       .catch(error => {
-        console.error('Error fetching coupon information:', error);
+        console.error('coupon에러:', error);
       });
 
     // IssuedCouponDTO 가져오기
@@ -256,7 +268,7 @@ const HotelReserve = () => {
         setIssuedCouponDTO(response.data);
       })
       .catch(error => {
-        console.error('Error fetching issued coupon information:', error);
+        console.error('issuedCoupon에러:', error);
       });
   }, []);
 

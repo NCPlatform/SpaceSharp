@@ -113,7 +113,7 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
         let currentDateTime = new Date(startDate);
         while (currentDateTime < endDate) {
           const hours = datetimeToHours(new Date(currentDateTime));
-          console.log(hours, currentDateTime, calendarData);
+          
           if (hours !== null) unavailableTimes.push(hours);
 
           currentDateTime.setHours(currentDateTime.getHours() + 1);
@@ -133,7 +133,7 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
       .then((response) => {
         const data = response.data;
         if (data) {
-          console.log(data);
+          
           const reservations = getUnavailableTimes(data);
           setReservations(reservations);
         } else {

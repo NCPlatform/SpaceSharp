@@ -427,7 +427,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<HotelDTO> searchHotel(HotelSearchDTO hotelDTO) {
-		return hotelDAO.searchHotel(hotelDTO.getSeqHotelCategory(), hotelDTO.getDate(), hotelDTO.getAddr(), hotelDTO.getMinPrice(), hotelDTO.getMaxPrice());
+		return hotelDAO.searchHotel(hotelDTO.getSeqHotelCategory(), hotelDTO.getDate(), hotelDTO.getAddr(), hotelDTO.getSearchValue(), hotelDTO.getMinPrice(), hotelDTO.getMaxPrice());
 	}
 	
 

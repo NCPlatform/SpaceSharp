@@ -52,6 +52,7 @@ import ManagerPlaceInfo from './components/managers/ManagerPlaceInfo';
 import ManagerRoomInfo from "./components/managers/ManagerRoomInfo";
 import ManagerChat from './components/managers/ManagerChat';
 import UserChat from './components/users/UserChat';
+import { Nav } from 'react-bootstrap';
 
 function App() {
   return (
@@ -59,11 +60,11 @@ function App() {
       <Routes>
         <Route path="/">
           <Route index element={<Main />} />
-          <Route path="hotelSearch">
-            <Route path=":searchValue" element={<HotelList />} />
+          <Route path="searchHotel">
+            <Route path=":searchValue" element={<HotelList  />} />
           </Route>
           <Route path="hotelList">
-            <Route path=":seqHotelCategory" element={<HotelList />} />
+            <Route path=":seqHotelCategory" element={<HotelList />} />            
           </Route>
           <Route path="detail">
             <Route path=":seqHotel" element={<HotelDetail />} />

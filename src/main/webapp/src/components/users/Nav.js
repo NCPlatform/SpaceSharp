@@ -1,19 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Navbar from 'react-bootstrap/Navbar';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import '../../css/navheader.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../../css/mainColor.css';
 import { Offcanvas } from 'react-bootstrap';
 
 const NavTest = () => {
-  const [sessionUserDTO, setSessionUserDTO] = useState(JSON.parse(sessionStorage.getItem('user')));
-
+  const [sessionUserDTO, setSessionUserDTO] = useState(
+    JSON.parse(sessionStorage.getItem('user'))
+  );
+  const [searchValue, setSearchValue] = useState('');
   const navigator = useNavigate();
+  const { searchValue: paramSearchValue } = useParams();
+
+  const handleSearch = () => {
+    navigator(`/searchHotel/${searchValue}`);
+  };
+
+  useEffect(() => {
+    setSearchValue(paramSearchValue || '');
+    
+  }, [paramSearchValue]);
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   return (
     <div>
@@ -41,8 +59,11 @@ const NavTest = () => {
                     className="me-2"
                     aria-label="Search"
                     style={{ width: '218px' }}
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    onKeyDown={handleKeyDown}
                   />
-                  <Button variant="outline-dark">
+                  <Button variant="outline-dark" onClick={handleSearch}>
                     <span className="bi bi-search"></span>
                   </Button>
                 </div>

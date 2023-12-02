@@ -5,7 +5,7 @@ import SelectRegister from './SelectRegister/SelectRegister';
 import ModalPicture from './modal/ModalPicture';
 
 const ListView = ({ data, room, handleTimeChange }) => {
-  console.log(data);
+  
   // 캘린더 표시를 위한 state 값
   const [isCalendarView, setIsCalendarView] = useState(false);
 
@@ -28,7 +28,7 @@ const ListView = ({ data, room, handleTimeChange }) => {
     if (data?.img) {
       const images = data.img.split(', ');
       const firstImageUrl = images[0];
-      console.log('Image Clicked', firstImageUrl);
+      
       modalShow();
     }
   };

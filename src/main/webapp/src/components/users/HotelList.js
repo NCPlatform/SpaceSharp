@@ -4,14 +4,13 @@ import Nav from "./Nav";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import Button from "react-bootstrap/Button";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import moment from "moment";
 import Slider, { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
 
-import { Card, Carousel, Col, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import HotelItemCard from "./HotelItemCard";
@@ -32,9 +31,9 @@ const List = () => {
     upperBound: 3000000,
   });
   const [filterOn, setFilterOn] = useState(false);
-  const [mainAddress, setMainAddress] = useState(""); 
-  const [subAddress, setSubAddress] = useState(""); 
-  const [selectedOptions, setOptions] = useState([]); 
+  const [mainAddress, setMainAddress] = useState("");
+  const [subAddress, setSubAddress] = useState("");
+  const [selectedOptions, setOptions] = useState([]);
   const handleOption1Change = (e) => {
     setMainAddress(e.target.value);
     setSubAddress("");
@@ -46,26 +45,59 @@ const List = () => {
 
   const [date, onDate] = useState(new Date());
 
-  const { seqHotelCategory } = useParams(); //이게 없으면 searchValue
+  const { seqHotelCategory, searchValue } = useParams();
   const [hotelList, setHotelList] = useState([]);
 
-  
+  useEffect(() => {
+    
+  }, [searchValue]);
+
   const fetchHotelList = async () => {
     const selectedDate = formatDate(date);
+    if (!seqHotelCategory) {
+      if (searchValue) {
+        
+        const { status, data } = await axios.post("/user/searchHotel", {
+          seqHotelCategory: "", 
+          addr: "", 
+          date: selectedDate,
+          minPrice: filterOn ? priceRange.lowerBound : null,
+          maxPrice: filterOn ? priceRange.upperBound : null,
+        });
+  
+        if (status === 200) {
+          return data.filter(
+            (item) =>
+              item.addr.includes(searchValue) ||
+              item.name.includes(searchValue) ||
+              item.addr.includes(searchValue)
+          );
+        }
+      } else {
+        
+        return [];
+      }
+    }
+  
     if (subAddress === "") {
       const { status, data } = await axios.post("/user/searchHotel", {
         seqHotelCategory:
-          seqHotelCategory.length === 1
-            ? `0${seqHotelCategory}`
-            : seqHotelCategory, //이게 없으면 searchValue 값으로 가져오게 해야함
+          seqHotelCategory.length === 1 ? `0${seqHotelCategory}` : seqHotelCategory,
         addr: subAddress,
         date: selectedDate,
         minPrice: filterOn ? priceRange.lowerBound : null,
         maxPrice: filterOn ? priceRange.upperBound : null,
       });
-
+  
       if (status === 200) {
-        return data;
+        return searchValue
+          ? data.filter(
+              (item) =>
+                item.addr.includes(searchValue) ||
+                item.name.includes(searchValue) ||
+                item.addr.includes(searchValue)
+            )
+          : data;
       }
     } else {
       const list = [];
@@ -73,31 +105,37 @@ const List = () => {
       for (let addr of addrs) {
         const { status, data } = await axios.post("/user/searchHotel", {
           seqHotelCategory:
-            seqHotelCategory.length === 1
-              ? `0${seqHotelCategory}`
-              : seqHotelCategory,
+            seqHotelCategory.length === 1 ? `0${seqHotelCategory}` : seqHotelCategory,
           addr: addr.trim(),
           date: selectedDate,
           minPrice: filterOn ? priceRange.lowerBound : null,
           maxPrice: filterOn ? priceRange.upperBound : null,
         });
-
+  
         if (status === 200) {
           data.forEach((hotel) => list.push(hotel));
         }
       }
-      
-      return list;
+  
+      return searchValue
+        ? list.filter(
+            (item) =>
+              item.addr.includes(searchValue) ||
+              item.name.includes(searchValue) ||
+              item.addr.includes(searchValue)
+          )
+        : list;
     }
     return [];
   };
+
 
   const filterHotel = (hotelList) => {
     const filtered = [];
     for (let hotel of hotelList) {
       let includeAllSelectedOptions = true;
       for (let option of selectedOptions) {
-        console.log(option, hotel[option]);
+        
         if (hotel[option] === false) {
           includeAllSelectedOptions = false;
           break;
@@ -111,16 +149,21 @@ const List = () => {
 
   const resetHotelList = async () => {
     const list = await fetchHotelList();
-    if (filterOn) setHotelList(filterHotel(list));
-    else setHotelList(list);
+    
+    if (filterOn) {
+      setHotelList(filterHotel(list.filter((item) => item.addr.includes(subAddress))));
+    } else {
+      setHotelList(list);
+    }
   };
   useEffect(() => {
-    console.log(hotelList);
+    
   }, [hotelList]);
-  
+
   useEffect(() => {
+    
     resetHotelList();
-  }, [seqHotelCategory, subAddress, date]);
+  }, [seqHotelCategory, subAddress, date, searchValue]);
 
   const toggleOption = (e) => {
     const { name } = e.target;
@@ -130,12 +173,12 @@ const List = () => {
       setOptions((prev) => [...prev, name]);
     }
   };
-  
+
   const resetOptions = () => {
     setPriceRange({ lowerBound: 0, upperBound: 300000, value: [0, 300000] });
     setOptions([]);
   };
-  
+
   const isActiveOption = (option) => {
     if (selectedOptions.includes(option)) {
     }
@@ -714,9 +757,8 @@ const List = () => {
                       {HotelOptionData.map((item, index) => (
                         <div className="col p-2" key={index}>
                           <button
-                            className={`btn btn-outline-dark container-fluid ${
-                              isActiveOption(item.key) ? "active" : ""
-                            }`}
+                            className={`btn btn-outline-dark container-fluid ${isActiveOption(item.key) ? "active" : ""
+                              }`}
                             data-bs-toggle="button"
                             name={item.key}
                             onClick={toggleOption}
@@ -797,18 +839,38 @@ const List = () => {
           <div className="container">
             <div className="row">
               {hotelList.length !== 0 ? (
-                hotelList.map((item, idx) => (
-                  <div className="col-xl-4 col-lg-6" key={idx}>
-                    <Link
-                      to={"/detail/" + item.seqHotel}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <Col>
-                        <HotelItemCard item={item} />
-                      </Col>
-                    </Link>
-                  </div>
-                ))
+                searchValue
+                  ? hotelList
+                    .filter((item) => {
+                      
+                      return Object.values(item).some((value) =>
+                        String(value).toLowerCase().includes(searchValue.toLowerCase())
+                      );
+                    })
+                    .map((item, idx) => (
+                      <div className="col-xl-4 col-lg-6" key={idx}>
+                        <Link
+                          to={"/detail/" + item.seqHotel}
+                          style={{ textDecoration: "none" }}
+                        >
+                          <Col>
+                            <HotelItemCard item={item} />
+                          </Col>
+                        </Link>
+                      </div>
+                    ))
+                  : hotelList.map((item, idx) => (
+                    <div className="col-xl-4 col-lg-6" key={idx}>
+                      <Link
+                        to={"/detail/" + item.seqHotel}
+                        style={{ textDecoration: "none" }}
+                      >
+                        <Col>
+                          <HotelItemCard item={item} />
+                        </Col>
+                      </Link>
+                    </div>
+                  ))
               ) : (
                 <div className="mt-5">
                   <h1>해당 카테고리에 숙소가 아직 없습니다.</h1>
@@ -825,3 +887,5 @@ const List = () => {
 };
 
 export default List;
+
+
