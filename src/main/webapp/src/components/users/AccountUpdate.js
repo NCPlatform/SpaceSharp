@@ -347,10 +347,15 @@ const initializeNaverLogin = () => {
 
   // 회원탈퇴
 const handleDeleteUser = () => {
+  const data ={
+    name: deleteName,
+    password: deletePassword,
+  };
+
   if(userDTO.name === deleteName && userDTO.password === deletePassword ){
   axios
     // .post('/user/deleteUser', null, { params: userDTO })
-    .post('/user/deleteUser', userDTO, {
+    .post('/user/deleteUser', data, {
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
@@ -364,7 +369,7 @@ const handleDeleteUser = () => {
     .catch((error) => console.log(error));
   
   }else{
-    alert('회원정보가 일치하지 않습니다. 다시 입력하세요!');
+    alert('회원정보가 일치하지 않습니다. 다시 입력하세요!');  
     setDeleteName('');
     setDeletePassword('');
   }

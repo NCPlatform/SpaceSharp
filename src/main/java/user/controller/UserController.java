@@ -233,6 +233,16 @@ public class UserController {
     	}
     }
     
+    @PostMapping("/deleteUser")
+    public ResponseEntity<String> deleteUser(@RequestBody Map<String, String> deleteUserData) {
+        try {
+            userService.deleteUser(deleteUserData.get("name"), deleteUserData.get("password"));
+            return new ResponseEntity<>("회원 삭제가 완료되었습니다.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("회원 삭제에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
     
 	@PostMapping(value = "mainPage")
 	@ResponseBody

@@ -18,16 +18,15 @@ public interface UserDAO extends JpaRepository<UserDTO, String> {
 
 	UserDTO findByEmail(String email);
 	
-	void deleteByEmail(String email);
-	
+    void delete(UserDTO userDTO);
+    
+    UserDTO findByNameAndPassword(String name, String password);
 
 	
 
 
 
 	
-
-
 
 
 
@@ -35,6 +34,7 @@ public interface UserDAO extends JpaRepository<UserDTO, String> {
 	Page<UserDTO> findAllByUsergradeLessThan(Pageable pageable, int i);
 
 	Page<UserDTO> findAllByUsergrade(Pageable pageable, int i);
+
 
 
 

@@ -41,7 +41,9 @@ public interface UserService {
 	
 	public void updateIsNaver(String email, boolean isnaver);
 	
+	public boolean updateUserNaverStatus(String userEmail, boolean isnaver);
 
+	public void deleteUser(String name, String password);
     
 	public String getHotelName(int seqHotel);
 
@@ -86,7 +88,7 @@ public interface UserService {
 	
 	public Map<String, Object> mainPage();
 	
-	public boolean updateUserNaverStatus(String userEmail, boolean isnaver);
+	
 
 
 

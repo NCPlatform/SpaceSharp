@@ -73,6 +73,16 @@ public class UserServiceImpl implements UserService {
         userDAO.save(userDTO);
     }
 	
+	@Override
+	public void deleteUser(String name, String password) {
+		UserDTO userDTO = userDAO.findByNameAndPassword(name, password);
+		
+		if (userDTO != null) {
+			userDAO.delete(userDTO);
+		} else {
+			throw new RuntimeException("사용자를 찾을 수 없습니다.");
+		}
+	}
 	
 	
 	@Override
@@ -278,8 +288,7 @@ public class UserServiceImpl implements UserService {
 	public Page<BoardDTO> list (Pageable pageable, int seqRefSeqBoard) {
 		return boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
 	}
-
-
+	
 	
 	
 	
