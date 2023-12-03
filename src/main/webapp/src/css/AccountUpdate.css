@@ -2,10 +2,15 @@
     .profileInfo{
       font-family: 'NanumBarunGothic';
     }
+
+    .nickProfile1{
+      font-family: 'NanumBarunGothic';
+      font-size: 22px;
+    }
   
     .favorInfoDiv{
       background-color: blueviolet;
-      padding-top: 1%;
+      padding-top: 3%;
       padding-bottom: 1%;
       border-radius: 4px;
       /*박스움직임*/
@@ -35,7 +40,7 @@
     .headerPtag{
     text-align: center;
     font-weight: bold;
-    font-size: 24px;
+    font-size: 32px;
     width : 100%;
     background-color: #f5d682;
     border: 1px solid #f5d682;
@@ -45,9 +50,12 @@
     .profilebox1 {
     border-radius: 15px;
     background-color: aliceblue;
+    width: 17rem;
+    height: 19rem;
     margin: 5% 0% 0% 30%;
     padding: 2%;
     float: left;
+
     /*박스 움직임*/
     background-color: aliceblue;
     overflow: hidden;
@@ -63,7 +71,7 @@
     width: 450px;
     border-radius: 15px;
     background-color: aliceblue;
-    margin: 5% 0 0 10%;
+    margin: 5% 0 0 0%;
     padding: 1%;
     float: left;
     /*박스 움직임*/

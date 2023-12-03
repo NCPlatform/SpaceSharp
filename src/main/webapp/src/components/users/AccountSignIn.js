@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../../css/AccountSignIn.css';
-import naverBtn from '../../image/naverBtn.png';
-import kakaoBtn from '../../image/kakaoBtn.png';
 import kakaoLogin from '../../image/kakaoLogin.png';
 import axios from 'axios';
 import PopupPostCode from './PopupPostCode';
@@ -475,13 +473,7 @@ const SignIn = ({ userInfo }) => {
               </p>
               <img src= { kakaoLogin }  style={{ width: '200px', height: '60px', cursor: 'pointer'  }} alt='카카오 로그인' onClick={loginHandler} />             
             </div>
-
-            {/* <div className={`d-flex flex-column align-items-center ${styles.loginButtons}`}>
-                <div>
-                <img src= { kakaoLogin }  style={{ width: '200px', height: '62px',  cursor: 'pointer'  }} alt='카카오 로그인' onClick={loginHandler} />
-                </div>
-            </div> */}
-
+            
           </div>
         <p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
           또는
