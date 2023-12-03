@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import '../../css/AccountSignIn.css';
 import naverBtn from '../../image/naverBtn.png';
 import kakaoBtn from '../../image/kakaoBtn.png';
+import kakaoLogin from '../../image/kakaoLogin.png';
 import axios from 'axios';
 import PopupPostCode from './PopupPostCode';
 import { useNavigate } from 'react-router-dom';
@@ -390,7 +391,17 @@ const SignIn = ({ userInfo }) => {
   
 
   const onChange = (e) => {
-    setUserDTO({ ...userDTO, [e.target.name]: e.target.value });
+    // 입력이 전화번호인지 확인
+    if (e.target.name === 'tel') {
+      // 숫자만 허용하도록 정규 표현식을 사용하여 필터링
+      const 숫자값 = e.target.value.replace(/\D/g, '');
+      
+      // 상태를 숫자값으로 업데이트
+      setUserDTO({ ...userDTO, [e.target.name]: 숫자값 });
+    } else {
+      // 다른 필드에 대해서는 기존 방식대로 상태를 업데이트
+      setUserDTO({ ...userDTO, [e.target.name]: e.target.value });
+    }
   };
 
 
@@ -408,7 +419,7 @@ const SignIn = ({ userInfo }) => {
     const requiredFields = ['email', 'name', 'nickname', 'password', 'passwordChk', 'addr', 'tel'];
     for (const field of requiredFields) {
       if (!userDTO[field]) {
-        setReadCheck(`${field === 'passwordChk' ? '비밀번호 확인 란 ' : field.toUpperCase()}을(를) 입력해주세요!`);
+        setReadCheck(`${field === 'passwordChk' ? '비밀번호 확인 란 ' : field.toUpperCase()} 이 비어있거나 형식에 맞지않습니다.다시 입력해주세요!`);
         return; // 회원가입을 중지하고 함수를 빠져나감
       }
     }
@@ -419,6 +430,7 @@ const SignIn = ({ userInfo }) => {
       setReadCheck('비밀번호와 비밀번호 확인이 일치하지 않습니다. 다시 확인해주세요!');
       return; // 회원가입을 중지하고 함수를 빠져나감
     }
+
 
     // 추가적인 유효성 검사 로직은 여기에 추가
 
@@ -454,25 +466,28 @@ const SignIn = ({ userInfo }) => {
     <>
       <div className="WriteBox">
         <h2 className="h2Title">회 원 가 입</h2>
-       
-          <div className={`d-flex flex-column align-items-center ${styles.loginButtons}`}>
-            <p id="naverIdLogin"  className={`${styles.naverLoginBtn} my-2`}>
-              네이버 로그인
-            </p>
-          </div>
-          <div className={`d-flex flex-column align-items-center ${styles.loginButtons}`}>
-            <div style={{width: "17rem"}}>
-              <p className={`${styles.kakaoLoginBtn} my-2`} onClick={loginHandler}>
-                카카오로 로그인
-              </p>
-            </div>
-          </div>
 
+          <div className='socialLogin'>
+
+            <div className={`d-flex flex-column align-items-center ${styles.loginButtons}`} >
+              <p id="naverIdLogin"  className={`${styles.naverLoginBtn}`} style={{ width: '300px', height: '60px' }}>
+                네이버 로그인
+              </p>
+              <img src= { kakaoLogin }  style={{ width: '200px', height: '60px', cursor: 'pointer'  }} alt='카카오 로그인' onClick={loginHandler} />             
+            </div>
+
+            {/* <div className={`d-flex flex-column align-items-center ${styles.loginButtons}`}>
+                <div>
+                <img src= { kakaoLogin }  style={{ width: '200px', height: '62px',  cursor: 'pointer'  }} alt='카카오 로그인' onClick={loginHandler} />
+                </div>
+            </div> */}
+
+          </div>
         <p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
           또는
         </p>
 
-        <input type="email" className="WriteInputBox" value={userDTO.email} name="email" onChange={(e) => onChange(e)} onBlur={ onFocusEmail } placeholder="이메일" />
+        <input type="email" className="WriteInputBox" value={userDTO.email} name="email" onChange={(e) => onChange(e)} onBlur={ onFocusEmail } placeholder="이메일( @를 포함한 이메일 형식으로 입력하세요 )" />
         <br />
         <input type="text" className="WriteInputBox" name="name" onChange={(e) => onChange(e)} placeholder="이름 " />
         <input type="text" className="WriteInputBox" value={userDTO.nickname} name="nickname" onChange={(e) => onChange(e)} placeholder="닉네임" />
@@ -489,10 +504,10 @@ const SignIn = ({ userInfo }) => {
         <input type="text" className="WriteAddrInputBox" name="addr" value={userDTO.addr}
         onChange={(e) => onChange(e)} placeholder="주소(우편번호)" />
         <button className="addrBtn" onClick={() => setModalVisible(true)}>
-          우편번호 검색
+        우편번호 검색
         </button>
 
-        <input type="text" className="WriteInputBox" name="tel" onChange={(e) => onChange(e)} placeholder="휴대폰 번호" />
+        <input type="text" className="WriteInputBox" name="tel" onChange={(e) => onChange(e)} placeholder="휴대폰 번호 ( -를 제외하고 입력하세요 )" />
 
         {/* 약관동의 */}
         <p>
