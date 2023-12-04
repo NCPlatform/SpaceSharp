@@ -268,22 +268,22 @@ const Main = () => {
 
       {/* Event */}
       {/* Carousel */}
-      <div className="container">
+      <div className="container mt-3 mt-3">
         <div
-          id="carouselExample"
+          id="carouselExample2"
           className="carousel slide"
           data-bs-ride="carousel"
         >
           <div className="carousel-inner rounded">
             {eventList &&
               eventList
-                .filter(
-                  (item) =>
-                    new Date(item.finishDate).toLocaleDateString("ko-KR") >=
-                    new Date().toLocaleDateString("ko-KR")
-                )
+                .filter((item) => new Date(item.finishDate) >= new Date())
                 .map((item, index) => (
-                  <div className="carousel-item active" data-bs-interval="3000">
+                  <div
+                    className="carousel-item active"
+                    data-bs-interval="3000"
+                    key={index}
+                  >
                     <img
                       src={item.mainImg}
                       className="d-block w-100"
@@ -299,6 +299,44 @@ const Main = () => {
                   </div>
                 ))}
           </div>
+          <button
+            className="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselExample2"
+            data-bs-slide="prev"
+            style={{ margin: 0, padding: 0, left: 0, width: "5%" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="50"
+              height="50"
+              fill="currentColor"
+              className="bi bi-caret-left-fill"
+              viewBox="0 0 16 16"
+            >
+              <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
+            </svg>
+            <span className="visually-hidden">Previous</span>
+          </button>
+          <button
+            className="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselExample2"
+            data-bs-slide="next"
+            style={{ margin: 0, padding: 0, right: 0, width: "5%" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="50"
+              height="50"
+              fill="currentColor"
+              className="bi bi-caret-right-fill"
+              viewBox="0 0 16 16"
+            >
+              <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+            </svg>
+            <span className="visually-hidden">Next</span>
+          </button>
         </div>
       </div>
 
@@ -329,15 +367,6 @@ const Main = () => {
                 <ReviewItemCard reviewListItem={item} />
               </div>
             ))}
-        </div>
-      </div>
-      <div className="container mt-5">
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-          <div className="px-3">
-            <div className="card">
-              <h1>게임</h1>
-            </div>
-          </div>
         </div>
       </div>
       <Footer />

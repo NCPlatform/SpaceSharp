@@ -91,6 +91,7 @@ public class AdminServiceImpl implements AdminService {
 		}
 		
 		map.put("deadline",eventDAO.findAllByFinishDateBetween(calendar.getTime(), new Date()));
+		map.put("couponList", couponDAO.findAll());
 		
 		return map;
 	}

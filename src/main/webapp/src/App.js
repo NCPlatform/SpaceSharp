@@ -16,7 +16,7 @@ import HotelList from "./components/users/HotelList";
 import HotelDetail from "./components/users/HotelDetail";
 import HotelReserve from "./components/users/HotelReserve";
 import HotelInMap from "./components/users/HotelInMap";
-import HotelReviewTest from "./components/users/HotelReviewTest";
+import HotelReviewList from "./components/users/HotelReviewList";
 
 // Hotel Reserve Check
 import HotelReserveList from "./components/users/HotelReserveList";
@@ -52,6 +52,8 @@ import ManagerPlaceInfo from "./components/managers/ManagerPlaceInfo";
 import ManagerRoomInfo from "./components/managers/ManagerRoomInfo";
 import ManagerChat from "./components/managers/ManagerChat";
 import UserChat from "./components/users/UserChat";
+import NavEvent from "./components/users/NavEvent";
+import Board from "./components/users/Board";
 
 function App() {
   return (
@@ -73,7 +75,7 @@ function App() {
             <Route path=":seqRoom" element={<HotelReserve />} />
           </Route>
           <Route path="hotelReserveList" element={<HotelReserveList />} />
-          <Route path="hotelReviewTest" element={<HotelReviewTest />} />
+          <Route path="hotelReviewList" element={<HotelReviewList />} />
           <Route
             path="hotelReserveListDetail"
             element={<HotelReserveDetail />}
@@ -81,6 +83,9 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="signin" element={<Signin />} />
           <Route path="update" element={<Update />} />
+          <Route path="board">
+            <Route path=":seqBoardCategory" element={<Board />} />
+          </Route>
           <Route path="boardList">
             <Route path=":page" element={<BoardList />} />
           </Route>
@@ -97,6 +102,8 @@ function App() {
           <Route path="KakaoRedirect" element={<KakaoRedirect />} />
           <Route path="PopupPostCode" element={<PopupPostCode />} />
           <Route path="chat" element={<UserChat />} />
+          {/* Nav */}
+          <Route path="NavEvent" element={<NavEvent />} />
         </Route>
         <Route path="/manager">
           <Route index element={<ManagerDashBoard />} />

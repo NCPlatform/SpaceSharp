@@ -3,14 +3,16 @@ import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import Calendar from "react-calendar";
 import Swal from "sweetalert2";
+import EventCouponAdd from "./EventCouponAdd";
 
-const EventAdd = () => {
+const EventAdd = ({ couponList }) => {
   const [eventDTO, setEventDTO] = useState({
     finishDate: "",
     mainImg: "",
     title: "",
     content: "",
     img: "",
+    couponSeq: "",
   });
 
   const [date, onDate] = useState(new Date());
@@ -176,13 +178,37 @@ const EventAdd = () => {
       </div>
       <div className="mb-2 p-2">
         <label htmlFor="content" className="form-label">
+          쿠폰 추가
+        </label>
+        <p className="p-0 m-0 text-danger" style={{ fontSize: "0.8rem" }}>
+          ※선택하지 않는다면 유저 페이지의 쿠폰 발급 버튼이 생성되지 않습니다.
+        </p>
+        <div className="d-grid gap-2 p-2">
+          <button
+            className="btn btn-secondary"
+            data-bs-toggle="modal"
+            data-bs-target="#couponSelectList"
+          >
+            쿠폰 추가
+          </button>
+        </div>
+      </div>
+      {
+        <EventCouponAdd
+          couponList={couponList}
+          eventDTO={eventDTO}
+          setEventDTO={setEventDTO}
+        />
+      }
+      <div className="mb-2 p-2">
+        <label htmlFor="content" className="form-label">
           이벤트 종료날짜
         </label>
         <Calendar onChange={onDate} value={date} className="rounded" />
       </div>
       <div className="d-grid gap-2 p-2">
         <button className="btn btn-dark" onClick={() => onSubmit()}>
-          버튼
+          생성
         </button>
       </div>
     </div>

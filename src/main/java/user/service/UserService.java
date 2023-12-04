@@ -97,6 +97,16 @@ public interface UserService {
 	public Integer saveReservation(ReservationDTO reservationDTO);
 
 	public String saveReceipt(ReceiptDTO receiptDTO);
+
+	public Map<String, Object> getEventList();
+
+	public Map<String, Object> getReservationList(Pageable pageable, String email);
+
+	public Map<String, Object> getReviewList(Pageable pageable, String email);
+
+	public Map<String, Object> getQnAList(Pageable pageable, String email);
+
+	public Map<String, Object> getBoardList(Pageable pageable, String searchKey, int seqBoardCategory);
 	
 
 

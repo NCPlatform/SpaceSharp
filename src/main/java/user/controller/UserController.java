@@ -149,6 +149,22 @@ public class UserController {
 	public  List<ReservationDTO> getReservationListByRoom(@RequestParam int seqRoom, @RequestParam Date startDate, @RequestParam Date endDate){
 		return userService.getReservationListByRoom(seqRoom, startDate, endDate);
 	}
+	
+	@GetMapping("getReservationList")
+	public  Map<String, Object> getReservationList(@PageableDefault(page=0, size=5, sort="seqReservation", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String email){
+		return userService.getReservationList(pageable, email);
+	}
+	
+	@GetMapping("getReviewList")
+	public  Map<String, Object> getReviewList(@PageableDefault(page=0, size=5, sort="seqComment", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String email){
+		return userService.getReviewList(pageable, email);
+	}
+	
+	@GetMapping("getQnAList")
+	public  Map<String, Object> getQnAList(@PageableDefault(page=0, size=5, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String email){
+		return userService.getQnAList(pageable, email);
+	}
+	
 	@PostMapping("/reservation")
 	  public ResponseEntity<String> saveReservation(@RequestBody ReservationDTO reservationDTO) {
 	    try {
@@ -224,8 +240,14 @@ public class UserController {
 	@GetMapping(path = "getBoard")
 	@ResponseBody
 	public Optional<BoardDTO> getBoard(@RequestParam int seqBoard){
-	    System.out.println("출력 : " + userService.getBoard(seqBoard));
 		return userService.getBoard(seqBoard);
+	}
+	
+	@GetMapping(path = "getBoardList")
+	@ResponseBody
+	public Map<String,Object> getBoardList(@PageableDefault(page=0, size=10, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable, String searchKey, int seqBoardCategory){
+	    
+		return userService.getBoardList(pageable, searchKey, seqBoardCategory);
 	}
 	
 	@PutMapping(path = "update")
@@ -337,6 +359,11 @@ public class UserController {
 	@GetMapping(value="getHotelList")
 	public Map<String,Object> getHotelList(){
 		return userService.getHotelList();
+	}
+	
+	@GetMapping(value="getEventList")
+	public Map<String,Object> getEventList(){
+		return userService.getEventList();
 	}
 	
 	public String uploadObject(List<MultipartFile> list, String path) {

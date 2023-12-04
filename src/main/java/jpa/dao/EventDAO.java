@@ -20,4 +20,6 @@ public interface EventDAO extends JpaRepository<EventDTO, Integer> {
 
 	List<EventDTO> findAllByFinishDateLessThanEqualAndStartDateGreaterThanEqual(Date date, Date date2);
 
+	List<EventDTO> findAllByFinishDateAfter(Date date);
+
 }

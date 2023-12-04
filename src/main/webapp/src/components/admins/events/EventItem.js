@@ -37,11 +37,9 @@ const EventItem = ({ item }) => {
   return (
     <div
       className={
-        new Date(item.finishDate).toLocaleDateString("ko-KR") <
-        new Date().toLocaleDateString("ko-KR")
+        new Date(item.finishDate) < new Date()
           ? "card bg-opacity-10 mb-3 bg-secondary"
-          : new Date(item.finishDate).toLocaleDateString("ko-KR") ===
-            new Date().toLocaleDateString("ko-KR")
+          : new Date(item.finishDate) === new Date()
           ? "card bg-opacity-10 mb-3 bg-danger-subtle"
           : "card bg-opacity-10 mb-3"
       }
