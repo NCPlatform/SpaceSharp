@@ -76,6 +76,8 @@ public class ManagerController {
 		String holiday = commaClearStr(hotelDTO.getHoliday(), true);
 		if(holiday.equals("")) {
 			hotelDTO.setHoliday("없음");
+		}else {
+			hotelDTO.setHoliday(holiday);
 		}
 		
 		System.out.println(hotelDTO.toString());
@@ -90,6 +92,19 @@ public class ManagerController {
 	@PostMapping(value = "addedPlaceWithoutImage")
 	@ResponseBody
 	public void addedPlaceWithoutImage(@RequestPart HotelDTO hotelDTO) {
+		// 쉼표 빼기 작업
+		hotelDTO.setSeqHotelCategory(commaClearStr(hotelDTO.getSeqHotelCategory(), true));
+		hotelDTO.setKeyword(commaClearStr(hotelDTO.getKeyword(), false));
+		hotelDTO.setFacilities(commaClearStr(hotelDTO.getFacilities(), false));
+		hotelDTO.setAlert(commaClearStr(hotelDTO.getAlert(), false));
+		hotelDTO.setRefund(commaClearStr(hotelDTO.getRefund(), false));
+		String holiday = commaClearStr(hotelDTO.getHoliday(), true);
+		if(holiday.equals("")) {
+			hotelDTO.setHoliday("없음");
+		}else {
+			hotelDTO.setHoliday(holiday);
+		}
+				
 		System.out.println("requested addedPlaceWithoutImage : only HotelDTO");
 		System.out.println(hotelDTO.toString());
 		managerService.addPlace(hotelDTO);
@@ -98,6 +113,7 @@ public class ManagerController {
 	@PostMapping(value = "addedRoomWithoutImage")
 	@ResponseBody
 	public void addedRoomWithoutImage(@RequestPart RoomDTO roomDTO) {
+		
 		System.out.println("requested addedRoomWithoutImage : only roomDTO");
 		System.out.println(roomDTO.toString());
 		managerService.addRoom(roomDTO);
@@ -179,13 +195,24 @@ public class ManagerController {
 		
 		String value = "";
 		for(String a : list) {
-			if(value.equals("")) {
-				value += a;
-			}else {
-				if(blank)
-					value +=", "+a;
-				else
-					value +=","+a;
+			
+			if(!a.isBlank()){
+				if(value.equals("")) {
+					if(a.strip().equals("없음")) // FOR ONLY HOLIDAYS
+						a = "";
+						value += a.strip();
+				}else {
+					if(blank) {
+						if(a.strip().equals("없음")) // FOR ONLY HOLIDAYS
+							a = "";
+						value +=", "+a.strip();
+					}
+					else {
+						if(a.strip().equals("없음")) // FOR ONLY HOLIDAYS
+							a = "";
+						value +=","+a.strip();
+					}
+				}	
 			}
 		}
 		System.out.println(value);

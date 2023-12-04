@@ -33,28 +33,6 @@ const ManagerPlaceInfo = () => {
         rounge: false, mirror: false, bbq: false, doorlock: false
 
     })
-
-    const [retrieveDTO, setRetrieveDTO] = useState({
-            
-        name: '', subscribe: '', mainKeyword: '', seqHotelCategory: '',
-        seqHotel: hotelSeq, img: '',
-        keyword: '', addr: '', ownerEmail: session.email,
-        workinghour: '', holiday: '', placeEx: '', 
-        facilities: '', alert: '', refund: '',
-        coupon: false, TV: false, internet: false, 
-        copy: false, whiteboard: false, mic: false, 
-        cooking: false, food: false, alcohol: false,
-        washing: false, parking: false, smoke: false,
-        animal: false, pc: false,
-        socket: false, open24: false, noHoliday: false, 
-        restaurant: false, freeFood: false, locker: false,
-        mailService: false, kitchen: false, waterFurifier: false, 
-        catering: false, heater: false, airConditioner: false, // airconditional -> airconditioner
-        fax: false, wareHouse: false, percelService: false, 
-        privateToilet: false, fittingRoom: false, roofTop: false,
-        rounge: false, mirror: false, bbq: false, doorlock: false
-
-    })
     
 
     const {name, subscribe, mainKeyword, seqHotelCategory, keyword, addr, workinghour, holiday,
@@ -136,23 +114,6 @@ const ManagerPlaceInfo = () => {
         setFile(e.target.files)
     }
 
-    const addInput = (name, mininame) => {
-        const newInput = document.createElement('input')
-        newInput.setAttribute('type', 'text')
-        newInput.setAttribute('name', name) 
-        newInput.setAttribute('style', 'width:75%')
-        newInput.addEventListener('change', () => {
-            settingInputs(name)
-        })
-        
-        const InputAddBtn = document.getElementById(mininame+'AddBtn')
-    
-        const br = document.createElement('br')
-        InputAddBtn.after(br)
-        br.after(newInput)
-
-    }
-
     const settingInputs = (name) => {
         const inputInfo = document.getElementsByName(name)
         let val = "";
@@ -228,7 +189,6 @@ const ManagerPlaceInfo = () => {
                 seq: hotelSeq
             }
         }).then(res => {setHotelDTO(res.data)
-                        setRetrieveDTO(res.data)
                         setIsReady(true)
 
                         }).catch(e => console.log(e))
@@ -271,15 +231,7 @@ const ManagerPlaceInfo = () => {
       }
 
       const isCancel = () => {
-        console.log('취소 눌렀음')
-        setHotelDTO(retrieveDTO)
-        setImageList([])
-        setModifyBit(false)
-        const elements = document.getElementsByClassName('DTOs');
-
-        for (const element of elements) {
-            element.disabled = true;
-        }
+       window.location.reload()
       }
     
     // ======================================== CSS
@@ -465,9 +417,18 @@ const ManagerPlaceInfo = () => {
                                 </td>
                             </tr>
                             <tr>
-                                <td>영업시간 & 휴무일</td>
+                                <td>영업시간 & 휴무일
+                                    {
+                                        modifyBit === true && 
+                                        <div>
+                                            
+                                            <span style = {{fontSize: '0.9em'}}>영업 시간은 변경 시에만<br/>입력해 주세요.</span>
+                                            
+                                        </div>
+                                    }
+                                </td>
                                 <td>
-                                    <input style = {styleE} type = 'number' name = 'openTime' onChange = {settingOn} value = {isReady === true && workinghour.split('~')[0]} className = 'DTOs'/>시부터 <input style = {styleE} type = 'number' name =  'closeTime' onChange = {settingOn} onBlur = {fixWorkTime} value = {isReady === true && workinghour.split('~')[1].slice(0,-1)} className = 'DTOs'/>시까지
+                                    <input style = {styleE} type = 'number' name = 'openTime' onChange = {settingOn} Value = {modifyBit === false && isReady === true && workinghour.split('~')[0]} className = 'DTOs'/>시부터 <input style = {styleE} type = 'number' name =  'closeTime' onChange = {settingOn} onBlur = {fixWorkTime} Value = {modifyBit === false && isReady === true && workinghour.split('~')[1].slice(0,-1)} className = 'DTOs'/>시까지
                                     <br/>
                                     <div>
                                         <table>
@@ -513,55 +474,55 @@ const ManagerPlaceInfo = () => {
                                             <tr>
                                                 <td>이용 8일 전&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {refund.split(',')[0]} onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[0]: undefined}   onBlur = {() => settingInputs('refund')} />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 7일 전&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {refund.split(',')[1]}  onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[1]: undefined}   onBlur = {() => settingInputs('refund')}  />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 6일 전&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {refund.split(',')[2]} onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[2]: undefined}   onBlur = {() => settingInputs('refund')}  />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 5일 전&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {refund.split(',')[3]} onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[3]: undefined}   onBlur = {() => settingInputs('refund')}  />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 4일 전&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {refund.split(',')[4]} onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[4]: undefined}   onBlur = {() => settingInputs('refund')} />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 3일 전&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {refund.split(',')[5]} onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[5]: undefined}    onBlur = {() => settingInputs('refund')} />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 2일 전&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {refund.split(',')[6]} onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[6]: undefined}   onBlur = {() => settingInputs('refund')}  />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 전날&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {refund.split(',')[7]} onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[7]: undefined}    onBlur = {() => settingInputs('refund')}  />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 당일&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {refund.split(',')[8]} onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[8]: undefined}   onBlur = {() => settingInputs('refund')} />
                                                 </td>
                                             </tr>
 

@@ -15,38 +15,22 @@ const ManagerRoomInfo = () => {
 
         const [roomDTO, setRoomDTO] = useState({
             seqHotel: '', //<< 이 값은 추후 hotelSeq로 줄 것
-            name: '', 
+            name: '', seqRoom:'', 
             price: 0, normalExplain: '',
             placeSize: '', people: '', datetime: '', // << 최소 예약 시간
             reserveRule: '', img: ''
         })
 
-        const {normalExplain, name, price, placeSize, people, datetime, reserveRule, img} = roomDTO
+        const {normalExplain, name, price, datetime, reserveRule, img} = roomDTO
 
-
-        const [retrieveDTO, setRetrieveDTO] = useState({
-            seqHotel: '', //<< 이 값은 추후 hotelSeq로 줄 것
-            name: '', 
-            price: 0, normalExplain: '',
-            placeSize: '', people: '', datetime: '', // << 최소 예약 시간
-            reserveRule: '', img: ''
-        })
 
         const [imageList, setImageList] = useState([])
 
         const [file, setFile] = useState('')
 
-        const [isMeter, setIsMeter] = useState(true)
-
-        const [isFinished, setIsFinished] = useState(false)
-
         const fileRef = useRef()
         
         const [modifyBit, setModifyBit] = useState(false)
-
-        const [isReady, setIsReady] = useState(false) // TextEditor 컴포넌트 로드
-
-        const [numReady, setNumReady] = useState(false)
 
         const [peopleMin, setPeopleMin] = useState(0)
 
@@ -54,14 +38,14 @@ const ManagerRoomInfo = () => {
 
         const [size, setSize] = useState(0)
 
-        const [forceRerender, setForceRerender] = useState(0);
 
     // functions =====================================================
 
-        const insertData = (e) => { // input onChange
+        const insertData = (e) => { // input onChange / 이름, 면적, 대여료, 대여 가능 시간, 총 예약인원
             let {name, value} = e.target
             
             console.log(name+ 'value: '+ value )
+            value = name === 'placeSize' && value+ 'm2'
             setRoomDTO({
                 ...roomDTO, [name]: value
             })
@@ -117,54 +101,24 @@ const ManagerRoomInfo = () => {
                 seq: roomSeq
             }
         }).then(res => {setRoomDTO(res.data)
-                        setRetrieveDTO(res.data)
-                        setIsReady(true)
-                        console.log(res)
+                        doReadyAction(res.data)
+                        console.log(res.data)
                         }).catch(e => console.log(e))
-   
-
-        
+                 
     },[])
 
     useEffect(() => {
-        const elements = document.getElementsByClassName('DTOs');
-
-        for (const element of elements) {
-            element.disabled = modifyBit === true ? false : true
-        }
-
-        axios.post('http://localhost:8080/manager/viewRoomInfo', null, {
-            params: {
-                seq: roomSeq
-            }
-        }).then(res => {setRoomDTO(res.data)
-                        setRetrieveDTO(res.data)
-                        setIsReady(true)
-                        console.log(res)
-                        }).catch(e => console.log(e))
-   
-
-        
-    },[forceRerender])
-
-    const handleForceRerender = () => {
-        setForceRerender(prev => prev + 1);
-      };
-
-    useEffect(() => {
-        console.log('changed isReady! ' + !isReady + ' => '+isReady)
+        console.log('roomDTO value was changed : ')
         console.log(roomDTO)
-        if(isReady){
-            doReadyAction(roomDTO)
-        }
-    },[isReady])
+    },[roomDTO])
+
 
     const doReadyAction = (dto) => {
 
         setSize(dto.placeSize.slice(0, -2))
         setPeopleMin(dto.people.split(' ~ ')[0].slice(3, -1))
         setPeopleMax(dto.people.split(' ~ ')[1].slice(3, -1))
-        setNumReady(true)
+       // setRoomDTO(dto)
     }
 
     const settingModifyBit = () => {
@@ -202,15 +156,7 @@ const ManagerRoomInfo = () => {
       }
 
       const isCancel = () => {
-        console.log('취소 눌렀음')
-        setRoomDTO(retrieveDTO)
-        setImageList([])
-        setModifyBit(false)
-        const elements = document.getElementsByClassName('DTOs');
-
-        for (const element of elements) {
-            element.disabled = true;
-        }
+        window.location.reload()
       }
 
 
@@ -278,7 +224,7 @@ const ManagerRoomInfo = () => {
             ex) <td> 최소 <input type = 'number'> ~ 최대 <input type = 'number'> 명까지 수용 가능</td> (완료)
 
           3. 면적 등록 시 n평 / n제곱미터 변환 기능 구현 (완료)
-
+ 
           4. 룸 등록 완료 후 선택 창 모달 띄우기 > 메인으로 가기 / 숙소 관리로 이동하기 / 새로운 룸 추가하기
 
         */
@@ -287,13 +233,13 @@ const ManagerRoomInfo = () => {
             <Disp_topNav/>
             <div id = 'disp' style = {styleZ}>
                 <form>
-                    <span style = {styleA} onClick={handleForceRerender}>룸 정보 상세보기</span>
+                    <span style = {styleA}>룸 정보 상세보기</span>
                     <table>
                         <tbody>
                             <tr>
                                 <td>룸 이름</td>
                                 <td>
-                                    <input type = 'text'  style = {styleB} name = 'name' value = {isReady === true && name} onChange = {insertData} className = 'DTOs'/>
+                                    <input type = 'text'  style = {styleB} name = 'name' value = {modifyBit === false ? name : undefined} onChange = {insertData} className = 'DTOs'/>
                                     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                                     <Button variant="outline-dark" type = 'button' onClick = {isModify} style = {{display: modifyBit && 'none'}} >수정</Button>        
                                     <Button variant="outline-dark" type = 'button' onClick = {isDelete} style = {{display: modifyBit && 'none'}}>삭제</Button>
@@ -305,7 +251,7 @@ const ManagerRoomInfo = () => {
                                 <td>룸 소개</td>
                                 <td>
                                     <div>
-                                    <TextEditor func = {editorVal} readOnly = {!modifyBit} texthold = 'normalExplain' value = {isReady === true && normalExplain}/>
+                                    <TextEditor func = {editorVal} readOnly = {!modifyBit} texthold = 'normalExplain' value = {normalExplain}/>
                                     </div>
                                     <br/><br/>
                                 </td>
@@ -318,7 +264,7 @@ const ManagerRoomInfo = () => {
                                     <Button variant="outline-dark" onClick = {findClk} style = {{display: modifyBit || 'none'}}>파일 찾아보기</Button> &nbsp;
                                     <br/><span style = {{fontSize: '0.9em'}}>이미지의 순서 변경이나 일부 이미지만 수정은 불가합니다. <br/>파일 추가 시 기존 이미지는 모두 사라집니다.</span>
                                     <Carousel>
-                                        {isReady === true && imageList.length > 0 ? 
+                                        {imageList.length > 0 ? 
                                                 ( imageList.map((item, index) => (
                                                     <Carousel.Item><img key={index} src={item} style={{ width: '100%', height: '300px', objectFit: 'cover' }} alt="" /></Carousel.Item>
                                                     ))) 
@@ -334,7 +280,7 @@ const ManagerRoomInfo = () => {
                                 <td>수용 가능 인원</td>
                                 <td>
                                     <div style = {styleB} id = 'peopleMinMax'>
-                                        <input type = 'number' id = 'min' style = {styleC} className = 'DTOs' value = {numReady === true && peopleMin}/>명부터 <input type = 'number' id = 'max' style = {styleC} onBlur = {settingPeople} className = 'DTOs' value = {numReady === true && peopleMax}/>명까지
+                                        <input type = 'number' id = 'min' style = {styleC} className = 'DTOs' value = { modifyBit === false ? peopleMin : undefined}/>명부터 <input type = 'number' id = 'max' style = {styleC} onBlur = {settingPeople} className = 'DTOs' value = {modifyBit === false ? peopleMax : undefined}/>명까지
                                     </div>
                                 </td>
                             </tr>
@@ -342,37 +288,31 @@ const ManagerRoomInfo = () => {
                                 <td>룸 면적</td>
                                 <td>
                                     <div>
-                                        <input type = 'number' style = {styleD} placeholder = '숫자만 입력' className = 'DTOs' name = 'placeSize' onChange = {insertData} value = { numReady === true && size} />&nbsp;제곱미터
-                                        {/* {
-                                            isMeter === true ? '제곱미터' : '평'
-                                        }&nbsp;<Button variant="outline-dark" type = 'button' onClick = {convertMeter} style = {{display : modifyBit === false && 'none'}}>{
-                                            isMeter === true ? '평수로 입력하기' : '제곱미터로 입력하기'
-                                        }</Button>  */}
+                                        <input type = 'number' style = {styleD} placeholder = '숫자만 입력' className = 'DTOs' name = 'placeSize' onChange = {insertData} value = {modifyBit === false ? size : undefined} />&nbsp;제곱미터
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>장소 대여료</td>
-                                <td><input type = 'number' style = {styleB} name = 'price' className = 'DTOs' value = {isReady === true && price} placeholder = '시간당 대여료를 입력해 주세요.' onChange = {insertData}/></td>
+                                <td><input type = 'number' style = {styleB} name = 'price' className = 'DTOs' value = { modifyBit === false ? price : undefined} placeholder = '시간당 대여료를 입력해 주세요.' onChange = {insertData}/></td>
                             </tr>
                             
                             <tr>
                                 <td>최소 대여 가능 시간&emsp;</td>
-                                <td><input type = 'number' style = {styleB} name = 'datetime' className = 'DTOs' value = {isReady === true && datetime} placeholder = '숫자만 입력 가능합니다.' onChange = {insertData}/></td>
+                                <td><input type = 'number' style = {styleB} name = 'datetime' className = 'DTOs' value = {modifyBit === false ? datetime : undefined} placeholder = '숫자만 입력 가능합니다.' onChange = {insertData}/></td>
                             </tr>
 
                             <tr>
                                 <td>총 예약인원</td>
-                                <td><input type = 'text' style = {styleB} name = 'reserveRule' className = 'DTOs' value = {isReady === true && reserveRule} onChange = {insertData} placeholder = '이용 인원 관련 규칙을 작성해 주세요.'/></td>
+                                <td><input type = 'text' style = {styleB} name = 'reserveRule' className = 'DTOs' value = { modifyBit === false ? reserveRule : undefined} onChange = {insertData} placeholder = '이용 인원 관련 규칙을 작성해 주세요.'/></td>
                             </tr>
                         </tbody>
                     </table>
                     <br/>
                     <Button variant="outline-dark" type = 'button' onClick = {confirmVals} style = {{display : modifyBit === false && 'none'}}>DTO 값 확인하기</Button>&nbsp;
-                    {
-                        isFinished && <AddFinishModal value = {roomSeq}/>
-                    }
+                    
                 </form>
+                
             </div>
         </div>
     );
