@@ -476,13 +476,8 @@ public class UserServiceImpl implements UserService {
 		System.out.println("header : " + header);
 		System.out.println("payload : " + payload);
 
-		// Payload 디코딩
 		Claims claims = Jwts.parser().setSigningKey(keyIn.getBytes()).parseClaimsJws(token).getBody();
-
-		// 토큰의 만료 시간 확인
 		Date expiration = claims.getExpiration();
-
-		// 현재 시간과 비교하여 토큰 만료 여부 판단
 		if (expiration != null && expiration.before(new Date())) {
 		    throw new Exception("JWT token has expired!");
 		}
