@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../css/AccountUpdate.css';
 import naverBtn from '../../image/naverBtn.png';
 import kakaoBtn from '../../image/kakaoBtn.png';
 import unKnown from '../../image/unKnown.png';
 import EmailAuth from './EmailAuth';
+import { useCookies } from 'react-cookie';
 
 
 //회원정보 수정 페이지
 const AccountUpdate = () => {
+    const [cookies, setCookie, removeCookie] = useCookies(['authSign'])
     const [goAuth, setGoAuth] = useState(false)
     const [email, setEmail] = useState(JSON.parse(window.sessionStorage.getItem('user')).email)
+    const [onChPwd, setOnChPwd] = useState(false) // 비밀번호 변경 모달
+  
+    useEffect(() => {
+
+        cookies.authSign !== undefined ?
+        setOnChPwd(true)
+        :
+        console.log('I HAVE NO COOKIE. '+cookies.authSign)
+
+    },[cookies.authSign])
+
     const doAuth = () => {
         console.log('doAuth');
         setGoAuth(true)
@@ -18,6 +31,10 @@ const AccountUpdate = () => {
     }
     const paramfunc = () => {
         setGoAuth(false)
+    }
+
+    const closeChPwd = () => { // 모달 닫는 함수. 컴포넌트 파라메터로 전달
+        setOnChPwd(false) 
     }
     return (
         <>
@@ -146,6 +163,13 @@ const AccountUpdate = () => {
                                             {
                                                 goAuth === true &&  <EmailAuth userEmail = {email} func = {paramfunc}/>
                                                 
+                                            }
+                                            {
+                                                onChPwd === true && 
+                                                <div>
+                                                <input type = 'password' placeholder='변경할 비밀번호 입력'/>
+                                                <button type = 'button' onClick = {closeChPwd}>닫기</button>
+                                                </div>
                                             }
                                         <br />
                                     </p>

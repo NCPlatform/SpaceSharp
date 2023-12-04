@@ -12,7 +12,6 @@ import { Offcanvas } from 'react-bootstrap';
 
 const NavTest = () => {
   const [sessionUserDTO, setSessionUserDTO] = useState(JSON.parse(sessionStorage.getItem('user')));
-
   const navigator = useNavigate();
 
   return (
@@ -263,6 +262,7 @@ const NavTest = () => {
                         onClick={() => {
                           sessionStorage.clear();
                           window.location.reload();
+
                         }}>
                         로그아웃
                       </span>

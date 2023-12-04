@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { CookiesProvider } from 'react-cookie';
 
 // User
 // Main
@@ -56,66 +57,69 @@ import AuthRequest from './components/users/AuthRequest';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/">
-          <Route index element={<Main />} />
-          <Route path="hotelList">
-            <Route path=":seqHotelCategory" element={<HotelList />} />
+    <CookiesProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/">
+            <Route index element={<Main />} />
+            <Route path="hotelList">
+              <Route path=":seqHotelCategory" element={<HotelList />} />
+            </Route>
+            <Route path="detail">
+              <Route path=":seqHotel" element={<HotelDetail />} />
+            </Route>
+            <Route path="hotelInMap" element={<HotelInMap />} />
+            <Route path="hotelReserve">
+              <Route path=":seqRoom" element={<HotelReserve />} />
+            </Route>
+            <Route path="hotelReserveList" element={<HotelReserveList />} />
+            <Route path="hotelReviewTest" element={<HotelReviewTest />} />
+            <Route path="hotelReserveListDetail" element={<HotelReserveDetail />} />
+            <Route path="login" element={<Login />} />
+            <Route path="signin" element={<Signin />} />
+            <Route path="update" element={<Update />} />
+            <Route path="boardList">
+              <Route path=":page" element={<BoardList />} />
+            </Route>
+            <Route path="boardDetail" element={<BoardDetail />}>
+              <Route path=":paramSeqBoard" element={<BoardDetail />} />
+            </Route>
+            {/* <Route path="/oauth/callback/kakao" element={<KakaoAuth />} /> */}
+            <Route path="boardWrite" element={<BoardWrite />} />
+            <Route path="boardUpdate" element={<BoardUpdate />}>
+              <Route path=":paramSeqBoard" element={<BoardUpdate />} />
+            </Route>
+            <Route path="review" element={<Review />} />
+            <Route path="info" element={<Info />} />
+            <Route path="KakaoRedirect" element={<KakaoRedirect />} />
+            <Route path="PopupPostCode" element={<PopupPostCode />} />
+            <Route path="chat" element={<UserChat />} />
           </Route>
-          <Route path="detail">
-            <Route path=":seqHotel" element={<HotelDetail />} />
-          </Route>
-          <Route path="hotelInMap" element={<HotelInMap />} />
-          <Route path="hotelReserve">
-            <Route path=":seqRoom" element={<HotelReserve />} />
-          </Route>
-          <Route path="hotelReserveList" element={<HotelReserveList />} />
-          <Route path="hotelReviewTest" element={<HotelReviewTest />} />
-          <Route path="hotelReserveListDetail" element={<HotelReserveDetail />} />
-          <Route path="login" element={<Login />} />
-          <Route path="signin" element={<Signin />} />
-          <Route path="update" element={<Update />} />
-          <Route path="boardList">
-            <Route path=":page" element={<BoardList />} />
-          </Route>
-          <Route path="boardDetail" element={<BoardDetail />}>
-            <Route path=":paramSeqBoard" element={<BoardDetail />} />
-          </Route>
-          {/* <Route path="/oauth/callback/kakao" element={<KakaoAuth />} /> */}
-          <Route path="boardWrite" element={<BoardWrite />} />
-          <Route path="boardUpdate" element={<BoardUpdate />}>
-            <Route path=":paramSeqBoard" element={<BoardUpdate />} />
-          </Route>
-          <Route path="review" element={<Review />} />
-          <Route path="info" element={<Info />} />
-          <Route path="KakaoRedirect" element={<KakaoRedirect />} />
-          <Route path="PopupPostCode" element={<PopupPostCode />} />
-          <Route path="chat" element={<UserChat />} />
-        </Route>
-        <Route path="/manager">
-          <Route index element={<ManagerDashBoard />} />
-          <Route path="reservation" element={<ManagerReservation />} />
-          <Route path="addPlace" element={<ManagerAddPlace />} />
-          <Route path="addRoom/:hotelSeq" element={<ManagerAddRoom />} />
-          <Route path="placeInfo/:hotelSeq" element={<ManagerPlaceInfo/>}/>
-          <Route path="roomInfo/:roomSeq" element={<ManagerRoomInfo/>}/>
+          <Route path="/manager">
+            <Route index element={<ManagerDashBoard />} />
+            <Route path="reservation" element={<ManagerReservation />} />
+            <Route path="addPlace" element={<ManagerAddPlace />} />
+            <Route path="addRoom/:hotelSeq" element={<ManagerAddRoom />} />
+            <Route path="placeInfo/:hotelSeq" element={<ManagerPlaceInfo/>}/>
+            <Route path="roomInfo/:roomSeq" element={<ManagerRoomInfo/>}/>
 
-          <Route path="review" element={<ManagerReview />} />
-          <Route path="myPlace" element={<ManagerMyPlace />} />
-          <Route path="chat" element={<ManagerChat />} />
-        </Route>
-        <Route path="/admin">
-          <Route index element={<AdminDashBoard />} />
-          <Route path="user" element={<AdminUser />} />
-          <Route path="coupon" element={<AdminCoupon />} />
-          <Route path="event" element={<AdminEvent />} />
-        </Route>
-        <Route path="/user">
-          <Route path = "authRequest/:token" element = {<AuthRequest/>} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+            <Route path="review" element={<ManagerReview />} />
+            <Route path="myPlace" element={<ManagerMyPlace />} />
+            <Route path="chat" element={<ManagerChat />} />
+          </Route>
+          <Route path="/admin">
+            <Route index element={<AdminDashBoard />} />
+            <Route path="user" element={<AdminUser />} />
+            <Route path="coupon" element={<AdminCoupon />} />
+            <Route path="event" element={<AdminEvent />} />
+          </Route>
+          <Route path="/user">
+            <Route path = "authRequest/:token" element = {<AuthRequest/>} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </CookiesProvider>
+    
   );
 }
 

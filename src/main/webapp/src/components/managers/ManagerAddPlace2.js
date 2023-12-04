@@ -32,7 +32,7 @@ const ManagerAddPlace = () => {
 
         })
 
-        const {seqHotelCategory, holiday, ownerEmail} = hotelDTO
+        const {seqHotelCategory, holiday, ownerEmail, placeEx} = hotelDTO
 
         const [whenOn, setWhenOn]  = useState({
             openTime: 0,
@@ -281,7 +281,7 @@ const ManagerAddPlace = () => {
                                 <td>소개</td>
                                 <td>
                                     <div>
-                                    <TextEditor func = {editorVal} readOnly = {false} texthold = 'placeEx'/>
+                                    <TextEditor func = {editorVal} readOnly = {false} texthold = 'placeEx' value = {placeEx}/>
                                     
                                     </div>
                                     <br/><br/>
