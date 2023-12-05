@@ -25,13 +25,10 @@ public interface UserDAO extends JpaRepository<UserDTO, String> {
     
     UserDTO findByNameAndPassword(String name, String password);
 
-
 	Page<UserDTO> findAllByUsergradeLessThan(Pageable pageable, int i);
 
 	Page<UserDTO> findAllByUsergrade(Pageable pageable, int i);
 
 	List<UserDTO> findAllByEmail(String memberemail);
-
-	UserDTO findByEmail(String email);
 
 }

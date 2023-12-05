@@ -45,8 +45,6 @@ public interface UserService {
 	public void updateIsKakao(String email, boolean isKakao);
 	
 	public void updateIsNaver(String email, boolean isnaver);
-	
-	public boolean updateUserNaverStatus(String userEmail, boolean isnaver);
 
 	public void deleteUser(String name, String password);
     
@@ -55,7 +53,6 @@ public interface UserService {
 	public List<HotelCategoryDTO> getHotelCategoryList();
 
 	public List<HotelDTO> getHotelList(String seqHotelCategory);
-	
 	
 	public String getMainKeyword(int seqHotel);
 
