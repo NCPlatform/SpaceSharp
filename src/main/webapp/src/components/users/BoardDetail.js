@@ -56,10 +56,8 @@ const BoardDetail = () => {
       .then(res => {
         Swal.fire({
           title: '게시글이 삭제되었습니다.',
-          imageUrl: 'https://item.kakaocdn.net/do/d640911d600b52c55d356740537ae9569f5287469802eca457586a25a096fd31',
           imageWidth: 300,
           imageHeight: 200,
-          imageAlt: '구데타마',
         });
         navigate('/BoardList/0');
       })
