@@ -5,6 +5,7 @@ import Disp_topNav from './Disp_topNav';
 import TextEditor from '../../TextEditor';
 import axios from 'axios'
 import Carousel from 'react-bootstrap/Carousel';
+import ManagerHeader from './ManagerHeader';
 
 
 const ManagerPlaceInfo = () => {
@@ -301,8 +302,8 @@ const ManagerPlaceInfo = () => {
 
     return (
         <div>
-            <Disp_topNav/>
-            <div style = {styleZ}>
+            <ManagerHeader />
+            <div className="container mt-5 pt-5">
             <form>
                     <span style = {styleA}>플레이스 정보 상세보기</span>
                     <table>
@@ -361,10 +362,10 @@ const ManagerPlaceInfo = () => {
                                     <Carousel>
                                         {imageList.length > 0 ? 
                                                 ( imageList.map((item, index) => (
-                                                    <Carousel.Item><img key={index} src={item} style={{ width: '100%' }} alt="" /></Carousel.Item>
+                                                    <Carousel.Item><img key={index} src={item} style={{ width: '100%', height: '300px', objectFit: 'cover' }} alt="" /></Carousel.Item>
                                                     ))) 
                                                 : ( img.split(',').map((item, index) => (
-                                                    <Carousel.Item><img key={index} src={item} style={{ width: '100%' }} alt="" /></Carousel.Item>
+                                                    <Carousel.Item><img key={index} src={item} style={{ width: '100%', height: '300px', objectFit: 'cover' }} alt="" /></Carousel.Item>
                                                     )))
                                         }
                                    

@@ -3,6 +3,7 @@ import axios from 'axios';
 import Disp_topNav from './Disp_topNav';
 import { Button } from 'react-bootstrap';
 import ViewRoomList from './ViewRoomList';
+import ManagerHeader from './ManagerHeader';
 
 
 
@@ -125,8 +126,8 @@ const MyPlace = () => {
 
     return (
         <div>
-             <Disp_topNav/>
-            <div style = {styleZ}>
+             <ManagerHeader />
+            <div className="container mt-5 pt-5">
                 <table style = {styleH}>
                     <thead>
                         <tr>

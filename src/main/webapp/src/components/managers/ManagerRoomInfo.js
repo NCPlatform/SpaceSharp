@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import AddFinishModal from './AddFinishModal';
 import TextEditor from '../../TextEditor';
 import Button from 'react-bootstrap/Button';
 import Disp_topNav from './Disp_topNav';
 import Carousel from 'react-bootstrap/Carousel';
+import ManagerHeader from './ManagerHeader';
 
 
 const ManagerRoomInfo = () => {
@@ -23,7 +23,6 @@ const ManagerRoomInfo = () => {
 
         const {normalExplain, name, price, datetime, reserveRule, img} = roomDTO
 
-
         const [imageList, setImageList] = useState([])
 
         const [file, setFile] = useState('')
@@ -37,6 +36,8 @@ const ManagerRoomInfo = () => {
         const [peopleMax, setPeopleMax] = useState(0)
 
         const [size, setSize] = useState(0)
+
+        const [ready, isReady] = useState(false)
 
 
     // functions =====================================================
@@ -118,7 +119,7 @@ const ManagerRoomInfo = () => {
         setSize(dto.placeSize.slice(0, -2))
         setPeopleMin(dto.people.split(' ~ ')[0].slice(3, -1))
         setPeopleMax(dto.people.split(' ~ ')[1].slice(3, -1))
-       // setRoomDTO(dto)
+        isReady(true)
     }
 
     const settingModifyBit = () => {
@@ -230,8 +231,8 @@ const ManagerRoomInfo = () => {
         */
     return (
         <div>
-            <Disp_topNav/>
-            <div id = 'disp' style = {styleZ}>
+            <ManagerHeader />
+            <div className="container mt-5 pt-5">
                 <form>
                     <span style = {styleA}>룸 정보 상세보기</span>
                     <table>
@@ -241,7 +242,7 @@ const ManagerRoomInfo = () => {
                                 <td>
                                     <input type = 'text'  style = {styleB} name = 'name' value = {modifyBit === false ? name : undefined} onChange = {insertData} className = 'DTOs'/>
                                     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-                                    <Button variant="outline-dark" type = 'button' onClick = {isModify} style = {{display: modifyBit && 'none'}} >수정</Button>        
+                                    <Button variant="outline-dark" type = 'button' onClick = {() => isModify()} style = {{display: modifyBit && 'none'}} >수정</Button>        
                                     <Button variant="outline-dark" type = 'button' onClick = {isDelete} style = {{display: modifyBit && 'none'}}>삭제</Button>
                                     <Button variant="outline-dark" type = 'button' onClick = {isFinish} style = {{display: modifyBit || 'none'}} >완료</Button>        
                                     <Button variant="outline-dark" type = 'button' onClick = {isCancel} style = {{display: modifyBit || 'none'}}>취소</Button>
@@ -251,7 +252,7 @@ const ManagerRoomInfo = () => {
                                 <td>룸 소개</td>
                                 <td>
                                     <div>
-                                    <TextEditor func = {editorVal} readOnly = {!modifyBit} texthold = 'normalExplain' value = {normalExplain}/>
+                                     { ready === true &&  <TextEditor func = {editorVal} readOnly = {!modifyBit} texthold = 'normalExplain' value = {normalExplain}/> }
                                     </div>
                                     <br/><br/>
                                 </td>
@@ -312,9 +313,8 @@ const ManagerRoomInfo = () => {
                     <Button variant="outline-dark" type = 'button' onClick = {confirmVals} style = {{display : modifyBit === false && 'none'}}>DTO 값 확인하기</Button>&nbsp;
                     
                 </form>
-                
+                </div>
             </div>
-        </div>
     );
 };
 

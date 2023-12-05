@@ -5,6 +5,7 @@ import AddFinishModal from './AddFinishModal';
 import TextEditor from '../../TextEditor';
 import Button from 'react-bootstrap/Button';
 import Disp_topNav from './Disp_topNav';
+import ManagerHeader from './ManagerHeader';
 
 
 const AddRoom = () => {
@@ -141,8 +142,8 @@ const AddRoom = () => {
         */
     return (
         <div>
-            <Disp_topNav/>
-            <div id = 'disp' style = {styleZ}>
+           <ManagerHeader />
+            <div className="container mt-5 pt-5">
                 <form>
                     <span style = {styleA}>새로운 룸 추가하기</span>
                     <table>
