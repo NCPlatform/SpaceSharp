@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import CouponItem from './CouponItem';
+import EventItem from './EventItem';
 import Swal from 'sweetalert2';
 
-const CouponList = ({ couponList, totalPages, issuedCouponList, setPage, page }) => {
+const EventList = ({ eventList, totalPages, page, deadline, setPage, searchKey, setSearchKey }) => {
   const [semiPage, setSemiPage] = useState(0);
 
   const goLastPage = () => {
@@ -18,14 +18,37 @@ const CouponList = ({ couponList, totalPages, issuedCouponList, setPage, page })
 
   return (
     <div className="container couponList" style={{ height: '80vh', overflowY: 'scroll' }}>
-      <p className="fs-2 fw-bold">쿠폰</p>
-      {couponList.map((item, index) => (
-        <CouponItem
-          item={item}
-          key={index}
-          issuedCnt={issuedCouponList.filter(issued => issued.seqCoupon === item.seqCoupon).length}
-        />
-      ))}
+      <p className="fs-2 fw-bold">이벤트</p>
+      <div className="border-bottom">
+        <p className="fs-5">마감 임박 이벤트</p>
+        {deadline.map((item, index) => (
+          <EventItem item={item} key={index} />
+        ))}
+      </div>
+      <div>
+        <p className="fs-5 mt-3 pt-3 border-dark border-top row">
+          <div className="col-6 col-xs-12 col-sm-12 col-md-6">이벤트 목록</div>
+          <div className="col-6 col-xs-12 col-sm-12 col-md-6 text-end mt-0">
+            <div className="btn-group w-100" role="group" aria-label="Basic example">
+              <button type="button" className="btn btn-dark" onClick={() => setSearchKey('all')}>
+                전체
+              </button>
+              <button type="button" className="btn btn-dark" onClick={() => setSearchKey('onGoing')}>
+                진행중
+              </button>
+              <button type="button" className="btn btn-dark" onClick={() => setSearchKey('Termination')}>
+                종료
+              </button>
+            </div>
+          </div>
+        </p>
+        {eventList.map(
+          (item, index) =>
+            new Date(item.finishDate).toLocaleDateString('ko-KR') !== new Date().toLocaleDateString('ko-KR') && (
+              <EventItem item={item} key={index} />
+            )
+        )}
+      </div>
       <div className="text-center">
         <button
           className="btn btn-outline-dark mx-1 px-2"
@@ -82,4 +105,4 @@ const CouponList = ({ couponList, totalPages, issuedCouponList, setPage, page })
   );
 };
 
-export default CouponList;
+export default EventList;

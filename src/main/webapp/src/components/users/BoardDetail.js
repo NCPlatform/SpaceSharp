@@ -30,6 +30,21 @@ const BoardDetail = () => {
     releaseDate: '',
   });
 
+  const storedUser = JSON.parse(window.sessionStorage.getItem('user'));
+  const [userEmail, setUserEmail] = useState('');
+  const usergrade = storedUser ? storedUser.usergrade : null;
+
+  useEffect(() => {
+    if (storedUser && storedUser.email === boardDTO.email) {
+      setBoardDTO(prevState => ({
+        ...prevState,
+        email: storedUser.email // Update the email to match the stored user's email
+      }));
+      setUserEmail(storedUser.email); // Set userEmail from storedUser's email
+    }
+  }, [storedUser]);
+  
+
   const onDeleteSuccess = e => {
     e.preventDefault();
 
@@ -150,6 +165,8 @@ const BoardDetail = () => {
               <div>{removeHtmlTags(boardDTO.content)}</div>
             </div>
 
+          
+            {boardDTO.email === userEmail ? (
             <div>
               <Link to={`/boardUpdate/${paramSeqBoard}`} className="btn btn-secondary">
                 수정
@@ -159,6 +176,7 @@ const BoardDetail = () => {
                 삭제
               </button>
             </div>
+            ) : null }
 
             <div>
               {comments ? (
@@ -199,11 +217,13 @@ const BoardDetail = () => {
                 <div>
                   {/* 내용 입력란 */}
                   {/* ... */}
+                  {storedUser && usergrade === 10 ? (
                   <BoardReply seqRefSeqBoard={boardDTO.seqBoard} />
+                  ) : null }
                 </div>
               )}
             </div>
-          </div>
+          </div><br /><br />
 
           <div>
             <button className="btn btn-secondary" onClick={() => navigate('/BoardList/0')}>

@@ -2,6 +2,9 @@ package jpa.bean;
 
 import java.util.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
@@ -13,38 +16,34 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "Receipt")
+@Table(name = "Event")
 @Data
-public class ReceiptDTO {
-
+public class EventDTO {
+	
 	@Id
-	@Column(nullable = false)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int apply_num;
+	@Column(nullable = false)
+	private int seqEvent;
 	
 	@Column
-	private String email;
+	private String title;
 	
 	@Column
-	private String bank_name;
-	
-	@Column(nullable = false)
-	private int seqReservation;
+	private String content;
 	
 	@Column
-	private String receipt_url;
+	private String img;
 	
-	@Column(nullable = false)
-	private String name;
+	@Column
+	private String mainImg;
 	
-	@Column(nullable = false)
-	private int paidAmount;
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@CreationTimestamp
+	@Column
+	private Date startDate;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
-	@Column(nullable = false)
-	private Date payDate;
-	
 	@Column
-	private String couponDiscount;
+	private Date finishDate;
 	
 }

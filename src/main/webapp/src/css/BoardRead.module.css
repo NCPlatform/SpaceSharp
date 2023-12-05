@@ -1,8 +1,12 @@
+@media only screen and (min-width: 1666px) {
+
 .BoardReadWrap{
     border: solid 1px #E8E8E8;
+    margin: auto;
+    width: 50%;
 }
 .BoardReadContent{
-    min-height: 90vh;
+    min-height: 20vh;
     border: solid 1px #E8E8E8;
 }
 .BoardReadTitle1{
@@ -21,4 +25,125 @@
 
 .BoardReadSeq {
     border-bottom: solid 1px #e0dfdf;
+}
+}
+
+@media only screen and (max-width: 375px) {
+
+.BoardReadWrap{
+    border: solid 1px #E8E8E8;
+    margin: 0;
+    width: 100%;
+}
+.BoardReadContent{
+    min-height: 20vh;
+    border: solid 1px #E8E8E8;
+}
+.BoardReadTitle1{
+    font-size: 25pt;
+}
+.BoardReadP{
+    margin: 0;
+}
+.BoardDetailCommentsEmail {
+    text-align: left; 
+}
+  
+.BoardDetailCommentsReleaseDate {
+    text-align: left;
+}
+
+.BoardReadSeq {
+    border-bottom: solid 1px #e0dfdf;
+}
+}
+
+@media only screen and (max-width: 440px) and (min-width: 375px) {
+
+.BoardReadWrap{
+    border: solid 1px #E8E8E8;
+    margin: 0 auto;
+    width: 95%;
+}
+.BoardReadContent{
+    min-height: 20vh;
+    border: solid 1px #E8E8E8;
+}
+.BoardReadTitle1{
+    font-size: 25pt;
+}
+.BoardReadP{
+    margin: 0;
+}
+.BoardDetailCommentsEmail {
+    text-align: left; 
+}
+  
+.BoardDetailCommentsReleaseDate {
+    text-align: left;
+}
+
+.BoardReadSeq {
+    border-bottom: solid 1px #e0dfdf;
+}
+}
+
+@media only screen and (max-width: 800px) and (min-width: 440px) {
+
+.BoardReadWrap{
+    border: solid 1px #E8E8E8;
+    margin: 0 auto;
+    width: 85%;
+}
+.BoardReadContent{
+    min-height: 20vh;
+    border: solid 1px #E8E8E8;
+}
+.BoardReadTitle1{
+    font-size: 25pt;
+}
+.BoardReadP{
+    margin: 0;
+}
+.BoardDetailCommentsEmail {
+    text-align: left; 
+}
+  
+.BoardDetailCommentsReleaseDate {
+    text-align: left;
+}
+
+.BoardReadSeq {
+    border-bottom: solid 1px #e0dfdf;
+}
+}
+
+@media only screen and (max-width: 1666px) and (min-width: 800px) {
+
+.BoardReadWrap{
+    border: solid 1px #E8E8E8;
+    margin: 0 auto;
+    width: 75%;
+}
+.BoardReadContent{
+    min-height: 20vh;
+    border: solid 1px #E8E8E8;
+}
+.BoardReadTitle1{
+    font-size: 25pt;
+}
+.BoardReadP{
+    margin: 0;
+}
+.BoardDetailCommentsEmail {
+    text-align: left; 
+}
+  
+.BoardDetailCommentsReleaseDate {
+    text-align: left;
+}
+
+.BoardReadSeq {
+    border-bottom: solid 1px #e0dfdf;
+}
 }

@@ -8,8 +8,11 @@ import "quill/dist/quill.snow.css";
 import ReactQuill from "react-quill";
 import Swal from "sweetalert2";
 import { Navigate,  useNavigate } from 'react-router-dom';
+import  Nav  from './Nav';
 
 const BoardWrite = () => {
+
+    const storedUser = JSON.parse(window.sessionStorage.getItem('user'));
 
     const[boardDTO, setBoardDTO] = useState(
         {
@@ -17,7 +20,7 @@ const BoardWrite = () => {
             "title" : '',
             "content" : '',
             "seqRefSeqBoard" : 0,
-            "email" : 'user'
+            "email" : (storedUser && storedUser.email)
         }
     )
 
@@ -94,6 +97,8 @@ const BoardWrite = () => {
         
         
     return (
+        <div>
+            <Nav />
         <div className='container'>
             <div>
                 <div className={styles.BoardWriteHeader}>
@@ -131,6 +136,7 @@ const BoardWrite = () => {
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     );
 };

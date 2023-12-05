@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,18 +20,25 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.DefaultJwtSignatureValidator;
 import io.jsonwebtoken.security.Keys;
+import jakarta.persistence.EntityNotFoundException;
+
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.HotelSearchDTO;
 import jpa.bean.LikedDTO;
+import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
@@ -39,6 +47,7 @@ import jpa.dao.CommentDAO;
 import jpa.dao.HotelCategoryDAO;
 import jpa.dao.HotelDAO;
 import jpa.dao.LikedDAO;
+import jpa.dao.ReceiptDAO;
 import jpa.dao.ReservationDAO;
 import jpa.dao.RoomDAO;
 import jpa.dao.UserDAO;
@@ -65,6 +74,9 @@ public class UserServiceImpl implements UserService {
 	private ReservationDAO reservationDAO;
 	
 	@Autowired
+	private ReceiptDAO receiptDAO;
+	
+	@Autowired
 	private CommentDAO commentDAO;
 	
 	@Autowired
@@ -83,6 +95,41 @@ public class UserServiceImpl implements UserService {
 		return userDAO.existsByEmail(email);
 	}
 
+	public void updateNickname(String email, String newNickname) {
+		UserDTO userDTO = userDAO.findByEmail(email);
+		if (userDTO != null) {
+			userDTO.setNickname(newNickname);
+			userDAO.save(userDTO);
+		}
+	}
+	
+	@Override
+	public void updateIsKakao(String email, boolean iskakao) {
+        UserDTO userDTO = userDAO.findByEmail(email);
+                
+        userDTO.setIskakao(iskakao);
+        userDAO.save(userDTO);
+    }
+	
+	@Override
+	public void updateIsNaver(String email, boolean isnaver) {
+        UserDTO userDTO = userDAO.findByEmail(email);
+                
+        userDTO.setIsnaver(isnaver);
+        userDAO.save(userDTO);
+    }
+	
+	@Override
+	public void deleteUser(String name, String password) {
+		UserDTO userDTO = userDAO.findByNameAndPassword(name, password);
+		
+		if (userDTO != null) {
+			userDAO.delete(userDTO);
+		} else {
+			throw new RuntimeException("사용자를 찾을 수 없습니다.");
+		}
+	}
+	
 	
 	@Override
 	public List<HotelCategoryDTO> getHotelCategoryList() {
@@ -232,6 +279,18 @@ public class UserServiceImpl implements UserService {
 	            .map(hotelDTO -> hotelDTO.getAddr())
 	            .orElse(null);
 	}
+	
+	@Override
+	public boolean updateUserNaverStatus(String userEmail, boolean isnaver) {
+		 Optional<UserDTO> optionalUser = userDAO.findById(userEmail);
+        if (optionalUser.isPresent()) {
+            UserDTO user = optionalUser.get();
+            user.setIsnaver(isnaver);
+            userDAO.save(user);
+            return true;
+        }
+        return false;
+    }
 
 	@Override
 	public UserDTO getUserByEmail(String email) {
@@ -241,7 +300,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<RoomDTO> getRoomListByHotel(int seqHotel) {
-		return roomDAO.findBySeqHotel( seqHotel);
+		return roomDAO.findBySeqHotel(seqHotel);
 	}
 
 
@@ -311,21 +370,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Page<BoardDTO> list (Pageable pageable, int seqRefSeqBoard) {
-		return boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
+	public Map<String,Object> list (Pageable pageable, int seqRefSeqBoard) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		Page<BoardDTO> boardList = boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
+		map.put("boardList",boardList);
+		map.put("userList", userDAO.findAll());
+		return map;
 	}
-
-	@Override
-	public boolean updateUserNaverStatus(String userEmail, boolean isnaver) {
-		 Optional<UserDTO> optionalUser = userDAO.findById(userEmail);
-        if (optionalUser.isPresent()) {
-            UserDTO user = optionalUser.get();
-            user.setIsnaver(isnaver);
-            userDAO.save(user);
-            return true;
-        }
-        return false;
-    }
 
 	public Map<String,Object> hotelReserve(int seqRoom) {
 		
@@ -418,7 +469,12 @@ public class UserServiceImpl implements UserService {
 		map.put("minPrice", minPrice);
 		map.put("cntReview", commentList.size());
 		map.put("cntLike", likedList.size());
-		return map;
+		return map;		
+	}
+
+	@Override
+	public List<HotelDTO> searchHotel(HotelSearchDTO hotelDTO) {
+		return hotelDAO.searchHotel(hotelDTO.getSeqHotelCategory(), hotelDTO.getDate(), hotelDTO.getAddr(), hotelDTO.getMinPrice(), hotelDTO.getMaxPrice());
 	}
 	
 // JWT
@@ -465,6 +521,34 @@ public class UserServiceImpl implements UserService {
         System.out.println(">> jwt : " + jwt);
         return jwt;
     }
+
+	@Override
+	public Integer saveReservation(ReservationDTO reservationDTO) {
+	    try {
+	        // 예약 정보 저장
+	        ReservationDTO savedReservation = reservationDAO.save(reservationDTO);
+
+	        // 예약 정보를 저장한 이후에 바로 조회
+	        Optional<ReservationDTO> optionalUpdatedReservation = reservationDAO.findByEmailAndReservationDate(savedReservation.getEmail(), savedReservation.getReservationDate());
+
+	        // 조회된 정보가 있으면 seqReservation 반환, 없으면 null 반환
+	        return optionalUpdatedReservation.get().getSeqReservation();//.map(ReservationDTO::getSeqReservation).orElse(null);
+	    } catch (Exception e) {
+	        // 예외를 처리하거나 로깅할 수 있습니다.
+	        return null;
+	    }
+	}
+
+    @Override
+    public String saveReceipt(ReceiptDTO receiptDTO) {
+        try {
+            receiptDAO.save(receiptDTO);
+            return "Receipt saved successfully";
+        } catch (Exception e) {
+            return "Failed to save receipt";
+        }
+    }
+    
 	
 	@Override
 	public String decodeToken(String token) throws Exception {

@@ -12,6 +12,8 @@ const BoardReply = ( {seqRefSeqBoard} ) => {
     const [commentEmail, setCommentEmail] = useState('');
     const [commentTitle, setCommentTitle] = useState('');
 
+
+
     const[boardDTO, setBoardDTO] = useState(
         {
             "seqBoardCategory" : 7,
@@ -113,7 +115,7 @@ const BoardReply = ( {seqRefSeqBoard} ) => {
         
 
     return (
-        <div className='container'>
+        <div className={`container ${styles.BoardReplyTop}`}>
             <div>
                 <div className={styles.BoardWriteHeader}>
                     <div className='d-flex justify-content-between'>
@@ -138,18 +140,18 @@ const BoardReply = ( {seqRefSeqBoard} ) => {
                             onChange={handleProcedureContentChange}
                             value={content}
                             className='form-control'
-                            style={{ height: "100px" }}
+                            style={{ height: "100px", border: "none" }}
                             >
-
                             </ReactQuill>
-                        {/* <textarea className="form-control" name='content' value={ boardDTO.content } onChange={ onChange } placeholder='내용을 입력해주세요.'  rows={30} /> */}
                         <div id={styles.contentDiv}>{ contentDiv }</div>
                     </div>
                        
                 </div>
-            </div>
+            </div> <br /><br /><br /><br /><br /><br />
                         <div>
+                        
                             <button className={`btn btn-success ${styles.overlayButton}`} onClick={ onWriteSuccess }>등록</button>
+
                         </div>
         </div>
     );
