@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styles from '../../css/BoardList.module.css';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Nav from './Nav';
@@ -36,16 +35,16 @@ const BoardList = () => {
     7: '1:1 문의',
   };
 
-  useEffect(() => {
-    axios
-      .get(`/user/list?page=${page}&size=${pageSize}`)
-      .then(res => {
-        setList(res.data.boardList.content);
-        setUserList(res.data.userList);
-        setPagingArray(Array.from({ length: res.data.boardList.totalPages }, (_, index) => index + 1));
-      })
-      .catch(error => console.log(error));
-  }, [page, pageSize]);
+    useEffect(() => {
+        axios.get(`/user/list?page=${page}&size=${pageSize}`)
+            .then(res => {
+            setList(res.data.boardList.content)
+            setUserList(res.data.userList);
+            setPagingArray(Array.from({ length: res.data.boardList.totalPages }, (_, index) => index + 1))
+            console.log(res.data)
+            })
+            .catch(error => console.log(error))
+    }, [page, pageSize])
 
   return (
     <div className={styles.BoardListTop}>

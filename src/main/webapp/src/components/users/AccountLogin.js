@@ -52,18 +52,17 @@ const Login = () => {
           if (res.data.length === 0) {
             Swal.fire({
               title: '아이디 또는 비밀번호가 잘못되었습니다.',
-              imageUrl: 'https://item.kakaocdn.net/do/58119590d6204ebd70e97763ca933baf82f3bd8c9735553d03f6f982e10ebe70',
               imageWidth: 300,
               imageHeight: 200,
-              imageAlt: '루피',
+           
             });
           } else {
             Swal.fire({
-              title: '성공',
-              imageUrl: 'https://item.kakaocdn.net/do/a7884a879ae30614290a1c20325e05e59cbcbe2de7f4969efc79ab353e0c19e8',
+              title: '로그인 성공',
+           
               imageWidth: 300,
               imageHeight: 200,
-              imageAlt: '루피',
+           
             });
             window.sessionStorage.setItem('user', JSON.stringify(res.data));
             setSessionUserDTO(res.data);
@@ -191,11 +190,9 @@ const Login = () => {
                           window.sessionStorage.setItem('user', JSON.stringify(existingUser));
                             Swal.fire({
                                       title: "로그인 성공",
-                                      imageUrl:
-                                        "https://item.kakaocdn.net/do/a7884a879ae30614290a1c20325e05e59cbcbe2de7f4969efc79ab353e0c19e8",
                                       imageWidth: 300,
                                       imageHeight: 200,
-                                      imageAlt: "루피",
+                                    
                                      });
                                      window.localStorage.removeItem('user')
                                      window.localStorage.removeItem('com.naver.nid.oauth.state_token')
@@ -215,12 +212,11 @@ const Login = () => {
                  
                     } else { // 통합을 하지 않는다고 하면 로그인에 실패했습니다. 라는 알람과 함께 로그인 페이지로 이동
                       Swal.fire({
-                        title: "로그인에 실패하였습니다.",
-                        imageUrl:
-                          "https://item.kakaocdn.net/do/58119590d6204ebd70e97763ca933baf82f3bd8c9735553d03f6f982e10ebe70",
+                        title: "로그인 실패",
+                      
                         imageWidth: 300,
                         imageHeight: 200,
-                        imageAlt: "루피",
+                     
                       });
                       window.localStorage.removeItem('user')
                       window.localStorage.removeItem('com.naver.nid.oauth.state_token')
@@ -234,11 +230,11 @@ const Login = () => {
                                   .then(res => {
                                     window.sessionStorage.setItem('user', JSON.stringify(existingUser));
                                     Swal.fire({
-                                      title: '로그인 완료.',
-                                      imageUrl: 'https://item.kakaocdn.net/do/d640911d600b52c55d356740537ae9569f5287469802eca457586a25a096fd31',
+                                      title: '로그인 성공.',
+                                  
                                       imageWidth: 300,
                                       imageHeight: 200,
-                                      imageAlt: '구데타마'
+                                
                                     })
                                     window.localStorage.removeItem('user')
                                     window.localStorage.removeItem('com.naver.nid.oauth.state_token')
@@ -376,3 +372,4 @@ const Login = () => {
 };
 
 export default Login;
+
