@@ -391,7 +391,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Map<String,Object> list (Pageable pageable, int seqRefSeqBoard) {
 		Map<String,Object> map = new HashMap<String,Object>();
-		Page<BoardDTO> boardList = boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
+		Page<BoardDTO> boardList = boardDAO.findBySeqRefSeqBoardAndSeqBoardCategoryLike(pageable,seqRefSeqBoard,7);
 		map.put("boardList",boardList);
 		map.put("userList", userDAO.findAll());
 		return map;

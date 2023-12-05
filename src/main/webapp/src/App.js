@@ -95,7 +95,9 @@ function App() {
               <Route path=":paramSeqBoard" element={<BoardDetail />} />
             </Route>
             {/* <Route path="/oauth/callback/kakao" element={<KakaoAuth />} /> */}
-            <Route path="boardWrite" element={<BoardWrite />} />
+            <Route path="boardWrite">
+              <Route path=":seqBoardCategory" element={<BoardWrite />} />
+            </Route>
             <Route path="boardUpdate" element={<BoardUpdate />}>
               <Route path=":paramSeqBoard" element={<BoardUpdate />} />
             </Route>

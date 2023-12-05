@@ -131,7 +131,7 @@ const BoardList = () => {
             </table>
             <div className="d-flex justify-content-end">
               {storedUser && storedUser.email ? (
-                <Link to="/boardWrite">
+                <Link to="/boardWrite/7">
                   <button className={styles.BoardListWriteButton}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

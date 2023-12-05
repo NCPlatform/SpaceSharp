@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Nav from "./Nav";
 import Footer from "./Footer";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import styles from "../../css/BoardList.module.css";
 import TableBoardItems from "./BoardComponents/TableBoardItems";
@@ -311,9 +311,13 @@ const Board = () => {
           </button>
         </div>
         {sessionUserDTO && sessionUserDTO.usergrade === 10 && (
-          <button type="btn" className="btn float-end mt-5">
+          <Link
+            to={`/boardWrite/${seqBoardCategory}`}
+            type="btn"
+            className="btn float-end mt-5"
+          >
             글 쓰기
-          </button>
+          </Link>
         )}
       </div>
       <Footer />
