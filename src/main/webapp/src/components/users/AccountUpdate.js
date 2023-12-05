@@ -631,7 +631,7 @@ const handleDeleteUser = () => {
                                 <Modal.Body>
                                 <label>
                                   이메일 인증이 완료되었습니다.<br/>
-                                  변경할 비밀번호를 입력하여주세요.
+                                  변경할 비밀번호를 입력하여 주세요.
                                 </label>
                                 <br/>
                                 <br/>
