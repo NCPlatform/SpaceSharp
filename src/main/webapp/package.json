@@ -48,7 +48,6 @@
     "source-map-loader": "^4.0.1",
     "stompjs": "^2.3.3",
     "sweetalert2": "^11.10.1",
-    
     "web-vitals": "^2.1.4"
   },
   "scripts": {

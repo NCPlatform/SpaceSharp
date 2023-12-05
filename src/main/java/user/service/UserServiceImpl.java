@@ -104,12 +104,24 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public void updateIsKakao(String email, boolean iskakao) {
-        UserDTO userDTO = userDAO.findByEmail(email);
-                
-        userDTO.setIskakao(iskakao);
-        userDAO.save(userDTO);
-    }
+	public void updateTel(String email, String newTel) {
+		UserDTO userDTO = userDAO.findByEmail(email);
+		if (userDTO != null) {
+			userDTO.setTel(newTel);
+			userDAO.save(userDTO);
+		}
+		
+	}
+	
+	@Override
+	public void updatePassword(String email, String newPassword) {
+		UserDTO userDTO = userDAO.findByEmail(email);
+		if (userDTO != null) {
+			userDTO.setPassword(newPassword);
+			userDAO.save(userDTO);
+		}
+		
+	}
 	
 	@Override
 	public void updateIsNaver(String email, boolean isnaver) {
@@ -281,22 +293,9 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public boolean updateUserNaverStatus(String userEmail, boolean isnaver) {
-		 Optional<UserDTO> optionalUser = userDAO.findById(userEmail);
-        if (optionalUser.isPresent()) {
-            UserDTO user = optionalUser.get();
-            user.setIsnaver(isnaver);
-            userDAO.save(user);
-            return true;
-        }
-        return false;
-    }
-
-	@Override
 	public UserDTO getUserByEmail(String email) {
 	    return userDAO.findById(email).orElse(null);
 	}
-
 
 	@Override
 	public List<RoomDTO> getRoomListByHotel(int seqHotel) {
@@ -476,6 +475,7 @@ public class UserServiceImpl implements UserService {
 	public List<HotelDTO> searchHotel(HotelSearchDTO hotelDTO) {
 		return hotelDAO.searchHotel(hotelDTO.getSeqHotelCategory(), hotelDTO.getDate(), hotelDTO.getAddr(), hotelDTO.getMinPrice(), hotelDTO.getMaxPrice());
 	}
+
 	
 // JWT
 	private String keyIn = "안녕하세요여기는스페이스샵입니다비밀번호찾기를요청하셨습니다";

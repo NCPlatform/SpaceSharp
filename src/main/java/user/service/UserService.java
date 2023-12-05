@@ -42,11 +42,13 @@ public interface UserService {
 	
 	public void updateNickname(String email, String newNickname);
 	
-	public void updateIsKakao(String email, boolean isKakao);
+	public void updateTel(String email, String newTel);
+	
+	public void updatePassword(String email, String newPassword);
+	
+	
 	
 	public void updateIsNaver(String email, boolean isnaver);
-	
-	public boolean updateUserNaverStatus(String userEmail, boolean isnaver);
 
 	public void deleteUser(String name, String password);
     
@@ -55,7 +57,6 @@ public interface UserService {
 	public List<HotelCategoryDTO> getHotelCategoryList();
 
 	public List<HotelDTO> getHotelList(String seqHotelCategory);
-	
 	
 	public String getMainKeyword(int seqHotel);
 
@@ -93,12 +94,6 @@ public interface UserService {
 	
 	public Map<String, Object> mainPage();
 	
-	
-
-
-
-
-	
 	public Map<String,Object> hotelReserve(int seqRoom);
 
 	public Map<String, Object> setReviewTab(int seqHotel);
@@ -119,7 +114,5 @@ public interface UserService {
 	public Integer saveReservation(ReservationDTO reservationDTO);
 
 	public String saveReceipt(ReceiptDTO receiptDTO);
-	
-
 
 }
