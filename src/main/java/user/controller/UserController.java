@@ -197,7 +197,7 @@ public class UserController {
 			return DTO.get();
 		}else {
 			return null;
-		}
+		}	
 	}
 	
 	@PostMapping(value="write")
@@ -252,7 +252,52 @@ public class UserController {
 		return userService.existsByEmail(email);
 	
     }
-				
+	
+    @PostMapping("/updateNickname")
+    public ResponseEntity<String> updateNickname(@RequestBody Map<String, String> data) {
+        String email = data.get("email");
+        String newNickname = data.get("newNickname");
+
+        userService.updateNickname(email, newNickname);
+
+        return ResponseEntity.ok("회원님의 닉네임이 수정되었습니다.");
+    }
+    
+    @PostMapping("updateIsKakao")
+    public ResponseEntity<String> updateIsKakao(
+    		@RequestParam String email,
+    		@RequestParam boolean iskakao) {
+    	try {
+    		userService.updateIsKakao(email, iskakao);
+    		return ResponseEntity.ok("업데이트 성공");
+    	} catch (Exception e) {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 실패");
+    	}
+    }
+    
+    @PostMapping("updateIsNaver")
+    public ResponseEntity<String> updateIsNaver(
+    		@RequestParam String email,
+    		@RequestParam boolean isnaver) {
+    	try {
+    		userService.updateIsNaver(email, isnaver);
+    		return ResponseEntity.ok("업데이트 성공");
+    	} catch (Exception e) {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 실패");
+    	}
+    }
+    
+    @PostMapping("/deleteUser")
+    public ResponseEntity<String> deleteUser(@RequestBody Map<String, String> deleteUserData) {
+        try {
+            userService.deleteUser(deleteUserData.get("name"), deleteUserData.get("password"));
+            return new ResponseEntity<>("회원 삭제가 완료되었습니다.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("회원 삭제에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    
 	@PostMapping(value = "mainPage")
 	@ResponseBody
 	public Map<String, Object> mainPage(){
@@ -357,4 +402,5 @@ public class UserController {
 		}
 		return imgValue;
 	}
+	
 }

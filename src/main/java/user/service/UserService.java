@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jpa.bean.BoardDTO;
@@ -36,13 +38,24 @@ public interface UserService {
 
 	public String accountWrite(UserDTO userDTO);
 	
+	boolean existsByEmail(String email);
+	
+	public void updateNickname(String email, String newNickname);
+	
+	public void updateIsKakao(String email, boolean isKakao);
+	
+	public void updateIsNaver(String email, boolean isnaver);
+	
+	public boolean updateUserNaverStatus(String userEmail, boolean isnaver);
+
+	public void deleteUser(String name, String password);
+    
 	public String getHotelName(int seqHotel);
 
 	public List<HotelCategoryDTO> getHotelCategoryList();
 
 	public List<HotelDTO> getHotelList(String seqHotelCategory);
 	
-	boolean existsByEmail(String email);
 	
 	public String getMainKeyword(int seqHotel);
 
@@ -79,6 +92,14 @@ public interface UserService {
 	public String getRefund(int seqHotel);
 	
 	public Map<String, Object> mainPage();
+	
+	
+
+
+
+
+
+
 
 	public boolean updateUserNaverStatus(String userEmail, boolean isnaver);
 	

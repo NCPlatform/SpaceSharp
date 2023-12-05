@@ -33,6 +33,7 @@
     "react-jquery-plugin": "^1.1.7",
     "react-kakao-login": "^2.1.1",
     "react-kakao-maps-sdk": "^1.1.24",
+    "react-modal": "^3.16.1",
     "react-owl-carousel": "^2.3.3",
     "react-quill": "^2.0.0",
     "react-redux": "^8.1.3",
@@ -46,6 +47,7 @@
     "source-map-loader": "^4.0.1",
     "stompjs": "^2.3.3",
     "sweetalert2": "^11.10.1",
+    
     "web-vitals": "^2.1.4"
   },
   "scripts": {

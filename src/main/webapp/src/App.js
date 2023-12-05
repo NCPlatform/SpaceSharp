@@ -48,6 +48,8 @@ import AdminUser from './components/admins/AdminUser';
 // import KakaoLogin from "./components/users/KaKaoLogin";
 import KakaoRedirect from './components/users/KakaoRedirect';
 import PopupPostCode from './components/users/PopupPostCode';
+import UpdateKakao from "./components/users/UpdateKakao";
+
 import ManagerPlaceInfo from './components/managers/ManagerPlaceInfo';
 import ManagerRoomInfo from "./components/managers/ManagerRoomInfo";
 import ManagerChat from './components/managers/ManagerChat';

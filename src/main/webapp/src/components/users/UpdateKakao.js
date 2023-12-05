@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import AccountSignIn from './AccountSignIn';
+import AccountUpdate from './AccountUpdate';
 
-function KakaoRedirect() {
+function UpdateKakao() {
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,17 +30,19 @@ function KakaoRedirect() {
     fetch(`https://kauth.kakao.com/oauth/token`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `grant_type=authorization_code&client_id=9ee2bf7ff3fd8c0f4da4c49d740dc522&redirect_uri=http://localhost:3000/KakaoRedirect&code=${KAKAO_CODE}`,
+      body: `grant_type=authorization_code&client_id=9ee2bf7ff3fd8c0f4da4c49d740dc522&redirect_uri=http://localhost:3000/updateKakao&code=${KAKAO_CODE}`,
     })
       .then(res => res.json())
       .then(data => {
         if (data.access_token) {
           localStorage.setItem('token', data.access_token);
         } else {
-          navigate('/');
+          navigate('/update');
+          alert('카카오 회원정보를 불러올 수 없습니다!');
         }
       });
   };
+
 
   //카카오 토큰 발급
   useEffect(() => {
@@ -49,7 +51,7 @@ function KakaoRedirect() {
       getKakaoToken();
       // 필요한 매개변수가 정의되어 있다고 가정 (RestApiKey, redirectUri)
       const RestApiKey = '9ee2bf7ff3fd8c0f4da4c49d740dc522';
-      const redirectUri = 'http://localhost:3000/KakaoRedirect';
+      const redirectUri = 'http://localhost:3000/updateKakao';
 
       // 먼저, 액세스 토큰을 요청
       axios.post(
@@ -70,9 +72,14 @@ function KakaoRedirect() {
               },
             }
           )
-            .then((res) => {
-              setUserDTO(res.data); // 상태에 사용자 정보 설정
-            })
+          .then((res) => {  
+            setUserDTO((prevUserDTO) => ({
+              ...prevUserDTO,
+              iskakao: true,
+              
+            }));
+          })
+          
             .catch((error) => {
               console.error('사용자 정보 가져오기 실패:', error);
             });
@@ -83,49 +90,47 @@ function KakaoRedirect() {
     }
   }, [KAKAO_CODE]);
 
-  //카카오 소셜로그인을 했을 때, DB에 email이 존재하는 회원이면 메인이동, 아니면 회원가입페이지로 UserInfo 전달
-  useEffect(()=> {
-    if (userInfo && userInfo.email) {
-      axios.post('/user/existsByEmail', null, { params: { email: userInfo.email } })
-        .then(response => {
-          console.log(response.data);
-          console.log('중복 이메일 검사중입니다.');
-          if (response.data === true) {
-            console.log('이미 존재하는 이메일입니다. 다른 이메일을 입력하여주세요!');
 
-            // 이미 존재하는 그 계정정보를 가져와요
-            
-            // 그 계정의 iskakao정보가 false면 true로 바꾸기
 
-            // session에 저장해줘요
+  
+    // 세션 스토리지에서 사용자 정보를 불러오고 userDTO에 추가
+    // useEffect(() => {
+    //   const storedUser = window.sessionStorage.getItem('user');
+    //   if (storedUser) {
+    //     const storedUserInfo = JSON.parse(storedUser);
+    //     setUserDTO((prevUserDTO) => ({
+    //       ...prevUserDTO,
+    //       ...storedUserInfo,
+    //     }));
+    //   }
+    // }, []);
 
-            // userDTO에 userInfo의 정보중 nickname과 email값을 가져와 집어넣기
-            navigate('/');      //이메일 중복체크 결과 후 없으면 입력, 존재하면 메인페이지로 이동
-          } else {
-            console.log('사용 가능한 이메일 입니다.');
-            setUserDTO(
-              {
-              ...userDTO,
-              nickname: userInfo.nickname,
-              email: userInfo.email,
-            }
-            );
-          }
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
-  }, [userInfo]);
+
+  // useEffect((userInfo)=>{
+  //   setUserDTO({
+  //     ...userDTO,
+  //     iskakao: true,
+  //       })
+  // },[userInfo]);
+  
+  // useEffect(() => {
+  //   window.sessionStorage.setItem('user', JSON.stringify(userDTO));
+  // }, []);
+
+
+  console.log('카카오리다이렉트1');
+  console.log(userDTO);
+  console.log('카카오리다이렉트2');
 
 
   return (
     <div>
 
-      {userDTO && <AccountSignIn userInfo={userDTO} />}
+      {userDTO && <AccountUpdate userInfo={ userDTO } />}
      
     </div>
   );
 }
 
-export default KakaoRedirect;
+export default UpdateKakao;
+

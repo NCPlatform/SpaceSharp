@@ -15,7 +15,12 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import jakarta.persistence.EntityNotFoundException;
 
 import jakarta.transaction.Transactional;
 import jpa.bean.BoardDTO;
@@ -81,6 +86,41 @@ public class UserServiceImpl implements UserService {
 		return userDAO.existsByEmail(email);
 	}
 
+	public void updateNickname(String email, String newNickname) {
+		UserDTO userDTO = userDAO.findByEmail(email);
+		if (userDTO != null) {
+			userDTO.setNickname(newNickname);
+			userDAO.save(userDTO);
+		}
+	}
+	
+	@Override
+	public void updateIsKakao(String email, boolean iskakao) {
+        UserDTO userDTO = userDAO.findByEmail(email);
+                
+        userDTO.setIskakao(iskakao);
+        userDAO.save(userDTO);
+    }
+	
+	@Override
+	public void updateIsNaver(String email, boolean isnaver) {
+        UserDTO userDTO = userDAO.findByEmail(email);
+                
+        userDTO.setIsnaver(isnaver);
+        userDAO.save(userDTO);
+    }
+	
+	@Override
+	public void deleteUser(String name, String password) {
+		UserDTO userDTO = userDAO.findByNameAndPassword(name, password);
+		
+		if (userDTO != null) {
+			userDAO.delete(userDTO);
+		} else {
+			throw new RuntimeException("사용자를 찾을 수 없습니다.");
+		}
+	}
+	
 	
 	@Override
 	public List<HotelCategoryDTO> getHotelCategoryList() {
@@ -230,6 +270,18 @@ public class UserServiceImpl implements UserService {
 	            .map(hotelDTO -> hotelDTO.getAddr())
 	            .orElse(null);
 	}
+	
+	@Override
+	public boolean updateUserNaverStatus(String userEmail, boolean isnaver) {
+		 Optional<UserDTO> optionalUser = userDAO.findById(userEmail);
+        if (optionalUser.isPresent()) {
+            UserDTO user = optionalUser.get();
+            user.setIsnaver(isnaver);
+            userDAO.save(user);
+            return true;
+        }
+        return false;
+    }
 
 	@Override
 	public UserDTO getUserByEmail(String email) {
@@ -239,7 +291,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<RoomDTO> getRoomListByHotel(int seqHotel) {
-		return roomDAO.findBySeqHotel( seqHotel);
+		return roomDAO.findBySeqHotel(seqHotel);
 	}
 
 
@@ -455,5 +507,6 @@ public class UserServiceImpl implements UserService {
             return "Failed to save receipt";
         }
     }
+    
 	
 }
