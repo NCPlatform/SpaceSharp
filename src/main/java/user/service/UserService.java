@@ -96,20 +96,6 @@ public interface UserService {
 	public String getRefund(int seqHotel);
 	
 	public Map<String, Object> mainPage();
-
-<<<<<<< HEAD
-	
-
-
-	
-	
-
-
-
-
-
-=======
-	public boolean updateUserNaverStatus(String userEmail, boolean isnaver);
 	
 	public Map<String,Object> hotelReserve(int seqRoom);
 
@@ -126,8 +112,5 @@ public interface UserService {
 	public Integer saveReservation(ReservationDTO reservationDTO);
 
 	public String saveReceipt(ReceiptDTO receiptDTO);
-	
->>>>>>> refs/remotes/origin/user
-
 
 }

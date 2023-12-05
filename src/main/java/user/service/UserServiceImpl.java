@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
 
-import jakarta.transaction.Transactional;
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
 import jpa.bean.HotelCategoryDTO;
@@ -282,18 +281,6 @@ public class UserServiceImpl implements UserService {
 	            .map(hotelDTO -> hotelDTO.getAddr())
 	            .orElse(null);
 	}
-	
-	@Override
-	public boolean updateUserNaverStatus(String userEmail, boolean isnaver) {
-		 Optional<UserDTO> optionalUser = userDAO.findById(userEmail);
-        if (optionalUser.isPresent()) {
-            UserDTO user = optionalUser.get();
-            user.setIsnaver(isnaver);
-            userDAO.save(user);
-            return true;
-        }
-        return false;
-    }
 
 	@Override
 	public UserDTO getUserByEmail(String email) {

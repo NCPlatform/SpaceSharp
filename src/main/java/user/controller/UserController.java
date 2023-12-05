@@ -185,7 +185,7 @@ public class UserController {
 	        return "네이버 성공";
 	    }
 	    return "네이버 실패";
-	
+  }
 	
 	@PostMapping(value="write")
 	@ResponseBody
@@ -351,7 +351,7 @@ public class UserController {
 		
 		return "redirect:http://127.0.0.1:3000/login";
 	}    
-}
+
   
   @GetMapping(value="hotelReserve")
 	public Map<String,Object> hotelReserve(int seqRoom) {

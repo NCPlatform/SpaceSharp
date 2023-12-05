@@ -18,49 +18,17 @@ import java.util.List;
 public interface UserDAO extends JpaRepository<UserDTO, String> {
 	
 	boolean existsByEmail(String email);
+	
+	Page<UserDTO> findAllByUsergradeLessThan(Pageable pageable, int i);
 
-<<<<<<< HEAD
+	Page<UserDTO> findAllByUsergrade(Pageable pageable, int i);
+
+	List<UserDTO> findAllByEmail(String memberemail);
+
 	UserDTO findByEmail(String email);
 	
     void delete(UserDTO userDTO);
     
     UserDTO findByNameAndPassword(String name, String password);
-
-
-
-
-
-	
-
-
-
-
-=======
->>>>>>> refs/remotes/origin/user
-	Page<UserDTO> findAllByUsergradeLessThan(Pageable pageable, int i);
-
-	Page<UserDTO> findAllByUsergrade(Pageable pageable, int i);
-
-<<<<<<< HEAD
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
-	List<UserDTO> findAllByEmail(String memberemail);
-
-	UserDTO findByEmail(String email);
->>>>>>> refs/remotes/origin/user
 
 }
