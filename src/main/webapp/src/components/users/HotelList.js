@@ -34,11 +34,14 @@ const List = () => {
   const [mainAddress, setMainAddress] = useState("");
   const [subAddress, setSubAddress] = useState("");
   const [selectedOptions, setOptions] = useState([]);
+  const [showCouponDiscount, setShowCouponDiscount] = useState(true);
   const handleOption1Change = (e) => {
     setMainAddress(e.target.value);
     setSubAddress("");
   };
-
+  const toggleCouponDiscount = () => {
+    setShowCouponDiscount((prev) => !prev);
+  };
   const handleOption2Change = (e) => {
     setSubAddress(e.target.value);
   };
@@ -49,22 +52,22 @@ const List = () => {
   const [hotelList, setHotelList] = useState([]);
 
   useEffect(() => {
-    
+    console.log("searchValue in List:", searchValue);
   }, [searchValue]);
 
   const fetchHotelList = async () => {
     const selectedDate = formatDate(date);
     if (!seqHotelCategory) {
       if (searchValue) {
-        
+
         const { status, data } = await axios.post("/user/searchHotel", {
-          seqHotelCategory: "", 
-          addr: "", 
+          seqHotelCategory: "",
+          addr: subAddress,
           date: selectedDate,
           minPrice: filterOn ? priceRange.lowerBound : null,
           maxPrice: filterOn ? priceRange.upperBound : null,
         });
-  
+
         if (status === 200) {
           return data.filter(
             (item) =>
@@ -74,11 +77,11 @@ const List = () => {
           );
         }
       } else {
-        
+
         return [];
       }
     }
-  
+
     if (subAddress === "") {
       const { status, data } = await axios.post("/user/searchHotel", {
         seqHotelCategory:
@@ -88,15 +91,15 @@ const List = () => {
         minPrice: filterOn ? priceRange.lowerBound : null,
         maxPrice: filterOn ? priceRange.upperBound : null,
       });
-  
+
       if (status === 200) {
         return searchValue
           ? data.filter(
-              (item) =>
-                item.addr.includes(searchValue) ||
-                item.name.includes(searchValue) ||
-                item.addr.includes(searchValue)
-            )
+            (item) =>
+              item.addr.includes(searchValue) ||
+              item.name.includes(searchValue) ||
+              item.addr.includes(searchValue)
+          )
           : data;
       }
     } else {
@@ -111,19 +114,19 @@ const List = () => {
           minPrice: filterOn ? priceRange.lowerBound : null,
           maxPrice: filterOn ? priceRange.upperBound : null,
         });
-  
+
         if (status === 200) {
           data.forEach((hotel) => list.push(hotel));
         }
       }
-  
+
       return searchValue
         ? list.filter(
-            (item) =>
-              item.addr.includes(searchValue) ||
-              item.name.includes(searchValue) ||
-              item.addr.includes(searchValue)
-          )
+          (item) =>
+            item.addr.includes(searchValue) ||
+            item.name.includes(searchValue) ||
+            item.addr.includes(searchValue)
+        )
         : list;
     }
     return [];
@@ -135,7 +138,7 @@ const List = () => {
     for (let hotel of hotelList) {
       let includeAllSelectedOptions = true;
       for (let option of selectedOptions) {
-        
+        console.log(option, hotel[option]);
         if (hotel[option] === false) {
           includeAllSelectedOptions = false;
           break;
@@ -149,7 +152,7 @@ const List = () => {
 
   const resetHotelList = async () => {
     const list = await fetchHotelList();
-    
+
     if (filterOn) {
       setHotelList(filterHotel(list.filter((item) => item.addr.includes(subAddress))));
     } else {
@@ -157,11 +160,11 @@ const List = () => {
     }
   };
   useEffect(() => {
-    
+    console.log(hotelList);
   }, [hotelList]);
 
   useEffect(() => {
-    
+    console.log("searchValue:", searchValue);
     resetHotelList();
   }, [seqHotelCategory, subAddress, date, searchValue]);
 
@@ -632,7 +635,8 @@ const List = () => {
                     data-bs-parent="#accordionExample"
                   >
                     <div className="accordion-body hotelListNav">
-                      <Calendar onChange={onDate} value={date} />
+                      <Calendar editableDateInputs={true}
+                        calendarType={"gregory"} formatDay={(locale, date) => moment(date).format("D")} onChange={onDate} value={date} minDate={new Date()} />
                       <div className="text-gray-500 mt-4">
                         {moment(date).format("YYYY년 MM월 DD일")}
                       </div>
@@ -796,8 +800,18 @@ const List = () => {
           <Row xl={3} lg={1} md={1} sm={1} xs={1}>
             <Col xl={3} className="mb-3">
               <div className="px-2 btn-group w-100">
-                <p className="btn btn-outline-secondary">바로결제</p>
-                <p className="btn btn-outline-secondary">쿠폰 할인</p>
+                <p
+                  className={`btn btn-outline-secondary ${showCouponDiscount ? "active" : ""}`}
+                  onClick={toggleCouponDiscount}
+                >
+                  바로결제
+                </p>
+                <p
+                  className={`btn btn-outline-secondary ${showCouponDiscount ? "" : "active"}`}
+                  onClick={toggleCouponDiscount}
+                >
+                  쿠폰 할인
+                </p>
               </div>
             </Col>
 
@@ -842,9 +856,11 @@ const List = () => {
                 searchValue
                   ? hotelList
                     .filter((item) => {
-                      
-                      return Object.values(item).some((value) =>
-                        String(value).toLowerCase().includes(searchValue.toLowerCase())
+                      return (
+                        Object.values(item).some((value) =>
+                          String(value).toLowerCase().includes(searchValue.toLowerCase())
+                        ) &&
+                        (showCouponDiscount || (!showCouponDiscount && item.coupon === true))
                       );
                     })
                     .map((item, idx) => (
@@ -859,18 +875,20 @@ const List = () => {
                         </Link>
                       </div>
                     ))
-                  : hotelList.map((item, idx) => (
-                    <div className="col-xl-4 col-lg-6" key={idx}>
-                      <Link
-                        to={"/detail/" + item.seqHotel}
-                        style={{ textDecoration: "none" }}
-                      >
-                        <Col>
-                          <HotelItemCard item={item} />
-                        </Col>
-                      </Link>
-                    </div>
-                  ))
+                  : hotelList
+                    .filter((item) => showCouponDiscount || (!showCouponDiscount && item.coupon === true))
+                    .map((item, idx) => (
+                      <div className="col-xl-4 col-lg-6" key={idx}>
+                        <Link
+                          to={"/detail/" + item.seqHotel}
+                          style={{ textDecoration: "none" }}
+                        >
+                          <Col>
+                            <HotelItemCard item={item} />
+                          </Col>
+                        </Link>
+                      </div>
+                    ))
               ) : (
                 <div className="mt-5">
                   <h1>해당 카테고리에 숙소가 아직 없습니다.</h1>
@@ -887,5 +905,6 @@ const List = () => {
 };
 
 export default List;
+
 
 

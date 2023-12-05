@@ -27,19 +27,21 @@ public interface HotelDAO extends JpaRepository<HotelDTO, Integer> {
 	@Query("select hotelDTO.seqHotel, hotelDTO.name, hotelDTO.addr, hotelDTO.img from HotelDTO hotelDTO where hotelDTO.ownerEmail like :email order by hotelDTO.seqHotel")
 	public Page<HotelDTO> getMyPlace(@Param("email") String email, Pageable pageable);
 	
-	@Query("SELECT DISTINCT h FROM HotelDTO h " +
+	@Query("SELECT h, COUNT(l.seqHotel) AS likeCount FROM HotelDTO h " +
 	        "LEFT JOIN RoomDTO r ON h.seqHotel = r.seqHotel " +
 	        "LEFT JOIN ReservationDTO res ON r.seqRoom = res.seqRoom " +
-	        "WHERE h.seqHotelCategory LIKE %:seqHotelCategory% " + 
+	        "LEFT JOIN LikedDTO l ON h.seqHotel = l.seqHotel " +
+	        "WHERE h.seqHotelCategory LIKE %:seqHotelCategory% " +
 	        "AND (res.travelStartDate IS NULL OR CAST(CONCAT(:date,' 00:00:00') AS TIMESTAMP) < res.travelStartDate OR CAST(CONCAT(:date,' 23:59:59') AS TIMESTAMP) > res.travelEndDate) " +
 	        "AND (:addr='' OR h.addr LIKE %:addr% OR h.addr LIKE %:searchValue%) " +
 	        "AND (:minPrice IS NULL OR :maxPrice IS NULL OR r.price IS NULL OR (r.price >= :minPrice AND r.price <= :maxPrice) " +
-	        "OR (:searchValue <> '' AND (h.name LIKE %:searchValue% OR h.addr LIKE %:searchValue%)))")
+	        "OR (:searchValue <> '' AND (h.name LIKE %:searchValue% OR h.addr LIKE %:searchValue%))) " +
+	        "GROUP BY h.seqHotel " +
+	        "ORDER BY likeCount DESC")
     List<HotelDTO> searchHotel(@Param("seqHotelCategory") String seqHotelCategory,
                                @Param("date") Date date,
                                @Param("addr") String addr,
                                @Param("searchValue") String searchValue,
                                @Param("minPrice") Integer minPrice,
                                @Param("maxPrice") Integer maxPrice);
-
 }
