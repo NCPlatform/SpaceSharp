@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
 import jpa.bean.HotelDTO;
+import jpa.bean.ReserveViewDTO;
 import jpa.bean.RoomDTO;
 import manager.service.ManagerService;
 import manager.service.ObjectStorageService;
@@ -166,7 +167,15 @@ public class ManagerController {
 		managerService.deleteRoom(seqRoom);
 		
 	}
-
+	
+	@PostMapping(value = "getMyReservations")
+	@ResponseBody
+	public List<ReserveViewDTO> viewReservations(@RequestParam String userEmail){
+		System.out.println("reservation view requested : "+userEmail);
+		List<ReserveViewDTO> resultDTO = managerService.viewReservations(userEmail);
+		return resultDTO;
+	}
+	
 	public String commaClearInt(String sample) {
 		ArrayList<Integer> list = new ArrayList<>();
 		StringTokenizer st = new StringTokenizer(sample, ",");

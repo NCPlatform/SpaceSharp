@@ -9,8 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jpa.bean.HotelDTO;
+import jpa.bean.ReserveViewDTO;
 import jpa.bean.RoomDTO;
 import jpa.dao.HotelDAO;
+import jpa.dao.ReservationDAO;
 import jpa.dao.RoomDAO;
 
 @Service
@@ -21,6 +23,9 @@ public class ManagerServiceImpl implements ManagerService {
 	
 	@Autowired
 	RoomDAO roomDAO;
+	
+	@Autowired
+	ReservationDAO reservationDAO;
 	
 	@Override
 	public void addPlace(HotelDTO hotelDTO) {
@@ -78,6 +83,11 @@ public class ManagerServiceImpl implements ManagerService {
 	public void deleteRoom(String seqRoom) {
 		roomDAO.deleteById(Integer.parseInt(seqRoom));
 		
+	}
+
+	@Override
+	public List<ReserveViewDTO> viewReservations(String userEmail) {
+		return reservationDAO.viewReservations(userEmail);
 	}
 
 }

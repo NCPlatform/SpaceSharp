@@ -3,6 +3,8 @@ package jpa.dao;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import jpa.bean.ReservationDTO;
+import jpa.bean.ReserveViewDTO;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -23,5 +25,20 @@ public interface ReservationDAO extends JpaRepository<ReservationDTO, Integer> {
 	Optional<ReservationDTO> findByEmailAndReservationDate(String email, Date reservationDate);
 
 	Optional<ReservationDTO> findTopByOrderBySeqReservationDesc();
+	
+
+	@Query("select new jpa.bean.ReserveViewDTO( "
+			+ "userT.name as user_name,"
+			+ "reserT.travelStartDate as departure,"
+			+ "reserT.travelEndDate as arrival,"
+			+ "roomT.name as room_name,"
+			+ "hotelT.ownerEmail )"
+			+ "from ReservationDTO reserT " 
+			+ "INNER JOIN UserDTO userT ON reserT.email = userT.email "
+			+ "INNER JOIN RoomDTO roomT ON roomT.seqRoom = reserT.seqRoom "
+			+ "INNER JOIN HotelDTO hotelT ON hotelT.seqHotel = roomT.seqHotel "
+			+ "where hotelT.ownerEmail = :userEmail")
+	List<ReserveViewDTO> viewReservations(@Param("userEmail") String userEmail);
+
 
 }
