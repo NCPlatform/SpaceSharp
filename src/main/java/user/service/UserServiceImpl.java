@@ -578,5 +578,27 @@ public class UserServiceImpl implements UserService {
 		
 		return map;
 	}
+
+	@Override
+	public String isLiked(String email, int seqHotel) {
+		Optional<LikedDTO> dto = likedDAO.findByEmailAndSeqHotel(email, seqHotel);
+		
+		if(dto.isPresent()) return "true";
+		else return "false";
+	}
+
+	@Override
+	public void deleteLike(String email, int seqHotel) {
+		likedDAO.deleteById(likedDAO.findByEmailAndSeqHotel(email, seqHotel).get().getSeqLiked());
+	}
+
+	@Override
+	public void addLike(String email, int seqHotel) {
+		LikedDTO dto = new LikedDTO();
+		dto.setEmail(email);
+		dto.setSeqHotel(seqHotel);
+		
+		likedDAO.save(dto);
+	}
 	
 }

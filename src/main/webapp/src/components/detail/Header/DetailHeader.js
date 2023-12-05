@@ -20,8 +20,79 @@ const DetailHeader = ({ hotel, name, img1, img2, img3, path }) => {
   // shareKakao parameters
 
   const [sessionUserDTO, setSessionUserDTO] = useState(JSON.parse(sessionStorage.getItem('user')));
+  const [liked, setLiked] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (sessionUserDTO !== null) {
+      axios
+        .get(`/user/isLiked?email=${sessionUserDTO.email}&seqHotel=${hotel * 1}`)
+        .then(res => {
+          setLiked(res.data);
+        })
+        .catch(err => console.log(err));
+    }
+  }, [sessionUserDTO]);
+
+  const onLike = () => {
+    if (sessionUserDTO !== null) {
+      if (liked) {
+        Swal.fire({
+          title: '찜 취소.',
+          text: '찜목록에서 삭제하겠습니까?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: '확인',
+          cancelButtonText: '취소',
+        }).then(response => {
+          if (response.isConfirmed) {
+            axios
+              .get(`/user/deleteLike?email=${sessionUserDTO.email}&seqHotel=${hotel * 1}`)
+              .then(res => {
+                Swal.fire({
+                  title: '찜 취소.',
+                  text: '찜목록에서 삭제했습니다.',
+                  icon: 'success',
+                });
+                setLiked(false);
+              })
+              .catch(err => console.log(err));
+          }
+        });
+      } else {
+        Swal.fire({
+          title: '찜.',
+          text: '찜목록에 추가하겠습니까?',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: '확인',
+          cancelButtonText: '취소',
+        }).then(response => {
+          if (response.isConfirmed) {
+            axios
+              .get(`/user/addLike?email=${sessionUserDTO.email}&seqHotel=${hotel * 1}`)
+              .then(res => {
+                Swal.fire({
+                  title: '찜.',
+                  text: '찜목록에 추가했습니다.',
+                  icon: 'success',
+                });
+                setLiked(true);
+              })
+              .catch(err => console.log(err));
+          }
+        });
+      }
+    } else {
+      Swal.fire({
+        title: '로그인 해주세요.',
+        text: '로그인 후 이용 가능한 서비스입니다.',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
+    }
+  };
 
   const onCreateChat = () => {
     if (sessionUserDTO !== null) {
@@ -75,7 +146,11 @@ const DetailHeader = ({ hotel, name, img1, img2, img3, path }) => {
               <i className="bi bi-upload" style={{ fontSize: '20px' }} />
             </Nav>
             <Nav className="px-1 me-2">
-              <i className="bi bi-suit-heart" style={{ fontSize: '20px' }} />
+              {liked ? (
+                <i className="bi bi-heart-fill" style={{ fontSize: '20px' }} onClick={() => onLike()} />
+              ) : (
+                <i className="bi bi-suit-heart" style={{ fontSize: '20px' }} onClick={() => onLike()} />
+              )}
             </Nav>
             <Nav className="px-1 me-2">
               <i className="bi bi-chat" style={{ fontSize: '20px' }} onClick={() => onCreateChat()} />

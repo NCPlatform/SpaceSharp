@@ -39,6 +39,7 @@ import jpa.bean.CommentDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.HotelSearchDTO;
+import jpa.bean.LikedDTO;
 import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
@@ -364,6 +365,21 @@ public class UserController {
 	@GetMapping(value="getEventList")
 	public Map<String,Object> getEventList(){
 		return userService.getEventList();
+	}
+	
+	@GetMapping(value="isLiked")
+	public String isLiked(@RequestParam String email,@RequestParam int seqHotel){
+		return userService.isLiked(email, seqHotel);
+	}
+	
+	@GetMapping(value="deleteLike")
+	public void deleteLike(@RequestParam String email, int seqHotel){
+		userService.deleteLike(email, seqHotel);
+	}
+	
+	@GetMapping(value="addLike")
+	public void addLike(@RequestParam String email, int seqHotel){
+		userService.addLike(email, seqHotel);
 	}
 	
 	public String uploadObject(List<MultipartFile> list, String path) {

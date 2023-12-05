@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jpa.bean.BoardDTO;
@@ -13,6 +14,7 @@ import jpa.bean.CommentDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.HotelSearchDTO;
+import jpa.bean.LikedDTO;
 import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
@@ -107,6 +109,12 @@ public interface UserService {
 	public Map<String, Object> getQnAList(Pageable pageable, String email);
 
 	public Map<String, Object> getBoardList(Pageable pageable, String searchKey, int seqBoardCategory);
+
+	public String isLiked(String email, int seqHotel);
+
+	public void deleteLike(String email, int seqHotel);
+
+	public void addLike(String email, int seqHotel);
 	
 
 
