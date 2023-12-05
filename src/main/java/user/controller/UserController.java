@@ -61,7 +61,6 @@ public class UserController {
 	private ObjectStorageService ncpService;
 	@Autowired
 	private ReservationDAO reservationDAO;
-
 	@Autowired
 	private ReceiptDAO receiptDAO;
 	
@@ -179,14 +178,6 @@ public class UserController {
 	      return new ResponseEntity<>("영수증 저장에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	  }
-  @GetMapping("/updateNaverStatus")
-	public String updateNaverStatus(@RequestParam String userEmail) {
-	    boolean updated = userService.updateUserNaverStatus(userEmail, true); // 여기에서 true 또는 false로 변경 가능
-	    if (updated) {
-	        return "네이버 성공";
-	    }
-	    return "네이버 실패";
-	}
 
 	@PostMapping(value="login")
 	@ResponseBody
@@ -253,6 +244,13 @@ public class UserController {
 	
     }
 	
+	
+	@PostMapping("/existsByIsKakao")
+    public ResponseEntity<Boolean> existsByIsKakao(@RequestParam String email) {
+        boolean exists = userService.existsByEmail(email);
+        return ResponseEntity.ok(exists);
+    }
+
     @PostMapping("/updateNickname")
     public ResponseEntity<String> updateNickname(@RequestBody Map<String, String> data) {
         String email = data.get("email");
@@ -262,18 +260,27 @@ public class UserController {
 
         return ResponseEntity.ok("회원님의 닉네임이 수정되었습니다.");
     }
-    
-    @PostMapping("updateIsKakao")
-    public ResponseEntity<String> updateIsKakao(
-    		@RequestParam String email,
-    		@RequestParam boolean iskakao) {
-    	try {
-    		userService.updateIsKakao(email, iskakao);
-    		return ResponseEntity.ok("업데이트 성공");
-    	} catch (Exception e) {
-    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 실패");
-    	}
+
+    @PostMapping("/updateTel")
+    public ResponseEntity<String> updateTel(@RequestBody Map<String, String> data) {
+        String email = data.get("email");
+        String newTel = data.get("newTel");
+
+        userService.updateTel(email, newTel);
+
+        return ResponseEntity.ok("회원님의 닉네임이 수정되었습니다.");
     }
+       
+    @PostMapping("/updatePassword")
+    public ResponseEntity<String> updatePassword(@RequestBody Map<String, String> data) {
+        String email = data.get("email");
+        String newPassword = data.get("newPassword");
+
+        userService.updatePassword(email, newPassword);
+
+        return ResponseEntity.ok("회원님의 비밀번호가 수정되었습니다.");
+    }
+    
     
     @PostMapping("updateIsNaver")
     public ResponseEntity<String> updateIsNaver(
@@ -298,7 +305,7 @@ public class UserController {
     }
     
     
-	@PostMapping(value = "mainPage")
+    @PostMapping(value = "mainPage")
 	@ResponseBody
 	public Map<String, Object> mainPage(){
 		return userService.mainPage();

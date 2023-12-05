@@ -157,152 +157,204 @@ const AccountUpdate = ({ userInfo }) => {
         closeModal();
       })
       .catch((error) => console.log(error));
-  };
-
-  useEffect(() => {
-    const storedUser = window.sessionStorage.getItem('user');
-    if (storedUser) {
-      setUserDTO(JSON.parse(storedUser));
-    }
-  }, [showModal]);
-
-  const openModal = () => setShowModal(true);
-  const closeModal = () => setShowModal(false);
-
-  const [showKakaoModal, setShowKakaoModal] = useState(false);
-  const [showNaverModal, setShowNaverModal] = useState(false);
+    };
+    
+    const openModal = () => setShowModal(true);
+    const closeModal = () => setShowModal(false);
 
 
-  useEffect(() => {
-    if (showKakaoModal) {
-      // 서버에 업데이트 요청 등을 추가할 수 있습니다.
-    }
-  }, [showKakaoModal]);
+  //연락처 변경 모달상태
+  const [newTel, setNewTel] = useState('');
+  const [showTelModal, setShowTelModal] = useState(false);
+  const [telValidationMsg, setTelValidationMsg] = useState('');
 
-  useEffect(()=>{
-    if(showNaverModal){
-      
-    }
-  },[showNaverModal]);
-
-  // 카카오모달이 닫힐 때 실행되는 함수
-  const closeKakaoModal = () => {
-    setShowKakaoModal(false);
-  };
-  // 네이버모달이 닫힐 때 실행되는 함수
-  const closeNaverModal = () => {
-    setShowNaverModal(false);
-  };
-
-  //카카오 연동 함수
-  const handleKakaoConfirmation = () => {
-    const storedUser = window.sessionStorage.getItem('user');
-    if (storedUser) {
-      const storedUserInfo = JSON.parse(storedUser);
-      setUserDTO((prevUserDTO) => ({
-        ...prevUserDTO,
-        ...storedUserInfo,
-      }));
-    }
-    axios
-      .post('/user/updateIsKakao', null, { params: { email: userDTO.email , iskakao: userDTO.iskakao } }) 
-      .then((res) => {
-        setShowKakaoModal(false);
-        setKakaoConnected(true);
-        alert('카카오 소셜로그인 연동이 완료된 계정입니다.');
-      })
-      .catch((error) => console.log(error));
-  };
-
-  //네이버 연동 함수
-  const handleNaverConfirmation = () => {
-    const storedUser = window.sessionStorage.getItem('user');
-    if (storedUser) {
-      const storedUserInfo = JSON.parse(storedUser);
-      setUserDTO((prevUserDTO) => ({
-        ...prevUserDTO,
-        ...storedUserInfo,
-           isnaver:true,
-      }));
-    }
-    axios
-      .post('/user/updateIsNaver', null, { params: { email: userDTO.email , isnaver: userDTO.isnaver } }) 
-      .then((res) => {
-        setShowNaverModal(false);
-        setNaverConnected(true);
-        alert('네이버 소셜로그인 연동이 완료된 계정입니다.');
-      })
-      .catch((error) => console.log(error));
-      
-  };
-
-  useEffect(() => {
-    const storedUser = window.sessionStorage.getItem('user');
-    if (storedUser) {
-      setUserDTO(JSON.parse(storedUser));
-    }
-  }, [showModal]);
-
-
-  useEffect(() => {
-    if (userDTO.iskakao === true && !kakaoConnected) {
-      setShowKakaoModal(true);
-    }
-  }, [userDTO.iskakao, kakaoConnected]);
-
-  useEffect(() => {
-    if (userDTO.isnaver === true && !naverConnected) {
-      setShowNaverModal(true);
-    }
-  }, [userDTO.isnaver, naverConnected]);
-
+  const openTelModal = () => setShowTelModal(true);
+  const closeTelModal = () => setShowTelModal(false); 
+  //  연락처 변경
+    const handleTelUpdate = () => {
+      axios
+        .post('/user/updateTel', { email: userDTO.email, newTel })
+        .then((res) => {
+          alert('회원님의 연락처가 수정되었습니다.');
+          const updatedUser = { ...userDTO, tel: newTel };
+          setUserDTO(updatedUser);
+          window.sessionStorage.setItem('user', JSON.stringify(updatedUser));
+          closeTelModal ();
+        })
+        .catch((error) => console.log(error));
+    };   
 
   
+  //비밀번호 변경 모달상태
+  const [newPassword, setNewPassword] = useState('');
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordValidationMsg, setPasswordValidationMsg] = useState('');
+
+  const openPasswordModal = () => setShowPasswordModal(true);
+  const closePasswordModal = () => setShowPasswordModal(false);
+  //  비밀번호 변경
+    const handlePasswordUpdate = () => {
+      axios
+        .post('/user/updatePassword', { email: userDTO.email, newPassword })
+        .then((res) => {
+          alert('회원님의 비밀번호가 수정되었습니다.');
+          const updatedUser = { ...userDTO, password: newPassword };
+          setUserDTO(updatedUser);
+          window.sessionStorage.setItem('user', JSON.stringify(updatedUser));
+          closePasswordModal();
+        })
+        .catch((error) => console.log(error));
+    };
+  
+    useEffect(() => {
+      const storedUser = window.sessionStorage.getItem('user');
+      if (storedUser) {
+        setUserDTO(JSON.parse(storedUser));
+      }
+    }, [showPasswordModal]);
+
+    useEffect(() => {
+      const storedUser = window.sessionStorage.getItem('user');
+      if (storedUser) {
+        setUserDTO(JSON.parse(storedUser));
+      }
+    }, [showModal]);
+
+
+    const [showKakaoModal, setShowKakaoModal] = useState(false);
+    const [showNaverModal, setShowNaverModal] = useState(false);
+
+
+    useEffect(() => {
+      if (showKakaoModal) {
+        // 서버에 업데이트 요청 등을 추가할 수 있습니다.
+      }
+    }, [showKakaoModal]);
+
+    useEffect(()=>{
+      if(showNaverModal){
+        
+      }
+    },[showNaverModal]);
+
+    // 카카오모달이 닫힐 때 실행되는 함수
+    const closeKakaoModal = () => {
+      setShowKakaoModal(false);
+    };
+    // 네이버모달이 닫힐 때 실행되는 함수
+    const closeNaverModal = () => {
+      setShowNaverModal(false);
+    };
+
+    //카카오 연동 함수
+    const handleKakaoConfirmation = () => {
+      const storedUser = window.sessionStorage.getItem('user');
+      if (storedUser) {
+        const storedUserInfo = JSON.parse(storedUser);
+        setUserDTO((prevUserDTO) => ({
+          ...prevUserDTO,
+          ...storedUserInfo,
+        }));
+      }
+      axios
+        .post('/user/updateIsKakao', null, { params: { email: userDTO.email , iskakao: userDTO.iskakao } }) 
+        .then((res) => {
+          setShowKakaoModal(false);
+          setKakaoConnected(true);
+          // alert('카카오 소셜로그인 연동이 완료된 계정입니다.');
+        })
+        .catch((error) => console.log(error));
+    };
+
+    //네이버 연동 함수
+    const handleNaverConfirmation = () => {
+      const storedUser = window.sessionStorage.getItem('user');
+      if (storedUser) {
+        const storedUserInfo = JSON.parse(storedUser);
+        setUserDTO((prevUserDTO) => ({
+          ...prevUserDTO,
+          ...storedUserInfo,
+            isnaver:true,
+        }));
+      }
+      axios
+        .post('/user/updateIsNaver', null, { params: { email: userDTO.email , isnaver: userDTO.isnaver } }) 
+        .then((res) => {
+          setShowNaverModal(false);
+          setNaverConnected(true);
+          // alert('네이버 소셜로그인 연동이 완료된 계정입니다.');
+        })
+        .catch((error) => console.log(error));
+        
+    };
+
+    useEffect(() => {
+      const storedUser = window.sessionStorage.getItem('user');
+      if (storedUser) {
+        setUserDTO(JSON.parse(storedUser));
+      }
+    }, [showModal]);
+
+
+    useEffect(() => {
+      if (userDTO.iskakao === true && !kakaoConnected) {
+        setShowKakaoModal(true);
+      }
+    }, [userDTO.iskakao, kakaoConnected]);
+
+    useEffect(() => {
+      if (userDTO.isnaver === true && !naverConnected) {
+        setShowNaverModal(true);
+      }
+    }, [userDTO.isnaver, naverConnected]);
+
+
+    
   // 네이버 소셜연동 시작
-const { naver } = window;
+  const { naver } = window;
 
-const initializeNaverLogin = () => {
-  const naverLogin = new naver.LoginWithNaverId({
-    clientId: '6ttVxktIhMD96aZLn_iu',
-    callbackUrl: 'http://localhost:3000/update',
-    isPopup: false,
-    loginButton: { color: 'green', type: 3, height: 58 },
-    callbackHandle: true,
-  });
-  naverLogin.init();
+  const initializeNaverLogin = () => {
+    const naverLogin = new naver.LoginWithNaverId({
+      clientId: '6ttVxktIhMD96aZLn_iu',
+      callbackUrl: 'http://localhost:3000/update',
+      isPopup: false,
+      loginButton: { color: 'green', type: 3, height: 58 },
+      callbackHandle: true,
+    });
+    naverLogin.init();
 
-  naverLogin.getLoginStatus(async function (status) {
-    if (status) {
-      const userid = naverLogin.user.getEmail();
-      const username = naverLogin.user.getName();
-      const usernickname = naverLogin.user.getNickName();
+    naverLogin.getLoginStatus(async function (status) {
+      if (status) {
+        const userid = naverLogin.user.getEmail();
+        const username = naverLogin.user.getName();
+        const usernickname = naverLogin.user.getNickName();
 
-      // 이메일 정보를 가져와서 naverUserInfo에 설정
-      setNaverUserInfo({
-        email: userid || '',
-        name: username || '',
-        nickname: usernickname || '',
-      });
+        // 이메일 정보를 가져와서 naverUserInfo에 설정
+        setNaverUserInfo({
+          email: userid || '',
+          name: username || '',
+          nickname: usernickname || '',
+        });
 
-      // 사용자 정보를 업데이트하고 localStorage에 저장
-      setUserDTO((prevUserDTO) => ({
-        ...prevUserDTO,
-        email: userid || '',
-        name: username || '',
-        nickname: usernickname || '',
-        isnaver: true,
-      }));
+        // 사용자 정보를 업데이트하고 localStorage에 저장
+        setUserDTO((prevUserDTO) => ({
+          ...prevUserDTO,
+          email: userid || '',
+          name: username || '',
+          nickname: usernickname || '',
+          isnaver: true,
+        }));
 
-      window.localStorage.setItem('userInfo', JSON.stringify(naverUserInfoRef.current));
-      window.localStorage.removeItem('com.naver.nid.oauth.state_token');
-      window.localStorage.removeItem('com.naver.nid.access_token');
-      navigate('/update');
-    } else {
-      // 로그인 상태가 아니라면 처리
-      // alert('네이버계정의 정보가 존재하지 않습니다.\n네이버계정으로 회원가입 진행바랍니다.');
-    }
-  });
-};
+        window.localStorage.setItem('userInfo', JSON.stringify(naverUserInfoRef.current));
+        window.localStorage.removeItem('com.naver.nid.oauth.state_token');
+        window.localStorage.removeItem('com.naver.nid.access_token');
+        navigate('/update');
+      } else {
+        // 로그인 상태가 아니라면 처리
+        // alert('네이버계정의 정보가 존재하지 않습니다.\n네이버계정으로 회원가입 진행바랍니다.');
+      }
+    });
+  };
 
 // ...
  
@@ -318,29 +370,9 @@ const initializeNaverLogin = () => {
 
   const handleNaverLogin = () => {
     naverRef.current.children[0].click()
-  };
+  };  //네이버 소셜 연동 끝
 
-  //네이버 소셜 연동 끝
-
-
-  //연락처 변경 모달상태
-  const [newTel, setNewTel] = useState('');
-  const [showTelModal, setShowTelModal] = useState(false);
-  const [telValidationMsg, setTelValidationMsg] = useState('');
-
-  const openTelModal = () => setShowTelModal(true);
-  const closeTelModal = () => setShowTelModal(false);  
-
-
-  //비밀번호 변경 모달상태
-  const [newPassword, setNewPassword] = useState('');
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [passwordValidationMsg, setPasswordValidationMsg] = useState('');
-
-  const openPasswordModal = () => setShowPasswordModal(true);
-  const closePasswordModal = () => setShowPasswordModal(false);
-  
-
+ 
   //회원탈퇴 모달 상태
   const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
   const [deleteValidationMsg, setDeleteValidationMsg] = useState('');
@@ -349,35 +381,60 @@ const initializeNaverLogin = () => {
   const closeDeleteUser = () => setShowDeleteUserModal(false);
 
   // 회원탈퇴
-const handleDeleteUser = () => {
-  const data ={
-    name: deleteName,
-    password: deletePassword,
-  };
+  const handleDeleteUser = () => {
+    const data ={
+      name: deleteName,
+      password: deletePassword,
+    };
 
-  if(userDTO.name === deleteName && userDTO.password === deletePassword ){
-  axios
-    // .post('/user/deleteUser', null, { params: userDTO })
-    .post('/user/deleteUser', data, {
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-    })
-    .then((res) => {
-      window.sessionStorage.removeItem('user');
-      alert('회원탈퇴가 완료되었습니다. 그동안 스페이스샵을 이용해주셔서 감사합니다.');
-      closeModal();
-      navigate('/');
-    })
-    .catch((error) => console.log(error));
+    if(userDTO.name === deleteName && userDTO.password === deletePassword ){
+    axios
+      // .post('/user/deleteUser', null, { params: userDTO })
+      .post('/user/deleteUser', data, {
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+      })
+      .then((res) => {
+        window.sessionStorage.removeItem('user');
+        alert('회원탈퇴가 완료되었습니다. 그동안 스페이스샵을 이용해주셔서 감사합니다.');
+        closeModal();
+        navigate('/');
+      })
+      .catch((error) => console.log(error));
+    
+    }else{
+      alert('회원정보가 일치하지 않습니다. 다시 입력하세요!');  
+      setDeleteName('');
+      setDeletePassword('');
+    }
+  };//handleDeleteUser
+
+  //프로필 이미지 업로드
+  // const UserProfile = () => {
+    const [profileImage, setProfileImage] = useState(localStorage.getItem('profileImage') || null);
+    const fileInputRef = useRef();
   
-  }else{
-    alert('회원정보가 일치하지 않습니다. 다시 입력하세요!');  
-    setDeleteName('');
-    setDeletePassword('');
-  }
-};//handleDeleteUser
+    const handleImageChange = () => {
+      fileInputRef.current.click();
+    };
   
+    const handleFileSelect = (e) => {
+      const file = e.target.files[0];
+  
+      if (file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+  
+        reader.onload = () => {
+          const base64Image = reader.result;
+          localStorage.setItem('profileImage', base64Image);
+          setProfileImage(base64Image);
+        };
+      }
+    };
+  // }
+    
 
     return (
         <>
@@ -388,14 +445,14 @@ const handleDeleteUser = () => {
                 <Col sm={8}>
                   <div className='profilebox1'>
                     <br/>
-                  &emsp;&emsp;&emsp;&emsp;
-                    <img src={unKnown} alt='카카오로고' style={{ width: '130px', height: '60' }} />
+                    &emsp;&emsp;
+                    <img src={profileImage || unKnown } alt='카카오로고' style={{ width: '160px', height: '150px',
+                      cursor: 'pointer', borderRadius: '50%' }} onClick={handleImageChange} />
+                    <input type='file' onChange={handleFileSelect} accept='image/*' style={{ display: 'none' }} ref={fileInputRef} />
                     <br />
                     <br />
-                    <p className='nickProfile1'>&emsp;&nbsp;&emsp;&emsp;&nbsp;&nbsp;{userDTO.nickname && <span>{userDTO.nickname} 님</span>}</p>
-                    &emsp;&emsp;&emsp;&nbsp;&nbsp;
-                    <button className='updatebtn green mini'>프로필 사진 변경</button>
-                  </div>{/*profilebox1*/}
+                      <p className='nickProfile1'>&emsp;&nbsp;&emsp;&emsp;&nbsp;&nbsp;{userDTO.nickname && <span>{userDTO.nickname} 님</span>}</p>
+                    </div>{/*profilebox1*/}
                   </Col>
 
                 <Col sm={4}>
@@ -489,7 +546,7 @@ const handleDeleteUser = () => {
                               </Modal.Body>
                               <Modal.Footer>
                                   <button className="updatebtn green mini" 
-                                  // onClick={handlePasswordUpdate}
+                                  onClick={handleTelUpdate}
                                   >
                                   연락처 변경
                                   </button>
@@ -548,7 +605,7 @@ const handleDeleteUser = () => {
                             <Modal.Header closeButton>
                               <Modal.Title>카카오 연동 확인</Modal.Title>
                             </Modal.Header>
-                            <Modal.Body>
+                            <Modal.Body>  
                               카카오와의 연동이 확인되었습니다. 계속해서 진행하시겠습니까?
                             </Modal.Body>
                             <Modal.Footer>
@@ -577,7 +634,7 @@ const handleDeleteUser = () => {
                       <ul class="list-group list-group-flush">
                         <br/>
                         <p className='profileTitle'>{/*비밀번호 변경자리 */}
-                          비빌번호&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  
+                          비밀번호&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  
                           &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
                           <button className='updatebtn green mini' onClick={openPasswordModal}>변경하기</button>
                           {/* 비밀번호 수정 모달*/}
@@ -594,15 +651,15 @@ const handleDeleteUser = () => {
                               <br/>
                               <label htmlFor="newPassword">새 비밀번호:&nbsp;</label>
                               <input type="password" id="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}/>
-                              <div className="passwordValidationMsg">{passwordValidationMsg}</div>
+                              <div className="passwordValidationMsg">{ passwordValidationMsg }</div>
                               </Modal.Body>
                               <Modal.Footer>
                                   <button className="updatebtn green mini" 
-                                  // onClick={handlePasswordUpdate}
+                                  onClick={handlePasswordUpdate }
                                   >
                                   비밀번호 변경
                                   </button>
-                                  <button className="updatebtn red mini" onClick={closePasswordModal}>
+                                  <button className="updatebtn red mini" onClick={closePasswordModal }>
                                   닫기
                                   </button>
                               </Modal.Footer>
