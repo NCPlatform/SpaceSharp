@@ -1,7 +1,11 @@
 package jpa.bean;
 
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -12,7 +16,8 @@ import lombok.Data;
 public class CouponDTO {
 	
 	@Id
-	@Column
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(nullable = false)
 	private int seqCoupon;
 	
 	@Column
@@ -21,7 +26,13 @@ public class CouponDTO {
 	@Column
 	private String content;
 	
-	@Column(nullable = false)
-	private int seqCouponType;
+	@Column
+	private String couponType;
+	
+	@Column
+	private int discount;
+	
+	@Column
+	private int cnt;
 	
 }

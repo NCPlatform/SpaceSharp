@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import jpa.bean.BoardDTO;
-import jpa.bean.UserDTO;
 
 @Repository
 public interface BoardDAO extends JpaRepository<BoardDTO, Integer> {

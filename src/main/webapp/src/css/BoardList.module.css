@@ -1,4 +1,9 @@
+@media only screen and (min-width: 1666px) {
 
+.BoardListContainer{
+    margin: auto;
+    width: 50%;
+}
 .table{
     margin-top: 2px;
     border-top: solid 2px;
@@ -39,6 +44,122 @@
 .BoardListInput{
     width: 100%;
 }
+.BoardListTr2{
+    height: 35px;
+}
+.BoardListTitle{
+    text-decoration: none;
+    color: black;
+}
+.BoardListTitle:hover{
+    text-decoration: underline;
+}
+.BoardListButton{
+   
+    background: #1dc207;
+    color: white;
+  
+}
+.BoardListPagingButton:active{
+    background-color: white;
+    color: #1dc207;
+}
+.BoardListPagingButton:hover{
+    text-decoration: underline;
+}
+.BoardListPagingPN:hover{
+    text-decoration: underline;
+}
+.BoardListTh1{
+    width: 10%;
+    text-align: center;
+}
+.BoardListTh2{
+    width: 45%;
+    text-align: center;
+}
+.BoardListTh3{
+    width: 25%;
+    text-align: center;
+}
+.BoardListTh4{
+    width: 20%;
+    text-align: center;
+}
+#currentPaging {
+	border: 1px solid #ccc;
+	margin: 5px;
+	padding: 5px 8px;
+	color: red;
+	cursor: pointer;
+}
+#paging {
+	color: black;
+	margin: 5px;
+	padding: 5px;
+	cursor: pointer;
+}
+
+#paging:link { color: black; text-decoration: none;}
+#paging:visited { color: black; text-decoration: none;}
+#paging:hover { color: black; text-decoration: underline;}
+#paging:active { color: black; text-decoration: none;}
+
+.subjectA:link { color: black; text-decoration: none;}
+.subjectA:visited { color: black; text-decoration: none;}
+.subjectA:hover { color: red; text-decoration: underline;}
+.subjectA:active { color: black; text-decoration: none;}
+}
+
+@media only screen and (max-width: 375px) {
+
+.BoardListContainer{
+    margin: 0;
+    width: 100%;
+}
+.table{
+    margin-top: 2px;
+    border-top: solid 2px;
+    width: 100%;
+}
+.icorn{
+    padding: 0.3rem;
+}
+.text-center{
+    background-color: #fdfdcd;
+}
+.BoardListSelect{
+    width: 100%;
+    border: solid 1px #E8E8E8;
+}
+.BoardListWriteButton{
+    background-color: #fcfbfb;
+    color: black;
+    border: 1px solid #E8E8E8;
+    padding: 9px;
+}
+.BoardListWriteButton:hover{
+    text-decoration: underline;
+}
+.BoardListPaging{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+}
+.BoardListFooter{
+    border-top: solid 1px #E8E8E8;
+    padding-top: 20px ;
+    display: flex;
+    justify-content: center;
+}
+.BoardListInput{
+    width: 100%;
+}
+.BoardListTr2{
+    height: 35px;
+}
 .BoardListTitle{
     text-decoration: none;
     color: black;
@@ -75,9 +196,13 @@
     text-align: center;
 }
 .BoardListTh4{
-    width: 10%;
+    width: 20%;
     text-align: center;
 }
+th.BoardListTh4,
+  .BoardListTd4 {
+    display: none;
+  }
 #currentPaging {
 	border: 1px solid #ccc;
 	margin: 5px;
@@ -101,3 +226,358 @@
 .subjectA:visited { color: black; text-decoration: none;}
 .subjectA:hover { color: red; text-decoration: underline;}
 .subjectA:active { color: black; text-decoration: none;}
+}
+
+@media only screen and (max-width: 440px) and (min-width: 375px){
+
+.BoardListContainer{
+    margin: 0 auto;
+    width: 95%;
+}
+.table{
+    margin-top: 2px;
+    border-top: solid 2px;
+    width: 100%;
+}
+.icorn{
+    padding: 0.3rem;
+}
+.text-center{
+    background-color: #fdfdcd;
+}
+.BoardListSelect{
+    width: 100%;
+    border: solid 1px #E8E8E8;
+}
+.BoardListWriteButton{
+    background-color: #fcfbfb;
+    color: black;
+    border: 1px solid #E8E8E8;
+    padding: 9px;
+}
+.BoardListWriteButton:hover{
+    text-decoration: underline;
+}
+.BoardListPaging{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+}
+.BoardListFooter{
+    border-top: solid 1px #E8E8E8;
+    padding-top: 20px ;
+    display: flex;
+    justify-content: center;
+}
+.BoardListInput{
+    width: 100%;
+}
+.BoardListTr2{
+    height: 35px;
+}
+.BoardListTitle{
+    text-decoration: none;
+    color: black;
+}
+.BoardListTitle:hover{
+    text-decoration: underline;
+}
+.BoardListButton{
+   
+    background: #1dc207;
+    color: white;
+  
+}
+.BoardListPagingButton:active{
+    background-color: white;
+    color: #1dc207;
+}
+.BoardListPagingButton:hover{
+    text-decoration: underline;
+}
+.BoardListPagingPN:hover{
+    text-decoration: underline;
+}
+.BoardListTh1{
+    width: 10%;
+    text-align: center;
+}
+.BoardListTh2{
+    width: 40%;
+    text-align: center;
+}
+.BoardListTh3{
+    width: 30%;
+    text-align: center;
+}
+.BoardListTh4{
+    width: 20%;
+    text-align: center;
+}
+th.BoardListTh4,
+  .BoardListTd4 {
+    display: none;
+  }
+#currentPaging {
+	border: 1px solid #ccc;
+	margin: 5px;
+	padding: 5px 8px;
+	color: red;
+	cursor: pointer;
+}
+#paging {
+	color: black;
+	margin: 5px;
+	padding: 5px;
+	cursor: pointer;
+}
+
+#paging:link { color: black; text-decoration: none;}
+#paging:visited { color: black; text-decoration: none;}
+#paging:hover { color: black; text-decoration: underline;}
+#paging:active { color: black; text-decoration: none;}
+
+.subjectA:link { color: black; text-decoration: none;}
+.subjectA:visited { color: black; text-decoration: none;}
+.subjectA:hover { color: red; text-decoration: underline;}
+.subjectA:active { color: black; text-decoration: none;}
+}
+
+@media only screen and (max-width: 800px) and (min-width: 440px){
+
+.BoardListContainer{
+    margin: 0 auto;
+    width: 85%;
+}
+.table{
+    margin-top: 2px;
+    border-top: solid 2px;
+    width: 100%;
+}
+.icorn{
+    padding: 0.3rem;
+}
+.text-center{
+    background-color: #fdfdcd;
+}
+.BoardListSelect{
+    width: 100%;
+    border: solid 1px #E8E8E8;
+}
+.BoardListWriteButton{
+    background-color: #fcfbfb;
+    color: black;
+    border: 1px solid #E8E8E8;
+    padding: 9px;
+}
+.BoardListWriteButton:hover{
+    text-decoration: underline;
+}
+.BoardListPaging{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+}
+.BoardListFooter{
+    border-top: solid 1px #E8E8E8;
+    padding-top: 20px ;
+    display: flex;
+    justify-content: center;
+}
+.BoardListInput{
+    width: 100%;
+}
+.BoardListTr2{
+    height: 35px;
+}
+.BoardListTitle{
+    text-decoration: none;
+    color: black;;
+    
+}
+.BoardListTitle:hover{
+    text-decoration: underline;
+}
+.BoardListButton{
+   
+    background: #1dc207;
+    color: white;
+  
+}
+.BoardListPagingButton:active{
+    background-color: white;
+    color: #1dc207;
+}
+.BoardListPagingButton:hover{
+    text-decoration: underline;
+}
+.BoardListPagingPN:hover{
+    text-decoration: underline;
+}
+.BoardListTh1{
+    width: 10%;
+    text-align: center;
+}
+.BoardListTh2{
+    width: 40%;
+    text-align: center;
+}
+.BoardListTh3{
+    width: 30%;
+    text-align: center;
+}
+.BoardListTh4{
+    width: 20%;
+    text-align: center;
+}
+th.BoardListTh4,
+  .BoardListTd4 {
+    display: none;
+  }
+#currentPaging {
+	border: 1px solid #ccc;
+	margin: 5px;
+	padding: 5px 8px;
+	color: red;
+	cursor: pointer;
+}
+#paging {
+	color: black;
+	margin: 5px;
+	padding: 5px;
+	cursor: pointer;
+}
+
+#paging:link { color: black; text-decoration: none;}
+#paging:visited { color: black; text-decoration: none;}
+#paging:hover { color: black; text-decoration: underline;}
+#paging:active { color: black; text-decoration: none;}
+
+.subjectA:link { color: black; text-decoration: none;}
+.subjectA:visited { color: black; text-decoration: none;}
+.subjectA:hover { color: red; text-decoration: underline;}
+.subjectA:active { color: black; text-decoration: none;}
+}
+
+@media only screen and (max-width: 1666px) and (min-width: 800px){
+
+.BoardListContainer{
+    margin: 0 auto;
+    width: 70%;
+}
+.table{
+    margin-top: 2px;
+    border-top: solid 2px;
+    width: 100%;
+}
+.icorn{
+    padding: 0.3rem;
+}
+.text-center{
+    background-color: #fdfdcd;
+}
+.BoardListSelect{
+    width: 100%;
+    border: solid 1px #E8E8E8;
+}
+.BoardListWriteButton{
+    background-color: #fcfbfb;
+    color: black;
+    border: 1px solid #E8E8E8;
+    padding: 9px;
+}
+.BoardListWriteButton:hover{
+    text-decoration: underline;
+}
+.BoardListPaging{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+}
+.BoardListFooter{
+    border-top: solid 1px #E8E8E8;
+    padding-top: 20px ;
+    display: flex;
+    justify-content: center;
+}
+.BoardListInput{
+    width: 100%;
+}
+.BoardListTr2{
+    height: 35px;
+}
+.BoardListTitle{
+    text-decoration: none;
+    color: black;;
+    
+}
+.BoardListTitle:hover{
+    text-decoration: underline;
+}
+.BoardListButton{
+   
+    background: #1dc207;
+    color: white;
+  
+}
+.BoardListPagingButton:active{
+    background-color: white;
+    color: #1dc207;
+}
+.BoardListPagingButton:hover{
+    text-decoration: underline;
+}
+.BoardListPagingPN:hover{
+    text-decoration: underline;
+}
+.BoardListTh1{
+    width: 10%;
+    text-align: center;
+}
+.BoardListTh2{
+    width: 40%;
+    text-align: center;
+}
+.BoardListTh3{
+    width: 30%;
+    text-align: center;
+}
+.BoardListTh4{
+    width: 20%;
+    text-align: center;
+}
+th.BoardListTh4,
+  .BoardListTd4 {
+    display: none;
+  }
+#currentPaging {
+	border: 1px solid #ccc;
+	margin: 5px;
+	padding: 5px 8px;
+	color: red;
+	cursor: pointer;
+}
+#paging {
+	color: black;
+	margin: 5px;
+	padding: 5px;
+	cursor: pointer;
+}
+
+#paging:link { color: black; text-decoration: none;}
+#paging:visited { color: black; text-decoration: none;}
+#paging:hover { color: black; text-decoration: underline;}
+#paging:active { color: black; text-decoration: none;}
+
+.subjectA:link { color: black; text-decoration: none;}
+.subjectA:visited { color: black; text-decoration: none;}
+.subjectA:hover { color: red; text-decoration: underline;}
+.subjectA:active { color: black; text-decoration: none;}
+}
+

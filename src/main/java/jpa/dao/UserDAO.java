@@ -12,10 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jpa.bean.UserDTO;
 
+import java.util.Collection;
+import java.util.List;
+
 public interface UserDAO extends JpaRepository<UserDTO, String> {
 	
 	boolean existsByEmail(String email);
 
+<<<<<<< HEAD
 	UserDTO findByEmail(String email);
 	
     void delete(UserDTO userDTO);
@@ -31,10 +35,13 @@ public interface UserDAO extends JpaRepository<UserDTO, String> {
 
 
 
+=======
+>>>>>>> refs/remotes/origin/user
 	Page<UserDTO> findAllByUsergradeLessThan(Pageable pageable, int i);
 
 	Page<UserDTO> findAllByUsergrade(Pageable pageable, int i);
 
+<<<<<<< HEAD
 
 
 
@@ -50,5 +57,10 @@ public interface UserDAO extends JpaRepository<UserDTO, String> {
 
 
 
+=======
+	List<UserDTO> findAllByEmail(String memberemail);
+
+	UserDTO findByEmail(String email);
+>>>>>>> refs/remotes/origin/user
 
 }

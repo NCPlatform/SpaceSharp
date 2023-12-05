@@ -1,5 +1,9 @@
 package user.controller;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,22 +19,34 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.mail.internet.ParseException;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jpa.bean.BoardDTO;
+import jpa.bean.CommentDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.HotelSearchDTO;
+import jpa.bean.ReceiptDTO;
+import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
+import jpa.dao.ReceiptDAO;
+import jpa.dao.ReservationDAO;
 import jpa.dao.UserDAO;
+import manager.service.ObjectStorageService;
 import user.service.UserService;
 
 
@@ -41,9 +57,15 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private ObjectStorageService ncpService;
+	@Autowired
+	private ReservationDAO reservationDAO;
 	
-	private UserDAO userDAO;
-
+	@Autowired
+	private ReceiptDAO receiptDAO;
+	
+	private String bucketName = "spacesharpbucket";
 
 	@GetMapping("/getHotelName")
     public String getHotelName(@RequestParam int seqHotel) {
@@ -115,36 +137,55 @@ public class UserController {
 	    return userService.getUserByEmail(email);
 	}
 	
-	@GetMapping("/getRoom")
+	@GetMapping("getRoom")
 	public List<RoomDTO> getRoomListByHotel(@RequestParam int seqHotel){
 		return userService.getRoomListByHotel(seqHotel);
 	}
 
-	@GetMapping("/getReservation")
-	public  List<Integer> getReservationListByRoom(@RequestParam int seqRoom, @RequestParam Date date){
-		return userService.getReservationListByRoom(seqRoom, date);
+	@GetMapping("getReservation")
+	public  List<ReservationDTO> getReservationListByRoom(@RequestParam int seqRoom, @RequestParam Date startDate, @RequestParam Date endDate){
+		return userService.getReservationListByRoom(seqRoom, startDate, endDate);
 	}
-	
-	@GetMapping("/updateNaverStatus")
+	@PostMapping("/reservation")
+	  public ResponseEntity<String> saveReservation(@RequestBody ReservationDTO reservationDTO) {
+	    try {
+	      
+
+	      reservationDAO.save(reservationDTO);
+	      
+	      int seqReservation = reservationDAO.findTopByOrderBySeqReservationDesc().get().getSeqReservation();
+	      
+	      // 성공적으로 처리되었을 경우
+	      return new ResponseEntity<>(String.valueOf(seqReservation), HttpStatus.OK);
+	    } catch (Exception e) {
+	      // 처리 중 오류가 발생한 경우
+	      return new ResponseEntity<>("예약 저장에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	  }
+
+	  @PostMapping("/receipt")
+	  public ResponseEntity<String> saveReceipt(@RequestBody ReceiptDTO receiptDTO) {
+	    try {
+	      
+	      int seqReservation = receiptDTO.getSeqReservation();
+
+	      receiptDAO.save(receiptDTO);
+
+	      // 성공적으로 처리되었을 경우
+	      return new ResponseEntity<>("영수증이 성공적으로 저장되었습니다. seqReservation: " + seqReservation, HttpStatus.OK);
+	    } catch (Exception e) {
+	      // 처리 중 오류가 발생한 경우
+	      return new ResponseEntity<>("영수증 저장에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	  }
+  @GetMapping("/updateNaverStatus")
 	public String updateNaverStatus(@RequestParam String userEmail) {
 	    boolean updated = userService.updateUserNaverStatus(userEmail, true); // 여기에서 true 또는 false로 변경 가능
 	    if (updated) {
 	        return "네이버 성공";
 	    }
 	    return "네이버 실패";
-	}
 	
-	@PostMapping(value="login")
-	@ResponseBody
-	public UserDTO login(@ModelAttribute UserDTO userDTO) {
-		Optional<UserDTO> DTO = userService.login(userDTO);
-		
-		if(DTO.isPresent() && DTO.get().getPassword().equals(userDTO.getPassword())) {
-			return DTO.get();
-		}else {
-			return null;
-		}	
-	}
 	
 	@PostMapping(value="write")
 	@ResponseBody
@@ -154,7 +195,7 @@ public class UserController {
 	
 	@GetMapping(value="list")
 	@ResponseBody
-	public Page<BoardDTO> list(@PageableDefault(page=0, size=10, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable) {
+	public Map<String,Object> list(@PageableDefault(page=0, size=10, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable) {
 		int seqRefSeqBoard = 0;
 		return userService.list(pageable, seqRefSeqBoard);
 	}
@@ -260,7 +301,7 @@ public class UserController {
     }
     
     
-	@PostMapping(value = "mainPage")
+    @PostMapping(value = "mainPage")
 	@ResponseBody
 	public Map<String, Object> mainPage(){
 		return userService.mainPage();
@@ -271,7 +312,13 @@ public class UserController {
 	public List<HotelDTO> getHotelList(@ModelAttribute HotelDTO hotelDTO){
 		return userService.getHotelList(hotelDTO.getSeqHotelCategory());
 	}
-	
+	@PostMapping(value = "searchHotel")
+	@ResponseBody
+	public List<HotelDTO> searchHotel(@RequestBody HotelSearchDTO hotelDTO){
+		System.out.println(hotelDTO);
+
+		return userService.searchHotel(hotelDTO);
+	}
 	@PostMapping(path = "writeReply")
 	@ResponseBody
 	public String reply(@ModelAttribute BoardDTO boardDTO) {
@@ -304,4 +351,59 @@ public class UserController {
 		
 		return "redirect:http://127.0.0.1:3000/login";
 	}    
+}
+  
+  @GetMapping(value="hotelReserve")
+	public Map<String,Object> hotelReserve(int seqRoom) {
+		return userService.hotelReserve(seqRoom);
+	}
+	
+	@GetMapping(value="setReviewTab")
+	public Map<String,Object> setReviewTab(int seqHotel){
+		return userService.setReviewTab(seqHotel);
+	}
+	
+	@PostMapping(value="writeHotelComment")
+	@ResponseBody
+	public void  writeHotelComment (@RequestPart CommentDTO commentDTO, @RequestPart(required = false) List<MultipartFile> list, HttpSession session) {
+		
+		if(list != null) {
+			String imgValue = uploadObject(list, "comment");
+			commentDTO.setPicture(imgValue);
+		}
+		
+		userService.writeHotelComment(commentDTO);
+		
+	}
+	
+	@GetMapping(value="getHotelDetailCard")
+	public Map<String,Object> getHotelDetailCard(int seqHotel){
+		return userService.getHotelDetailCard(seqHotel);
+	}
+	
+	@GetMapping(value="getHotelList")
+	public Map<String,Object> getHotelList(){
+		return userService.getHotelList();
+	}
+	
+	public String uploadObject(List<MultipartFile> list, String path) {
+		String fileName;
+		ArrayList<String> fileNames = new ArrayList<>();
+		
+		for(MultipartFile img : list) {
+				fileName = "https://kr.object.ncloudstorage.com/spacesharpbucket/storage/"+path+"/";
+				fileName += ncpService.uploadFile(bucketName, "storage/"+path+"/", img);
+				fileNames.add(fileName);
+			}
+		String imgValue = "";
+		
+		for(String img : fileNames) {
+			if(imgValue.equals("")) {
+				imgValue += img;
+			}else {
+				imgValue +=", "+img;
+			}
+		}
+		return imgValue;
+	}
 }
