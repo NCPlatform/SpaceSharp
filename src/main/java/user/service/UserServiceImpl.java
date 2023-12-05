@@ -491,9 +491,11 @@ public class UserServiceImpl implements UserService {
 		Page<ReservationDTO> reservationPage = reservationDAO.findAllByEmail(pageable, email);
 		List<RoomDTO> roomList = new ArrayList<RoomDTO>();
 		List<HotelDTO> hotelList = new ArrayList<HotelDTO>();
+		List<ReceiptDTO> receiptList = new ArrayList<ReceiptDTO>();
 		
 		for(ReservationDTO dto : reservationPage.getContent()) {
 			roomList.add(roomDAO.findById(dto.getSeqRoom()).get());
+			receiptList.add(receiptDAO.findBySeqReservation(dto.getSeqReservation()));
 		}
 		
 		for(RoomDTO dto : roomList) {
@@ -505,6 +507,7 @@ public class UserServiceImpl implements UserService {
 		map.put("reservationPage", reservationPage);
 		map.put("roomList", roomList);
 		map.put("hotelList", hotelList);
+		map.put("receiptList", receiptList);
 		
 		return map;
 	}
@@ -599,6 +602,12 @@ public class UserServiceImpl implements UserService {
 		dto.setSeqHotel(seqHotel);
 		
 		likedDAO.save(dto);
+	}
+
+	@Override
+	public List<HotelDTO> getLikedHotel(String email) {
+		
+		return hotelDAO.findAllByEmail(email);
 	}
 	
 }

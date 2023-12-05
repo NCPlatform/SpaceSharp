@@ -289,6 +289,13 @@ public class UserController {
 	public List<HotelDTO> getHotelList(@ModelAttribute HotelDTO hotelDTO){
 		return userService.getHotelList(hotelDTO.getSeqHotelCategory());
 	}
+	
+	@GetMapping(value = "getLikedHotel")
+	@ResponseBody
+	public List<HotelDTO> getLikedHotel(@RequestParam String email){
+		return userService.getLikedHotel(email);
+	}
+	
 	@PostMapping(value = "searchHotel")
 	@ResponseBody
 	public List<HotelDTO> searchHotel(@RequestBody HotelSearchDTO hotelDTO){

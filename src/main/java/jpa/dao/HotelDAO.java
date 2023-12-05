@@ -40,4 +40,9 @@ public interface HotelDAO extends JpaRepository<HotelDTO, Integer> {
                                @Param("minPrice") Integer minPrice,
                                @Param("maxPrice") Integer maxPrice);
 
+	@Query("SELECT DISTINCT h FROM HotelDTO h "
+			+ "LEFT JOIN LikedDTO l ON h.seqHotel = l.seqHotel "
+			+ "WHERE l.email LIKE :email")
+	public List<HotelDTO> findAllByEmail(@Param("email")String email);
+
 }

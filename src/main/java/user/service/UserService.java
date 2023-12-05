@@ -115,6 +115,8 @@ public interface UserService {
 	public void deleteLike(String email, int seqHotel);
 
 	public void addLike(String email, int seqHotel);
+
+	public List<HotelDTO> getLikedHotel(String email);
 	
 
 
