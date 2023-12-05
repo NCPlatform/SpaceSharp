@@ -211,6 +211,33 @@ const AccountUpdate = ({ userInfo }) => {
         .catch((error) => console.log(error));
     };   
 
+  //비밀번호 변경 모달상태
+  const [newPassword, setNewPassword] = useState('');
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordValidationMsg, setPasswordValidationMsg] = useState('');
+
+  const openPasswordModal = () => 
+  { 
+    setShowPasswordModal(true);
+    doAuth()
+  }
+  const closePasswordModal = () => 
+  { 
+    setShowPasswordModal(false);
+    setOnChPwd(false)
+  }
+  const handlePasswordUpdate = () => {
+    axios
+      .post('/user/updatePassword', { email: userDTO.email, newPassword })
+      .then((res) => {
+        alert('회원님의 비밀번호가 수정되었습니다.');
+        const updatedUser = { ...userDTO, password: newPassword };
+        setUserDTO(updatedUser);
+        window.sessionStorage.setItem('user', JSON.stringify(updatedUser));
+        closePasswordModal();
+      })
+      .catch((error) => console.log(error));
+  };
   
     useEffect(() => {
       const storedUser = window.sessionStorage.getItem('user');
@@ -378,33 +405,6 @@ const AccountUpdate = ({ userInfo }) => {
     naverRef.current.children[0].click()
   };  //네이버 소셜 연동 끝
 
-  //비밀번호 변경 모달상태
-  const [newPassword, setNewPassword] = useState('');
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [passwordValidationMsg, setPasswordValidationMsg] = useState('');
-
-  const openPasswordModal = () => 
-  { 
-    setShowPasswordModal(true);
-    doAuth()
-  }
-  const closePasswordModal = () => 
-  { 
-    setShowPasswordModal(false);
-    setOnChPwd(false)
-  }
-  const handlePasswordUpdate = () => {
-    axios
-      .post('/user/updatePassword', { email: userDTO.email, newPassword })
-      .then((res) => {
-        alert('회원님의 비밀번호가 수정되었습니다.');
-        const updatedUser = { ...userDTO, password: newPassword };
-        setUserDTO(updatedUser);
-        window.sessionStorage.setItem('user', JSON.stringify(updatedUser));
-        closePasswordModal();
-      })
-      .catch((error) => console.log(error));
-  };
 
   //회원탈퇴 모달 상태
   const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
@@ -696,7 +696,7 @@ const AccountUpdate = ({ userInfo }) => {
                                 </Modal.Body>
                                 <Modal.Footer>
                                     <button className="updatebtn green mini" 
-                                    // onClick={handlePasswordUpdate}
+                                     onClick={handlePasswordUpdate}
                                     >
                                     비밀번호 변경
                                     </button>
