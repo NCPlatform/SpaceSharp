@@ -100,6 +100,10 @@ public interface UserService {
 
 	public String saveReceipt(ReceiptDTO receiptDTO);
 
+	public List<HotelDTO> searchHotelByLowPrice(HotelSearchDTO hotelDTO);
+
+	public List<HotelDTO> searchHotelByHighPrice(HotelSearchDTO hotelDTO);
+
 	//public List<IssuedCouponDTO> getCouponInfo(String email);
 
 	//public List<CouponDTO> getUserCoupons();

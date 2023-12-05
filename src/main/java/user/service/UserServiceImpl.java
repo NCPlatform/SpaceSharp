@@ -430,7 +430,14 @@ public class UserServiceImpl implements UserService {
 		return hotelDAO.searchHotel(hotelDTO.getSeqHotelCategory(), hotelDTO.getDate(), hotelDTO.getAddr(), hotelDTO.getSearchValue(), hotelDTO.getMinPrice(), hotelDTO.getMaxPrice());
 	}
 	
-
+	@Override
+	public List<HotelDTO> searchHotelByLowPrice(HotelSearchDTO hotelDTO) {
+		return hotelDAO.searchHotelByLowPrice(hotelDTO.getSeqHotelCategory(), hotelDTO.getDate(), hotelDTO.getAddr(), hotelDTO.getSearchValue(), hotelDTO.getMinPrice(), hotelDTO.getMaxPrice());
+	}
+	@Override
+	public List<HotelDTO> searchHotelByHighPrice(HotelSearchDTO hotelDTO) {
+		return hotelDAO.searchHotelByHighPrice(hotelDTO.getSeqHotelCategory(), hotelDTO.getDate(), hotelDTO.getAddr(), hotelDTO.getSearchValue(), hotelDTO.getMinPrice(), hotelDTO.getMaxPrice());
+	}
 	@Override
 	public Integer saveReservation(ReservationDTO reservationDTO) {
 	    try {

@@ -288,6 +288,20 @@ public class UserController {
 
 		return userService.searchHotel(hotelDTO);
 	}
+	@PostMapping(value = "searchHotelByLowPrice")
+	@ResponseBody
+	public List<HotelDTO> searchHotelByLowPrice(@RequestBody HotelSearchDTO hotelDTO){
+		System.out.println(hotelDTO);
+
+		return userService.searchHotelByLowPrice(hotelDTO);
+	}
+	@PostMapping(value = "searchHotelByHighPrice")
+	@ResponseBody
+	public List<HotelDTO> searchHotelByHighPrice(@RequestBody HotelSearchDTO hotelDTO){
+		System.out.println(hotelDTO);
+
+		return userService.searchHotelByHighPrice(hotelDTO);
+	}
 	@PostMapping(path = "writeReply")
 	@ResponseBody
 	public String reply(@ModelAttribute BoardDTO boardDTO) {

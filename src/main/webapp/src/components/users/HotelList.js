@@ -35,6 +35,8 @@ const List = () => {
   const [subAddress, setSubAddress] = useState("");
   const [selectedOptions, setOptions] = useState([]);
   const [showCouponDiscount, setShowCouponDiscount] = useState(true);
+  const [sortOption, setSortOption] = useState("best");
+  const [originalHotelList, setOriginalHotelList] = useState([]);
   const handleOption1Change = (e) => {
     setMainAddress(e.target.value);
     setSubAddress("");
@@ -131,8 +133,180 @@ const List = () => {
     }
     return [];
   };
+  const fetchHotelListByLowPrice = async () => {
+    const selectedDate = formatDate(date);
+    let list = [];
+
+    if (!seqHotelCategory) {
+      const { status, data } = await axios.post("/user/searchHotelByLowPrice", {
+        seqHotelCategory: "",
+        addr: subAddress,
+        date: selectedDate,
+        minPrice: filterOn ? priceRange.lowerBound : null,
+        maxPrice: filterOn ? priceRange.upperBound : null,
+      });
+      
+      if (status === 200) {
+        return data.filter(
+          (item) =>
+            item.addr.includes(searchValue) ||
+            item.name.includes(searchValue) ||
+            item.addr.includes(searchValue)
+        );
+      }
+    } else {
+      const { status, data } = await axios.post("/user/searchHotelByLowPrice", {
+        seqHotelCategory: "",
+        addr: subAddress,
+        date: selectedDate,
+        minPrice: filterOn ? priceRange.lowerBound : null,
+        maxPrice: filterOn ? priceRange.upperBound : null,
+      });
+
+      if (status === 200) {
+        return data;
+      }
+    }
 
 
+
+    if (subAddress === "") {
+      const { status, data } = await axios.post("/user/searchHotelByLowPrice", {
+        seqHotelCategory:
+          seqHotelCategory.length === 1 ? `0${seqHotelCategory}` : seqHotelCategory,
+        addr: subAddress,
+        date: selectedDate,
+        minPrice: filterOn ? priceRange.lowerBound : null,
+        maxPrice: filterOn ? priceRange.upperBound : null,
+      });
+
+      if (status === 200) {
+        return searchValue
+          ? data.filter(
+            (item) =>
+              item.addr.includes(searchValue) ||
+              item.name.includes(searchValue) ||
+              item.addr.includes(searchValue)
+          )
+          : data;
+      }
+    } else {
+      const list = [];
+      const addrs = subAddress.split(",");
+      for (let addr of addrs) {
+        const { status, data } = await axios.post("/user/searchHotelByLowPrice", {
+          seqHotelCategory:
+            seqHotelCategory.length === 1 ? `0${seqHotelCategory}` : seqHotelCategory,
+          addr: addr.trim(),
+          date: selectedDate,
+          minPrice: filterOn ? priceRange.lowerBound : null,
+          maxPrice: filterOn ? priceRange.upperBound : null,
+        });
+
+        if (status === 200) {
+          data.forEach((hotel) => list.push(hotel));
+        }
+      }
+
+      return searchValue
+        ? list.filter(
+          (item) =>
+            item.addr.includes(searchValue) ||
+            item.name.includes(searchValue) ||
+            item.addr.includes(searchValue)
+        )
+        : list;
+    }
+    return [];
+  };
+
+  const fetchHotelByHighPrice = async () => {
+    const selectedDate = formatDate(date);
+    let list = [];
+
+    if (!seqHotelCategory) {
+      const { status, data } = await axios.post("/user/searchHotelByHighPrice", {
+        seqHotelCategory: "",
+        addr: subAddress,
+        date: selectedDate,
+        minPrice: filterOn ? priceRange.lowerBound : null,
+        maxPrice: filterOn ? priceRange.upperBound : null,
+      });
+
+      if (status === 200) {
+        return data.filter(
+          (item) =>
+            item.addr.includes(searchValue) ||
+            item.name.includes(searchValue) ||
+            item.addr.includes(searchValue)
+        );
+      }
+    } else {
+      const { status, data } = await axios.post("/user/searchHotelByHighPrice", {
+        seqHotelCategory: "",
+        addr: subAddress,
+        date: selectedDate,
+        minPrice: filterOn ? priceRange.lowerBound : null,
+        maxPrice: filterOn ? priceRange.upperBound : null,
+      });
+
+      if (status === 200) {
+        return data;
+      }
+    }
+
+
+
+    if (subAddress === "") {
+      const { status, data } = await axios.post("/user/searchHotelByHighPrice", {
+        seqHotelCategory:
+          seqHotelCategory.length === 1 ? `0${seqHotelCategory}` : seqHotelCategory,
+        addr: subAddress,
+        date: selectedDate,
+        minPrice: filterOn ? priceRange.lowerBound : null,
+        maxPrice: filterOn ? priceRange.upperBound : null,
+      });
+
+      if (status === 200) {
+        return searchValue
+          ? data.filter(
+            (item) =>
+              item.addr.includes(searchValue) ||
+              item.name.includes(searchValue) ||
+              item.addr.includes(searchValue)
+          )
+          : data;
+      }
+    } else {
+      const list = [];
+      const addrs = subAddress.split(",");
+      for (let addr of addrs) {
+        const { status, data } = await axios.post("/user/searchHotelByHighPrice", {
+          seqHotelCategory:
+            seqHotelCategory.length === 1 ? `0${seqHotelCategory}` : seqHotelCategory,
+          addr: addr.trim(),
+          date: selectedDate,
+          minPrice: filterOn ? priceRange.lowerBound : null,
+          maxPrice: filterOn ? priceRange.upperBound : null,
+        });
+
+        if (status === 200) {
+          data.forEach((hotel) => list.push(hotel));
+        }
+      }
+
+      return searchValue
+        ? list.filter(
+          (item) =>
+            item.addr.includes(searchValue) ||
+            item.name.includes(searchValue) ||
+            item.addr.includes(searchValue)
+        )
+        : list;
+    }
+    return [];
+  };
+  
   const filterHotel = (hotelList) => {
     const filtered = [];
     for (let hotel of hotelList) {
@@ -151,14 +325,31 @@ const List = () => {
   };
 
   const resetHotelList = async () => {
-    const list = await fetchHotelList();
-
-    if (filterOn) {
-      setHotelList(filterHotel(list.filter((item) => item.addr.includes(subAddress))));
+    let list;
+  
+    if (sortOption === "lowPrice") {
+      list = await fetchHotelListByLowPrice();
+    } else if (sortOption === "highPrice") {
+      list = await fetchHotelByHighPrice();
     } else {
-      setHotelList(list);
+      list = await fetchHotelList();
     }
+  
+    // 원래 순서를 유지하는 복사본 생성
+    const originalList = [...list];
+  
+    // 필터 적용
+    if (filterOn) {
+      list = filterHotel(list.filter((item) => item.addr.includes(subAddress)));
+    }
+  
+    // 바로 HotelItemCard를 업데이트
+    setHotelList(list);
+  
+    // 원래 순서를 유지하는 복사본을 저장
+    setOriginalHotelList(originalList);
   };
+
   useEffect(() => {
     console.log(hotelList);
   }, [hotelList]);
@@ -166,7 +357,7 @@ const List = () => {
   useEffect(() => {
     console.log("searchValue:", searchValue);
     resetHotelList();
-  }, [seqHotelCategory, subAddress, date, searchValue]);
+  }, [seqHotelCategory, subAddress, date, searchValue, sortOption]);
 
   const toggleOption = (e) => {
     const { name } = e.target;
@@ -187,8 +378,16 @@ const List = () => {
     }
     return selectedOptions.includes(option);
   };
-  const applyFilter = () => {
-    resetHotelList();
+  const applyFilter = async () => {
+    if (sortOption === "lowPrice") {
+      await fetchHotelListByLowPrice();
+    } else {
+      await resetHotelList();
+    }
+  };
+  // 'best' 옵션을 선택할 때 원래 순서로 HotelItemCard를 출력하는 함수
+  const resetToOriginalOrder = () => {
+    setHotelList(originalHotelList);
   };
   return (
     <div>
@@ -838,11 +1037,15 @@ const List = () => {
 
             <Col xl={2} className="d-flex justify-content-end mb-3">
               <div>
-                <select className="form-select">
-                  <option selected>베스트 공간 순</option>
-                  <option>가격 낮은 순</option>
-                  <option>가격 높은 순</option>
-                  <option>이용후기 많은 순</option>
+                <select
+                  className="form-select"
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                >
+                  <option value="best">베스트 공간 순</option>
+                  <option value="lowPrice">가격 낮은 순</option>
+                  <option value="highPrice">가격 높은 순</option>
+                  {/* <option value="manyReviews">이용후기 많은 순</option> */}
                 </select>
               </div>
             </Col>
@@ -905,6 +1108,3 @@ const List = () => {
 };
 
 export default List;
-
-
-

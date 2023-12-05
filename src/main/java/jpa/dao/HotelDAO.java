@@ -44,4 +44,39 @@ public interface HotelDAO extends JpaRepository<HotelDTO, Integer> {
                                @Param("searchValue") String searchValue,
                                @Param("minPrice") Integer minPrice,
                                @Param("maxPrice") Integer maxPrice);
+	
+	@Query("SELECT h, COUNT(l.seqHotel) AS likeCount, MIN(r.price) AS minPrice FROM HotelDTO h " +
+	        "LEFT JOIN RoomDTO r ON h.seqHotel = r.seqHotel " +
+	        "LEFT JOIN ReservationDTO res ON r.seqRoom = res.seqRoom " +
+	        "LEFT JOIN LikedDTO l ON h.seqHotel = l.seqHotel " +
+	        "WHERE h.seqHotelCategory LIKE %:seqHotelCategory% " +
+	        "AND (res.travelStartDate IS NULL OR CAST(CONCAT(:date,' 00:00:00') AS TIMESTAMP) < res.travelStartDate OR CAST(CONCAT(:date,' 23:59:59') AS TIMESTAMP) > res.travelEndDate) " +
+	        "AND (:addr='' OR h.addr LIKE %:addr% OR h.addr LIKE %:searchValue%) " +
+	        "AND (:minPrice IS NULL OR :maxPrice IS NULL OR r.price IS NULL OR (r.price >= :minPrice AND r.price <= :maxPrice) " +
+	        "OR (:searchValue <> '' AND (h.name LIKE %:searchValue% OR h.addr LIKE %:searchValue%))) " +
+	        "GROUP BY h.seqHotel " +
+	        "ORDER BY CASE WHEN COALESCE(MIN(r.price), 0) = 0 THEN 1 ELSE 0 END, COALESCE(MIN(r.price), 0) ASC")
+	List<HotelDTO> searchHotelByLowPrice(@Param("seqHotelCategory") String seqHotelCategory,
+	                           @Param("date") Date date,
+	                           @Param("addr") String addr,
+	                           @Param("searchValue") String searchValue,
+	                           @Param("minPrice") Integer minPrice,
+	                           @Param("maxPrice") Integer maxPrice);
+	@Query("SELECT h, COUNT(l.seqHotel) AS likeCount FROM HotelDTO h " +
+	        "LEFT JOIN RoomDTO r ON h.seqHotel = r.seqHotel " +
+	        "LEFT JOIN ReservationDTO res ON r.seqRoom = res.seqRoom " +
+	        "LEFT JOIN LikedDTO l ON h.seqHotel = l.seqHotel " +
+	        "WHERE h.seqHotelCategory LIKE %:seqHotelCategory% " +
+	        "AND (res.travelStartDate IS NULL OR CAST(CONCAT(:date,' 00:00:00') AS TIMESTAMP) < res.travelStartDate OR CAST(CONCAT(:date,' 23:59:59') AS TIMESTAMP) > res.travelEndDate) " +
+	        "AND (:addr='' OR h.addr LIKE %:addr% OR h.addr LIKE %:searchValue%) " +
+	        "AND (:minPrice IS NULL OR :maxPrice IS NULL OR r.price IS NULL OR (r.price >= :minPrice AND r.price <= :maxPrice) " +
+	        "OR (:searchValue <> '' AND (h.name LIKE %:searchValue% OR h.addr LIKE %:searchValue%))) " +
+	        "GROUP BY h.seqHotel " +
+	        "ORDER BY COALESCE(MIN(r.price), 0) DESC")
+	List<HotelDTO> searchHotelByHighPrice(@Param("seqHotelCategory") String seqHotelCategory,
+	                           @Param("date") Date date,
+	                           @Param("addr") String addr,
+	                           @Param("searchValue") String searchValue,
+	                           @Param("minPrice") Integer minPrice,
+	                           @Param("maxPrice") Integer maxPrice);
 }
