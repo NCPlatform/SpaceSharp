@@ -86,9 +86,6 @@ const AccountUpdate = ({ userInfo }) => {
             setGoAuth(false)
         }
 
-        const closeChPwd = () => { // 모달 닫는 함수. 컴포넌트 파라메터로 전달
-            setOnChPwd(false) 
-        }
   
 
   // 세션 스토리지에서 사용자 정보를 불러오고 userDTO에 추가
@@ -367,8 +364,16 @@ const initializeNaverLogin = () => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordValidationMsg, setPasswordValidationMsg] = useState('');
 
-  const openPasswordModal = () => setShowPasswordModal(true);
-  const closePasswordModal = () => setShowPasswordModal(false);
+  const openPasswordModal = () => 
+  { 
+    setShowPasswordModal(true);
+    doAuth()
+  }
+  const closePasswordModal = () => 
+  { 
+    setShowPasswordModal(false);
+    setOnChPwd(false)
+  }
   
 
   //회원탈퇴 모달 상태
@@ -607,52 +612,49 @@ const handleDeleteUser = () => {
                       <ul class="list-group list-group-flush">
                         <br/>
                         <p className='profileTitle'>{/*비밀번호 변경자리 */}
-                          비빌번호&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  
+                          비밀번호&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;  
                           &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;
                           <button className='updatebtn green mini' onClick={openPasswordModal}>변경하기</button>
-                          {/* 비밀번호 수정 모달
+                         
 
-                                            {
-                                                goAuth === true &&  <EmailAuth userEmail = {email} func = {paramfunc}/>
+                          {
+                              goAuth === true &&  <EmailAuth userEmail = {email} func = {paramfunc}/>
                                                 
-                                            }
-                                            {
-                                                onChPwd === true && 
-                                                <div>
-                                                <input type = 'password' placeholder='변경할 비밀번호 입력'/>
-                                                <button type = 'button' onClick = {closeChPwd}>닫기</button>
-                                                </div>
-                                            }
-                          
-                          
-                          */
                           }
-                          <Modal show={showPasswordModal} onHide={closePasswordModal}>
-                              <Modal.Header closeButton>
-                              <Modal.Title>비밀번호 수정</Modal.Title>
-                              </Modal.Header>
-                              <Modal.Body>
-                              <label>
-                                이메일 인증이 완료되었습니다.<br/>
-                                변경할 비밀번호를 입력하여주세요.
-                              </label>
-                              <br/>
-                              <br/>
-                              <label htmlFor="newPassword">새 비밀번호:&nbsp;</label>
-                              <input type="password" id="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}/>
-                              <div className="passwordValidationMsg">{passwordValidationMsg}</div>
-                              </Modal.Body>
-                              <Modal.Footer>
-                                  <button className="updatebtn green mini" 
-                                  // onClick={handlePasswordUpdate}
-                                  >
-                                  비밀번호 변경
-                                  </button>
-                                  <button className="updatebtn red mini" onClick={closePasswordModal}>
-                                  닫기
-                                  </button>
-                              </Modal.Footer>
-                            </Modal>
+                          {
+                              onChPwd === true && 
+                              <div>
+                                <Modal show={showPasswordModal} onHide={closePasswordModal}>
+                                <Modal.Header closeButton>
+                                <Modal.Title>비밀번호 수정</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                <label>
+                                  이메일 인증이 완료되었습니다.<br/>
+                                  변경할 비밀번호를 입력하여주세요.
+                                </label>
+                                <br/>
+                                <br/>
+                                <label htmlFor="newPassword">새 비밀번호:&nbsp;</label>
+                                <input type="password" id="newPassword" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}/>
+                                <div className="passwordValidationMsg">{passwordValidationMsg}</div>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <button className="updatebtn green mini" 
+                                    // onClick={handlePasswordUpdate}
+                                    >
+                                    비밀번호 변경
+                                    </button>
+                                    <button className="updatebtn red mini" onClick={closePasswordModal}>
+                                    닫기
+                                    </button>
+                                </Modal.Footer>
+                              </Modal>
+                            </div>
+                          }
+                          
+                          
+                          
                           <br />
                         </p>
                         <br/>
