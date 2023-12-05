@@ -341,6 +341,7 @@ const NavTest = () => {
                         onClick={() => {
                           sessionStorage.clear();
                           window.location.reload();
+
                         }}
                       >
                         로그아웃

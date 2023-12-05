@@ -4,6 +4,8 @@ import Button from 'react-bootstrap/Button';
 import Disp_topNav from './Disp_topNav';
 import TextEditor from '../../TextEditor';
 import axios from 'axios'
+import Carousel from 'react-bootstrap/Carousel';
+import ManagerHeader from './ManagerHeader';
 
 
 const ManagerPlaceInfo = () => {
@@ -14,7 +16,7 @@ const ManagerPlaceInfo = () => {
     const [hotelDTO, setHotelDTO] = useState({
             
         name: '', subscribe: '', mainKeyword: '', seqHotelCategory: '',
-        seqHotel: hotelSeq,
+        seqHotel: hotelSeq, img: '',
         keyword: '', addr: '', ownerEmail: session.email,
         workinghour: '', holiday: '', placeEx: '', 
         facilities: '', alert: '', refund: '',
@@ -32,8 +34,14 @@ const ManagerPlaceInfo = () => {
         rounge: false, mirror: false, bbq: false, doorlock: false
 
     })
+    
 
-    const {seqHotelCategory, holiday, ownerEmail} = hotelDTO
+    const {name, subscribe, mainKeyword, seqHotelCategory, keyword, addr, workinghour, holiday,
+            placeEx, facilities, alert, refund, coupon, TV, internet, copy, whiteboard, mic,
+            cooking, food, alcohol, washing, parking, smoke, animal, pc, socket, open24, noHoliday,
+            restaurant, freeFood, locker, mailService, kitchen, waterFurifier, catering, heater,
+            airConditioner, fax, wareHouse, percelService, privateToilet, fittingRoom, roofTop,
+            rounge, mirror, bbq, doorlock, ownerEmail, img} = hotelDTO
 
     const [whenOn, setWhenOn]  = useState({
         openTime: 0,
@@ -53,6 +61,8 @@ const ManagerPlaceInfo = () => {
 
     // 수정 전용
     const [modifyBit, setModifyBit] = useState(false)
+
+    const [isReady, setIsReady] = useState(false) // TextEditor 컴포넌트 로드
 
 
     // ======================================== functions 
@@ -87,13 +97,6 @@ const ManagerPlaceInfo = () => {
         }
     }
 
-    const insertTags = () => {
-        let tags = document.getElementById('addTags').innerText
-        tags = tags.replaceAll('#',',#')
-        console.log(tags)
-       setHotelDTO({...hotelDTO, keyword:tags})
-    }
-
     const findClk = (e) => {
         fileRef.current.click()
     }
@@ -112,23 +115,6 @@ const ManagerPlaceInfo = () => {
         setFile(e.target.files)
     }
 
-    const addInput = (name, mininame) => {
-        const newInput = document.createElement('input')
-        newInput.setAttribute('type', 'text')
-        newInput.setAttribute('name', name) 
-        newInput.setAttribute('style', 'width:75%')
-        newInput.addEventListener('change', () => {
-            settingInputs(name)
-        })
-        
-        const InputAddBtn = document.getElementById(mininame+'AddBtn')
-    
-        const br = document.createElement('br')
-        InputAddBtn.after(br)
-        br.after(newInput)
-
-    }
-
     const settingInputs = (name) => {
         const inputInfo = document.getElementsByName(name)
         let val = "";
@@ -138,13 +124,9 @@ const ManagerPlaceInfo = () => {
         })
         setHotelDTO({...hotelDTO, [name]:val})
     }
-    
-    const settingVals = () => { // 주소창 입력하려 눌렀을 때 해시태그, 이미지 확정
-        insertTags()
-    }
 
     const searchAddr = () => {
-        settingVals()
+        
         new daum.Postcode({
             oncomplete: function(data) {
                 var roadAddr = data.roadAddress; // 도로명 주소 변수
@@ -195,18 +177,23 @@ const ManagerPlaceInfo = () => {
         // modify action =========================================
 
     useEffect(() => {
-
+        console.log('EFFECT 발동')
         const elements = document.getElementsByClassName('DTOs');
 
         for (const element of elements) {
             element.disabled = modifyBit === true ? false : true
+           // console.log(element.name)
         }
 
         axios.post('http://localhost:8080/manager/viewPlaceInfo', null, {
             params: {
                 seq: hotelSeq
             }
-        }).then(res => console.log(res)).catch(e => console.log(e))
+        }).then(res => {setHotelDTO(res.data)
+                        setIsReady(true)
+
+                        }).catch(e => console.log(e))
+
        
     },[])
 
@@ -222,14 +209,16 @@ const ManagerPlaceInfo = () => {
             element.disabled = false;
         }
 
-        // const delValue = document.getElementsByClassName('EditVals')
-        // for (const element of delValue){
-        //     element.value = false;
-        // }
+        
       }
 
       const isDelete = () => {
-        window.confirm('정말 플레이스를 삭제하시겠어요? \n룸도 함께 삭제되며, 삭제 후에는 취소할 수 없습니다.')
+        window.confirm('정말 플레이스를 삭제하시겠어요? \n룸도 함께 삭제되며, 삭제 후에는 취소할 수 없습니다.') && 
+            axios.post('http://localhost:8080/manager/deletePlace', null, {
+                params: {
+                    seqHotel: hotelSeq
+                }
+            }).then(() => {window.alert('플레이스 삭제가 완료되었습니다.'); window.location.href = '/manager/myplace'}).catch((e) => console.log(e))
       }
 
       const isFinish = () => {
@@ -239,25 +228,13 @@ const ManagerPlaceInfo = () => {
         for (const element of elements) {
             element.disabled = true;
         }
+        submitVals()
       }
 
       const isCancel = () => {
-        setModifyBit(false)
-        const elements = document.getElementsByClassName('DTOs');
-
-        for (const element of elements) {
-            element.disabled = null;
-        }
+       window.location.reload()
       }
     
-      const editorVal_alert = (val) => {
-        
-        setHotelDTO({...hotelDTO, placeEx:val})
-      }
-
-      const editorVal_facilities = (val) => {
-        setHotelDTO({...hotelDTO, facilities: val})
-      }
     // ======================================== CSS
     const styleA = {fontSize: '1.2em', fontWeight: 'bold'} // style = {styleA}
     const styleB = {width: '75%'} // style = {styleB}
@@ -278,27 +255,46 @@ const ManagerPlaceInfo = () => {
     // ======================================== API / Test / etc
     const confirmVals = () => {
         console.log(hotelDTO)
+        
     }
 
     const submitVals = () => {
-        var formData = new FormData()
-        formData.append('hotelDTO', new Blob([JSON.stringify(hotelDTO)], {type: 'application/json'}))
+        
 
-        Object.values(file).map((item, index) => {
-            formData.append('img', item)
-            return null;
-        })
+        // imageList.length가 0이면(사진이 수정되지 않았다면) 다른 링크로 보내야 한다.
+        // (multipartFile을 파라메터로 요구하지 않는 메서드로 DTO만 보내야 함)
 
-        console.log(formData)
-       
-        axios.post('http://localhost:8080/manager/addedPlace', formData, {
-            headers:{
-                'Content-Type': 'multipart/form-data'
-            }
+        if(imageList.length === 0){
 
-        }).then(res=>{alert('플레이스 등록이 완료되었어요! 호실 등록으로 이동합니다.');  window.location.href = '/manager/addRoom/'+res.data
-        }).catch(e => console.log(e))
+            var formData = new FormData()
+            formData.append('hotelDTO', new Blob([JSON.stringify(hotelDTO)], {type: 'application/json'}))
 
+            axios.post('http://localhost:8080/manager/addedPlaceWithoutImage', formData, {
+                headers:{
+                    'Content-Type' : 'multipart/form-data'
+                }
+                
+            }).then(res => {window.alert('플레이스 수정이 완료되었어요!'); window.location.href = '/manager/myplace'}).catch(e => console.log(e))
+        }
+
+        else{
+            var formData = new FormData()
+            formData.append('hotelDTO', new Blob([JSON.stringify(hotelDTO)], {type: 'application/json'}))
+
+            Object.values(file).map((item, index) => {
+                formData.append('img', item)
+                return null;
+            })
+            console.log(formData)
+            // JPA에서 save 메서드를 쓰기 때문에 수정과 등록이 똑같은 주소로 가능하다.
+            axios.post('http://localhost:8080/manager/addedPlace', formData, {
+                headers:{
+                    'Content-Type': 'multipart/form-data'
+                }
+
+            }).then(res=>{window.alert('플레이스 수정이 완료되었어요!');  window.location.href = '/manager/myplace'
+            }).catch(e => console.log(e))
+        }
     }
 
 
@@ -306,8 +302,8 @@ const ManagerPlaceInfo = () => {
 
     return (
         <div>
-            <Disp_topNav/>
-            <div style = {styleZ}>
+            <ManagerHeader />
+            <div className="container mt-5 pt-5">
             <form>
                     <span style = {styleA}>플레이스 정보 상세보기</span>
                     <table>
@@ -325,17 +321,25 @@ const ManagerPlaceInfo = () => {
                             </tr>
                             <tr>
                                 <td>플레이스 이름&emsp;</td>
-                                <td><input type = 'text'  style = {styleB} name = 'name' onChange = {insertData} className = 'DTOs'/></td>
+                                <td>
+                                    
+                                    <input type = 'text'  style = {styleB} name = 'name' onChange = {insertData} value = {name} className = 'DTOs'/>
+                                    
+                                </td>
                             </tr>
                             <tr>
                                 <td>한 마디 소개</td>
-                                <td><input type = 'text' style = {styleB} name = 'subscribe' onChange = {insertData} placeholder = '손님들에게 보여질 소개 멘트를 작성해 주세요.' className = 'DTOs'/></td>
+                                <td><input type = 'text' style = {styleB} name = 'subscribe' onChange = {insertData} value = {subscribe} placeholder = '손님들에게 보여질 소개 멘트를 작성해 주세요.' className = 'DTOs'/></td>
                             </tr>
                             <tr>
                                 <td>소개</td>
                                 <td>
                                     <div>
-                                    <TextEditor func = {editorVal_placeEx} readOnly = {!modifyBit} texthold = 'placeEx' />
+                                        {
+                                            isReady === true &&
+                                            <TextEditor func = {editorVal_placeEx} readOnly = {!modifyBit} texthold = 'placeEx' value = {placeEx} />
+                                        
+                                        }
                                     
                                     </div>
                                     <br/><br/>
@@ -343,10 +347,10 @@ const ManagerPlaceInfo = () => {
                             </tr>
                             <tr>
                                 <td>해시태그</td>
-                                <td><input type = 'text' style = {styleB} name = 'keyword' placeholder='#'onChange = {settingHashTags} onBlur = {insertTags} className = 'DTOs'/>
-                                    <div id = 'addTags'>
+                                <td>
+                                   
+                                            <input type = 'text' style = {styleB} value = {keyword} name = 'keyword' onChange = {insertData} className = 'DTOs'/>
                                         
-                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -354,9 +358,18 @@ const ManagerPlaceInfo = () => {
                                 <td>
                                     <input type = 'file' name = 'img[]' multiple = 'multiple' onChange = {settingImages} ref = {fileRef} style = {styleK}/>
                                     <Button variant="outline-dark" onClick = {findClk} style = {{display: modifyBit || 'none'}}>파일 찾아보기</Button> &nbsp;
-                                    { // modifyBit 시 처리 필요 
-                                        imageList.map((item, index) => <img key = {index} src = {item} style = {{width: '40px', height: '40px'}} alt = ''/>)
-                                    }
+                                    <br/><span style = {{fontSize: '0.9em'}}>이미지의 순서 변경이나 일부 이미지만 수정은 불가합니다. <br/>파일 추가 시 기존 이미지는 모두 사라집니다.</span>
+                                    <Carousel>
+                                        {imageList.length > 0 ? 
+                                                ( imageList.map((item, index) => (
+                                                    <Carousel.Item><img key={index} src={item} style={{ width: '100%', height: '300px', objectFit: 'cover' }} alt="" /></Carousel.Item>
+                                                    ))) 
+                                                : ( img.split(',').map((item, index) => (
+                                                    <Carousel.Item><img key={index} src={item} style={{ width: '100%', height: '300px', objectFit: 'cover' }} alt="" /></Carousel.Item>
+                                                    )))
+                                        }
+                                   
+                                    </Carousel>
                                 </td>
                             </tr>
                             <tr>
@@ -365,46 +378,73 @@ const ManagerPlaceInfo = () => {
                                     {/* <TextEditor func = {editorVal_facilities} readOnly = {!modifyBit} texthold = 'facilities' /> */}
                                     {/* <br/><br/> */}
                                     <textarea rows = '10' cols = '60'
-                                        name = 'facilities' onChange = {insertData} className = 'DTOs EditVals'>
-                                        고양이 갑자기 왈왈
+                                        name = 'facilities' onChange = {insertData} className = 'DTOs EditVals' defaultValue = {facilities}>
+                                        
                                     </textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <td>오시는 길</td>
-                                <td><input type = 'text' style = {styleB} name = 'mainKeyword' placeholder = '가까운 지하철역 기준으로 작성해 주세요.' onChange = {insertData}  className = 'DTOs'/></td>
+                                <td><input type = 'text' style = {styleB} name = 'mainKeyword' placeholder = '가까운 지하철역 기준으로 작성해 주세요.' value = {mainKeyword} onChange = {insertData}  className = 'DTOs'/></td>
                             </tr>
                             <tr>
-                                <td>주소</td>
+                                <td>주소
+                                    {
+                                        modifyBit === true && 
+                                        <div>
+                                            
+                                            <span style = {{fontSize: '0.9em'}}>주소 변경 시에만<br/>입력해 주세요.</span>
+                                            
+                                        </div>
+                                    }
+
+                                </td>
                                 <td>
                                     <div>
-                                        <input type = 'text' readOnly  style = {styleH} id = 'roadAddr' className = 'DTOs' />
-                                        &nbsp;
-                                        <Button variant="outline-dark" type = 'button' onClick = {searchAddr} style = {{display: modifyBit || 'none'}}>주소 검색</Button>
-                                        <br/><input type = 'text' style = {styleH} id = 'detailAddr' onChange = {settingAddr} placeholder = '상세주소 입력'  className = 'DTOs'/>
-                                    
+                                        
+                                        {
+                                            modifyBit === false ? 
+                                            <input type = 'text' style = {styleB} name = 'addr' value = {addr} className = 'DTOs'/>
+                                            :
+
+                                        <div>
+                                            <input type = 'text' readOnly  style = {styleH} id = 'roadAddr' className = 'DTOs' />
+                                            &nbsp;
+                                            <Button variant="outline-dark" type = 'button' onClick = {searchAddr} style = {{display: modifyBit || 'none'}}>주소 검색</Button>
+                                            <br/><input type = 'text' style = {styleH} id = 'detailAddr' onChange = {settingAddr} placeholder = '상세주소 입력'  className = 'DTOs'/>
+                                        </div>
+                                         }
                                     </div>
                                 </td>
                             </tr>
                             <tr>
-                                <td>영업시간 & 휴무일</td>
+                                <td>영업시간 & 휴무일
+                                    {
+                                        modifyBit === true && 
+                                        <div>
+                                            
+                                            <span style = {{fontSize: '0.9em'}}>영업 시간은 변경 시에만<br/>입력해 주세요.</span>
+                                            
+                                        </div>
+                                    }
+                                </td>
                                 <td>
-                                    <input style = {styleE} type = 'number' name = 'openTime' onChange = {settingOn}  className = 'DTOs'/>시부터 <input style = {styleE} type = 'number' name =  'closeTime' onChange = {settingOn} onBlur = {fixWorkTime} className = 'DTOs'/>시까지
+                                    <input style = {styleE} type = 'number' name = 'openTime' onChange = {settingOn} Value = {modifyBit === false && isReady === true && workinghour.split('~')[0]} className = 'DTOs'/>시부터 <input style = {styleE} type = 'number' name =  'closeTime' onChange = {settingOn} onBlur = {fixWorkTime} Value = {modifyBit === false && isReady === true && workinghour.split('~')[1].slice(0,-1)} className = 'DTOs'/>시까지
                                     <br/>
                                     <div>
                                         <table>
                                             <tbody>
                                                 <tr>
-                                                    <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '법정공휴일' onChange = {setCate}/>법정공휴일</label></td>
-                                                    <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '매주 일요일' onChange = {setCate}/>매주 일요일</label></td>
-                                                    <td style = {styleD}> <label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '매주 월요일' onChange = {setCate}/>매주 월요일</label></td>
-                                                    <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '매주 화요일' onChange = {setCate}/>매주 화요일</label></td>
+                                                    <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '법정공휴일' checked = {holiday.includes('법정공휴일')} onChange = {setCate}/>법정공휴일</label></td>
+                                                    <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '매주 일요일' checked = {holiday.includes('매주 일요일')} onChange = {setCate}/>매주 일요일</label></td>
+                                                    <td style = {styleD}> <label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '매주 월요일' checked = {holiday.includes('매주 월요일')} onChange = {setCate}/>매주 월요일</label></td>
+                                                    <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '매주 화요일' checked = {holiday.includes('매주 화요일')} onChange = {setCate}/>매주 화요일</label></td>
                                                 </tr>
                                                 <tr>
-                                                    <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '매주 수요일' onChange = {setCate}/>매주 수요일</label></td>
-                                                    <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '매주 목요일' onChange = {setCate}/>매주 목요일</label></td>
-                                                    <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '매주 금요일' onChange = {setCate}/>매주 금요일</label></td>
-                                                    <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '매주 토요일' onChange = {setCate}/>매주 토요일</label></td>
+                                                    <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '매주 수요일' checked = {holiday.includes('매주 수요일')} onChange = {setCate}/>매주 수요일</label></td>
+                                                    <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '매주 목요일' checked = {holiday.includes('매주 목요일')} onChange = {setCate}/>매주 목요일</label></td>
+                                                    <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '매주 금요일' checked = {holiday.includes('매주 금요일')} onChange = {setCate}/>매주 금요일</label></td>
+                                                    <td style = {styleD}><label><input type = 'checkbox' name = 'holiday' className = 'DTOs' value = '매주 토요일' checked = {holiday.includes('매주 토요일')} onChange = {setCate}/>매주 토요일</label></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -418,14 +458,14 @@ const ManagerPlaceInfo = () => {
                                         {/* <br/><br/> */}
                                         <textarea rows = '10' cols = '60'
                                         
-                                        name = 'alert' onChange = {insertData}  className = 'DTOs EditVals'
+                                        name = 'alert' onChange = {insertData}  className = 'DTOs EditVals' defaultValue={alert} 
                                     ></textarea>
                                 </td>
 
                             </tr>
                             <tr>
                                 <td>쿠폰 가능 여부</td> 
-                                <td><label><input type = 'checkbox' name = 'coupon' onChange = {setBooleans} />&nbsp; 체크하시면 이용자가 결제 시 쿠폰을 사용할 수 있습니다.</label></td>
+                                <td><label><input type = 'checkbox' className = 'DTOs' name = 'coupon' onChange = {setBooleans} checked = {coupon}/>&nbsp; 체크하시면 이용자가 결제 시 쿠폰을 사용할 수 있습니다.</label></td>
                             </tr>
                             <tr>
                                 <td>환불 정책</td>
@@ -435,55 +475,55 @@ const ManagerPlaceInfo = () => {
                                             <tr>
                                                 <td>이용 8일 전&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[0]: undefined}   onBlur = {() => settingInputs('refund')} />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 7일 전&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[1]: undefined}   onBlur = {() => settingInputs('refund')}  />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 6일 전&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[2]: undefined}   onBlur = {() => settingInputs('refund')}  />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 5일 전&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[3]: undefined}   onBlur = {() => settingInputs('refund')}  />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 4일 전&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[4]: undefined}   onBlur = {() => settingInputs('refund')} />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 3일 전&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[5]: undefined}    onBlur = {() => settingInputs('refund')} />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 2일 전&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[6]: undefined}   onBlur = {() => settingInputs('refund')}  />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 전날&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[7]: undefined}    onBlur = {() => settingInputs('refund')}  />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>이용 당일&emsp;</td>
                                                 <td>
-                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' onChange = {() => settingInputs('refund')} />
+                                                    <input type = 'text' className = 'DTOs' style = {styleF} name = 'refund' value = {modifyBit === false ? refund.split(',')[8]: undefined}   onBlur = {() => settingInputs('refund')} />
                                                 </td>
                                             </tr>
 
@@ -502,26 +542,26 @@ const ManagerPlaceInfo = () => {
                                     <table>
                                         <tbody>
                                             <tr>
-                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '01'/> 파티룸</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '02' /> 스터디룸</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '03'/>공연장</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '04'/>공유주방</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '01' checked = {seqHotelCategory.includes('01')}/> 파티룸</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '02' checked = {seqHotelCategory.includes('02')} /> 스터디룸</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '03' checked = {seqHotelCategory.includes('03')}/>공연장</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '04' checked = {seqHotelCategory.includes('04')}/>공유주방</label></td>
                                             </tr>
                                             <tr>
-                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '05'/>촬영장</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '06'/>카페</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '07'/>연습실</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '08'/>컨퍼런스</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '05' checked = {seqHotelCategory.includes('05')}/>촬영장</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '06' checked = {seqHotelCategory.includes('06')}/>카페</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '07' checked = {seqHotelCategory.includes('07')}/>연습실</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '08' checked = {seqHotelCategory.includes('08')}/>컨퍼런스</label></td>
                                             </tr>
                                             <tr>
-                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '09'/>강의실</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '10'/>운동시설</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '11'/>갤러리</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '12'/>공용 오피스</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '09' checked = {seqHotelCategory.includes('09')}/>강의실</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '10' checked = {seqHotelCategory.includes('10')}/>운동시설</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '11' checked = {seqHotelCategory.includes('11')}/>갤러리</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '12' checked = {seqHotelCategory.includes('12')}/>공용 오피스</label></td>
                                             </tr>
                                             <tr>
-                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '13'/>당일 캠핑</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '14'/>가정집</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '13' checked = {seqHotelCategory.includes('13')}/>당일 캠핑</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' name = 'seqHotelCategory' className = 'DTOs' onChange = {setCate} value = '14' checked = {seqHotelCategory.includes('14')}/>가정집</label></td>
                                                 <td style = {styleD}><label></label></td>
                                                 <td style = {styleD}><label></label></td>
                                             </tr>
@@ -539,51 +579,51 @@ const ManagerPlaceInfo = () => {
                                     <table>
                                         <tbody>
                                             <tr>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'TV' onChange = {setBooleans}/>TV/프로젝터</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'internet' onChange = {setBooleans}/>인터넷/WIFI</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'copy' onChange = {setBooleans}/>프린터기</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'whiteboard' onChange = {setBooleans}/>화이트보드</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'mic' onChange = {setBooleans}/>음향/마이크</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'cooking' onChange = {setBooleans}/>취사가능</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'TV' checked = {TV} onChange = {setBooleans}/>TV/프로젝터</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'internet' checked = {internet} onChange = {setBooleans}/>인터넷/WIFI</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'copy' checked = {copy} onChange = {setBooleans}/>프린터기</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'whiteboard' checked = {whiteboard} onChange = {setBooleans}/>화이트보드</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'mic' checked = {mic} onChange = {setBooleans}/>음향/마이크</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'cooking' checked = {cooking} onChange = {setBooleans}/>취사가능</label></td>
                                             </tr>
                                             <tr>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'food' onChange = {setBooleans}/>음식물반입가능</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'alcohol' onChange = {setBooleans}/>주류반입가능</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'washing' onChange = {setBooleans}/>샤워시설</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'parking' onChange = {setBooleans}/>주차가능</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'smoke' onChange = {setBooleans}/>흡연가능</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'animal' onChange = {setBooleans}/>반려동물동반</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'food' checked = {food} onChange = {setBooleans}/>음식물반입가능</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'alcohol' checked = {alcohol} onChange = {setBooleans}/>주류반입가능</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'washing' checked = {washing} onChange = {setBooleans}/>샤워시설</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'parking' checked = {parking} onChange = {setBooleans}/>주차가능</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'smoke' checked = {smoke} onChange = {setBooleans}/>흡연가능</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'animal' checked = {animal} onChange = {setBooleans}/>반려동물동반</label></td>
                                             </tr>
                                             <tr>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'pc' onChange = {setBooleans}/>PC</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'socket' onChange = {setBooleans}/>콘센트</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'open24' onChange = {setBooleans}/>24시 운영</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'noHoliday' onChange = {setBooleans}/>연중무휴</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'restaurant' onChange = {setBooleans}/>식당 및 카페</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'freeFood' onChange = {setBooleans}/>다과 및 음료</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'pc' checked = {pc} onChange = {setBooleans}/>PC</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'socket' checked = {socket} onChange = {setBooleans}/>콘센트</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'open24' checked = {open24} onChange = {setBooleans}/>24시 운영</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'noHoliday' checked = {noHoliday} onChange = {setBooleans}/>연중무휴</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'restaurant' checked = {restaurant} onChange = {setBooleans}/>식당 및 카페</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'freeFood' checked = {freeFood} onChange = {setBooleans}/>다과 및 음료</label></td>
                                             </tr>
                                             <tr>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'locker' onChange = {setBooleans}/>개인사물함</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'mailService' onChange = {setBooleans}/>메일 서비스</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'kitchen' onChange = {setBooleans}/>주방</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'waterFurifier' onChange = {setBooleans}/>정수기</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'catering' onChange = {setBooleans}/>케이터링</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'heater' onChange = {setBooleans}/>난방</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'locker' checked = {locker} onChange = {setBooleans}/>개인사물함</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'mailService' checked = {mailService} onChange = {setBooleans}/>메일 서비스</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'kitchen' checked = {kitchen} onChange = {setBooleans}/>주방</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'waterFurifier' checked = {waterFurifier} onChange = {setBooleans}/>정수기</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'catering' checked = {catering} onChange = {setBooleans}/>케이터링</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'heater' checked = {heater} onChange = {setBooleans}/>난방</label></td>
                                             </tr>
                                             <tr>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'airConditioner' onChange = {setBooleans}/>에어컨</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'fax' onChange = {setBooleans}/>팩스</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'wareHouse' onChange = {setBooleans}/>창고서비스</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'percelService' onChange = {setBooleans}/>택배서비스</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'privateToilet' onChange = {setBooleans}/>내부화장실</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'fittingRoom' onChange = {setBooleans}/>탈의실</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'airConditioner' checked = {airConditioner} onChange = {setBooleans}/>에어컨</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'fax' checked = {fax} onChange = {setBooleans}/>팩스</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'wareHouse' checked = {wareHouse} onChange = {setBooleans}/>창고서비스</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'percelService' checked = {percelService} onChange = {setBooleans}/>택배서비스</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'privateToilet' checked = {privateToilet} onChange = {setBooleans}/>내부화장실</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'fittingRoom' checked = {fittingRoom} onChange = {setBooleans}/>탈의실</label></td>
                                             </tr>
                                             <tr>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'roofTop' onChange = {setBooleans}/>루프탑/테라스</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'rounge' onChange = {setBooleans}/>라운지</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'mirror' onChange = {setBooleans}/>전신거울</label></td>
-                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'bbq' onChange = {setBooleans}/>바베큐</label></td>
-                                                <td style = {styleD} rowSpan = '2'><label><input type = 'checkbox' className = 'DTOs' name = 'doorlock' onChange = {setBooleans}/>도어락</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'roofTop' checked = {roofTop} onChange = {setBooleans}/>루프탑/테라스</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'rounge' checked = {rounge} onChange = {setBooleans}/>라운지</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'mirror' checked = {mirror} onChange = {setBooleans}/>전신거울</label></td>
+                                                <td style = {styleD}><label><input type = 'checkbox' className = 'DTOs' name = 'bbq' checked = {bbq} onChange = {setBooleans}/>바베큐</label></td>
+                                                <td style = {styleD} rowSpan = '2'><label><input type = 'checkbox' className = 'DTOs' name = 'doorlock' checked = {doorlock} onChange = {setBooleans}/>도어락</label></td>
                                             </tr>
                                         </tbody>
                                     </table>

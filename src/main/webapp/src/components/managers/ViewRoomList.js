@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import axios from 'axios'
+import CloseButton from 'react-bootstrap/CloseButton';
 
 const ViewRoomList = ({seq, func, roomList, roomAvailable}) => {
     // ================================== modal CSS
     
     const bg = {width: '100%', height: '100%', position: 'fixed', left: 0, top: 0, backgroundColor: 'black', opacity: 0.6} 
-    const pop = {width: '80%', height: '80%', backgroundColor: '#FAFAFA', position: 'absolute', left: '50%', top: '50%', padding: '5%', boxSizing: 'border-box', transform: 'translate(-50%, -50%)'}
+    const pop = {width: '80%', height: '80%', backgroundColor: '#FAFAFA', position: 'absolute', left: '50%', top: '50%', padding: '5%', boxSizing: 'border-box', transform: 'translate(-50%, -50%)', overflow: 'auto'}
     const close = {position: 'absolute', top: '5%', right: '5%', cursor: 'pointer', color: 'grey'}
     const subject = {position: 'absolute', top:'10%', left: '5%'}
     const table = {position: 'absolute', top: '20%', left: '5%', marginRight: '5%'}
@@ -27,16 +28,24 @@ const ViewRoomList = ({seq, func, roomList, roomAvailable}) => {
     const styleB = {width :'6%', textAlign: 'center'}
     const styleC = {width: '4%', textAlign: 'center'}
     const styleD = {width: '4%', textAlign: 'center'}
-    const styleE = {width: '100%'}
+    const styleE = {width: '100%', height: '150px', objectFit: 'cover'}
     const styleF = {borderBottom: '1px solid gray'}
     const styleG = {cursor: 'pointer'}
+    const styleH = {color: '#5AA2E1', cursor: 'pointer'}
+    const styleI = {fontSize: '1.3em'}
+    const styleJ = {textAlign: 'center'}
+    const styleK = {position: 'absolute', top: '12%', right: '7%'}
     
     return (
         <>
             <div style = {bg}></div>
             <div style = {pop}>
                 <h2 style = {subject}>룸 리스트</h2>
-                <a onClick = {closeAction}><span style = {close}>X</span></a>
+                <a onClick = {closeAction}><span style = {close}><CloseButton/></span></a>
+                {
+                    roomAvailable === true && <Button variant = "outline-dark" type = 'button' onClick = {() => locate(seq, 'addRoom')} style = {styleK}>새로운 룸 추가하기</Button>
+                
+                }
                 <table style = {table}>
                     <thead>
                         <tr style = {{borderBottom: '1px solid gray'}}>
@@ -62,11 +71,14 @@ const ViewRoomList = ({seq, func, roomList, roomAvailable}) => {
 
                                 </tr>
                                 
-                            ) :
+                            )
+                            :
 
                             <tr>
-                                <td colSpan = '5'>
-                                    아직 등록된 룸이 없습니다. <span style = {{color: 'blue'}}>새로운 룸을 추가</span>해 볼까요?
+                                <td colSpan = '5' style = {styleJ}>
+                                    <br/>
+                                    <span style = {styleI}>아직 등록된 룸이 없습니다. <span style = {styleH} onClick = {() => locate(seq, 'addRoom')}>새로운 룸을 추가</span>해 볼까요?</span>
+                                    
                                 </td>
                             </tr>
                             

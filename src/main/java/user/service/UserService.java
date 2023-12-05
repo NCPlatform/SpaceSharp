@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jpa.bean.BoardDTO;
@@ -38,17 +40,29 @@ public interface UserService {
 
 	public String accountWrite(UserDTO userDTO);
 	
+	boolean existsByEmail(String email);
+	
+	public void updateNickname(String email, String newNickname);
+	
+	public void updateTel(String email, String newTel);
+	
+	public void updatePassword(String email, String newPassword);
+	
+	
+	
+	public void updateIsNaver(String email, boolean isnaver);
+
+	public void deleteUser(String name, String password);
+    
 	public String getHotelName(int seqHotel);
 
 	public List<HotelCategoryDTO> getHotelCategoryList();
 
 	public List<HotelDTO> getHotelList(String seqHotelCategory);
 	
-	boolean existsByEmail(String email);
-	
 	public String getMainKeyword(int seqHotel);
 
-	public Page<BoardDTO> list(Pageable pageable, int seqRefSeqBoard);
+	public Map<String,Object> list(Pageable pageable, int seqRefSeqBoard);
 
 	public Optional<BoardDTO> getReply(int seqRefSeqBoard);
 	
@@ -81,8 +95,6 @@ public interface UserService {
 	public String getRefund(int seqHotel);
 	
 	public Map<String, Object> mainPage();
-
-	public boolean updateUserNaverStatus(String userEmail, boolean isnaver);
 	
 	public Map<String,Object> hotelReserve(int seqRoom);
 
@@ -93,6 +105,11 @@ public interface UserService {
 	public Map<String, Object> getHotelDetailCard(int seqHotel);
 
 	public Map<String,Object> getHotelList();
+	
+	// mail
+	public String createToken(String userEmail);
+	
+	public String decodeToken(String token) throws Exception;
 
 	public List<HotelDTO> searchHotel(HotelSearchDTO hotelDTO);
 	

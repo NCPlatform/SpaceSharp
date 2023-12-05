@@ -26,6 +26,34 @@
 .BoardReadSeq {
     border-bottom: solid 1px #e0dfdf;
 }
+
+.BoardDetailUser1 {
+    display: flex;
+    justify-content: space-between;
+}
+  
+.BoardDetailUser2 {
+   
+    text-align: left;
+}
+  
+
+.BoardDetailUser3 {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.BoardDetailUser4 {
+
+}
+
+.BoardDetailUser5 {
+    text-align: right;
+}
+
+.BoardDetailUser6 {
+    
+}
 }
 
 @media only screen and (max-width: 375px) {
@@ -55,6 +83,34 @@
 
 .BoardReadSeq {
     border-bottom: solid 1px #e0dfdf;
+}
+
+.BoardDetailUser1 {
+    display: flex;
+    flex-direction: column;
+}
+  
+.BoardDetailUser2 {
+   
+    text-align: left;
+}
+  
+
+.BoardDetailUser3 {
+    display: flex;
+    justify-content: flex-start;
+}
+  
+.BoardDetailUser4 {
+    
+}
+  
+.BoardDetailUser5 {
+    text-align: left;
+}
+
+.BoardDetailUser6 {
+    
 }
 }
 
@@ -86,6 +142,34 @@
 .BoardReadSeq {
     border-bottom: solid 1px #e0dfdf;
 }
+
+.BoardDetailUser1 {
+    display: flex;
+    flex-direction: column;
+}
+  
+.BoardDetailUser2 {
+   
+    text-align: left;
+}
+  
+
+.BoardDetailUser3 {
+    display: flex;
+    justify-content: flex-start;
+}
+  
+.BoardDetailUser4 {
+    
+}
+  
+.BoardDetailUser5 {
+    text-align: left;
+}
+  
+.BoardDetailUser6 {
+    
+}
 }
 
 @media only screen and (max-width: 800px) and (min-width: 440px) {
@@ -116,6 +200,34 @@
 .BoardReadSeq {
     border-bottom: solid 1px #e0dfdf;
 }
+
+.BoardDetailUser1 {
+    display: flex;
+    flex-direction: column;
+}
+  
+.BoardDetailUser2 {
+   
+    text-align: left;
+}
+  
+
+.BoardDetailUser3 {
+    display: flex;
+    justify-content: flex-start;
+}
+  
+.BoardDetailUser4 {
+    
+}
+  
+.BoardDetailUser5 {
+    text-align: left;
+}
+  
+.BoardDetailUser6 {
+
+}
 }
 
 @media only screen and (max-width: 1666px) and (min-width: 800px) {
@@ -145,5 +257,33 @@
 
 .BoardReadSeq {
     border-bottom: solid 1px #e0dfdf;
+}
+
+.BoardDetailUser1 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.BoardDetailUser2 {
+
+    text-align: left;
+}
+
+
+.BoardDetailUser3 {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.BoardDetailUser4 {
+
+}
+
+.BoardDetailUser5 {
+    text-align: right;
+}
+
+.BoardDetailUser6 {
+
 }
 }
