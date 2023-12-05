@@ -37,7 +37,11 @@ public interface UserService {
 	
 	public void updateNickname(String email, String newNickname);
 	
-	public void updateIsKakao(String email, boolean isKakao);
+	public void updateTel(String email, String newTel);
+	
+	public void updatePassword(String email, String newPassword);
+	
+	
 	
 	public void updateIsNaver(String email, boolean isnaver);
 	
@@ -87,6 +91,10 @@ public interface UserService {
 	public String getRefund(int seqHotel);
 	
 	public Map<String, Object> mainPage();
+
+	
+
+
 	
 	
 

@@ -46,10 +46,11 @@ import AdminEvent from "./components/admins/AdminEvent";
 import AdminUser from "./components/admins/AdminUser";
 
 //kakao social login
-// import KakaoLogin from "./components/users/KaKaoLogin";
 import KakaoRedirect from "./components/users/KakaoRedirect";
 import PopupPostCode from "./components/users/PopupPostCode";
 import UpdateKakao from "./components/users/UpdateKakao";
+import AdminSignIn from "./components/users/AdminSignIn";
+
 
 
 
@@ -94,6 +95,7 @@ function App() {
           <Route path="KakaoRedirect" element={<KakaoRedirect />} />
           <Route path="PopupPostCode" element={ <PopupPostCode />} />
           <Route path="updateKakao" element={ <UpdateKakao />} />
+          <Route path="AdminSignIn" element={ <AdminSignIn />} />
         </Route>
         <Route path="/manager">
           <Route index element={<ManagerDashBoard />} />

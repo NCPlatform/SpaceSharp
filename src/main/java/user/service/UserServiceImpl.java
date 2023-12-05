@@ -58,12 +58,24 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public void updateIsKakao(String email, boolean iskakao) {
-        UserDTO userDTO = userDAO.findByEmail(email);
-                
-        userDTO.setIskakao(iskakao);
-        userDAO.save(userDTO);
-    }
+	public void updateTel(String email, String newTel) {
+		UserDTO userDTO = userDAO.findByEmail(email);
+		if (userDTO != null) {
+			userDTO.setTel(newTel);
+			userDAO.save(userDTO);
+		}
+		
+	}
+	
+	@Override
+	public void updatePassword(String email, String newPassword) {
+		UserDTO userDTO = userDAO.findByEmail(email);
+		if (userDTO != null) {
+			userDTO.setPassword(newPassword);
+			userDAO.save(userDTO);
+		}
+		
+	}
 	
 	@Override
 	public void updateIsNaver(String email, boolean isnaver) {
@@ -288,6 +300,10 @@ public class UserServiceImpl implements UserService {
 	public Page<BoardDTO> list (Pageable pageable, int seqRefSeqBoard) {
 		return boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
 	}
+
+	
+
+
 	
 	
 	
