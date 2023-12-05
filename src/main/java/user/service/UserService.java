@@ -98,10 +98,6 @@ public interface UserService {
 
 
 
-
-
-
-	public boolean updateUserNaverStatus(String userEmail, boolean isnaver);
 	
 	public Map<String,Object> hotelReserve(int seqRoom);
 
