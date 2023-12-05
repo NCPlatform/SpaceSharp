@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styles from '../../css/BoardList.module.css'
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Nav from "./Nav";
@@ -44,7 +43,8 @@ const BoardList = () => {
             .then(res => {
             setList(res.data.boardList.content)
             setUserList(res.data.userList);
-            setPagingArray(Array.from({ length: res.data.totalPages }, (_, index) => index + 1))
+            setPagingArray(Array.from({ length: res.data.boardList.totalPages }, (_, index) => index + 1))
+            console.log(res.data)
             })
             .catch(error => console.log(error))
     }, [page, pageSize])
@@ -96,7 +96,7 @@ const BoardList = () => {
                             <tr key={ item.seqBoard } className={styles.BoardListTr2}>
                                 <td>{ item.seqBoard }</td>
                                 <td><Link className={`col-2 text-truncate ${styles.BoardListTitle}`} to={`/boardDetail/${item.seqBoard}`}>{ item.title }</Link></td>
-                                <td className={`col-2 text-truncate ${styles.BoardListTd3}`}>{ userList&&userList.filter(user=> user.email === item.email)[0].nickname }</td>
+                                <td className={`col-2 text-truncate ${styles.BoardListTd3}`}>{ userList&&userList.filter(user=> user.email === item.email)[0]?userList&&userList.filter(user=> user.email === item.email)[0].nickname: <>삭제된유저</> }</td>
                                 <td className={styles.BoardListTd4}>{ formattedReleaseDate }</td>
                             </tr>
                             
@@ -131,7 +131,7 @@ const BoardList = () => {
                             pagingArray.map(item => 
                             <span key={item}>
                                 {/* page는 useParams()으로 받은 객체라서 parseInt() 사용 */}
-                                <Link id={ (item -1) === parseInt(page) ? styles.currentPaging : styles.paging } to = { `/BoardList/${item-1}` }>{item}</Link>
+                                <Link id={ (item -1) === parseInt(page) ? styles.currentPaging : styles.paging } to = { `/boardList/${item-1}` }>{item}</Link>
                             </span>)
                         }
                         </p>
