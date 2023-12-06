@@ -337,8 +337,9 @@ const ManagerPlaceInfo = () => {
                                     <div>
                                         {
                                             isReady === true &&
+                                           // <div style = {{width: '500px', height: '200px'}}>
                                             <TextEditor func = {editorVal_placeEx} readOnly = {!modifyBit} texthold = 'placeEx' value = {placeEx} />
-                                        
+                                           // </div>
                                         }
                                     
                                     </div>
@@ -359,7 +360,7 @@ const ManagerPlaceInfo = () => {
                                     <input type = 'file' name = 'img[]' multiple = 'multiple' onChange = {settingImages} ref = {fileRef} style = {styleK}/>
                                     <Button variant="outline-dark" onClick = {findClk} style = {{display: modifyBit || 'none'}}>파일 찾아보기</Button> &nbsp;
                                     <br/><span style = {{fontSize: '0.9em'}}>이미지의 순서 변경이나 일부 이미지만 수정은 불가합니다. <br/>파일 추가 시 기존 이미지는 모두 사라집니다.</span>
-                                    <Carousel>
+                                    <Carousel style = {{width: '70%'}}>
                                         {imageList.length > 0 ? 
                                                 ( imageList.map((item, index) => (
                                                     <Carousel.Item><img key={index} src={item} style={{ width: '100%', height: '300px', objectFit: 'cover' }} alt="" /></Carousel.Item>

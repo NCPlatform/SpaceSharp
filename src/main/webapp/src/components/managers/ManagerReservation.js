@@ -6,7 +6,7 @@ import ManagerHeader from "./ManagerHeader";
 import {format} from 'date-fns';
 import Swal from 'sweetalert2'
 import axios from "axios";
-
+import css from '../../css/FullCalendar.css'
 
 const Reservation = () => {
 
@@ -45,18 +45,11 @@ const Reservation = () => {
     Swal.fire({
       title: title.split('/ ')[1],
       html: '예약자 성명 : <b>'+title.split(' /')[0]+'</b><br/><span style = "font-size: 0.8em">'+formatStart+formatEnd+'</span>',
-      icon: "info"
+      icon: "info",
+      confirmButtonColor: "#b3b3b3",
+      confirmButtonText: "닫기"
     });
-    console.log('events:', [
-      { title: '정우성 / 스페이스 주다 을지센터점', start: '2023-12-18 00:00:00.000000', end: '2023-12-26 11:00:00.000000' },
-      { title: '신현빈 / 302호', start: '2023-12-18 12:00:00.000000', end: '2023-12-19 14:00:00.000000' },
-      { title: '이정재 / 스페이스 주다 을지센터점', start: '2023-12-25 00:00:00.000000', end: '2023-12-25 23:59:00.000000' },
-      ...reserveDTO.map((reserve) => ({
-        title: reserve.user_name + ' / ' + reserve.room_name,
-        start: new Date(reserve.startDate), // startDate에 따라 변경 필요
-        end: new Date(reserve.endDate),     // endDate에 따라 변경 필요
-      })),
-    ]);
+    
   }
 
   return (
@@ -68,17 +61,16 @@ const Reservation = () => {
           plugins={[dayGridPlugin, interactionPlugin]}
           dateClick={(e) => handleDateClick(e)}
           defaultView="dayGridMonth" 
-          events={[{ title: '정우성 / 스페이스 주다 을지센터점', start: '2023-12-18 00:00:00.000000', end: '2023-12-26 11:00:00.000000' },
-          { title: '신현빈 / 302호', start: '2023-12-18 12:00:00.000000', end: '2023-12-19 14:00:00.000000' },
-          { title: '이정재 / 스페이스 주다 을지센터점', start: '2023-12-25 00:00:00.000000', end: '2023-12-25 23:59:00.000000' },
-          
+          events={[
             ...reserveDTO.map((reserve) => ({
               title: reserve.user_name + ' / ' + reserve.room_name,
-              start: new Date(reserve.startDate).toLocaleDateString('en-US', {timeZone: 'Asia/Seoul'}), // startDate에 따라 변경 필요
-              end: new Date(reserve.endDate).toLocaleDateString('en-US', {timeZone: 'Asia/Seoul'}),     // endDate에 따라 변경 필요
+              start: new Date(reserve.departure), // startDate에 따라 변경 필요
+              end: new Date(reserve.arrival),     // endDate에 따라 변경 필요
             })),
           ]}
+          eventColor='#b3b3b3'
           eventClick={(e) => handleEventClick(e)}
+          
         />
       </div>
     </div>
