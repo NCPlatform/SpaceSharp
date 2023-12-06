@@ -335,7 +335,7 @@ public class UserController {
 	}
 	
 	@GetMapping(value="setReviewTab")
-	public Map<String,Object> setReviewTab(int seqHotel){
+	public Map<String,Object> setReviewTab(@RequestParam int seqHotel){
 		return userService.setReviewTab(seqHotel);
 	}
 	
@@ -401,5 +401,6 @@ public class UserController {
 			}
 		}
 		return imgValue;
+		
 	}
 }

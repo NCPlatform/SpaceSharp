@@ -25,8 +25,9 @@ const HotelDetailReview = ({ seqHotel }) => {
 
   useEffect(() => {
     axios
-      .get(`user/setReviewTab?seqHotel=${seqHotel}`)
+      .get(`/user/setReviewTab?seqHotel=${seqHotel}`)
       .then(res => {
+        console.log(res.data);
         setReview(res.data.review);
         setReservation(res.data.reservation);
         setReserveUser(res.data.reserveUser);
@@ -132,6 +133,33 @@ const HotelDetailReview = ({ seqHotel }) => {
 
   // OwlCarousel Option
   const options = {
+    loop: false,
+    margin: 30,
+    touchDrag: true,
+    dots: false,
+    nav: true,
+    navText: ['Prev', 'Next'],
+    responsiveClass: true,
+    responsive: {
+      0: {
+        items: 1,
+      },
+      576: {
+        items: 1,
+      },
+      768: {
+        items: 1,
+      },
+      992: {
+        items: 2,
+      },
+      1400: {
+        items: 3,
+      },
+    },
+  };
+
+  const options2 = {
     loop: false,
     margin: 30,
     touchDrag: true,
@@ -259,7 +287,7 @@ const HotelDetailReview = ({ seqHotel }) => {
               <div>
                 <h3>리뷰작성</h3>
                 <p>언제 예약에 대한 리뷰인가요</p>
-                <div className="row">
+                <OwlCarousel className="owl-theme" {...options2}>
                   {reservation
                     .filter(item => item.email === sessionUserDTO.email)
                     .map((item, index) => {
@@ -290,19 +318,19 @@ const HotelDetailReview = ({ seqHotel }) => {
                               {moment(item.reservationDate).format(' ( YYYY / MM / D ) ')}
                             </p>
                             <div className="card-body">
-                              <p className="card-text">
-                                <span>입실 시간 : </span>
-                                <p className="p-0 m-0 text-center">
-                                  {moment(item.travelStartDate).format('YYYY/MM/D hh:mm') + ' '}~
-                                  {' ' + moment(item.travelEndDate).format('YYYY/MM/D hh:mm')}
+                              <div className="card-text">
+                                <p>입실 시간 : {moment(item.travelStartDate).format('YYYY/MM/D hh:mm')}</p>
+                                <p className="card-text">
+                                  퇴실 시간 : {moment(item.travelEndDate).format('YYYY/MM/D hh:mm')}
                                 </p>
-                              </p>
+                                
+                              </div>
                             </div>
                           </div>
                         </div>
                       );
                     })}
-                </div>
+                </OwlCarousel>
                 <div className="my-3 text-end">
                   {Array.from({ length: '5' }).map((item, index) => (
                     <ImStarFull
