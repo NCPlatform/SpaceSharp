@@ -11,6 +11,7 @@ const CouponAdd = () => {
   });
 
   const onSubmit = () => {
+    console.log(couponDTO);
     axios
       .post('/admin/addCoupon', null, { params: couponDTO })
       .then(res => {
