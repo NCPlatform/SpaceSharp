@@ -1,5 +1,7 @@
 package jpa.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import jpa.bean.ReservationDTO;
@@ -40,5 +42,7 @@ public interface ReservationDAO extends JpaRepository<ReservationDTO, Integer> {
 			+ "where hotelT.ownerEmail = :userEmail")
 	List<ReserveViewDTO> viewReservations(@Param("userEmail") String userEmail);
 
+
+	Page<ReservationDTO> findAllByEmail(Pageable pageable, String email);
 
 }

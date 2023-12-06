@@ -41,6 +41,7 @@ import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.HotelSearchDTO;
+import jpa.bean.LikedDTO;
 import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
@@ -59,8 +60,10 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	
 	@Autowired
 	private ObjectStorageService ncpService;
+	
 	@Autowired
 	private ReservationDAO reservationDAO;
 	@Autowired
@@ -147,6 +150,22 @@ public class UserController {
 	public  List<ReservationDTO> getReservationListByRoom(@RequestParam int seqRoom, @RequestParam Date startDate, @RequestParam Date endDate){
 		return userService.getReservationListByRoom(seqRoom, startDate, endDate);
 	}
+	
+	@GetMapping("getReservationList")
+	public  Map<String, Object> getReservationList(@PageableDefault(page=0, size=5, sort="seqReservation", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String email){
+		return userService.getReservationList(pageable, email);
+	}
+	
+	@GetMapping("getReviewList")
+	public  Map<String, Object> getReviewList(@PageableDefault(page=0, size=5, sort="seqComment", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String email){
+		return userService.getReviewList(pageable, email);
+	}
+	
+	@GetMapping("getQnAList")
+	public  Map<String, Object> getQnAList(@PageableDefault(page=0, size=5, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam String email){
+		return userService.getQnAList(pageable, email);
+	}
+	
 	@PostMapping("/reservation")
 	  public ResponseEntity<String> saveReservation(@RequestBody ReservationDTO reservationDTO) {
 	    try {
@@ -214,8 +233,14 @@ public class UserController {
 	@GetMapping(path = "getBoard")
 	@ResponseBody
 	public Optional<BoardDTO> getBoard(@RequestParam int seqBoard){
-	    System.out.println("출력 : " + userService.getBoard(seqBoard));
 		return userService.getBoard(seqBoard);
+	}
+	
+	@GetMapping(path = "getBoardList")
+	@ResponseBody
+	public Map<String,Object> getBoardList(@PageableDefault(page=0, size=10, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable, String searchKey, int seqBoardCategory){
+	    
+		return userService.getBoardList(pageable, searchKey, seqBoardCategory);
 	}
 	
 	@PutMapping(path = "update")
@@ -317,6 +342,13 @@ public class UserController {
 	public List<HotelDTO> getHotelList(@ModelAttribute HotelDTO hotelDTO){
 		return userService.getHotelList(hotelDTO.getSeqHotelCategory());
 	}
+	
+	@GetMapping(value = "getLikedHotel")
+	@ResponseBody
+	public List<HotelDTO> getLikedHotel(@RequestParam String email){
+		return userService.getLikedHotel(email);
+	}
+	
 	@PostMapping(value = "searchHotel")
 	@ResponseBody
 	public List<HotelDTO> searchHotel(@RequestBody HotelSearchDTO hotelDTO){
@@ -363,7 +395,7 @@ public class UserController {
 	}
 	
 	@GetMapping(value="setReviewTab")
-	public Map<String,Object> setReviewTab(int seqHotel){
+	public Map<String,Object> setReviewTab(@RequestParam int seqHotel){
 		return userService.setReviewTab(seqHotel);
 	}
 	
@@ -390,6 +422,26 @@ public class UserController {
 		return userService.getHotelList();
 	}
 	
+	@GetMapping(value="getEventList")
+	public Map<String,Object> getEventList(){
+		return userService.getEventList();
+	}
+	
+	@GetMapping(value="isLiked")
+	public String isLiked(@RequestParam String email,@RequestParam int seqHotel){
+		return userService.isLiked(email, seqHotel);
+	}
+	
+	@GetMapping(value="deleteLike")
+	public void deleteLike(@RequestParam String email, int seqHotel){
+		userService.deleteLike(email, seqHotel);
+	}
+	
+	@GetMapping(value="addLike")
+	public void addLike(@RequestParam String email, int seqHotel){
+		userService.addLike(email, seqHotel);
+	}
+	
 	public String uploadObject(List<MultipartFile> list, String path) {
 		String fileName;
 		ArrayList<String> fileNames = new ArrayList<>();
@@ -409,6 +461,7 @@ public class UserController {
 			}
 		}
 		return imgValue;
+		
 	}
 	
 	// =========================== MAIL SERVICE =====================

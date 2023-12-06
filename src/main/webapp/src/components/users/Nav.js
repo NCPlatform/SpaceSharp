@@ -1,34 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Navbar from 'react-bootstrap/Navbar';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import '../../css/navheader.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import '../../css/mainColor.css';
-import { Offcanvas } from 'react-bootstrap';
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Navbar from "react-bootstrap/Navbar";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import "../../css/navheader.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "../../css/mainColor.css";
+import { Offcanvas } from "react-bootstrap";
 
 const NavTest = () => {
-  const [sessionUserDTO, setSessionUserDTO] = useState(JSON.parse(sessionStorage.getItem('user')));
+  const [sessionUserDTO, setSessionUserDTO] = useState(
+    JSON.parse(sessionStorage.getItem("user"))
+  );
+
   const navigator = useNavigate();
 
   return (
     <div>
-      {[false].map(expand => (
+      {[false].map((expand) => (
         <div key={expand} className="mb-4 my-navbar bg-body-tertiary">
-          <Navbar expand={expand} className="" style={{ backgroundColor: '#FFF' }}>
+          <Navbar
+            expand={expand}
+            className=""
+            style={{ backgroundColor: "#FFF" }}
+          >
             <Container fluid>
-              <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
+              <Navbar.Toggle
+                aria-controls={`offcanvasNavbar-expand-${expand}`}
+              />
               <Link to="/">
                 <Navbar.Brand
                   style={{
-                    position: 'absolute',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    top: '5px',
-                  }}>
+                    position: "absolute",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    top: "5px",
+                  }}
+                >
                   Space #
                 </Navbar.Brand>
               </Link>
@@ -39,7 +49,7 @@ const NavTest = () => {
                     placeholder="어떤 공간이 필요하세요?"
                     className="me-2"
                     aria-label="Search"
-                    style={{ width: '218px' }}
+                    style={{ width: "218px" }}
                   />
                   <Button variant="outline-dark">
                     <span className="bi bi-search"></span>
@@ -49,29 +59,38 @@ const NavTest = () => {
               <Navbar.Offcanvas
                 id={`offcanvasNavbar-expand-${expand}`}
                 aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
-                placement="start">
+                placement="start"
+              >
                 <Offcanvas.Header className="py-4 fourthBackColor" closeButton>
                   <p></p>
                   <div className="text-center">
                     {sessionUserDTO ? (
-                      <div style={{ textDecoration: 'none', color: 'black' }} className="text-center">
+                      <div
+                        style={{ textDecoration: "none", color: "black" }}
+                        className="text-center"
+                      >
                         <p className="fw-bold mb-0">{sessionUserDTO.name}</p>
                         <Link
                           to="/update"
                           style={{
-                            fontSize: '0.8rem',
-                            color: 'black',
-                            textDecoration: 'none',
-                          }}>
+                            fontSize: "0.8rem",
+                            color: "black",
+                            textDecoration: "none",
+                          }}
+                        >
                           프로필 관리
                         </Link>
                       </div>
                     ) : (
                       <div
-                        style={{ textDecoration: 'none', color: 'black' }}
+                        style={{ textDecoration: "none", color: "black" }}
                         className="text-center"
-                        onClick={() => navigator('/login')}>
-                        <p className="offcanvas-title fw-bold" id="offcanvasNavbarLabel">
+                        onClick={() => navigator("/login")}
+                      >
+                        <p
+                          className="offcanvas-title fw-bold"
+                          id="offcanvasNavbarLabel"
+                        >
                           게스트로
                           <br />
                           로그인 / 회원가입
@@ -82,28 +101,40 @@ const NavTest = () => {
                 </Offcanvas.Header>
 
                 {/* offcanvas body */}
-                <div className="bg-body-secondary" style={{ height: '100vh' }}>
+                <div className="bg-body-secondary" style={{ height: "100vh" }}>
                   {/* Grid */}
                   <div className="px-2 py-3">
                     <div className="row text-center">
-                      <div className="col">
+                      <Link
+                        to="/NavEvent"
+                        className="col text-decoration-none text-dark"
+                      >
                         <p>&#127881;</p>이벤트
-                      </div>
-                      <div className="col">
+                      </Link>
+                      <Link
+                        to="/hotelReserveList"
+                        className="col text-decoration-none text-dark"
+                      >
                         <p>🗒</p>
                         예약
                         <br />
                         리스트
-                      </div>
-                      <div className="col">
+                      </Link>
+                      <Link
+                        to="/hotelReviewList"
+                        className="col text-decoration-none text-dark"
+                      >
                         <p>📰</p>
                         이용후기
                         <br />
                         Q&A관리
-                      </div>
-                      <div className="col">
+                      </Link>
+                      <Link
+                        to="/likedHotelList"
+                        className="col text-decoration-none text-dark"
+                      >
                         <p>♥</p>찜한 공간
-                      </div>
+                      </Link>
                     </div>
                   </div>
 
@@ -117,7 +148,8 @@ const NavTest = () => {
                         height="24"
                         fill="currentColor"
                         className="bi bi-chevron-right"
-                        viewBox="0 0 16 16">
+                        viewBox="0 0 16 16"
+                      >
                         <path
                           fillRule="evenodd"
                           d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
@@ -125,7 +157,10 @@ const NavTest = () => {
                       </svg>
                     </div>
                   </Link>
-                  <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border">
+                  <Link
+                    to="/"
+                    className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border text-decoration-none text-dark"
+                  >
                     <span className="py-0">스페이스클라우드 홈</span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -133,15 +168,19 @@ const NavTest = () => {
                       height="24"
                       fill="currentColor"
                       className="bi bi-chevron-right"
-                      viewBox="0 0 16 16">
+                      viewBox="0 0 16 16"
+                    >
                       <path
                         fillRule="evenodd"
                         d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
                       />
                     </svg>
-                  </div>
+                  </Link>
 
-                  <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border">
+                  <Link
+                    to="/board/1"
+                    className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border text-decoration-none text-dark"
+                  >
                     <span className="py-0">공지사항</span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -149,15 +188,19 @@ const NavTest = () => {
                       height="24"
                       fill="currentColor"
                       className="bi bi-chevron-right"
-                      viewBox="0 0 16 16">
+                      viewBox="0 0 16 16"
+                    >
                       <path
                         fillRule="evenodd"
                         d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
                       />
                     </svg>
-                  </div>
+                  </Link>
 
-                  <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border">
+                  <Link
+                    to="/board/2"
+                    className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border text-decoration-none text-dark"
+                  >
                     <span className="py-0">도움말</span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -165,14 +208,18 @@ const NavTest = () => {
                       height="24"
                       fill="currentColor"
                       className="bi bi-chevron-right"
-                      viewBox="0 0 16 16">
+                      viewBox="0 0 16 16"
+                    >
                       <path
                         fillRule="evenodd"
                         d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
                       />
                     </svg>
-                  </div>
-                  <Link to="/boardList/0" className="text-decoration-none text-black">
+                  </Link>
+                  <Link
+                    to="/boardList/0"
+                    className="text-decoration-none text-black"
+                  >
                     <div className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border ">
                       <span className="py-0">1:1 문의</span>
                       <svg
@@ -181,7 +228,8 @@ const NavTest = () => {
                         height="24"
                         fill="currentColor"
                         className="bi bi-chevron-right"
-                        viewBox="0 0 16 16">
+                        viewBox="0 0 16 16"
+                      >
                         <path
                           fillRule="evenodd"
                           d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
@@ -198,56 +246,87 @@ const NavTest = () => {
                       data-bs-toggle="collapse"
                       data-bs-target="#collapseOne"
                       aria-expanded="true"
-                      aria-controls="collapseOne">
+                      aria-controls="collapseOne"
+                    >
                       <span className="py-0">서비스 정보</span>
                     </div>
-                    <div id="collapseOne" className="accordion-collapse collapse" data-bs-parent="#serviceInfo">
+                    <div
+                      id="collapseOne"
+                      className="accordion-collapse collapse"
+                      data-bs-parent="#serviceInfo"
+                    >
                       <div>
                         <ul className="list-group">
-                          <li className="list-group-item border ps-3 py-1 fw-light bg-transparent">
+                          <Link
+                            to="/info"
+                            className="list-group-item border ps-3 py-1 fw-light bg-transparent"
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="16"
                               height="16"
                               fill="currentColor"
                               className="bi bi-dot"
-                              viewBox="0 0 16 16">
+                              viewBox="0 0 16 16"
+                            >
                               <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
                             </svg>
                             서비스 소개
-                          </li>
-                          <li className="list-group-item border ps-3 py-1 fw-light bg-transparent">
+                          </Link>
+                          <li
+                            className="list-group-item border ps-3 py-1 fw-light bg-transparent"
+                            onClick={() =>
+                              window.open("https://www.spacecloud.kr/agreement")
+                            }
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="16"
                               height="16"
                               fill="currentColor"
                               className="bi bi-dot"
-                              viewBox="0 0 16 16">
+                              viewBox="0 0 16 16"
+                            >
                               <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
                             </svg>
                             이용약관
                           </li>
-                          <li className="list-group-item border ps-3 py-1 fw-light bg-transparent">
+                          <li
+                            className="list-group-item border ps-3 py-1 fw-light bg-transparent"
+                            onClick={() =>
+                              window.open(
+                                "https://www.spacecloud.kr/policyPerson"
+                              )
+                            }
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="16"
                               height="16"
                               fill="currentColor"
                               className="bi bi-dot"
-                              viewBox="0 0 16 16">
+                              viewBox="0 0 16 16"
+                            >
                               <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
                             </svg>
                             개인정보처리방침
                           </li>
-                          <li className="list-group-item border ps-3 py-1 fw-light bg-transparent">
+                          <li
+                            className="list-group-item border ps-3 py-1 fw-light bg-transparent"
+                            onClick={() =>
+                              window.open(
+                                "https://www.spacecloud.kr/policyOperate"
+                              )
+                            }
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="16"
                               height="16"
                               fill="currentColor"
                               className="bi bi-dot"
-                              viewBox="0 0 16 16">
+                              viewBox="0 0 16 16"
+                            >
                               <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
                             </svg>
                             운영정책
@@ -263,11 +342,12 @@ const NavTest = () => {
                           sessionStorage.clear();
                           window.location.reload();
 
-                        }}>
+                        }}
+                      >
                         로그아웃
                       </span>
                     ) : (
-                      <div onClick={() => navigator('/login')}>로그인</div>
+                      <div onClick={() => navigator("/login")}>로그인</div>
                     )}
                     <br />
                     powered by &#9426; Netflex Corp
@@ -284,7 +364,8 @@ const NavTest = () => {
                         height="20"
                         fill="currentColor"
                         className="bi bi-arrow-right-circle"
-                        viewBox="0 0 16 16">
+                        viewBox="0 0 16 16"
+                      >
                         <path
                           fillRule="evenodd"
                           className="firstFontColor"
@@ -296,7 +377,8 @@ const NavTest = () => {
                 ) : (
                   <div
                     className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor"
-                    onClick={() => alert('일반유저는 접근할 수 없습니다.')}>
+                    onClick={() => alert("일반유저는 접근할 수 없습니다.")}
+                  >
                     <span className="py-0 me-2">호스트센터로 이동</span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -304,7 +386,8 @@ const NavTest = () => {
                       height="20"
                       fill="currentColor"
                       className="bi bi-arrow-right-circle"
-                      viewBox="0 0 16 16">
+                      viewBox="0 0 16 16"
+                    >
                       <path
                         fillRule="evenodd"
                         className="firstFontColor"
@@ -316,14 +399,17 @@ const NavTest = () => {
                 {sessionUserDTO && sessionUserDTO.usergrade * 1 === 10 ? (
                   <Link to="/admin" className="text-decoration-none">
                     <div className="py-3 ps-3 pe-3 text-white fw-bold text-center secondBackColor">
-                      <span className="py-0 me-2">최고 관리자 페이지로 이동</span>
+                      <span className="py-0 me-2">
+                        최고 관리자 페이지로 이동
+                      </span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
                         height="20"
                         fill="currentColor"
                         className="bi bi-arrow-right-circle"
-                        viewBox="0 0 16 16">
+                        viewBox="0 0 16 16"
+                      >
                         <path
                           fillRule="evenodd"
                           className="firstFontColor"

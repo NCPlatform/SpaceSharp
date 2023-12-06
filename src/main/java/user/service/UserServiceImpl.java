@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
@@ -34,6 +35,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
+import jpa.bean.EventDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.HotelSearchDTO;
@@ -42,10 +44,14 @@ import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
+import jpa.dao.BoardCategoryDAO;
 import jpa.dao.BoardDAO;
 import jpa.dao.CommentDAO;
+import jpa.dao.CouponDAO;
+import jpa.dao.EventDAO;
 import jpa.dao.HotelCategoryDAO;
 import jpa.dao.HotelDAO;
+import jpa.dao.IssuedCouponDAO;
 import jpa.dao.LikedDAO;
 import jpa.dao.ReceiptDAO;
 import jpa.dao.ReservationDAO;
@@ -81,6 +87,18 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	private LikedDAO likedDAO;
+	
+	@Autowired
+	private EventDAO eventDAO;
+	
+	@Autowired
+	CouponDAO couponDAO;
+	
+	@Autowired
+	IssuedCouponDAO issuedCouponDAO;
+	
+	@Autowired
+	BoardCategoryDAO boardCategoryDAO;
 	
 
 	@Override
@@ -330,6 +348,7 @@ public class UserServiceImpl implements UserService {
 		List<HotelDTO> hotelList = hotelDAO.findTop6ByOrderBySeqHotelDesc();
 		List<CommentDTO> reviewList = commentDAO.findTop6ByOrderBySeqCommentDesc();
 		List<Object> reviewCardList = new ArrayList<Object>();
+		List<EventDTO> eventList = eventDAO.findAll();
 		Map<String, Object> reviewCard = new HashMap<String, Object>();
 		
 		for(CommentDTO dto : reviewList) {
@@ -358,6 +377,7 @@ public class UserServiceImpl implements UserService {
 		map.put("categoryList", hotelCategoryList);
 		map.put("hotelList", hotelList);
 		map.put("reviewCardList", reviewCardList);
+		map.put("eventList", eventList);
 		return map;
 	}
 
@@ -371,7 +391,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Map<String,Object> list (Pageable pageable, int seqRefSeqBoard) {
 		Map<String,Object> map = new HashMap<String,Object>();
-		Page<BoardDTO> boardList = boardDAO.findBySeqRefSeqBoard(pageable,seqRefSeqBoard);
+		Page<BoardDTO> boardList = boardDAO.findBySeqRefSeqBoardAndSeqBoardCategoryLike(pageable,seqRefSeqBoard,7);
 		map.put("boardList",boardList);
 		map.put("userList", userDAO.findAll());
 		return map;
@@ -548,7 +568,144 @@ public class UserServiceImpl implements UserService {
             return "Failed to save receipt";
         }
     }
-    
+
+	@Override
+	public Map<String, Object> getEventList() {
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, 1);
+		
+		map.put("eventList",eventDAO.findAllByFinishDateAfter(new Date()));
+		map.put("deadline",eventDAO.findAllByFinishDateBetween(new Date(),calendar.getTime()));
+		map.put("couponList", couponDAO.findAll());
+		
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> getReservationList(Pageable pageable, String email) {
+		Page<ReservationDTO> reservationPage = reservationDAO.findAllByEmail(pageable, email);
+		List<RoomDTO> roomList = new ArrayList<RoomDTO>();
+		List<HotelDTO> hotelList = new ArrayList<HotelDTO>();
+		List<ReceiptDTO> receiptList = new ArrayList<ReceiptDTO>();
+		
+		for(ReservationDTO dto : reservationPage.getContent()) {
+			roomList.add(roomDAO.findById(dto.getSeqRoom()).get());
+			receiptList.add(receiptDAO.findBySeqReservation(dto.getSeqReservation()));
+		}
+		
+		for(RoomDTO dto : roomList) {
+			hotelList.add(hotelDAO.findById(dto.getSeqHotel()).get());
+		}
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		map.put("reservationPage", reservationPage);
+		map.put("roomList", roomList);
+		map.put("hotelList", hotelList);
+		map.put("receiptList", receiptList);
+		
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> getReviewList(Pageable pageable, String email) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		Page<CommentDTO> reviewList = commentDAO.findAllByEmail(pageable, email);
+		
+		Map<String, Object> reviewCard = new HashMap<String, Object>();
+		List<Object> reviewCardList = new ArrayList<Object>();
+		
+		for(CommentDTO dto : reviewList) {
+			reviewCard = new HashMap<String, Object>();
+			StringBuffer sb = new StringBuffer("");
+			
+			ReservationDTO reservDTO = reservationDAO.getBySeqReservation(dto.getSeqReservation()).get();
+			RoomDTO roomDTO = roomDAO.findById(reservDTO.getSeqRoom()).get();
+			HotelDTO hotelDTO = hotelDAO.findById(roomDTO.getSeqHotel()).get();
+			
+			List<String> categories = Arrays.asList(hotelDTO.getSeqHotelCategory().split(",")).stream().map(String::trim).collect(Collectors.toList());
+		    for(String category : categories) {
+		    	sb.append(hotelCategoryDAO.findById(Integer.parseInt(category)).get().getName() + ",");
+		    }
+		    sb.setLength(sb.length()-1);
+
+			reviewCard.put("reviewItem", dto);
+			reviewCard.put("reservedRoom", roomDTO);
+			reviewCard.put("reservedHotel", hotelDTO);
+			reviewCard.put("hotelCategory", sb.toString());
+			
+			reviewCardList.add(reviewCard);
+		}
+		
+		map.put("list", reviewCardList);
+		map.put("totalPages", reviewList.getTotalPages());
+		
+		System.out.println("review");
+		
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> getQnAList(Pageable pageable, String email) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		Page<BoardDTO> QnAList = boardDAO.findAllByEmailAndSeqBoardCategory(pageable, email, 7);
+		
+		map.put("list", QnAList.getContent());
+		map.put("totalPages", QnAList.getTotalPages());
+		
+		System.out.println("QnA");
+		
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> getBoardList(Pageable pageable, String searchKey, int seqBoardCategory) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		Page<BoardDTO> boardList = boardDAO.findAllBySeqBoardCategoryAndTitleContaining(pageable, seqBoardCategory, searchKey);
+		List<UserDTO> userList = new ArrayList<UserDTO>();
+		
+		for(BoardDTO dto : boardList) {
+			userList.add(userDAO.findByEmail(dto.getEmail()));
+		}
+		
+		map.put("boardList", boardList);
+		map.put("userList", userList);
+		map.put("boardCategory", boardCategoryDAO.findById(seqBoardCategory));
+		
+		return map;
+	}
+
+	@Override
+	public String isLiked(String email, int seqHotel) {
+		Optional<LikedDTO> dto = likedDAO.findByEmailAndSeqHotel(email, seqHotel);
+		
+		if(dto.isPresent()) return "true";
+		else return "false";
+	}
+
+	@Override
+	public void deleteLike(String email, int seqHotel) {
+		likedDAO.deleteById(likedDAO.findByEmailAndSeqHotel(email, seqHotel).get().getSeqLiked());
+	}
+
+	@Override
+	public void addLike(String email, int seqHotel) {
+		LikedDTO dto = new LikedDTO();
+		dto.setEmail(email);
+		dto.setSeqHotel(seqHotel);
+		
+		likedDAO.save(dto);
+	}
+
+	@Override
+	public List<HotelDTO> getLikedHotel(String email) {
+		
+		return hotelDAO.findAllByEmail(email);
+	}
 	
 	@Override
 	public String decodeToken(String token) throws Exception {
