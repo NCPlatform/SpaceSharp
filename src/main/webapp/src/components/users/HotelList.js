@@ -4,7 +4,7 @@ import Nav from "./Nav";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import Calendar from "react-calendar";
+import InfiniteScroll from 'react-infinite-scroll-component';
 import "react-calendar/dist/Calendar.css";
 import moment from "moment";
 import Slider, { Range } from "rc-slider";
@@ -37,6 +37,30 @@ const List = () => {
   const [showCouponDiscount, setShowCouponDiscount] = useState(true);
   const [sortOption, setSortOption] = useState("best");
   const [originalHotelList, setOriginalHotelList] = useState([]);
+  const [loading, setLoading] = useState(false); // 추가: 로딩 상태 추가
+  const [page, setPage] = useState(1); // 추가: 페이지 수 추가
+  const [hasMore, setHasMore] = useState(true); // 추가: 더 불러올 데이터가 있는지 여부 추가
+  const loadMoreData = async () => {
+    if (!loading && hasMore) {
+      setLoading(true);
+  
+      const moreData = await fetchHotelList(page + 1);
+  
+      if (moreData.length > 0) {
+        // 새 데이터를 추가하기 전에 1초의 지연
+        setTimeout(() => {
+          setHotelList((prev) => [...prev, ...moreData]);
+          setPage((prev) => prev + 1);
+          setLoading(false);
+        }, 1000);
+      } else {
+        setHasMore(false);
+        setLoading(false);
+      }
+    }
+  };
+
+  
   const handleOption1Change = (e) => {
     setMainAddress(e.target.value);
     setSubAddress("");
@@ -332,11 +356,16 @@ const List = () => {
 
   useEffect(() => {
     console.log(hotelList);
+    if (hotelList.length === 0) { // 처음 렌더링 시에만 데이터를 가져오도록 수정
+      loadMoreData();
+    }
   }, [hotelList]);
 
   useEffect(() => {
     console.log("searchValue:", searchValue);
     resetHotelList();
+    setPage(1); // 검색 조건이 변경되면 페이지를 리셋
+    setHasMore(true); // 더 불러올 데이터가 있음을 다시 표시
   }, [seqHotelCategory, subAddress, date, searchValue, sortOption]);
 
   const toggleOption = (e) => {
@@ -819,7 +848,7 @@ const List = () => {
 
           <Col
             className="d-flex justify-content-end mb-3"
-            xl={6} lg={10} md={12} sm={12} xs={12}
+            xl={6} lg={12} md={12} sm={12} xs={12}
           >
             <div>
               <Link to="/hotelInMap">
@@ -1021,6 +1050,27 @@ const List = () => {
 
         <div>
           <div className="container">
+          <InfiniteScroll
+            dataLength={hotelList.length} // 현재 로드된 항목 수
+            next={loadMoreData} // 다음 페이지 로드 함수
+            hasMore={hasMore} // 더 불러올 데이터가 있는지 여부
+            loader={loading && (
+              <img
+                src="https://blog.kakaocdn.net/dn/c3Rwqs/btqVugu1Dvv/SWkENtL39bcQ7fTrWNBxu0/img.gif"
+                alt="Loading..."
+                style={{
+                  position: 'fixed',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  display: 'block',
+                  margin: 'auto',
+                  width: '60px', 
+                  height: '60px', 
+                }}
+              />
+            )}// 로딩 중에 표시될 컴포넌트
+          >
             <div className="row">
               {hotelList.length !== 0 ? (
                 searchValue
@@ -1066,6 +1116,7 @@ const List = () => {
                 </div>
               )}
             </div>
+            </InfiniteScroll>
           </div>
         </div>
       </div>
