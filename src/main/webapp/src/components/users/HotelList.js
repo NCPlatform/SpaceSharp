@@ -133,42 +133,32 @@ const List = () => {
     }
     return [];
   };
-  const fetchHotelListByLowPrice = async () => {
+  const fetchHotelByLowPrice = async () => {
     const selectedDate = formatDate(date);
-    let list = [];
-
     if (!seqHotelCategory) {
-      const { status, data } = await axios.post("/user/searchHotelByLowPrice", {
-        seqHotelCategory: "",
-        addr: subAddress,
-        date: selectedDate,
-        minPrice: filterOn ? priceRange.lowerBound : null,
-        maxPrice: filterOn ? priceRange.upperBound : null,
-      });
-      
-      if (status === 200) {
-        return data.filter(
-          (item) =>
-            item.addr.includes(searchValue) ||
-            item.name.includes(searchValue) ||
-            item.addr.includes(searchValue)
-        );
-      }
-    } else {
-      const { status, data } = await axios.post("/user/searchHotelByLowPrice", {
-        seqHotelCategory: "",
-        addr: subAddress,
-        date: selectedDate,
-        minPrice: filterOn ? priceRange.lowerBound : null,
-        maxPrice: filterOn ? priceRange.upperBound : null,
-      });
+      if (searchValue) {
 
-      if (status === 200) {
-        return data;
+        const { status, data } = await axios.post("/user/searchHotelByLowPrice", {
+          seqHotelCategory: "",
+          addr: subAddress,
+          date: selectedDate,
+          minPrice: filterOn ? priceRange.lowerBound : null,
+          maxPrice: filterOn ? priceRange.upperBound : null,
+        });
+
+        if (status === 200) {
+          return data.filter(
+            (item) =>
+              item.addr.includes(searchValue) ||
+              item.name.includes(searchValue) ||
+              item.addr.includes(searchValue)
+          );
+        }
+      } else {
+
+        return [];
       }
     }
-
-
 
     if (subAddress === "") {
       const { status, data } = await axios.post("/user/searchHotelByLowPrice", {
@@ -222,40 +212,30 @@ const List = () => {
 
   const fetchHotelByHighPrice = async () => {
     const selectedDate = formatDate(date);
-    let list = [];
-
     if (!seqHotelCategory) {
-      const { status, data } = await axios.post("/user/searchHotelByHighPrice", {
-        seqHotelCategory: "",
-        addr: subAddress,
-        date: selectedDate,
-        minPrice: filterOn ? priceRange.lowerBound : null,
-        maxPrice: filterOn ? priceRange.upperBound : null,
-      });
+      if (searchValue) {
 
-      if (status === 200) {
-        return data.filter(
-          (item) =>
-            item.addr.includes(searchValue) ||
-            item.name.includes(searchValue) ||
-            item.addr.includes(searchValue)
-        );
-      }
-    } else {
-      const { status, data } = await axios.post("/user/searchHotelByHighPrice", {
-        seqHotelCategory: "",
-        addr: subAddress,
-        date: selectedDate,
-        minPrice: filterOn ? priceRange.lowerBound : null,
-        maxPrice: filterOn ? priceRange.upperBound : null,
-      });
+        const { status, data } = await axios.post("/user/searchHotelByHighPrice", {
+          seqHotelCategory: "",
+          addr: subAddress,
+          date: selectedDate,
+          minPrice: filterOn ? priceRange.lowerBound : null,
+          maxPrice: filterOn ? priceRange.upperBound : null,
+        });
 
-      if (status === 200) {
-        return data;
+        if (status === 200) {
+          return data.filter(
+            (item) =>
+              item.addr.includes(searchValue) ||
+              item.name.includes(searchValue) ||
+              item.addr.includes(searchValue)
+          );
+        }
+      } else {
+
+        return [];
       }
     }
-
-
 
     if (subAddress === "") {
       const { status, data } = await axios.post("/user/searchHotelByHighPrice", {
@@ -328,7 +308,7 @@ const List = () => {
     let list;
   
     if (sortOption === "lowPrice") {
-      list = await fetchHotelListByLowPrice();
+      list = await fetchHotelByLowPrice();
     } else if (sortOption === "highPrice") {
       list = await fetchHotelByHighPrice();
     } else {
@@ -380,7 +360,7 @@ const List = () => {
   };
   const applyFilter = async () => {
     if (sortOption === "lowPrice") {
-      await fetchHotelListByLowPrice();
+      await fetchHotelByLowPrice();
     } else {
       await resetHotelList();
     }
@@ -422,6 +402,12 @@ const List = () => {
                 <option value="choong-book">충북</option>
               </select>
 
+              
+            </div>
+          </Col>
+
+          <Col className="mb-3" xl={3} lg={6} md={12} sm={12} xs={12}>
+            <div className="input-group mb-3">
               {mainAddress && (
                 <select
                   className="form-select ms-auto"
@@ -793,22 +779,7 @@ const List = () => {
             </div>
           </Col>
 
-          <Col className="mb-3" xl={2} lg={6} md={12} sm={12} xs={12}>
-            <div className="input-group mb-3">
-              <span className="input-group-text" id="basic-addon1">
-                예약 인원
-              </span>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="명"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-              />
-            </div>
-          </Col>
-
-          <Col className="mb-3" xl={5} lg={10} md={12} sm={12} xs={12}>
+          {/* <Col className="mb-3" xl={5} lg={10} md={12} sm={12} xs={12}>
             <div className="accordion">
               <div
                 className={`${styles.HotelListAccordionItem} accordion-item`}
@@ -844,15 +815,11 @@ const List = () => {
                 </div>
               </div>
             </div>
-          </Col>
+          </Col> */}
 
           <Col
             className="d-flex justify-content-end mb-3"
-            xl={2}
-            lg={2}
-            md={12}
-            sm={12}
-            xs={12}
+            xl={6} lg={10} md={12} sm={12} xs={12}
           >
             <div>
               <Link to="/hotelInMap">
