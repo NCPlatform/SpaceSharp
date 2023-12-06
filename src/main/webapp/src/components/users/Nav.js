@@ -129,9 +129,12 @@ const NavTest = () => {
                         <br />
                         Q&A관리
                       </Link>
-                      <div className="col">
+                      <Link
+                        to="/likedHotelList"
+                        className="col text-decoration-none text-dark"
+                      >
                         <p>♥</p>찜한 공간
-                      </div>
+                      </Link>
                     </div>
                   </div>
 
@@ -338,6 +341,7 @@ const NavTest = () => {
                         onClick={() => {
                           sessionStorage.clear();
                           window.location.reload();
+
                         }}
                       >
                         로그아웃

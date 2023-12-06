@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import styles from '../../css/BoardList.module.css'
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button';
-import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import styles from "../../css/BoardList.module.css";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 import Nav from "./Nav";
 
 const BoardList = () => {
@@ -31,8 +30,7 @@ const BoardList = () => {
     releaseDate: "",
   });
 
-  const [userEmail, setUserEmail] = useState("");
-  const [userNickname, setUserNickname] = useState("");
+  const [userList, setUserList] = useState([]);
 
   const categoryTitles = {
     7: "1:1 문의",
@@ -42,10 +40,14 @@ const BoardList = () => {
     axios
       .get(`/user/list?page=${page}&size=${pageSize}`)
       .then((res) => {
-        setList(res.data.content);
-
+        console.log(res.data);
+        setList(res.data.boardList.content);
+        setUserList(res.data.userList);
         setPagingArray(
-          Array.from({ length: res.data.totalPages }, (_, index) => index + 1)
+          Array.from(
+            { length: res.data.boardList.totalPages },
+            (_, index) => index + 1
+          )
         );
       })
       .catch((error) => console.log(error));
@@ -95,11 +97,6 @@ const BoardList = () => {
                     const releaseDate = new Date(item.releaseDate);
                     const formattedReleaseDate =
                       releaseDate.toLocaleDateString("ko-KR");
-                    let nicknameToShow = item.email;
-
-                    if (userEmail && userEmail === item.email) {
-                      nicknameToShow = userNickname;
-                    }
 
                     return (
                       <tr key={item.seqBoard} className={styles.BoardListTr2}>
@@ -115,7 +112,14 @@ const BoardList = () => {
                         <td
                           className={`col-2 text-truncate ${styles.BoardListTd3}`}
                         >
-                          {nicknameToShow}
+                          {userList.filter((user) => user.email === item.email)
+                            .length > 0 ? (
+                            userList.filter(
+                              (user) => user.email === item.email
+                            )[0].name
+                          ) : (
+                            <>삭제된 유저</>
+                          )}
                         </td>
                         <td className={styles.BoardListTd4}>
                           {formattedReleaseDate}
@@ -127,7 +131,7 @@ const BoardList = () => {
             </table>
             <div className="d-flex justify-content-end">
               {storedUser && storedUser.email ? (
-                <Link to="/boardWrite">
+                <Link to="/boardWrite/7">
                   <button className={styles.BoardListWriteButton}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

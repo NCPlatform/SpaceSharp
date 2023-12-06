@@ -26,4 +26,7 @@ public interface BoardDAO extends JpaRepository<BoardDTO, Integer> {
 			String searchKey);
 
 	Page<BoardDTO> findBySeqRefSeqBoardAndSeqBoardCategory(Pageable pageable, int seqRefSeqBoard, int i);
+
+
+	Page<BoardDTO> findBySeqRefSeqBoardAndSeqBoardCategoryLike(Pageable pageable, int seqRefSeqBoard, int i);
 }

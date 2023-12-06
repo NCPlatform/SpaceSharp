@@ -3,6 +3,7 @@ import axios from 'axios';
 import TextEditor from '../../TextEditor';
 import Disp_topNav from './Disp_topNav';
 import Button from 'react-bootstrap/Button';
+import ManagerHeader from './ManagerHeader';
 
 const ManagerAddPlace = () => {
 
@@ -32,7 +33,7 @@ const ManagerAddPlace = () => {
 
         })
 
-        const {seqHotelCategory, holiday, ownerEmail} = hotelDTO
+        const {seqHotelCategory, holiday, ownerEmail, placeEx} = hotelDTO
 
         const [whenOn, setWhenOn]  = useState({
             openTime: 0,
@@ -256,9 +257,9 @@ const ManagerAddPlace = () => {
 
     return (
         <div>
-            <Disp_topNav/>
             
-            <div style = {styleZ}>
+            <ManagerHeader />
+            <div className="container mt-5 pt-5">
                 <form>
                     <span style = {styleA}>새로운 플레이스 추가하기</span>
                     <table>
@@ -281,7 +282,7 @@ const ManagerAddPlace = () => {
                                 <td>소개</td>
                                 <td>
                                     <div>
-                                    <TextEditor func = {editorVal} readOnly = {false} texthold = 'placeEx'/>
+                                    <TextEditor func = {editorVal} readOnly = {false} texthold = 'placeEx' value = {placeEx}/>
                                     
                                     </div>
                                     <br/><br/>

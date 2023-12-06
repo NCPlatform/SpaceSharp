@@ -1,8 +1,6 @@
 import React from 'react';
 
-const NaverAuth = () => {
-
- 
+const ChangePwdForm = () => {
     return (
         <div>
             
@@ -10,4 +8,4 @@ const NaverAuth = () => {
     );
 };
 
-export default NaverAuth;
+export default ChangePwdForm;

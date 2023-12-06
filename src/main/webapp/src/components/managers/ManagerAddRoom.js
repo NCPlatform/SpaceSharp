@@ -5,6 +5,7 @@ import AddFinishModal from './AddFinishModal';
 import TextEditor from '../../TextEditor';
 import Button from 'react-bootstrap/Button';
 import Disp_topNav from './Disp_topNav';
+import ManagerHeader from './ManagerHeader';
 
 
 const AddRoom = () => {
@@ -19,6 +20,8 @@ const AddRoom = () => {
             placeSize: '', people: '', datetime: '', // << 최소 예약 시간
             reserveRule: ''
         })
+
+        const {normalExplain} = roomDTO
 
         const [imageList, setImageList] = useState([])
 
@@ -139,8 +142,8 @@ const AddRoom = () => {
         */
     return (
         <div>
-            <Disp_topNav/>
-            <div id = 'disp' style = {styleZ}>
+           <ManagerHeader />
+            <div className="container mt-5 pt-5">
                 <form>
                     <span style = {styleA}>새로운 룸 추가하기</span>
                     <table>
@@ -153,7 +156,7 @@ const AddRoom = () => {
                                 <td>룸 소개</td>
                                 <td>
                                     <div>
-                                    <TextEditor func = {editorVal}/>
+                                    <TextEditor func = {editorVal} readOnly = {false} texthold = 'normalExplain' value = {normalExplain}/>
                                     </div>
                                     <br/><br/>
                                 </td>

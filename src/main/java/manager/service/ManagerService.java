@@ -23,4 +23,10 @@ public interface ManagerService {
 
 	public Optional<HotelDTO> viewPlaceInfo(String seq);
 
+	public void deletePlace(String seqHotel);
+
+	public Optional<RoomDTO> viewRoomInfo(String seq);
+
+	public void deleteRoom(String seqRoom);
+
 }

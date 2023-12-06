@@ -60,5 +60,24 @@ public class ManagerServiceImpl implements ManagerService {
 		Optional<HotelDTO> resultDTO = hotelDAO.findById(Integer.parseInt(seq));
 		return resultDTO;
 	}
+	
+	
+
+	@Override
+	public void deletePlace(String seqHotel) {
+		hotelDAO.deleteById(Integer.parseInt(seqHotel));
+	}
+
+	@Override
+	public Optional<RoomDTO> viewRoomInfo(String seq) {
+		Optional<RoomDTO> resultDTO = roomDAO.findById(Integer.parseInt(seq));
+		return resultDTO;
+	}
+
+	@Override
+	public void deleteRoom(String seqRoom) {
+		roomDAO.deleteById(Integer.parseInt(seqRoom));
+		
+	}
 
 }

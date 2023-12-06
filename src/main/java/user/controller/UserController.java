@@ -5,7 +5,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,7 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.stereotype.Controller;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,12 +31,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.mail.internet.ParseException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
-import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.HotelSearchDTO;
 import jpa.bean.LikedDTO;
@@ -64,12 +66,10 @@ public class UserController {
 	
 	@Autowired
 	private ReservationDAO reservationDAO;
-
 	@Autowired
 	private ReceiptDAO receiptDAO;
 	
 	private String bucketName = "spacesharpbucket";
-
 
 	@GetMapping("/getHotelName")
     public String getHotelName(@RequestParam int seqHotel) {
@@ -198,14 +198,6 @@ public class UserController {
 	      return new ResponseEntity<>("영수증 저장에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	  }
-  @GetMapping("/updateNaverStatus")
-	public String updateNaverStatus(@RequestParam String userEmail) {
-	    boolean updated = userService.updateUserNaverStatus(userEmail, true); // 여기에서 true 또는 false로 변경 가능
-	    if (updated) {
-	        return "네이버 성공";
-	    }
-	    return "네이버 실패";
-	}
 
 	@PostMapping(value="login")
 	@ResponseBody
@@ -216,7 +208,7 @@ public class UserController {
 			return DTO.get();
 		}else {
 			return null;
-		}
+		}	
 	}
 	
 	@PostMapping(value="write")
@@ -227,7 +219,7 @@ public class UserController {
 	
 	@GetMapping(value="list")
 	@ResponseBody
-	public Page<BoardDTO> list(@PageableDefault(page=0, size=10, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable) {
+	public Map<String,Object> list(@PageableDefault(page=0, size=10, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable) {
 		int seqRefSeqBoard = 0;
 		return userService.list(pageable, seqRefSeqBoard);
 	}
@@ -277,8 +269,69 @@ public class UserController {
 		return userService.existsByEmail(email);
 	
     }
-				
-	@PostMapping(value = "mainPage")
+	
+	
+	@PostMapping("/existsByIsKakao")
+    public ResponseEntity<Boolean> existsByIsKakao(@RequestParam String email) {
+        boolean exists = userService.existsByEmail(email);
+        return ResponseEntity.ok(exists);
+    }
+
+    @PostMapping("/updateNickname")
+    public ResponseEntity<String> updateNickname(@RequestBody Map<String, String> data) {
+        String email = data.get("email");
+        String newNickname = data.get("newNickname");
+
+        userService.updateNickname(email, newNickname);
+
+        return ResponseEntity.ok("회원님의 닉네임이 수정되었습니다.");
+    }
+
+    @PostMapping("/updateTel")
+    public ResponseEntity<String> updateTel(@RequestBody Map<String, String> data) {
+        String email = data.get("email");
+        String newTel = data.get("newTel");
+
+        userService.updateTel(email, newTel);
+
+        return ResponseEntity.ok("회원님의 닉네임이 수정되었습니다.");
+    }
+       
+    @PostMapping("/updatePassword")
+    public ResponseEntity<String> updatePassword(@RequestBody Map<String, String> data) {
+        String email = data.get("email");
+        String newPassword = data.get("newPassword");
+
+        userService.updatePassword(email, newPassword);
+
+        return ResponseEntity.ok("회원님의 비밀번호가 수정되었습니다.");
+    }
+    
+    
+    @PostMapping("updateIsNaver")
+    public ResponseEntity<String> updateIsNaver(
+    		@RequestParam String email,
+    		@RequestParam boolean isnaver) {
+    	try {
+    		userService.updateIsNaver(email, isnaver);
+    		return ResponseEntity.ok("업데이트 성공");
+    	} catch (Exception e) {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 실패");
+    	}
+    }
+    
+    @PostMapping("/deleteUser")
+    public ResponseEntity<String> deleteUser(@RequestBody Map<String, String> deleteUserData) {
+        try {
+            userService.deleteUser(deleteUserData.get("name"), deleteUserData.get("password"));
+            return new ResponseEntity<>("회원 삭제가 완료되었습니다.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("회원 삭제에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    
+    @PostMapping(value = "mainPage")
 	@ResponseBody
 	public Map<String, Object> mainPage(){
 		return userService.mainPage();
@@ -289,6 +342,13 @@ public class UserController {
 	public List<HotelDTO> getHotelList(@ModelAttribute HotelDTO hotelDTO){
 		return userService.getHotelList(hotelDTO.getSeqHotelCategory());
 	}
+	
+	@GetMapping(value = "getLikedHotel")
+	@ResponseBody
+	public List<HotelDTO> getLikedHotel(@RequestParam String email){
+		return userService.getLikedHotel(email);
+	}
+	
 	@PostMapping(value = "searchHotel")
 	@ResponseBody
 	public List<HotelDTO> searchHotel(@RequestBody HotelSearchDTO hotelDTO){
@@ -403,4 +463,96 @@ public class UserController {
 		return imgValue;
 		
 	}
+	
+	// =========================== MAIL SERVICE =====================
+	
+	@Autowired
+	private JavaMailSender mailSender;
+	
+	@PostMapping(value = "sendEmail")
+	@ResponseBody
+	public void sendEmail(@RequestParam(required = false, defaultValue = "1") int emailType,
+						@RequestParam String emailId, @RequestParam String emailDomain  
+						) {
+		
+		System.out.println("requested sendEmail : "+emailId+"@"+emailDomain);
+		// emailType => 링크로 연결하려면 1, 인증번호를 보내려면 2
+		/**/
+		String emailAddr = emailId+"@"+emailDomain;
+		System.out.println(emailAddr+" and emailType: "+emailType);
+		String subject = "";
+		String content = "";
+		String whenOops = "";
+		
+		switch(emailType) {
+		 
+		  case 1: {
+			  String tokenURL = "";
+			  subject = "[Space#] SpaceSharp에서 비밀번호 찾기를 요청하셨나요?";
+			  content = "<!DOCTYPE HTML> <html> <head> <meta charset = \"UTF-8\"/> <style> #body, #caption{text-align: center;} #caption{font-size: 5em;} table{height: 390px; width: 530px;} #btn{margin-left: 175px; } #oops{font-size: 0.75em; text-align: center; margin-left: 160px; color: gray; } #oopsHref{text-decoration: none;} table{border: 15px solid #86A3B8;} #introduce{font-size: 0.5em; color: gray;} #textColor{ color: #F55050; } .rowSpace{height: 10px;} </style> </head> <body> <div> <table> <tr height = '100px'> <td><div id = 'caption'>SpaceSharp</div></td> </tr> <tr> <td><div id = 'body'> 안녕하세요, SpaceSharp입니다! <br><div class = 'rowSpace'></div> 아래 <span id = 'textColor'>SpaceSharp 열기</span> 버튼을 누르시면 <br><div class = 'rowSpace'></div> 요청하신 이메일 인증이 완료됩니다. </div></td> </tr> <tr height = '100px'> <td><div id = 'btn'><a href = '";
+			  tokenURL = "http://localhost:3000/user/authRequest/"+userService.createToken(emailAddr);
+			  content += tokenURL;
+			  content += "' target = '_blank'><img width = '150px' src = 				'https://me2.do/G87iQ5hN'></a> </div><a href = '";
+			  content += whenOops;
+			  content += "' id = 'oopsHref'> <span id = 'oops'>인증 링크는 꼭 5분 안에 클릭해 주세요!</span></a> <br> </td></tr> </table> </div> <span id = 'introduce'>Project Space#, 2023.</span> </body> </html>";
+			 
+			  break;
+		  }
+		  
+		  case 2 : {
+			  int verifNum = 0;
+			  subject = "[Space#] SpaceSharp에서 인증번호를 보내드립니다.";
+			  content = "<!DOCTYPE HTML> <html> <head> <meta charset = \"UTF-8\"/> <style> #body, #caption{text-align: center;} #caption{font-size: 5em;} table{height: 390px; width: 530px;} #btn{margin-left: 175px; } #oops{font-size: 0.75em; text-align: center; margin-left: 160px; color: gray; } #oopsHref{text-decoration: none;} table{border: 15px solid #86A3B8;} #introduce{font-size: 0.5em; color: gray;} #textColor{ color: #F55050; } .rowSpace{height: 10px;} #verifNums{font-size: 3.5em; color: #F55050} </style> </head> <body> <div> <table> <tr height = '100px'> <td><div id = 'caption'>SpaceSharp</div></td> </tr> <tr> <td><div id = 'body'> 안녕하세요, SpaceSharp입니다! <br><div class = 'rowSpace'></div> 아래 <span id = 'textColor'>인증번호</span>를 정확히 입력해 주세요! <br><div class = 'rowSpace'></div> 인증번호를 입력하시면 요청하신 인증이 완료됩니다. </div></td> </tr> <tr height = '100px'> <td><div id = 'btn'><span id = 'verifNums'>";
+			  verifNum = 23628;
+			  content += ""+verifNum;
+			  content += "</span> </div><a href = '";
+			  content += whenOops;
+			  content += "' id = 'oopsHref'> <span id = 'oops'>Oops! 인증을 요청하지 않았어요</span></a> <br> </td></tr> </table> </div> <span id = 'introduce'>Project Space#, 2023.</span> </body> </html>";
+			  break;
+		  }
+		  
+		  default: {
+			  System.out.println("emailType을 확인해 주세요.");
+			  break;
+		  } 
+		  }
+		
+		String from = "Space# <no-reply@project.spaceSharp.com>";
+		String to = "<"+emailAddr+">";
+		
+		 try 
+	        {
+	            MimeMessage mail = mailSender.createMimeMessage();
+	            MimeMessageHelper mailHelper = new MimeMessageHelper(mail, true, "UTF-8");
+	            mailHelper.setFrom(from);
+	            mailHelper.setTo(to);
+	            mailHelper.setSubject(subject);
+	            mailHelper.setText(content, true);
+	            
+	            mailSender.send(mail);
+	        } 
+	        catch(Exception e) 
+	        {
+	            e.printStackTrace();
+	        }
+	        
+	}
+	
+	@PostMapping(value = "emailAuth")
+	@ResponseBody
+	public String authEmail(@RequestParam String token, HttpServletRequest request, HttpServletResponse response) {
+		// 토큰 해금
+		System.out.println("인증 요청됨 : "+token);
+		try {
+			userService.decodeToken(token);}
+		catch(ExpiredJwtException e) {
+			return "E";
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return "N";
+		}
+		return "Y";
+	}
+	
 }

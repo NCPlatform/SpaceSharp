@@ -1,24 +1,38 @@
 package user.service;
 
-import java.text.SimpleDateFormat;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.transaction.Transactional;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.crypto.DefaultJwtSignatureValidator;
+import io.jsonwebtoken.security.Keys;
+import jakarta.persistence.EntityNotFoundException;
+
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
 import jpa.bean.EventDTO;
@@ -99,6 +113,53 @@ public class UserServiceImpl implements UserService {
 		return userDAO.existsByEmail(email);
 	}
 
+	public void updateNickname(String email, String newNickname) {
+		UserDTO userDTO = userDAO.findByEmail(email);
+		if (userDTO != null) {
+			userDTO.setNickname(newNickname);
+			userDAO.save(userDTO);
+		}
+	}
+	
+	@Override
+	public void updateTel(String email, String newTel) {
+		UserDTO userDTO = userDAO.findByEmail(email);
+		if (userDTO != null) {
+			userDTO.setTel(newTel);
+			userDAO.save(userDTO);
+		}
+		
+	}
+	
+	@Override
+	public void updatePassword(String email, String newPassword) {
+		UserDTO userDTO = userDAO.findByEmail(email);
+		if (userDTO != null) {
+			userDTO.setPassword(newPassword);
+			userDAO.save(userDTO);
+		}
+		
+	}
+	
+	@Override
+	public void updateIsNaver(String email, boolean isnaver) {
+        UserDTO userDTO = userDAO.findByEmail(email);
+                
+        userDTO.setIsnaver(isnaver);
+        userDAO.save(userDTO);
+    }
+	
+	@Override
+	public void deleteUser(String name, String password) {
+		UserDTO userDTO = userDAO.findByNameAndPassword(name, password);
+		
+		if (userDTO != null) {
+			userDAO.delete(userDTO);
+		} else {
+			throw new RuntimeException("사용자를 찾을 수 없습니다.");
+		}
+	}
+	
 	
 	@Override
 	public List<HotelCategoryDTO> getHotelCategoryList() {
@@ -248,16 +309,15 @@ public class UserServiceImpl implements UserService {
 	            .map(hotelDTO -> hotelDTO.getAddr())
 	            .orElse(null);
 	}
-
+	
 	@Override
 	public UserDTO getUserByEmail(String email) {
 	    return userDAO.findById(email).orElse(null);
 	}
 
-
 	@Override
 	public List<RoomDTO> getRoomListByHotel(int seqHotel) {
-		return roomDAO.findBySeqHotel( seqHotel);
+		return roomDAO.findBySeqHotel(seqHotel);
 	}
 
 
@@ -329,21 +389,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Page<BoardDTO> list (Pageable pageable, int seqRefSeqBoard) {
-		return boardDAO.findBySeqRefSeqBoardAndSeqBoardCategory(pageable,seqRefSeqBoard,7);
+	public Map<String,Object> list (Pageable pageable, int seqRefSeqBoard) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		Page<BoardDTO> boardList = boardDAO.findBySeqRefSeqBoardAndSeqBoardCategoryLike(pageable,seqRefSeqBoard,7);
+		map.put("boardList",boardList);
+		map.put("userList", userDAO.findAll());
+		return map;
 	}
-
-	@Override
-	public boolean updateUserNaverStatus(String userEmail, boolean isnaver) {
-		 Optional<UserDTO> optionalUser = userDAO.findById(userEmail);
-        if (optionalUser.isPresent()) {
-            UserDTO user = optionalUser.get();
-            user.setIsnaver(isnaver);
-            userDAO.save(user);
-            return true;
-        }
-        return false;
-    }
 
 	public Map<String,Object> hotelReserve(int seqRoom) {
 		
@@ -443,7 +495,52 @@ public class UserServiceImpl implements UserService {
 	public List<HotelDTO> searchHotel(HotelSearchDTO hotelDTO) {
 		return hotelDAO.searchHotel(hotelDTO.getSeqHotelCategory(), hotelDTO.getDate(), hotelDTO.getAddr(), hotelDTO.getMinPrice(), hotelDTO.getMaxPrice());
 	}
+
 	
+// JWT
+	private String keyIn = "안녕하세요여기는스페이스샵입니다비밀번호찾기를요청하셨습니다";
+    
+	@Override
+	public String createToken(String userEmail) {
+
+        //Header 부분 설정
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("typ", "JWT");
+        headers.put("alg", "HS256");
+        // -> 헤더에 타입과 알고리즘을 지정한다. 이 부분은 건드릴 필요가 없을 것 같음
+
+        //payload 부분 설정
+        Map<String, Object> payloads = new HashMap<>();
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss");
+        String today = currentDateTime.format(formatter);
+        payloads.put("greeting", "Hello, Space#!");
+        payloads.put("space#method","email-link-authorize");
+        payloads.put("space#date", today);
+        payloads.put("space#request","re:pwd");
+        payloads.put("requested#user", userEmail);
+
+        Long expiredTime = 1000 * 60L * 5L; // 5분  
+
+        Date date = new Date(); // 토큰 만료 시간
+        date.setTime(date.getTime() + expiredTime);
+    
+        SecretKey key = Keys.hmacShaKeyFor(keyIn.getBytes(StandardCharsets.UTF_8));
+        
+        
+        // 토큰 Builder
+        String jwt = Jwts.builder()
+                .setHeader(headers) // Headers 설정
+                .setClaims(payloads) // Claims 설정
+                .setSubject("Test") // 토큰 용도
+                .setExpiration(date) // 토큰 만료 시간 설정
+                .signWith(SignatureAlgorithm.HS256, key)
+                .compact(); // 토큰 생성
+
+
+        System.out.println(">> jwt : " + jwt);
+        return jwt;
+    }
 
 	@Override
 	public Integer saveReservation(ReservationDTO reservationDTO) {
@@ -491,9 +588,11 @@ public class UserServiceImpl implements UserService {
 		Page<ReservationDTO> reservationPage = reservationDAO.findAllByEmail(pageable, email);
 		List<RoomDTO> roomList = new ArrayList<RoomDTO>();
 		List<HotelDTO> hotelList = new ArrayList<HotelDTO>();
+		List<ReceiptDTO> receiptList = new ArrayList<ReceiptDTO>();
 		
 		for(ReservationDTO dto : reservationPage.getContent()) {
 			roomList.add(roomDAO.findById(dto.getSeqRoom()).get());
+			receiptList.add(receiptDAO.findBySeqReservation(dto.getSeqReservation()));
 		}
 		
 		for(RoomDTO dto : roomList) {
@@ -505,6 +604,7 @@ public class UserServiceImpl implements UserService {
 		map.put("reservationPage", reservationPage);
 		map.put("roomList", roomList);
 		map.put("hotelList", hotelList);
+		map.put("receiptList", receiptList);
 		
 		return map;
 	}
@@ -600,5 +700,37 @@ public class UserServiceImpl implements UserService {
 		
 		likedDAO.save(dto);
 	}
+
+	@Override
+	public List<HotelDTO> getLikedHotel(String email) {
+		
+		return hotelDAO.findAllByEmail(email);
+	}
 	
+	@Override
+	public String decodeToken(String token) throws Exception {
+		String[] chunks = token.split("\\.");
+		Base64.Decoder decoder = Base64.getDecoder();
+		String header = new String(decoder.decode(chunks[0]));
+		String payload = new String(decoder.decode(chunks[1]));
+		
+		System.out.println("header : " + header);
+		System.out.println("payload : " + payload);
+
+		Claims claims = Jwts.parser().setSigningKey(keyIn.getBytes()).parseClaimsJws(token).getBody();
+		Date expiration = claims.getExpiration();
+		if (expiration != null && expiration.before(new Date())) {
+		    throw new Exception("JWT token has expired!");
+		}
+		SignatureAlgorithm sa = SignatureAlgorithm.HS256;
+		SecretKeySpec secretKeySpec = new SecretKeySpec(keyIn.getBytes(), sa.getJcaName());
+		String tokenWithoutSignature = chunks[0] + "." + chunks[1];
+		String signature = chunks[2];
+		DefaultJwtSignatureValidator validator = new DefaultJwtSignatureValidator(sa, secretKeySpec);
+
+		if (!validator.isValid(tokenWithoutSignature, signature)) {
+		    throw new Exception("Could not verify JWT token integrity!");
+		}
+		return payload;
+	}
 }

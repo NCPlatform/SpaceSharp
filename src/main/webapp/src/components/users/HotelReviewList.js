@@ -9,7 +9,7 @@ import ReviewItemCard from "./ReviewItemCard";
 import styles from "../../css/BoardList.module.css";
 
 const HotelReviewList = () => {
-  const [tab, setTab] = useState("QnA");
+  const [tab, setTab] = useState("review");
 
   const [list, setList] = useState([]);
 
