@@ -212,7 +212,7 @@ const HotelReserve = () => {
                     icon: 'success',
                     confirmButtonText: '확인'
                   }).then(() => {
-                    window.location.href = "http://localhost:3000/";
+                    window.location.href = "/hotelReserveList";
                   });//데이터 추가 완료 후 이동 URL
                 })
                 .catch(receiptError => {

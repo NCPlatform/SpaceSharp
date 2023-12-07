@@ -47,12 +47,12 @@ const List = () => {
       const moreData = await fetchHotelList(page + 1);
   
       if (moreData.length > 0) {
-        // 새 데이터를 추가하기 전에 1초의 지연
+        // 새 데이터를 추가하기 전에 0.7초의 지연
         setTimeout(() => {
           setHotelList((prev) => [...prev, ...moreData]);
           setPage((prev) => prev + 1);
           setLoading(false);
-        }, 1000);
+        }, 700);
       } else {
         setHasMore(false);
         setLoading(false);
