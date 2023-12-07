@@ -45,4 +45,6 @@ public interface HotelDAO extends JpaRepository<HotelDTO, Integer> {
 			+ "WHERE l.email LIKE :email")
 	public List<HotelDTO> findAllByEmail(@Param("email")String email);
 
+	public List<HotelDTO> findAllByOwnerEmail(String email);
+
 }

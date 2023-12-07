@@ -236,6 +236,12 @@ public class UserController {
 		return userService.getBoard(seqBoard);
 	}
 	
+	@GetMapping(path = "getCoupon")
+	@ResponseBody
+	public String getCoupon(@RequestParam String email, @RequestParam int seqCoupon){
+		return userService.getCoupon(email, seqCoupon);
+	}
+	
 	@GetMapping(path = "getBoardList")
 	@ResponseBody
 	public Map<String,Object> getBoardList(@PageableDefault(page=0, size=10, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable, String searchKey, int seqBoardCategory){

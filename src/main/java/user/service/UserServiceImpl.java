@@ -39,6 +39,7 @@ import jpa.bean.EventDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.HotelSearchDTO;
+import jpa.bean.IssuedCouponDTO;
 import jpa.bean.LikedDTO;
 import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
@@ -378,6 +379,7 @@ public class UserServiceImpl implements UserService {
 		map.put("hotelList", hotelList);
 		map.put("reviewCardList", reviewCardList);
 		map.put("eventList", eventList);
+		map.put("couponList", couponDAO.findAll());
 		return map;
 	}
 
@@ -732,5 +734,29 @@ public class UserServiceImpl implements UserService {
 		    throw new Exception("Could not verify JWT token integrity!");
 		}
 		return payload;
+	}
+
+	@Override
+	public String getCoupon(String email, int seqCoupon) {
+		
+		Optional<IssuedCouponDTO> coupon = issuedCouponDAO.findByEmailAndSeqCoupon(email, seqCoupon);
+		
+		if(coupon.isPresent()) {
+			return "have";
+			
+		}else {
+			int cnt = couponDAO.findById(seqCoupon).get().getCnt();
+			List<IssuedCouponDTO> couponList = issuedCouponDAO.findAllBySeqCoupon(seqCoupon);
+			
+			if(couponList.size() < cnt) {
+				IssuedCouponDTO newCoupon = new IssuedCouponDTO();
+				newCoupon.setEmail(email);
+				newCoupon.setSeqCoupon(seqCoupon);
+				issuedCouponDAO.save(newCoupon);
+				return "success";
+			}else {
+				return "fail";
+			}
+		}
 	}
 }
