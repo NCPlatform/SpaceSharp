@@ -46,4 +46,7 @@ public class EventDTO {
 	@Column
 	private Date finishDate;
 	
+	@Column
+	private String CouponSeq;
+	
 }

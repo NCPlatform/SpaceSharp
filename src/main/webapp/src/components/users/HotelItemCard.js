@@ -105,19 +105,19 @@ const HotelItemCard = ({ item, index }) => {
           )}
           <p className="d-flex pt-1">
             {maxPeople !== -1 && (
-              <p>
+              <span>
                 최대{" "}
                 <span className="fw-bold fourthFontColor">{maxPeople}</span>인/
-              </p>
+              </span>
             )}
-            <p>
+            <span>
               리뷰 <span className="fw-bold fourthFontColor">{cntReview}</span>
               개/{" "}
-            </p>
-            <p>
+            </span>
+            <span>
               좋아요 <span className="fw-bold fourthFontColor">{cntLike}</span>
               개
-            </p>
+            </span>
           </p>
         </div>
       </Card.Body>
