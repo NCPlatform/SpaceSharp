@@ -13,7 +13,7 @@ const ChatList = ({ backColor }) => {
   const [stompClient, setStompClient] = useState();
 
   const initializeWebSocket = useCallback(() => {
-    const socket = new WebSocket('ws://localhost:8080/ws');
+    const socket = new WebSocket('ws://223.130.136.57/8080/ws');
 
     const client = Stomp.over(socket, { debug: true }); // 디버그 모드 활성화
     client.debug = function () {};
