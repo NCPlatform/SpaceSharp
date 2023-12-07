@@ -168,6 +168,9 @@ function App() {
             <Route path="coupon" element={<AdminCoupon />} />
             <Route path="event" element={<AdminEvent />} />
           </Route>
+          <Route path="/user">
+            <Route path="authRequest/:token" element = {<AuthRequest/>}/>
+          </Route>
         </Routes>
       </BrowserRouter>
     </CookiesProvider>
