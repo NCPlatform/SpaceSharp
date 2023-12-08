@@ -28,6 +28,9 @@ const Main = () => {
   const scrollToBottom = () => {
     window.scrollTo(0, document.body.scrollHeight);
   };
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  };
   const steps = [
     {
       id: "1",
@@ -70,8 +73,9 @@ const Main = () => {
         <Link
           to={`/detail/${randomHotelId}`}
           style={{ textDecoration: "none", color: "blue" }}
+          onClick={scrollToTop}
         >
-          랜덤 공간 확인하기
+          추천 공간 확인하기
         </Link>
       ),
       end: true,
@@ -87,6 +91,7 @@ const Main = () => {
         <Link
           to="/hotelList/1"
           style={{ textDecoration: "none", color: "blue" }}
+          onClick={scrollToTop}
         >
           공간 검색 페이지로 이동
         </Link>
@@ -104,6 +109,7 @@ const Main = () => {
         <Link
           to="/boardList/0"
           style={{ textDecoration: "none", color: "blue" }}
+          onClick={scrollToTop}
         >
           1:1 문의 페이지로 이동
         </Link>
@@ -138,8 +144,9 @@ const Main = () => {
       id: "redirectToEventPage",
       component: (
         <Link
-          to="/NavEvent"  // Update this with the correct URL for your event page
+          to="/NavEvent"  
           style={{ textDecoration: "none", color: "blue" }}
+          onClick={scrollToTop}
         >
           이벤트 페이지로 이동
         </Link>
