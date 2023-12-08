@@ -14,7 +14,7 @@ const TableBoardItems = ({ item, userName }) => {
         </Link>
       </td>
       <td className="text-center">{userName}</td>
-      <td className="text-center">
+      <td className="text-center d-none d-lg-block d-xl-block d-xxl-block">
         {new Date(item.releaseDate).toLocaleDateString("ko-KR")}
       </td>
     </tr>

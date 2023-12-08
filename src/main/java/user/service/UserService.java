@@ -134,6 +134,8 @@ public interface UserService {
 	public void addLike(String email, int seqHotel);
 
 	public List<HotelDTO> getLikedHotel(String email);
+
+	public String getCoupon(String email, int seqCoupon);
 	
 
 

@@ -14,6 +14,7 @@ import { options } from "@fullcalendar/core/preact";
 import Footer from "./Footer";
 import HotelItemCard from "./HotelItemCard";
 import ReviewItemCard from "./ReviewItemCard";
+import NavEventDetail from "./NavComponents/NavEventDetail";
 
 const Main = () => {
   const [activeTab, setActiveTab] = useState("total");
@@ -21,6 +22,7 @@ const Main = () => {
   const [newHotelList, setNewHotelList] = useState([]);
   const [reviewList, setReviewList] = useState([]);
   const [eventList, setEventList] = useState([]);
+  const [couponList, setCouponList] = useState([]);
 
   useEffect(() => {
     axios
@@ -30,6 +32,7 @@ const Main = () => {
         setHotelCategoryList(res.data.categoryList);
         setReviewList(res.data.reviewCardList);
         setEventList(res.data.eventList);
+        setCouponList(res.data.couponList);
       })
       .catch((error) => console.log(error));
   }, []);
@@ -275,28 +278,34 @@ const Main = () => {
           data-bs-ride="carousel"
         >
           <div className="carousel-inner rounded">
-            {eventList &&
+            {eventList.length > 1 &&
               eventList
                 .filter((item) => new Date(item.finishDate) >= new Date())
                 .map((item, index) => (
-                  <div
-                    className="carousel-item active"
-                    data-bs-interval="3000"
-                    key={index}
-                  >
-                    <img
-                      src={item.mainImg}
-                      className="d-block w-100"
-                      style={{ height: "25vw", objectFit: "cover" }}
-                      alt=""
-                    />
+                  <>
                     <div
-                      className="carousel-caption d-none d-md-block bg-dark bg-opacity-25 w-100 px-0 mx-0"
-                      style={{ right: 0, left: 0 }}
+                      className="carousel-item active"
+                      data-bs-interval="3000"
+                      key={index}
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target={"#event" + item.seqEvent}
                     >
-                      <h3>{item.title}</h3>
+                      <img
+                        src={item.mainImg}
+                        className="d-block w-100"
+                        style={{ height: "25vw", objectFit: "cover" }}
+                        alt=""
+                      />
+                      <div
+                        className="carousel-caption d-none d-md-block bg-dark bg-opacity-25 w-100 px-0 mx-0"
+                        style={{ right: 0, left: 0 }}
+                      >
+                        <h3>{item.title}</h3>
+                      </div>
                     </div>
-                  </div>
+                    <NavEventDetail item={item} couponList={couponList} />
+                  </>
                 ))}
           </div>
           <button

@@ -45,4 +45,10 @@ public interface ReservationDAO extends JpaRepository<ReservationDTO, Integer> {
 
 	Page<ReservationDTO> findAllByEmail(Pageable pageable, String email);
 
+	@Query("SELECT DISTINCT re FROM ReservationDTO re "
+			+ "LEFT JOIN RoomDTO r ON re.seqRoom = r.seqRoom "
+            + "LEFT JOIN HotelDTO h ON h.seqHotel = r.seqHotel "
+            + "WHERE h.ownerEmail Like :email")
+	List<ReservationDTO> findAllByOwnerEmail(@Param("email")String email);
+
 }

@@ -1,6 +1,7 @@
 package manager.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -31,5 +32,7 @@ public interface ManagerService {
 	public void deleteRoom(String seqRoom);
 
 	public List<ReserveViewDTO> viewReservations(String userEmail);
+	
+	public Map<String, Object> getReviewList(String email);
 
 }

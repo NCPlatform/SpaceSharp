@@ -3,6 +3,7 @@ package manager.controller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.StringTokenizer;
 
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -166,6 +168,12 @@ public class ManagerController {
 		System.out.println("deleteRoom requested : " + seqRoom);
 		managerService.deleteRoom(seqRoom);
 		
+	}
+	
+	@GetMapping("getReviewList")
+	@ResponseBody
+	public Map<String,Object> getReviewList(@RequestParam String email){
+		return managerService.getReviewList(email);
 	}
 	
 	@PostMapping(value = "getMyReservations")
