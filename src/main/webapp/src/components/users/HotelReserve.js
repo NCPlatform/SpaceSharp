@@ -13,6 +13,11 @@ const HotelReserve = () => {
   const [ownerDTO, setOwnerDTO] = useState();
   const [hotelDTO, setHotelDTO] = useState(null);
   const [roomDTO, setRoomDTO] = useState(null);
+  const [couponDTO, setCouponDTO] = useState([]);
+  const [issuedCouponDTO, setIssuedCouponDTO] = useState([]);
+  const [couponOptions, setCouponOptions] = useState([]);
+  const [selectedCoupon, setSelectedCoupon] = useState(null);
+  const [discountedTotalReservationCost, setDiscountedTotalReservationCost] = useState(0);
   const [hotelCategory, setHotelCategory] = useState();
   const [reservationDate, setReservationDate] = useState('');
   const [currentDateTime, setCurrentDateTime] = useState('');
@@ -20,7 +25,45 @@ const HotelReserve = () => {
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
+  const handleCouponSelection = (event) => {
+    const selectedCouponValue = event.target.value;
+    if (selectedCouponValue === "") {
+      // Default option selected, set discountAmount to 0
+      setDiscountAmount(0);
+      setSelectedCoupon(null); // Optional: Reset selectedCoupon if needed
+    } else {
+      // A coupon is selected, proceed with setting the selected coupon
+      setSelectedCoupon(JSON.parse(selectedCouponValue));
+    }
+  };
+  const [discountAmount, setDiscountAmount] = useState(0);  // 새로운 state 추가
 
+  useEffect(() => {
+    if (selectedCoupon) {
+      if (selectedCoupon.couponType === "discount") {
+        // 선택된 쿠폰이 할인 쿠폰인 경우, 할인을 적용하여 총 예약 금액을 계산
+        const discountAmount = selectedCoupon.discount || 0;
+        const totalReservationCost = sessionStorage.getItem('totalReservationCost') || 0;
+        const discountedCost = totalReservationCost - discountAmount;
+
+        setDiscountAmount(discountAmount);  // 할인 금액을 state에 저장
+        setDiscountedTotalReservationCost(discountedCost > 0 ? discountedCost : 0);
+      } else if (selectedCoupon.couponType === "percentage") {
+        // 선택된 쿠폰이 퍼센트 할인 쿠폰인 경우, 할인율을 적용하여 총 예약 금액을 계산
+        const discountPercentage = selectedCoupon.discount || 0;
+        const totalReservationCost = sessionStorage.getItem('totalReservationCost') || 0;
+        const discountAmount = (totalReservationCost * discountPercentage) / 100;
+        const discountedCost = totalReservationCost - discountAmount;
+
+        setDiscountAmount(discountAmount);  // 할인 금액을 state에 저장
+        setDiscountedTotalReservationCost(discountedCost > 0 ? discountedCost : 0);
+      }
+    } else {
+      // 할인 쿠폰이 아닌 경우, 기존 총 예약 금액 사용
+      setDiscountAmount(0);  // 할인이 적용되지 않은 경우 할인 금액을 0으로 설정
+      setDiscountedTotalReservationCost(Number(sessionStorage.getItem('totalReservationCost')) || 0);
+    }
+  }, [selectedCoupon]);
   const fail = () => {
     Swal.fire({
       icon: 'error',
@@ -32,24 +75,23 @@ const HotelReserve = () => {
     });
   };
 
-  // Declare formatDateString function before using it
-  const formatDateString = (dateString) => {
-    const options = {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      fractionalSecondDigits: 3,
-      timeZoneName: 'short',
-    };
+  // const formatDateString = (dateString) => {
+  //   const options = {
+  //     year: 'numeric',
+  //     month: '2-digit',
+  //     day: '2-digit',
+  //     hour: '2-digit',
+  //     minute: '2-digit',
+  //     second: '2-digit',
+  //     fractionalSecondDigits: 3,
+  //     timeZoneName: 'short',
+  //   };
 
-    const date = new Date(dateString);
-    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
+  //   const date = new Date(dateString);
+  //   const formattedDate = new Intl.DateTimeFormat('en-US', options).format(date);
 
-    return formattedDate;
-  };
+  //   return formattedDate;
+  // };
 
   useEffect(() => {
     axios
@@ -78,7 +120,7 @@ const HotelReserve = () => {
       axios.get(`/user/getHotelInfo?seqHotel=${roomDTO.seqHotel}`)
         .then(response => {
           const data = response.data;
-          console.log(data)
+
           if (data) {
             setHotelDTO(data);
           } else {
@@ -118,7 +160,8 @@ const HotelReserve = () => {
             pay_method: "card",
             merchant_uid: new Date().getTime().toString(),
             name: "SPACE SHARP",
-            amount: Number(sessionStorage.getItem('totalReservationCost')),
+            amount: Number(discountedTotalReservationCost),
+
             buyer_tel: "010-0000-0000",
             // redirect_url: "http://localhost:3000/", //URL 교체
           }, (response) => {
@@ -155,15 +198,22 @@ const HotelReserve = () => {
                 seqReservation: seqReservation, // Use the updated value
                 receipt_url: null,
                 name: hotelDTO.name,
-                paidAmount: Number(sessionStorage.getItem('totalReservationCost')).toLocaleString(),
+                paidAmount: Number(discountedTotalReservationCost),
                 payDate: new Date(sessionStorage.getItem('currentDateTime')).toISOString(),
-                couponDiscount: null
+                couponDiscount: discountAmount * 1
               };
 
               axios.post('/user/receipt', receiptData)
                 .then(receiptResponse => {
-                  console.log(receiptResponse.data);
-                  window.location.href = "http://localhost:3000/"; //데이터 추가 완료 후 이동 URL
+
+                  Swal.fire({
+                    title: '결제 완료',
+                    text: '결제가 성공적으로 완료되었습니다.',
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                  }).then(() => {
+                    window.location.href = "/hotelReserveList";
+                  });//데이터 추가 완료 후 이동 URL
                 })
                 .catch(receiptError => {
                   console.error('영수증 정보 전송 실패:', receiptError);
@@ -177,18 +227,68 @@ const HotelReserve = () => {
         } else {
           // 결제 실패 시 처리
           console.error('결제 실패:', response.error_msg);
-          alert('결제에 실패했습니다.');
+          Swal.fire({
+            icon: 'error',
+            title: '결제에 실패했습니다.',
+            confirmButtonText: '확인'
+          }).then(() => {
+            window.location.reload();
+          });
         }
       } catch (error) {
         // 예외 처리
         console.error('결제 오류:', error);
-        alert('결제 중 오류가 발생했습니다.');
+        Swal.fire({
+          icon: 'error',
+          title: '결제 중 오류가 발생했습니다.',
+          confirmButtonText: '확인'
+        }).then(() => {
+          window.location.reload();
+        });
       }
     } else {
       // IMP 라이브러리가 로드되지 않은 경우 처리
       alert('결제 라이브러리 로드에 실패했습니다.');
     }
   };
+
+  useEffect(() => {
+    // CouponDTO 가져오기
+    axios.get('/user/coupon')  // 적절한 엔드포인트로 변경
+      .then(response => {
+        setCouponDTO(response.data);
+      })
+      .catch(error => {
+        console.error('coupon에러:', error);
+      });
+
+    // IssuedCouponDTO 가져오기
+    axios.get('/user/issuedCoupon')  // 적절한 엔드포인트로 변경
+      .then(response => {
+        setIssuedCouponDTO(response.data);
+      })
+      .catch(error => {
+        console.error('issuedCoupon에러:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // CouponDTO와 IssuedCouponDTO를 기반으로 옵션 생성
+    if (couponDTO.length > 0 && issuedCouponDTO.length > 0) {
+      const userCoupons = issuedCouponDTO.filter(coupon => coupon.email === sessionUserDTO.email);
+
+      const options = userCoupons.map(issuedCoupon => {
+        const correspondingCoupon = couponDTO.find(coupon => coupon.seqCoupon === issuedCoupon.seqCoupon);
+        // 위 라인 대신에, couponDTO의 모든 값을 사용하도록 수정
+        return {
+          value: JSON.stringify(correspondingCoupon), // 모든 값을 문자열로 저장
+          label: `🎫 ${correspondingCoupon.title}`,
+        };
+      });
+
+      setCouponOptions(options);
+    }
+  }, [couponDTO, issuedCouponDTO, sessionUserDTO.email]);
   // TRUE인 항목들을 5개씩 그룹화하여 반환하는 함수
   const groupTrueOptions = () => {
     if (!hotelDTO) {
@@ -388,21 +488,44 @@ const HotelReserve = () => {
                       <li className="list-group-item me-0" style={{ fontSize: '0.8rem', display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5%' }}>
                           <span className="fw-bold me-1">할인쿠폰🎫</span>
-                          <span className="fw-bold me-1" style={{ color: '#aba1a1' }}>보유쿠폰()장</span>
+                          <span className="fw-bold me-1" style={{ color: '#aba1a1' }}>
+                            보유쿠폰(
+                            {issuedCouponDTO
+                              ? issuedCouponDTO.filter(coupon => coupon.email === sessionUserDTO.email).length
+                              : 0}
+                            장)
+                          </span>
                         </div>
                         <div style={{}}>
-                          <select className="form-select form-select-lg mb-3" aria-label="Large select example" style={{ color: '#aba1a1' }}>
-                            <option value="" selected disabled hidden>🎫 쿠폰을 선택하세요.</option>
-                            <option value="1">🎫One</option>
-                            <option value="2">🎫Two</option>
-                            <option value="3">🎫Three</option>
+                          <select
+                            className="form-select form-select-lg mb-3"
+                            aria-label="Large select example"
+                            style={{ color: '#aba1a1' }}
+                            onChange={handleCouponSelection}
+                          >
+                            <option value="" selected>
+                              🎫 쿠폰을 선택하세요.
+                            </option>
+                            {couponOptions.map((option, index) => (
+                              <option key={index} value={option.value}>
+                                {option.label}
+                              </option>
+                            ))}
                           </select>
                         </div>
                       </li>
                       <li className="list-group-item" style={{ borderTop: '5px solid rgb(244, 132, 132)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5%' }}>
+                          <span className="fw-bold me-1">예약금액</span>
+                          <span style={{ fontSize: '150%' }}>{Number(sessionStorage.getItem('totalReservationCost')).toLocaleString()}</span>
+                        </div>
+                        <div style={{ color: '#F48484', display: 'flex', justifyContent: 'space-between', marginBottom: '5%' }}>
+                          <span className="fw-bold me-1"><i className="bi bi-ticket-perforated-fill" />  {selectedCoupon ? selectedCoupon.title : ' '}</span>
+                          <span style={{ fontSize: '150%' }}>-{Number(discountAmount).toLocaleString()}</span>
+                        </div>
                         <h3 className="fw-bold d-flex justify-content-between" style={{ color: 'rgb(245, 80, 80)' }}>
                           <span>￦</span>
-                          <span>{Number(sessionStorage.getItem('totalReservationCost')).toLocaleString()}</span>
+                          <span>{Number(discountedTotalReservationCost).toLocaleString()}</span>
                         </h3>
                       </li>
                     </ul>

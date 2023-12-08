@@ -5,7 +5,7 @@ import SelectRegister from './SelectRegister/SelectRegister';
 import ModalPicture from './modal/ModalPicture';
 
 const ListView = ({ data, room, handleTimeChange }) => {
-  console.log(data);
+  
   // 캘린더 표시를 위한 state 값
   const [isCalendarView, setIsCalendarView] = useState(false);
 
@@ -28,7 +28,7 @@ const ListView = ({ data, room, handleTimeChange }) => {
     if (data?.img) {
       const images = data.img.split(', ');
       const firstImageUrl = images[0];
-      console.log('Image Clicked', firstImageUrl);
+      
       modalShow();
     }
   };
@@ -75,22 +75,22 @@ const ListView = ({ data, room, handleTimeChange }) => {
         </Row>
 
         <Row className="border-2 border-top  pt-2 pb-2">
-          <Col md={4}>● 공간 면적</Col>
+          <Col md={4} style={{fontWeight: 'bold', color: '#656565'}}> 공간 면적</Col>
           {/* <Col md={8}>53 m^3</Col> */}
           <Col md={8}>{data?.placeSize}</Col>
         </Row>
         <Row className="border-2 border-top  pt-2 pb-2">
-          <Col md={4}>● 예약 시간</Col>
+          <Col md={4} style={{fontWeight: 'bold', color: '#656565'}}> 예약 시간</Col>
           {/* <Col md={8}>최소 4시간 부터</Col> */}
           <Col md={8}>최소 {data?.datetime}시간 부터</Col>
         </Row>
         <Row className="border-2 border-top  pt-2 pb-2">
-          <Col md={4}>● 수용 인원</Col>
+          <Col md={4} style={{fontWeight: 'bold', color: '#656565'}}> 수용 인원</Col>
           {/* <Col md={8}>최소 1명 ~ 최대 10명</Col> */}
           <Col md={8}>{data?.people}</Col>
         </Row>
         <Row className="border-2 border-top pt-2 pb-2">
-          <Col md={4}>● 예약 기준</Col>
+          <Col md={4} style={{fontWeight: 'bold', color: '#656565'}}> 예약 기준</Col>
           <Col md={8}>
             {data?.reserveRule ? (
               data.reserveRule

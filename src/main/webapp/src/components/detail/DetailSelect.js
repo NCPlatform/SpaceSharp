@@ -4,6 +4,7 @@ import DetailHeader from "./Header/DetailHeader";
 import DetailList from "./list/DetailList";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 
 const DetailSelect = ({ hotel, name, img1, img2, img3, path }) => {
@@ -18,7 +19,7 @@ const DetailSelect = ({ hotel, name, img1, img2, img3, path }) => {
   const [startHour, setStartHour] = useState(null);
   const [endHour, setEndHour] = useState(null);
   const [selectedDateTime, setSelectedDateTime] = useState(null);
-  // 추가된 부분: 선택한 시간 정보를 저장할 상태
+
   const [selectedTime, setSelectedTime] = useState({
     startHour: null,
     endHour: null,
@@ -124,13 +125,27 @@ const DetailSelect = ({ hotel, name, img1, img2, img3, path }) => {
     // console.log('날짜 및 시간:', datetime);
   };
   const handleReservationButtonClick = () => {
-    if (checkedRoom === null) {
-      alert('방을 선택해주세요.');
+    if (!sessionStorage.getItem('user')) {
+      Swal.fire({
+        icon: 'info',
+        title: '로그인 후 예약 가능합니다.',
+        confirmButtonText: '확인'
+      });
+    } else if (checkedRoom === null) {
+      Swal.fire({
+        icon: 'info',
+        title: '방을 선택해주세요.',
+        confirmButtonText: '확인'
+      });
     } else if (startHour === null || endHour === null) {
-      alert('시작시간과 종료시간을 선택해주세요.');
-      window.location.reload();
-    } else {
-      // Use seqRoom as the parameter for navigation
+      Swal.fire({
+        icon: 'info',
+        title: '시작시간과 종료시간을 선택해주세요.',
+        confirmButtonText: '확인'
+      }).then(() => {
+        window.location.reload();
+      });
+    }else {
       navigate(`/hotelReserve/${rooms[checkedRoom].seqRoom}`);
     }
   };

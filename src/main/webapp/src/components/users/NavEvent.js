@@ -2,18 +2,20 @@ import React, { useEffect, useState } from "react";
 import Nav from "./Nav";
 import Footer from "./Footer";
 import axios from "axios";
+import NavEventDetail from "./NavComponents/NavEventDetail";
 
 const NavEvent = () => {
   const [eventList, setEventList] = useState();
   const [deadline, setDeadline] = useState([]);
+  const [couponList, setCouponList] = useState([]);
 
   useEffect(() => {
     axios
       .get(`user/getEventList`)
       .then((res) => {
-        console.log(res.data);
         setEventList(res.data.eventList);
         setDeadline(res.data.deadline);
+        setCouponList(res.data.couponList);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -31,6 +33,9 @@ const NavEvent = () => {
                   style={{ width: "60%", height: "10rem", objectFit: "cover" }}
                   src={item.mainImg}
                   alt={item.mainImg}
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target={"#" + item.seqEvent}
                 />
                 <div
                   className="position-absolute top-50 start-50 translate-middle bg-dark bg-opacity-25"
@@ -43,6 +48,7 @@ const NavEvent = () => {
                   </div>
                 </div>
               </div>
+              <NavEventDetail item={item} couponList={couponList} />
             </div>
           ))}
         <div className="mb-3 pb-3 text-center">
@@ -51,26 +57,34 @@ const NavEvent = () => {
           )}
           {eventList ? (
             eventList.map((item, index) => (
-              <div className="position-relative mb-3">
-                <img
-                  style={{
-                    width: "60%",
-                    height: "10rem",
-                    objectFit: "cover",
-                  }}
-                  src={item.mainImg}
-                  alt={item.mainImg}
-                />
+              <div key={index}>
                 <div
-                  className="position-absolute top-50 start-50 translate-middle bg-dark bg-opacity-25"
-                  style={{ width: "60%", height: "10rem" }}
+                  className="position-relative mb-3"
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target={"#event" + item.seqEvent}
                 >
-                  <div className="position-relative h-100">
-                    <p className="position-absolute top-50 start-50 translate-middle fs-5 text-white">
-                      {item.title}
-                    </p>
+                  <img
+                    style={{
+                      width: "60%",
+                      height: "10rem",
+                      objectFit: "cover",
+                    }}
+                    src={item.mainImg}
+                    alt={item.mainImg}
+                  />
+                  <div
+                    className="position-absolute top-50 start-50 translate-middle bg-dark bg-opacity-25"
+                    style={{ width: "60%", height: "10rem" }}
+                  >
+                    <div className="position-relative h-100">
+                      <p className="position-absolute top-50 start-50 translate-middle fs-5 text-white">
+                        {item.title}
+                      </p>
+                    </div>
                   </div>
                 </div>
+                <NavEventDetail item={item} couponList={couponList} />
               </div>
             ))
           ) : (

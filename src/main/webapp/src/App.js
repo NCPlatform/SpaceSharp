@@ -67,7 +67,7 @@ function App() {
         <Routes>
           <Route path="/">
             <Route index element={<Main />} />
-            <Route path="hotelSearch">
+            <Route path="searchHotel">
               <Route path=":searchValue" element={<HotelList />} />
             </Route>
             <Route path="hotelList">
@@ -167,6 +167,9 @@ function App() {
             <Route path="user" element={<AdminUser />} />
             <Route path="coupon" element={<AdminCoupon />} />
             <Route path="event" element={<AdminEvent />} />
+          </Route>
+          <Route path="/user">
+            <Route path="authRequest/:token" element = {<AuthRequest/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import jpa.bean.ReserveViewDTO;
 import jpa.bean.UserDTO;
 
 import java.util.Collection;
@@ -30,4 +31,7 @@ public interface UserDAO extends JpaRepository<UserDTO, String> {
 	List<UserDTO> findAllByEmail(String memberemail);
 
 	UserDTO findByEmail(String email);
+	
+    boolean existsByEmailAndIskakao(String email, boolean iskakao);
+    
 }

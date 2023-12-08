@@ -12,7 +12,7 @@ const HotelSameSpace = ({ hotelCategory, hotel }) => {
         params: { seqHotelCategory: hotelCategory },
       })
       .then(res => {
-        console.log(res.data);
+        
         setSpaces(
           res.data.filter(space => space.seqHotel !== Number(hotel)).slice(0, 6) //6개 까지만 출력
         );

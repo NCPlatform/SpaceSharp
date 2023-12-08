@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "icon": "https://www.spacecloud.kr/img/icons/gathering.svg"
+  },
+  {
+    "id": 2,
+    "icon": "https://www.spacecloud.kr/img/icons/study.svg"
+  },
+  {
+    "id": 3,
+    "icon": "https://www.spacecloud.kr/img/icons/performance.svg"
+  },
+  {
+    "id": 4,
+    "icon": "https://www.spacecloud.kr/img/icons/kitchen.svg"
+  },
+  {
+    "id": 5,
+    "icon": "https://www.spacecloud.kr/img/icons/shooting.svg"
+  },
+  {
+    "id": 6,
+    "icon": "https://www.spacecloud.kr/img/icons/cafe.svg"
+  },
+  {
+    "id": 7,
+    "icon": "https://www.spacecloud.kr/img/icons/instrumental_room.svg"
+  },
+  {
+    "id": 8,
+    "icon": "https://www.spacecloud.kr/img/icons/seminar.svg"
+  },
+  {
+    "id": 9,
+    "icon": "https://www.spacecloud.kr/img/icons/lecture.svg"
+  },
+  {
+    "id": 10,
+    "icon": "https://www.spacecloud.kr/img/icons/workingout.svg"
+  },
+  {
+    "id": 11,
+    "icon": "https://www.spacecloud.kr/img/icons/gallery.svg"
+  },
+  {
+    "id": 12,
+    "icon": "https://www.spacecloud.kr/img/icons/coworking_office.svg"
+  },
+  {
+    "id": 13,
+    "icon": "https://www.spacecloud.kr/img/icons/camping_service.svg"
+  },
+  {
+    "id": 14,
+    "icon": "https://www.spacecloud.kr/img/icons/house.svg"
+  }
+]

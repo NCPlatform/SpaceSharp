@@ -35,10 +35,12 @@ import jakarta.persistence.EntityNotFoundException;
 
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
+import jpa.bean.CouponDTO;
 import jpa.bean.EventDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.HotelSearchDTO;
+import jpa.bean.IssuedCouponDTO;
 import jpa.bean.LikedDTO;
 import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
@@ -83,6 +85,9 @@ public class UserServiceImpl implements UserService {
 	private ReceiptDAO receiptDAO;
 	
 	@Autowired
+	private IssuedCouponDAO issuedCouponDAO;
+	
+	@Autowired
 	private CommentDAO commentDAO;
 	
 	@Autowired
@@ -92,13 +97,10 @@ public class UserServiceImpl implements UserService {
 	private EventDAO eventDAO;
 	
 	@Autowired
-	CouponDAO couponDAO;
+	private CouponDAO couponDAO;
 	
 	@Autowired
-	IssuedCouponDAO issuedCouponDAO;
-	
-	@Autowired
-	BoardCategoryDAO boardCategoryDAO;
+	private BoardCategoryDAO boardCategoryDAO;
 	
 
 	@Override
@@ -113,6 +115,20 @@ public class UserServiceImpl implements UserService {
 		return userDAO.existsByEmail(email);
 	}
 
+	@Override
+    public boolean existsByIsKakao(String email) {
+        return userDAO.existsByEmailAndIskakao(email, true);
+    }
+
+    @Override
+    public void updateIsKakao(String email, boolean iskakao) {
+        UserDTO userDTO = userDAO.findByEmail(email);
+        if (userDTO != null) {
+        	userDTO.setIskakao(iskakao);
+            userDAO.save(userDTO);
+        }
+    }
+	
 	public void updateNickname(String email, String newNickname) {
 		UserDTO userDTO = userDAO.findByEmail(email);
 		if (userDTO != null) {
@@ -378,6 +394,7 @@ public class UserServiceImpl implements UserService {
 		map.put("hotelList", hotelList);
 		map.put("reviewCardList", reviewCardList);
 		map.put("eventList", eventList);
+		map.put("couponList", couponDAO.findAll());
 		return map;
 	}
 
@@ -493,10 +510,17 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<HotelDTO> searchHotel(HotelSearchDTO hotelDTO) {
-		return hotelDAO.searchHotel(hotelDTO.getSeqHotelCategory(), hotelDTO.getDate(), hotelDTO.getAddr(), hotelDTO.getMinPrice(), hotelDTO.getMaxPrice());
+		return hotelDAO.searchHotel(hotelDTO.getSeqHotelCategory(), hotelDTO.getDate(), hotelDTO.getAddr(), hotelDTO.getSearchValue(), hotelDTO.getMinPrice(), hotelDTO.getMaxPrice());
 	}
 
-	
+	@Override
+	public List<HotelDTO> searchHotelByLowPrice(HotelSearchDTO hotelDTO) {
+		return hotelDAO.searchHotelByLowPrice(hotelDTO.getSeqHotelCategory(), hotelDTO.getDate(), hotelDTO.getAddr(), hotelDTO.getSearchValue(), hotelDTO.getMinPrice(), hotelDTO.getMaxPrice());
+	}
+	@Override
+	public List<HotelDTO> searchHotelByHighPrice(HotelSearchDTO hotelDTO) {
+		return hotelDAO.searchHotelByHighPrice(hotelDTO.getSeqHotelCategory(), hotelDTO.getDate(), hotelDTO.getAddr(), hotelDTO.getSearchValue(), hotelDTO.getMinPrice(), hotelDTO.getMaxPrice());
+	}
 // JWT
 	private String keyIn = "안녕하세요여기는스페이스샵입니다비밀번호찾기를요청하셨습니다";
     
@@ -567,7 +591,8 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             return "Failed to save receipt";
         }
-    }
+   
+}
 
 	@Override
 	public Map<String, Object> getEventList() {
@@ -732,5 +757,41 @@ public class UserServiceImpl implements UserService {
 		    throw new Exception("Could not verify JWT token integrity!");
 		}
 		return payload;
+	}
+
+	@Override
+	public String getCoupon(String email, int seqCoupon) {
+		
+		Optional<IssuedCouponDTO> coupon = issuedCouponDAO.findByEmailAndSeqCoupon(email, seqCoupon);
+		
+		if(coupon.isPresent()) {
+			return "have";
+			
+		}else {
+			int cnt = couponDAO.findById(seqCoupon).get().getCnt();
+			List<IssuedCouponDTO> couponList = issuedCouponDAO.findAllBySeqCoupon(seqCoupon);
+			
+			if(couponList.size() < cnt) {
+				IssuedCouponDTO newCoupon = new IssuedCouponDTO();
+				newCoupon.setEmail(email);
+				newCoupon.setSeqCoupon(seqCoupon);
+				issuedCouponDAO.save(newCoupon);
+				return "success";
+			}else {
+				return "fail";
+			}
+		}
+	}
+
+	@Override
+	public boolean updateUserNaverStatus(String userEmail, boolean isnaver) {
+		 Optional<UserDTO> optionalUser = userDAO.findById(userEmail);
+        if (optionalUser.isPresent()) {
+            UserDTO user = optionalUser.get();
+            user.setIsnaver(isnaver);
+            userDAO.save(user);
+            return true;
+        }
+        return false;
 	}
 }

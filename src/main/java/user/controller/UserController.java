@@ -39,13 +39,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
+import jpa.bean.CouponDTO;
+import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.HotelSearchDTO;
+import jpa.bean.IssuedCouponDTO;
 import jpa.bean.LikedDTO;
 import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
+import jpa.dao.CouponDAO;
+import jpa.dao.IssuedCouponDAO;
 import jpa.dao.ReceiptDAO;
 import jpa.dao.ReservationDAO;
 import jpa.dao.UserDAO;
@@ -66,10 +71,17 @@ public class UserController {
 	
 	@Autowired
 	private ReservationDAO reservationDAO;
+
 	@Autowired
 	private ReceiptDAO receiptDAO;
 	
+	@Autowired
+    private IssuedCouponDAO issuedCouponDAO;
+	@Autowired
+    private CouponDAO couponDAO;
+	
 	private String bucketName = "spacesharpbucket";
+
 
 	@GetMapping("/getHotelName")
     public String getHotelName(@RequestParam int seqHotel) {
@@ -199,6 +211,25 @@ public class UserController {
 	    }
 	  }
 
+	@GetMapping("/coupon")
+    public List<CouponDTO> getAllCoupons() {
+        return couponDAO.findAll();
+    }
+
+    @GetMapping("/issuedCoupon")
+    public List<IssuedCouponDTO> getAllIssuedCoupons() {
+        return issuedCouponDAO.findAll();
+    }
+    
+	@GetMapping("/updateNaverStatus")
+	public String updateNaverStatus(@RequestParam String userEmail) {
+	    boolean updated = userService.updateUserNaverStatus(userEmail, true); // 여기에서 true 또는 false로 변경 가능
+	    if (updated) {
+	        return "네이버 성공";
+	    }
+	    return "네이버 실패";
+	}
+
 	@PostMapping(value="login")
 	@ResponseBody
 	public UserDTO login(@ModelAttribute UserDTO userDTO) {
@@ -236,6 +267,12 @@ public class UserController {
 		return userService.getBoard(seqBoard);
 	}
 	
+	@GetMapping(path = "getCoupon")
+	@ResponseBody
+	public String getCoupon(@RequestParam String email, @RequestParam int seqCoupon){
+		return userService.getCoupon(email, seqCoupon);
+	}
+	
 	@GetMapping(path = "getBoardList")
 	@ResponseBody
 	public Map<String,Object> getBoardList(@PageableDefault(page=0, size=10, sort="seqBoard", direction = Sort.Direction.DESC) Pageable pageable, String searchKey, int seqBoardCategory){
@@ -270,13 +307,6 @@ public class UserController {
 	
     }
 	
-	
-	@PostMapping("/existsByIsKakao")
-    public ResponseEntity<Boolean> existsByIsKakao(@RequestParam String email) {
-        boolean exists = userService.existsByEmail(email);
-        return ResponseEntity.ok(exists);
-    }
-
     @PostMapping("/updateNickname")
     public ResponseEntity<String> updateNickname(@RequestBody Map<String, String> data) {
         String email = data.get("email");
@@ -286,7 +316,7 @@ public class UserController {
 
         return ResponseEntity.ok("회원님의 닉네임이 수정되었습니다.");
     }
-
+    
     @PostMapping("/updateTel")
     public ResponseEntity<String> updateTel(@RequestBody Map<String, String> data) {
         String email = data.get("email");
@@ -307,6 +337,17 @@ public class UserController {
         return ResponseEntity.ok("회원님의 비밀번호가 수정되었습니다.");
     }
     
+    @PostMapping("updateIsKakao")
+    public ResponseEntity<String> updateIsKakao(
+    		@RequestParam String email,
+    		@RequestParam boolean iskakao) {
+    	try {
+    		userService.updateIsKakao(email, iskakao);
+    		return ResponseEntity.ok("업데이트 성공");
+    	} catch (Exception e) {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 실패");
+    	}
+    }
     
     @PostMapping("updateIsNaver")
     public ResponseEntity<String> updateIsNaver(
@@ -331,7 +372,7 @@ public class UserController {
     }
     
     
-    @PostMapping(value = "mainPage")
+	@PostMapping(value = "mainPage")
 	@ResponseBody
 	public Map<String, Object> mainPage(){
 		return userService.mainPage();
@@ -355,6 +396,20 @@ public class UserController {
 		System.out.println(hotelDTO);
 
 		return userService.searchHotel(hotelDTO);
+	}
+	@PostMapping(value = "searchHotelByLowPrice")
+	@ResponseBody
+	public List<HotelDTO> searchHotelByLowPrice(@RequestBody HotelSearchDTO hotelDTO){
+		System.out.println(hotelDTO);
+
+		return userService.searchHotelByLowPrice(hotelDTO);
+	}
+	@PostMapping(value = "searchHotelByHighPrice")
+	@ResponseBody
+	public List<HotelDTO> searchHotelByHighPrice(@RequestBody HotelSearchDTO hotelDTO){
+		System.out.println(hotelDTO);
+
+		return userService.searchHotelByHighPrice(hotelDTO);
 	}
 	@PostMapping(path = "writeReply")
 	@ResponseBody
@@ -489,10 +544,10 @@ public class UserController {
 		  case 1: {
 			  String tokenURL = "";
 			  subject = "[Space#] SpaceSharp에서 비밀번호 찾기를 요청하셨나요?";
-			  content = "<!DOCTYPE HTML> <html> <head> <meta charset = \"UTF-8\"/> <style> #body, #caption{text-align: center;} #caption{font-size: 5em;} table{height: 390px; width: 530px;} #btn{margin-left: 175px; } #oops{font-size: 0.75em; text-align: center; margin-left: 160px; color: gray; } #oopsHref{text-decoration: none;} table{border: 15px solid #86A3B8;} #introduce{font-size: 0.5em; color: gray;} #textColor{ color: #F55050; } .rowSpace{height: 10px;} </style> </head> <body> <div> <table> <tr height = '100px'> <td><div id = 'caption'>SpaceSharp</div></td> </tr> <tr> <td><div id = 'body'> 안녕하세요, SpaceSharp입니다! <br><div class = 'rowSpace'></div> 아래 <span id = 'textColor'>SpaceSharp 열기</span> 버튼을 누르시면 <br><div class = 'rowSpace'></div> 요청하신 이메일 인증이 완료됩니다. </div></td> </tr> <tr height = '100px'> <td><div id = 'btn'><a href = '";
+			  content = "<!DOCTYPE HTML> <html> <head> <meta charset = \\\"UTF-8\\\"/> <style> #body, #caption{text-align: center; color:black;} #caption{font-size: 5em;} table{height: 390px; width: 530px;} #btn{margin-left: 175px; } #oops{font-size: 0.75em; text-align: center; margin-left: 160px; color: gray; } #oopsHref{text-decoration: none;} table{border: 15px solid #FFCC66;} #introduce{font-size: 0.5em; color: gray;} #textColor{ color: #F9A700; } .rowSpace{height: 10px;} </style> </head> <body> <div> <table> <tr height = '100px'> <td><div id = 'caption'><img src=' https://kr.object.ncloudstorage.com/spacesharpbucket/storage/room/b76e1cc6-bba9-4413-854f-d841c77cb88d' style='width: 200px; height: 200px;'></div></td> </tr> <tr> <td><div id = 'body'> 안녕하세요, SpaceSharp입니다! <br><div class = 'rowSpace'></div> 아래 <span id = 'textColor'>SpaceSharp 열기</span> 버튼을 누르시면 <br><div class = 'rowSpace'></div> 요청하신 이메일 인증이 완료됩니다. </div></td> </tr> <tr height = '100px'> <td><div id = 'btn'><a href = '";
 			  tokenURL = "http://localhost:3000/user/authRequest/"+userService.createToken(emailAddr);
 			  content += tokenURL;
-			  content += "' target = '_blank'><img width = '150px' src = 				'https://me2.do/G87iQ5hN'></a> </div><a href = '";
+			  content += "' target = '_blank'><img width = '150px' src ='https://kr.object.ncloudstorage.com/spacesharpbucket/storage/room/d191dc5e-eab3-43c5-9923-d88d3dbd0706'></a></div><a href = '";
 			  content += whenOops;
 			  content += "' id = 'oopsHref'> <span id = 'oops'>인증 링크는 꼭 5분 안에 클릭해 주세요!</span></a> <br> </td></tr> </table> </div> <span id = 'introduce'>Project Space#, 2023.</span> </body> </html>";
 			 

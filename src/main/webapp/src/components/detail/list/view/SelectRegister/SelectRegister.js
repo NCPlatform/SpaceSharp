@@ -113,7 +113,7 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
         let currentDateTime = new Date(startDate);
         while (currentDateTime < endDate) {
           const hours = datetimeToHours(new Date(currentDateTime));
-          console.log(hours, currentDateTime, calendarData);
+          
           if (hours !== null) unavailableTimes.push(hours);
 
           currentDateTime.setHours(currentDateTime.getHours() + 1);
@@ -133,7 +133,7 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
       .then((response) => {
         const data = response.data;
         if (data) {
-          console.log(data);
+          
           const reservations = getUnavailableTimes(data);
           setReservations(reservations);
         } else {
@@ -301,6 +301,7 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
           icon: 'error',
           title: 'Error',
           text: '종료시간이 시작시간보다 이전을 선택할 수 없습니다.',
+          confirmButtonText: '확인'
         });
         return;
       }
@@ -312,6 +313,7 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
           icon: 'error',
           title: 'Error',
           text: '예약 가능한 최대 시간은 24시간입니다.\n24시간을 초과하는 예약은 1:1 문의 부탁드립니다.',
+          confirmButtonText: '확인'
         });
         return;
       }
@@ -327,6 +329,7 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
           icon: 'error',
           title: 'Error',
           text: '예약 불가능한 시간이 포함되어 있습니다.',
+          confirmButtonText: '확인'
         });
         return;
       }
@@ -424,7 +427,7 @@ const SelectRegister = ({ data, room, handleTimeChange }) => {
 
       {/* 시간 선택 */}
       <Row>
-        <h4>시간 선택</h4>
+        <h4>시간 선택</h4><p style={{color:'#a89292'}}>금일과 익일 사이</p>
       </Row>
       <div
         className="pt-4 pb-2"
