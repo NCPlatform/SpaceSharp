@@ -5,6 +5,7 @@ import ChatBot from "react-simple-chatbot";
 import OwlCarousel from "react-owl-carousel";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
+import HotelCategoryIcon from "../data/HotelCategoryIcon.json";
 
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -292,18 +293,9 @@ const Main = () => {
                   className="hotelCategoryList"
                 >
                   <div className="col my-3 text-center">
-                    <p className="">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        className="bi bi-cursor-fill"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z" />
-                      </svg>
-                    </p>
+                    <div>
+                      <img src={HotelCategoryIcon.filter(icon=>icon.id === item.seqHotelCategory)[0].icon} alt={item.seqHotelCategory} style={{width: "5rem"}}/>
+                    </div>
                     <span className="hotelCategoryListName">{item.name}</span>
                   </div>
                 </Link>
@@ -319,18 +311,9 @@ const Main = () => {
                     className="hotelCategoryList"
                   >
                     <div className="col my-3 text-center" key={index}>
-                      <p className="">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          className="bi bi-cursor-fill"
-                          viewBox="0 0 16 16"
-                        >
-                          <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z" />
-                        </svg>
-                      </p>
+                      <div>
+                        <img src={HotelCategoryIcon.filter(icon=>icon.id === item.seqHotelCategory)[0].icon} alt={item.seqHotelCategory} style={{width: "5rem"}}/>
+                      </div>
                       <span style={{ color: "#999", fontSize: "0.8rem" }}>
                         {item.name}
                       </span>
