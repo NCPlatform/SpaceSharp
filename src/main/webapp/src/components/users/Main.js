@@ -6,6 +6,10 @@ import OwlCarousel from "react-owl-carousel";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import chatbotImage from "../../img/bot.png"; 
+import caro1 from "../../img/carousel1.png";
+import caro2 from "../../img/carousel2.png";
+import caro3 from "../../img/carousel3.png";
+import caro4 from "../../img/carousel4.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { options } from "@fullcalendar/core/preact";
@@ -213,7 +217,7 @@ const Main = () => {
           <div className="carousel-inner rounded">
             <div className="carousel-item active">
               <img
-                src="https://tourimage.interpark.com/BBS/Tour/FckUpload/202011/6374206851388933880.jpg"
+                src={caro1}
                 className="d-block w-100"
                 style={{ height: "15vw", objectFit: "cover" }}
                 alt=""
@@ -221,7 +225,7 @@ const Main = () => {
             </div>
             <div className="carousel-item">
               <img
-                src="https://joyparty.co.kr//data/goods/20/09/38/1000068206/1000068205_detail_048.jpg"
+                src={caro2}
                 className="d-block w-100"
                 style={{ height: "15vw", objectFit: "cover" }}
                 alt=""
@@ -229,7 +233,15 @@ const Main = () => {
             </div>
             <div className="carousel-item">
               <img
-                src="https://t1.daumcdn.net/cfile/tistory/99CCBB455C46B97235"
+                src={caro3}
+                className="d-block w-100"
+                style={{ height: "15vw", objectFit: "cover" }}
+                alt=""
+              />
+            </div>
+            <div className="carousel-item">
+              <img
+                src={caro4}
                 className="d-block w-100"
                 style={{ height: "15vw", objectFit: "cover" }}
                 alt=""
