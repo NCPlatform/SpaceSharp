@@ -160,7 +160,7 @@ const Main = () => {
           to={`/detail/${randomHotelId}`}
           style={{ textDecoration: "none", color: "blue" }}
         >
-          랜덤 공간 확인하기
+          추천 공간 확인하기
         </Link>
       ),
       end: true,
