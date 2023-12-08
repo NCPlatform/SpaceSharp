@@ -41,7 +41,7 @@ const List = () => {
   const [page, setPage] = useState(1); // 추가: 페이지 수 추가
   const [hasMore, setHasMore] = useState(true); // 추가: 더 불러올 데이터가 있는지 여부 추가
   const loadMoreData = async () => {
-    if (!loading && hasMore) {
+    if (!loading && hasMore && hotelList.length >= 6) {
       setLoading(true);
   
       const moreData = await fetchHotelList(page + 1);
@@ -1053,7 +1053,7 @@ const List = () => {
           <InfiniteScroll
             dataLength={hotelList.length} // 현재 로드된 항목 수
             next={loadMoreData} // 다음 페이지 로드 함수
-            hasMore={hasMore} // 더 불러올 데이터가 있는지 여부
+            hasMore={hasMore && hotelList.length >= 6} // 더 불러올 데이터가 있는지 여부
             loader={loading && (
               <img
                 src="https://blog.kakaocdn.net/dn/c3Rwqs/btqVugu1Dvv/SWkENtL39bcQ7fTrWNBxu0/img.gif"
@@ -1070,6 +1070,7 @@ const List = () => {
                 }}
               />
             )}// 로딩 중에 표시될 컴포넌트
+            
           >
             <div className="row">
               {hotelList.length !== 0 ? (

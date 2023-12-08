@@ -180,7 +180,7 @@ const NavTest = () => {
                     to="/"
                     className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border text-decoration-none text-dark"
                   >
-                    <span className="py-0">스페이스클라우드 홈</span>
+                    <span className="py-0">스페이스# 홈</span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
