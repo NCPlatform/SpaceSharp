@@ -3,6 +3,7 @@ import axios from 'axios';
 import Disp_topNav from './Disp_topNav';
 import { Button } from 'react-bootstrap';
 import ViewRoomList from './ViewRoomList';
+import ManagerHeader from './ManagerHeader';
 
 
 
@@ -105,7 +106,7 @@ const MyPlace = () => {
         const styleB = {width: '7%', textAlign: 'center'} // 이미지 th 
         const styleC = {width: '5%', textAlign: 'center'} // 고유번호 th, td
         const styleD = {width: '10%', textAlign: 'center'} // 플레이스명 td, th
-        const styleE = {width: '100%'} // 이미지 td
+        const styleE = {width: '100%', height: '150px', objectFit: 'cover'}
         const styleF = {width: '10%', textAlign: 'center'} // 주소 th
         const styleG = {cursor: 'pointer'} // 링크
         const styleH = {width: '85%'} // entire table width
@@ -125,8 +126,8 @@ const MyPlace = () => {
 
     return (
         <div>
-             <Disp_topNav/>
-            <div style = {styleZ}>
+             <ManagerHeader />
+            <div className="container mt-5 pt-5">
                 <table style = {styleH}>
                     <thead>
                         <tr>

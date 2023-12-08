@@ -19,4 +19,14 @@ public interface BoardDAO extends JpaRepository<BoardDTO, Integer> {
 	Page<BoardDTO> findAll(Pageable pageable);
 
 	Page<BoardDTO> findBySeqRefSeqBoard(Pageable pageable, int seqRefSeqBoard);
+
+	Page<BoardDTO> findAllByEmailAndSeqBoardCategory(Pageable pageable, String email, int i);
+
+	Page<BoardDTO> findAllBySeqBoardCategoryAndTitleContaining(Pageable pageable, int seqBoardCategory,
+			String searchKey);
+
+	Page<BoardDTO> findBySeqRefSeqBoardAndSeqBoardCategory(Pageable pageable, int seqRefSeqBoard, int i);
+
+
+	Page<BoardDTO> findBySeqRefSeqBoardAndSeqBoardCategoryLike(Pageable pageable, int seqRefSeqBoard, int i);
 }

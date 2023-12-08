@@ -3,6 +3,7 @@ package manager.controller;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.StringTokenizer;
 
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
 import jpa.bean.HotelDTO;
+import jpa.bean.ReserveViewDTO;
 import jpa.bean.RoomDTO;
 import manager.service.ManagerService;
 import manager.service.ObjectStorageService;
@@ -48,6 +52,14 @@ public class ManagerController {
 		
 		return returnDTO;
 	}
+	
+	@PostMapping(value = "viewRoomInfo")
+	@ResponseBody
+	public Optional<RoomDTO> viewRoomInfo(@RequestParam String seq){
+		System.out.println("viewRoomInfo requested : "+seq);
+		Optional<RoomDTO> returnDTO = managerService.viewRoomInfo(seq);
+		return returnDTO;
+	}
  	
 	@PostMapping(value = "addedPlace")
 	@ResponseBody
@@ -67,6 +79,8 @@ public class ManagerController {
 		String holiday = commaClearStr(hotelDTO.getHoliday(), true);
 		if(holiday.equals("")) {
 			hotelDTO.setHoliday("없음");
+		}else {
+			hotelDTO.setHoliday(holiday);
 		}
 		
 		System.out.println(hotelDTO.toString());
@@ -75,6 +89,38 @@ public class ManagerController {
 		managerService.addPlace(hotelDTO);
 		int result = managerService.importSeq(hotelDTO.getOwnerEmail(), hotelDTO.getName(), hotelDTO.getAddr());
 		return result; // 값 확인, 배포 시 void로 변경
+		
+	}
+	
+	@PostMapping(value = "addedPlaceWithoutImage")
+	@ResponseBody
+	public void addedPlaceWithoutImage(@RequestPart HotelDTO hotelDTO) {
+		// 쉼표 빼기 작업
+		hotelDTO.setSeqHotelCategory(commaClearStr(hotelDTO.getSeqHotelCategory(), true));
+		hotelDTO.setKeyword(commaClearStr(hotelDTO.getKeyword(), false));
+		hotelDTO.setFacilities(commaClearStr(hotelDTO.getFacilities(), false));
+		hotelDTO.setAlert(commaClearStr(hotelDTO.getAlert(), false));
+		hotelDTO.setRefund(commaClearStr(hotelDTO.getRefund(), false));
+		String holiday = commaClearStr(hotelDTO.getHoliday(), true);
+		if(holiday.equals("")) {
+			hotelDTO.setHoliday("없음");
+		}else {
+			hotelDTO.setHoliday(holiday);
+		}
+				
+		System.out.println("requested addedPlaceWithoutImage : only HotelDTO");
+		System.out.println(hotelDTO.toString());
+		managerService.addPlace(hotelDTO);
+	}
+	
+	@PostMapping(value = "addedRoomWithoutImage")
+	@ResponseBody
+	public void addedRoomWithoutImage(@RequestPart RoomDTO roomDTO) {
+		
+		System.out.println("requested addedRoomWithoutImage : only roomDTO");
+		System.out.println(roomDTO.toString());
+		managerService.addRoom(roomDTO);
+		
 	}
 	
 	@PostMapping(value = "addedRoom")
@@ -108,7 +154,36 @@ public class ManagerController {
 		List<RoomDTO> list = managerService.getMyroom(seqHotel);
 		return list;
 	}
-
+	
+	@PostMapping(value = "deletePlace")
+	@ResponseBody
+	public void deletePlace(@RequestParam String seqHotel) {
+		System.out.println("deletePlace requested : "+seqHotel);
+		managerService.deletePlace(seqHotel);
+	}
+	
+	@PostMapping(value = "deleteRoom")
+	@ResponseBody
+	public void deleteRoom(@RequestParam String seqRoom) {
+		System.out.println("deleteRoom requested : " + seqRoom);
+		managerService.deleteRoom(seqRoom);
+		
+	}
+	
+	@GetMapping("getReviewList")
+	@ResponseBody
+	public Map<String,Object> getReviewList(@RequestParam String email){
+		return managerService.getReviewList(email);
+	}
+	
+	@PostMapping(value = "getMyReservations")
+	@ResponseBody
+	public List<ReserveViewDTO> viewReservations(@RequestParam String userEmail){
+		System.out.println("reservation view requested : "+userEmail);
+		List<ReserveViewDTO> resultDTO = managerService.viewReservations(userEmail);
+		return resultDTO;
+	}
+	
 	public String commaClearInt(String sample) {
 		ArrayList<Integer> list = new ArrayList<>();
 		StringTokenizer st = new StringTokenizer(sample, ",");
@@ -137,13 +212,24 @@ public class ManagerController {
 		
 		String value = "";
 		for(String a : list) {
-			if(value.equals("")) {
-				value += a;
-			}else {
-				if(blank)
-					value +=", "+a;
-				else
-					value +=","+a;
+			
+			if(!a.isBlank()){
+				if(value.equals("")) {
+					if(a.strip().equals("없음")) // FOR ONLY HOLIDAYS
+						a = "";
+						value += a.strip();
+				}else {
+					if(blank) {
+						if(a.strip().equals("없음")) // FOR ONLY HOLIDAYS
+							a = "";
+						value +=", "+a.strip();
+					}
+					else {
+						if(a.strip().equals("없음")) // FOR ONLY HOLIDAYS
+							a = "";
+						value +=","+a.strip();
+					}
+				}	
 			}
 		}
 		System.out.println(value);

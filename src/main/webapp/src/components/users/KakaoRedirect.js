@@ -9,6 +9,22 @@ function KakaoRedirect() {
   const location = useLocation();
   const KAKAO_CODE = new URLSearchParams(location.search).get('code');
 
+  const [userDTO, setUserDTO] = useState({  //userDTO
+    email: '',
+    name: '',
+    nickname: '',
+    password: '',
+    addr: '',
+    tel: '',
+    businessRegistrationNumber: 0,
+    companyName: '',
+    usergrade: 1,     //회원 기본 등급
+    payment: '',
+    // passwordChk: '',
+    iskakao: false,
+    isnaver: false, 
+  });
+
   //로컬스토리지에 토큰 저장
   const getKakaoToken = () => {
     fetch(`https://kauth.kakao.com/oauth/token`, {
@@ -43,7 +59,6 @@ function KakaoRedirect() {
       )
         .then((res) => {
           const { access_token } = res.data;
-
           // 그런 다음 액세스 토큰을 사용하여 사용자 정보를 가져옴
           axios.post(
             'https://kapi.kakao.com/v2/user/me',
@@ -56,7 +71,7 @@ function KakaoRedirect() {
             }
           )
             .then((res) => {
-              setUserInfo(res.data); // 상태에 사용자 정보 설정
+              setUserDTO(res.data); // 상태에 사용자 정보 설정
             })
             .catch((error) => {
               console.error('사용자 정보 가져오기 실패:', error);
@@ -69,24 +84,48 @@ function KakaoRedirect() {
   }, [KAKAO_CODE]);
 
   //카카오 소셜로그인을 했을 때, DB에 email이 존재하는 회원이면 메인이동, 아니면 회원가입페이지로 UserInfo 전달
-  useEffect(()=> {
+  useEffect(() => {
     if (userInfo && userInfo.email) {
       axios.post('/user/existsByEmail', null, { params: { email: userInfo.email } })
         .then(response => {
           console.log(response.data);
           console.log('중복 이메일 검사중입니다.');
           if (response.data === true) {
-            console.log('이미 존재하는 이메일입니다. 다른 이메일을 입력하여주세요!');
-
-            // 이미 존재하는 그 계정정보를 가져와요
-            
-            // 그 계정의 iskakao정보가 false면 true로 바꾸기
-
-            // session에 저장해줘요
-
-            navigate('/');      //이메일 중복체크 결과 후 없으면 입력, 존재하면 메인페이지로 이동
+            // 이미 존재하는 이메일이라면
+            axios.post('/user/existsByIsKakao', null, { params: { email: userInfo.email } })
+              .then(response => {
+                if (response.data === true) {
+                  // 이미 카카오 소셜 로그인 연동된 사용자라면
+                  const user = response.data;
+                  window.sessionStorage.setItem('user', JSON.stringify(user));
+                  navigate('/');
+                } else {
+                  // 아직 카카오 소셜 로그인 연동이 안 된 사용자라면
+                  if (window.confirm("카카오 소셜 로그인 연동하시겠습니까")) {
+                    axios.post('/user/updateIsKakao', { email: userInfo.email, iskakao: true })
+                      .then((res) => {
+                        alert("카카오 소셜 로그인이 연동되었습니다.");
+                        const user = response.data;
+                        window.sessionStorage.setItem('user', JSON.stringify(user));
+                        navigate('/');
+                      })
+                      .catch((error) => console.log(error));
+                  } else {
+                    alert("취소합니다.");
+                    const user = response.data;
+                    window.sessionStorage.setItem('user', JSON.stringify(user));
+                    navigate('/');
+                  }
+                }
+              })
+              .catch(error => {
+                console.error(error);
+              });
           } else {
+            // 사용 가능한 이메일이라면
             console.log('사용 가능한 이메일 입니다.');
+            // SignIn 페이지로 이동하고 userInfo(userDTO) 값을 전달
+            navigate('/SignIn', { state: { userInfo } });
           }
         })
         .catch(error => {
@@ -94,13 +133,14 @@ function KakaoRedirect() {
         });
     }
   }, [userInfo]);
+  
+  
 
 
   return (
     <div>
-      {/* <h1>KakaoRedirect에서 작성된 글</h1> */}
 
-      {userInfo && <AccountSignIn userInfo={userInfo} />}
+      {userDTO && <AccountSignIn userInfo={userDTO} />}
      
     </div>
   );

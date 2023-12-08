@@ -6,4 +6,6 @@ import jpa.bean.ReceiptDTO;
 
 public interface ReceiptDAO extends JpaRepository<ReceiptDTO, Integer> {
 
+	ReceiptDTO findBySeqReservation(int seqReservation);
+
 }

@@ -12,6 +12,7 @@ import { options } from "@fullcalendar/core/preact";
 import Footer from "./Footer";
 import HotelItemCard from "./HotelItemCard";
 import ReviewItemCard from "./ReviewItemCard";
+import NavEventDetail from "./NavComponents/NavEventDetail";
 
 const Main = () => {
   const [activeTab, setActiveTab] = useState("total");
@@ -89,6 +90,8 @@ const Main = () => {
       end: true,
     },
   ];
+  const [eventList, setEventList] = useState([]);
+  const [couponList, setCouponList] = useState([]);
 
   const toggleChatbot = () => {
     setShowChatbot(!showChatbot);
@@ -100,6 +103,8 @@ const Main = () => {
         setNewHotelList(res.data.hotelList);
         setHotelCategoryList(res.data.categoryList);
         setReviewList(res.data.reviewCardList);
+        setEventList(res.data.eventList);
+        setCouponList(res.data.couponList);
       })
       .catch((error) => console.log(error));
   }, []);
@@ -338,38 +343,81 @@ const Main = () => {
 
       {/* Event */}
       {/* Carousel */}
-      <div className="container">
+      <div className="container mt-3 mt-3">
         <div
-          id="carouselExample"
+          id="carouselExample2"
           className="carousel slide"
           data-bs-ride="carousel"
         >
           <div className="carousel-inner rounded">
-            <div className="carousel-item active" data-bs-interval="3000">
-              <img
-                src="https://tourimage.interpark.com/BBS/Tour/FckUpload/202011/6374206851388933880.jpg"
-                className="d-block w-100"
-                style={{ height: "25vw", objectFit: "cover" }}
-                alt=""
-              />
-            </div>
-            <div className="carousel-item" data-bs-interval="3000">
-              <img
-                src="https://joyparty.co.kr//data/goods/20/09/38/1000068206/1000068205_detail_048.jpg"
-                className="d-block w-100"
-                style={{ height: "25vw", objectFit: "cover" }}
-                alt=""
-              />
-            </div>
-            <div className="carousel-item" data-bs-interval="3000">
-              <img
-                src="https://t1.daumcdn.net/cfile/tistory/99CCBB455C46B97235"
-                className="d-block w-100"
-                style={{ height: "25vw", objectFit: "cover" }}
-                alt=""
-              />
-            </div>
+            {eventList.length > 1 &&
+              eventList
+                .filter((item) => new Date(item.finishDate) >= new Date())
+                .map((item, index) => (
+                  <>
+                    <div
+                      className="carousel-item active"
+                      data-bs-interval="3000"
+                      key={index}
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target={"#event" + item.seqEvent}
+                    >
+                      <img
+                        src={item.mainImg}
+                        className="d-block w-100"
+                        style={{ height: "25vw", objectFit: "cover" }}
+                        alt=""
+                      />
+                      <div
+                        className="carousel-caption d-none d-md-block bg-dark bg-opacity-25 w-100 px-0 mx-0"
+                        style={{ right: 0, left: 0 }}
+                      >
+                        <h3>{item.title}</h3>
+                      </div>
+                    </div>
+                    <NavEventDetail item={item} couponList={couponList} />
+                  </>
+                ))}
           </div>
+          <button
+            className="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselExample2"
+            data-bs-slide="prev"
+            style={{ margin: 0, padding: 0, left: 0, width: "5%" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="50"
+              height="50"
+              fill="currentColor"
+              className="bi bi-caret-left-fill"
+              viewBox="0 0 16 16"
+            >
+              <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
+            </svg>
+            <span className="visually-hidden">Previous</span>
+          </button>
+          <button
+            className="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselExample2"
+            data-bs-slide="next"
+            style={{ margin: 0, padding: 0, right: 0, width: "5%" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="50"
+              height="50"
+              fill="currentColor"
+              className="bi bi-caret-right-fill"
+              viewBox="0 0 16 16"
+            >
+              <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+            </svg>
+            <span className="visually-hidden">Next</span>
+          </button>
         </div>
       </div>
 

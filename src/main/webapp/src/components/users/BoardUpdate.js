@@ -8,6 +8,7 @@ import axios from 'axios';
 import ReactQuill from 'react-quill';
 import Swal from "sweetalert2";
 import { Navigate } from 'react-router-dom';
+import  Nav  from './Nav';
 
 
 const BoardUpdate = () => {
@@ -56,10 +57,8 @@ const BoardUpdate = () => {
               .then(res => {
                  Swal.fire({
                      title: '게시글이 수정되었습니다.',
-                     imageUrl: 'https://item.kakaocdn.net/do/d640911d600b52c55d356740537ae9569f5287469802eca457586a25a096fd31',
                      imageWidth: 300,
                      imageHeight: 200,
-                     imageAlt: '구데타마',
                    })
                    navigate('/BoardList/0');
               })
@@ -76,10 +75,8 @@ const BoardUpdate = () => {
                  .then(res => {
                     Swal.fire({
                         title: '게시글이 삭제되었습니다.',
-                        imageUrl: 'https://item.kakaocdn.net/do/d640911d600b52c55d356740537ae9569f5287469802eca457586a25a096fd31',
                         imageWidth: 300,
                         imageHeight: 200,
-                        imageAlt: '구데타마',
                       })
                       navigate('/BoardList/0');
                  })
@@ -131,6 +128,8 @@ const BoardUpdate = () => {
 
 
     return (
+    <div>
+        <Nav />
         <div className='container'>
             <div>
                 <div className={styles.BoardWriteHeader}>
@@ -172,6 +171,7 @@ const BoardUpdate = () => {
                 </div>
             </div>
         </div>
+    </div>
     );
 };
 
