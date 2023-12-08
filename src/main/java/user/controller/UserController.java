@@ -39,13 +39,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
+import jpa.bean.CouponDTO;
+import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.HotelSearchDTO;
+import jpa.bean.IssuedCouponDTO;
 import jpa.bean.LikedDTO;
 import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
 import jpa.bean.RoomDTO;
 import jpa.bean.UserDTO;
+import jpa.dao.CouponDAO;
+import jpa.dao.IssuedCouponDAO;
 import jpa.dao.ReceiptDAO;
 import jpa.dao.ReservationDAO;
 import jpa.dao.UserDAO;
@@ -68,6 +73,11 @@ public class UserController {
 	private ReservationDAO reservationDAO;
 	@Autowired
 	private ReceiptDAO receiptDAO;
+	
+	@Autowired
+    private IssuedCouponDAO issuedCouponDAO;
+	@Autowired
+    private CouponDAO couponDAO;
 	
 	private String bucketName = "spacesharpbucket";
 
@@ -198,6 +208,25 @@ public class UserController {
 	      return new ResponseEntity<>("영수증 저장에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	  }
+
+	@GetMapping("/coupon")
+    public List<CouponDTO> getAllCoupons() {
+        return couponDAO.findAll();
+    }
+
+    @GetMapping("/issuedCoupon")
+    public List<IssuedCouponDTO> getAllIssuedCoupons() {
+        return issuedCouponDAO.findAll();
+    }
+    
+	@GetMapping("/updateNaverStatus")
+	public String updateNaverStatus(@RequestParam String userEmail) {
+	    boolean updated = userService.updateUserNaverStatus(userEmail, true); // 여기에서 true 또는 false로 변경 가능
+	    if (updated) {
+	        return "네이버 성공";
+	    }
+	    return "네이버 실패";
+	}
 
 	@PostMapping(value="login")
 	@ResponseBody
@@ -361,6 +390,20 @@ public class UserController {
 		System.out.println(hotelDTO);
 
 		return userService.searchHotel(hotelDTO);
+	}
+	@PostMapping(value = "searchHotelByLowPrice")
+	@ResponseBody
+	public List<HotelDTO> searchHotelByLowPrice(@RequestBody HotelSearchDTO hotelDTO){
+		System.out.println(hotelDTO);
+
+		return userService.searchHotelByLowPrice(hotelDTO);
+	}
+	@PostMapping(value = "searchHotelByHighPrice")
+	@ResponseBody
+	public List<HotelDTO> searchHotelByHighPrice(@RequestBody HotelSearchDTO hotelDTO){
+		System.out.println(hotelDTO);
+
+		return userService.searchHotelByHighPrice(hotelDTO);
 	}
 	@PostMapping(path = "writeReply")
 	@ResponseBody

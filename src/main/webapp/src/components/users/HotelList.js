@@ -4,14 +4,13 @@ import Nav from "./Nav";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import Button from "react-bootstrap/Button";
-import Calendar from "react-calendar";
+import InfiniteScroll from 'react-infinite-scroll-component';
 import "react-calendar/dist/Calendar.css";
 import moment from "moment";
 import Slider, { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
 
-import { Card, Carousel, Col, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import HotelItemCard from "./HotelItemCard";
@@ -32,32 +31,87 @@ const List = () => {
     upperBound: 3000000,
   });
   const [filterOn, setFilterOn] = useState(false);
-  const [mainAddress, setMainAddress] = useState(""); 
-  const [subAddress, setSubAddress] = useState(""); 
-  const [selectedOptions, setOptions] = useState([]); 
+  const [mainAddress, setMainAddress] = useState("");
+  const [subAddress, setSubAddress] = useState("");
+  const [selectedOptions, setOptions] = useState([]);
+  const [showCouponDiscount, setShowCouponDiscount] = useState(true);
+  const [sortOption, setSortOption] = useState("best");
+  const [originalHotelList, setOriginalHotelList] = useState([]);
+  const [loading, setLoading] = useState(false); // 추가: 로딩 상태 추가
+  const [page, setPage] = useState(1); // 추가: 페이지 수 추가
+  const [hasMore, setHasMore] = useState(true); // 추가: 더 불러올 데이터가 있는지 여부 추가
+  const loadMoreData = async () => {
+    if (!loading && hasMore) {
+      setLoading(true);
+  
+      const moreData = await fetchHotelList(page + 1);
+  
+      if (moreData.length > 0) {
+        // 새 데이터를 추가하기 전에 0.7초의 지연
+        setTimeout(() => {
+          setHotelList((prev) => [...prev, ...moreData]);
+          setPage((prev) => prev + 1);
+          setLoading(false);
+        }, 700);
+      } else {
+        setHasMore(false);
+        setLoading(false);
+      }
+    }
+  };
+
+  
   const handleOption1Change = (e) => {
     setMainAddress(e.target.value);
     setSubAddress("");
   };
-
+  const toggleCouponDiscount = () => {
+    setShowCouponDiscount((prev) => !prev);
+  };
   const handleOption2Change = (e) => {
     setSubAddress(e.target.value);
   };
 
   const [date, onDate] = useState(new Date());
 
-  const { seqHotelCategory } = useParams(); //이게 없으면 searchValue
+  const { seqHotelCategory, searchValue } = useParams();
   const [hotelList, setHotelList] = useState([]);
 
-  
+  useEffect(() => {
+    console.log("searchValue in List:", searchValue);
+  }, [searchValue]);
+
   const fetchHotelList = async () => {
     const selectedDate = formatDate(date);
+    if (!seqHotelCategory) {
+      if (searchValue) {
+
+        const { status, data } = await axios.post("/user/searchHotel", {
+          seqHotelCategory: "",
+          addr: subAddress,
+          date: selectedDate,
+          minPrice: filterOn ? priceRange.lowerBound : null,
+          maxPrice: filterOn ? priceRange.upperBound : null,
+        });
+
+        if (status === 200) {
+          return data.filter(
+            (item) =>
+              item.addr.includes(searchValue) ||
+              item.name.includes(searchValue) ||
+              item.addr.includes(searchValue)
+          );
+        }
+      } else {
+
+        return [];
+      }
+    }
+
     if (subAddress === "") {
       const { status, data } = await axios.post("/user/searchHotel", {
         seqHotelCategory:
-          seqHotelCategory.length === 1
-            ? `0${seqHotelCategory}`
-            : seqHotelCategory, //이게 없으면 searchValue 값으로 가져오게 해야함
+          seqHotelCategory.length === 1 ? `0${seqHotelCategory}` : seqHotelCategory,
         addr: subAddress,
         date: selectedDate,
         minPrice: filterOn ? priceRange.lowerBound : null,
@@ -65,7 +119,14 @@ const List = () => {
       });
 
       if (status === 200) {
-        return data;
+        return searchValue
+          ? data.filter(
+            (item) =>
+              item.addr.includes(searchValue) ||
+              item.name.includes(searchValue) ||
+              item.addr.includes(searchValue)
+          )
+          : data;
       }
     } else {
       const list = [];
@@ -73,9 +134,7 @@ const List = () => {
       for (let addr of addrs) {
         const { status, data } = await axios.post("/user/searchHotel", {
           seqHotelCategory:
-            seqHotelCategory.length === 1
-              ? `0${seqHotelCategory}`
-              : seqHotelCategory,
+            seqHotelCategory.length === 1 ? `0${seqHotelCategory}` : seqHotelCategory,
           addr: addr.trim(),
           date: selectedDate,
           minPrice: filterOn ? priceRange.lowerBound : null,
@@ -86,12 +145,172 @@ const List = () => {
           data.forEach((hotel) => list.push(hotel));
         }
       }
-      
-      return list;
+
+      return searchValue
+        ? list.filter(
+          (item) =>
+            item.addr.includes(searchValue) ||
+            item.name.includes(searchValue) ||
+            item.addr.includes(searchValue)
+        )
+        : list;
+    }
+    return [];
+  };
+  const fetchHotelByLowPrice = async () => {
+    const selectedDate = formatDate(date);
+    if (!seqHotelCategory) {
+      if (searchValue) {
+
+        const { status, data } = await axios.post("/user/searchHotelByLowPrice", {
+          seqHotelCategory: "",
+          addr: subAddress,
+          date: selectedDate,
+          minPrice: filterOn ? priceRange.lowerBound : null,
+          maxPrice: filterOn ? priceRange.upperBound : null,
+        });
+
+        if (status === 200) {
+          return data.filter(
+            (item) =>
+              item.addr.includes(searchValue) ||
+              item.name.includes(searchValue) ||
+              item.addr.includes(searchValue)
+          );
+        }
+      } else {
+
+        return [];
+      }
+    }
+
+    if (subAddress === "") {
+      const { status, data } = await axios.post("/user/searchHotelByLowPrice", {
+        seqHotelCategory:
+          seqHotelCategory.length === 1 ? `0${seqHotelCategory}` : seqHotelCategory,
+        addr: subAddress,
+        date: selectedDate,
+        minPrice: filterOn ? priceRange.lowerBound : null,
+        maxPrice: filterOn ? priceRange.upperBound : null,
+      });
+
+      if (status === 200) {
+        return searchValue
+          ? data.filter(
+            (item) =>
+              item.addr.includes(searchValue) ||
+              item.name.includes(searchValue) ||
+              item.addr.includes(searchValue)
+          )
+          : data;
+      }
+    } else {
+      const list = [];
+      const addrs = subAddress.split(",");
+      for (let addr of addrs) {
+        const { status, data } = await axios.post("/user/searchHotelByLowPrice", {
+          seqHotelCategory:
+            seqHotelCategory.length === 1 ? `0${seqHotelCategory}` : seqHotelCategory,
+          addr: addr.trim(),
+          date: selectedDate,
+          minPrice: filterOn ? priceRange.lowerBound : null,
+          maxPrice: filterOn ? priceRange.upperBound : null,
+        });
+
+        if (status === 200) {
+          data.forEach((hotel) => list.push(hotel));
+        }
+      }
+
+      return searchValue
+        ? list.filter(
+          (item) =>
+            item.addr.includes(searchValue) ||
+            item.name.includes(searchValue) ||
+            item.addr.includes(searchValue)
+        )
+        : list;
     }
     return [];
   };
 
+  const fetchHotelByHighPrice = async () => {
+    const selectedDate = formatDate(date);
+    if (!seqHotelCategory) {
+      if (searchValue) {
+
+        const { status, data } = await axios.post("/user/searchHotelByHighPrice", {
+          seqHotelCategory: "",
+          addr: subAddress,
+          date: selectedDate,
+          minPrice: filterOn ? priceRange.lowerBound : null,
+          maxPrice: filterOn ? priceRange.upperBound : null,
+        });
+
+        if (status === 200) {
+          return data.filter(
+            (item) =>
+              item.addr.includes(searchValue) ||
+              item.name.includes(searchValue) ||
+              item.addr.includes(searchValue)
+          );
+        }
+      } else {
+
+        return [];
+      }
+    }
+
+    if (subAddress === "") {
+      const { status, data } = await axios.post("/user/searchHotelByHighPrice", {
+        seqHotelCategory:
+          seqHotelCategory.length === 1 ? `0${seqHotelCategory}` : seqHotelCategory,
+        addr: subAddress,
+        date: selectedDate,
+        minPrice: filterOn ? priceRange.lowerBound : null,
+        maxPrice: filterOn ? priceRange.upperBound : null,
+      });
+
+      if (status === 200) {
+        return searchValue
+          ? data.filter(
+            (item) =>
+              item.addr.includes(searchValue) ||
+              item.name.includes(searchValue) ||
+              item.addr.includes(searchValue)
+          )
+          : data;
+      }
+    } else {
+      const list = [];
+      const addrs = subAddress.split(",");
+      for (let addr of addrs) {
+        const { status, data } = await axios.post("/user/searchHotelByHighPrice", {
+          seqHotelCategory:
+            seqHotelCategory.length === 1 ? `0${seqHotelCategory}` : seqHotelCategory,
+          addr: addr.trim(),
+          date: selectedDate,
+          minPrice: filterOn ? priceRange.lowerBound : null,
+          maxPrice: filterOn ? priceRange.upperBound : null,
+        });
+
+        if (status === 200) {
+          data.forEach((hotel) => list.push(hotel));
+        }
+      }
+
+      return searchValue
+        ? list.filter(
+          (item) =>
+            item.addr.includes(searchValue) ||
+            item.name.includes(searchValue) ||
+            item.addr.includes(searchValue)
+        )
+        : list;
+    }
+    return [];
+  };
+  
   const filterHotel = (hotelList) => {
     const filtered = [];
     for (let hotel of hotelList) {
@@ -110,17 +329,44 @@ const List = () => {
   };
 
   const resetHotelList = async () => {
-    const list = await fetchHotelList();
-    if (filterOn) setHotelList(filterHotel(list));
-    else setHotelList(list);
+    let list;
+  
+    if (sortOption === "lowPrice") {
+      list = await fetchHotelByLowPrice();
+    } else if (sortOption === "highPrice") {
+      list = await fetchHotelByHighPrice();
+    } else {
+      list = await fetchHotelList();
+    }
+  
+    // 원래 순서를 유지하는 복사본 생성
+    const originalList = [...list];
+  
+    // 필터 적용
+    if (filterOn) {
+      list = filterHotel(list.filter((item) => item.addr.includes(subAddress)));
+    }
+  
+    // 바로 HotelItemCard를 업데이트
+    setHotelList(list);
+  
+    // 원래 순서를 유지하는 복사본을 저장
+    setOriginalHotelList(originalList);
   };
+
   useEffect(() => {
     console.log(hotelList);
+    if (hotelList.length === 0) { // 처음 렌더링 시에만 데이터를 가져오도록 수정
+      loadMoreData();
+    }
   }, [hotelList]);
-  
+
   useEffect(() => {
+    console.log("searchValue:", searchValue);
     resetHotelList();
-  }, [seqHotelCategory, subAddress, date]);
+    setPage(1); // 검색 조건이 변경되면 페이지를 리셋
+    setHasMore(true); // 더 불러올 데이터가 있음을 다시 표시
+  }, [seqHotelCategory, subAddress, date, searchValue, sortOption]);
 
   const toggleOption = (e) => {
     const { name } = e.target;
@@ -130,19 +376,27 @@ const List = () => {
       setOptions((prev) => [...prev, name]);
     }
   };
-  
+
   const resetOptions = () => {
     setPriceRange({ lowerBound: 0, upperBound: 300000, value: [0, 300000] });
     setOptions([]);
   };
-  
+
   const isActiveOption = (option) => {
     if (selectedOptions.includes(option)) {
     }
     return selectedOptions.includes(option);
   };
-  const applyFilter = () => {
-    resetHotelList();
+  const applyFilter = async () => {
+    if (sortOption === "lowPrice") {
+      await fetchHotelByLowPrice();
+    } else {
+      await resetHotelList();
+    }
+  };
+  // 'best' 옵션을 선택할 때 원래 순서로 HotelItemCard를 출력하는 함수
+  const resetToOriginalOrder = () => {
+    setHotelList(originalHotelList);
   };
   return (
     <div>
@@ -177,6 +431,12 @@ const List = () => {
                 <option value="choong-book">충북</option>
               </select>
 
+              
+            </div>
+          </Col>
+
+          <Col className="mb-3" xl={3} lg={6} md={12} sm={12} xs={12}>
+            <div className="input-group mb-3">
               {mainAddress && (
                 <select
                   className="form-select ms-auto"
@@ -242,7 +502,7 @@ const List = () => {
                   )}
                   {mainAddress === "gyung-gi" && (
                     <>
-                      <option value="gyung-gi1">경기 전체</option>
+                      <option value="경기">경기 전체</option>
                       <option value="gyung-gi2">고양 일산</option>
                       <option value="gyung-gi3">
                         수원역, 팔달, 권선, 장안
@@ -548,22 +808,7 @@ const List = () => {
             </div>
           </Col>
 
-          <Col className="mb-3" xl={2} lg={6} md={12} sm={12} xs={12}>
-            <div className="input-group mb-3">
-              <span className="input-group-text" id="basic-addon1">
-                예약 인원
-              </span>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="명"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-              />
-            </div>
-          </Col>
-
-          <Col className="mb-3" xl={5} lg={10} md={12} sm={12} xs={12}>
+          {/* <Col className="mb-3" xl={5} lg={10} md={12} sm={12} xs={12}>
             <div className="accordion">
               <div
                 className={`${styles.HotelListAccordionItem} accordion-item`}
@@ -589,7 +834,8 @@ const List = () => {
                     data-bs-parent="#accordionExample"
                   >
                     <div className="accordion-body hotelListNav">
-                      <Calendar onChange={onDate} value={date} />
+                      <Calendar editableDateInputs={true}
+                        calendarType={"gregory"} formatDay={(locale, date) => moment(date).format("D")} onChange={onDate} value={date} minDate={new Date()} />
                       <div className="text-gray-500 mt-4">
                         {moment(date).format("YYYY년 MM월 DD일")}
                       </div>
@@ -598,15 +844,11 @@ const List = () => {
                 </div>
               </div>
             </div>
-          </Col>
+          </Col> */}
 
           <Col
             className="d-flex justify-content-end mb-3"
-            xl={2}
-            lg={2}
-            md={12}
-            sm={12}
-            xs={12}
+            xl={6} lg={12} md={12} sm={12} xs={12}
           >
             <div>
               <Link to="/hotelInMap">
@@ -714,9 +956,8 @@ const List = () => {
                       {HotelOptionData.map((item, index) => (
                         <div className="col p-2" key={index}>
                           <button
-                            className={`btn btn-outline-dark container-fluid ${
-                              isActiveOption(item.key) ? "active" : ""
-                            }`}
+                            className={`btn btn-outline-dark container-fluid ${isActiveOption(item.key) ? "active" : ""
+                              }`}
                             data-bs-toggle="button"
                             name={item.key}
                             onClick={toggleOption}
@@ -754,8 +995,18 @@ const List = () => {
           <Row xl={3} lg={1} md={1} sm={1} xs={1}>
             <Col xl={3} className="mb-3">
               <div className="px-2 btn-group w-100">
-                <p className="btn btn-outline-secondary">바로결제</p>
-                <p className="btn btn-outline-secondary">쿠폰 할인</p>
+                <p
+                  className={`btn btn-outline-secondary ${showCouponDiscount ? "active" : ""}`}
+                  onClick={toggleCouponDiscount}
+                >
+                  바로결제
+                </p>
+                <p
+                  className={`btn btn-outline-secondary ${showCouponDiscount ? "" : "active"}`}
+                  onClick={toggleCouponDiscount}
+                >
+                  쿠폰 할인
+                </p>
               </div>
             </Col>
 
@@ -782,11 +1033,15 @@ const List = () => {
 
             <Col xl={2} className="d-flex justify-content-end mb-3">
               <div>
-                <select className="form-select">
-                  <option selected>베스트 공간 순</option>
-                  <option>가격 낮은 순</option>
-                  <option>가격 높은 순</option>
-                  <option>이용후기 많은 순</option>
+                <select
+                  className="form-select"
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                >
+                  <option value="best">베스트 공간 순</option>
+                  <option value="lowPrice">가격 낮은 순</option>
+                  <option value="highPrice">가격 높은 순</option>
+                  {/* <option value="manyReviews">이용후기 많은 순</option> */}
                 </select>
               </div>
             </Col>
@@ -795,20 +1050,65 @@ const List = () => {
 
         <div>
           <div className="container">
+          <InfiniteScroll
+            dataLength={hotelList.length} // 현재 로드된 항목 수
+            next={loadMoreData} // 다음 페이지 로드 함수
+            hasMore={hasMore} // 더 불러올 데이터가 있는지 여부
+            loader={loading && (
+              <img
+                src="https://blog.kakaocdn.net/dn/c3Rwqs/btqVugu1Dvv/SWkENtL39bcQ7fTrWNBxu0/img.gif"
+                alt="Loading..."
+                style={{
+                  position: 'fixed',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  display: 'block',
+                  margin: 'auto',
+                  width: '60px', 
+                  height: '60px', 
+                }}
+              />
+            )}// 로딩 중에 표시될 컴포넌트
+          >
             <div className="row">
               {hotelList.length !== 0 ? (
-                hotelList.map((item, idx) => (
-                  <div className="col-xl-4 col-lg-6" key={idx}>
-                    <Link
-                      to={"/detail/" + item.seqHotel}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <Col>
-                        <HotelItemCard item={item} />
-                      </Col>
-                    </Link>
-                  </div>
-                ))
+                searchValue
+                  ? hotelList
+                    .filter((item) => {
+                      return (
+                        Object.values(item).some((value) =>
+                          String(value).toLowerCase().includes(searchValue.toLowerCase())
+                        ) &&
+                        (showCouponDiscount || (!showCouponDiscount && item.coupon === true))
+                      );
+                    })
+                    .map((item, idx) => (
+                      <div className="col-xl-4 col-lg-6" key={idx}>
+                        <Link
+                          to={"/detail/" + item.seqHotel}
+                          style={{ textDecoration: "none" }}
+                        >
+                          <Col>
+                            <HotelItemCard item={item} />
+                          </Col>
+                        </Link>
+                      </div>
+                    ))
+                  : hotelList
+                    .filter((item) => showCouponDiscount || (!showCouponDiscount && item.coupon === true))
+                    .map((item, idx) => (
+                      <div className="col-xl-4 col-lg-6" key={idx}>
+                        <Link
+                          to={"/detail/" + item.seqHotel}
+                          style={{ textDecoration: "none" }}
+                        >
+                          <Col>
+                            <HotelItemCard item={item} />
+                          </Col>
+                        </Link>
+                      </div>
+                    ))
               ) : (
                 <div className="mt-5">
                   <h1>해당 카테고리에 숙소가 아직 없습니다.</h1>
@@ -816,6 +1116,7 @@ const List = () => {
                 </div>
               )}
             </div>
+            </InfiniteScroll>
           </div>
         </div>
       </div>
@@ -823,5 +1124,6 @@ const List = () => {
     </div>
   );
 };
+
 
 export default List;

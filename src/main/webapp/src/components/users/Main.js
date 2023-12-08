@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Nav from "./Nav";
 import "../../css/main_nav_tab.css";
-
+import ChatBot from "react-simple-chatbot";
 import OwlCarousel from "react-owl-carousel";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
-import { $ } from "react-jquery-plugin";
-import { Card } from "react-bootstrap";
 
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -21,9 +19,83 @@ const Main = () => {
   const [hotelCategoryList, setHotelCategoryList] = useState([]);
   const [newHotelList, setNewHotelList] = useState([]);
   const [reviewList, setReviewList] = useState([]);
+  const [showChatbot, setShowChatbot] = useState(false);
+  const randomHotelId = Math.floor(Math.random() * 100) + 1;
+  const scrollToBottom = () => {
+    window.scrollTo(0, document.body.scrollHeight);
+  };
+  const steps = [
+    {
+      id: "1",
+      message: "안녕하세요! 어떤 도움이 필요하세요?",
+      trigger: "2",
+    },
+    {
+      id: "2",
+      options: [
+        {
+          value: 1,
+          label: "추천받기",
+          trigger: "hotelInfo",
+        },
+        {
+          value: 2,
+          label: "찾는 공간",
+          trigger: "reservation",
+        },
+        {
+          value: 3,
+          label: "문의하기",
+          trigger: "other",
+        },
+      ],
+    },
+    {
+      id: "hotelInfo",
+      component: (
+        <Link
+          to={`/detail/${randomHotelId}`}
+          style={{ textDecoration: "none" }}
+          onClick={() => window.scrollTo(0, 0)}
+        >
+          공간 추천받기
+        </Link>
+      ),
+      end: true,
+    },
+    {
+      id: "reservation",
+      component: (
+        <Link
+          to="/hotelList/1"
+          style={{ textDecoration: "none" }}
+          onClick={() => window.scrollTo(0, 0)}
+        >
+          검색하기
+        </Link>
+      ),
+      end: true,
+    },
+    {
+      id: "other",
+      component: (
+        <Link
+          to="/boardList/0"
+          style={{ textDecoration: "none" }}
+          onClick={() => window.scrollTo(0, 0)}
+        >
+          1:1 문의 이용하기
+        </Link>
+      ),
+      end: true,
+    },
+  ];
   const [eventList, setEventList] = useState([]);
   const [couponList, setCouponList] = useState([]);
 
+  const toggleChatbot = () => {
+    setShowChatbot(!showChatbot);
+  };
   useEffect(() => {
     axios
       .post("/user/mainPage", null, {})
@@ -213,13 +285,40 @@ const Main = () => {
         <div className="row row-cols-4 row-cols-sm-4 row-cols-md-6">
           {activeTab === "total"
             ? hotelCategoryList.map((item, index) => {
+              return (
+                <Link
+                  to={`hotelList/${item.seqHotelCategory}`}
+                  key={index}
+                  className="hotelCategoryList"
+                >
+                  <div className="col my-3 text-center">
+                    <p className="">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        className="bi bi-cursor-fill"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z" />
+                      </svg>
+                    </p>
+                    <span className="hotelCategoryListName">{item.name}</span>
+                  </div>
+                </Link>
+              );
+            })
+            : hotelCategoryList
+              .filter((item) => item.tab === activeTab)
+              .map((item, index) => {
                 return (
                   <Link
                     to={`hotelList/${item.seqHotelCategory}`}
                     key={index}
                     className="hotelCategoryList"
                   >
-                    <div className="col my-3 text-center">
+                    <div className="col my-3 text-center" key={index}>
                       <p className="">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -232,40 +331,13 @@ const Main = () => {
                           <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z" />
                         </svg>
                       </p>
-                      <span className="hotelCategoryListName">{item.name}</span>
+                      <span style={{ color: "#999", fontSize: "0.8rem" }}>
+                        {item.name}
+                      </span>
                     </div>
                   </Link>
                 );
-              })
-            : hotelCategoryList
-                .filter((item) => item.tab === activeTab)
-                .map((item, index) => {
-                  return (
-                    <Link
-                      to={`hotelList/${item.seqHotelCategory}`}
-                      key={index}
-                      className="hotelCategoryList"
-                    >
-                      <div className="col my-3 text-center" key={index}>
-                        <p className="">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            className="bi bi-cursor-fill"
-                            viewBox="0 0 16 16"
-                          >
-                            <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z" />
-                          </svg>
-                        </p>
-                        <span style={{ color: "#999", fontSize: "0.8rem" }}>
-                          {item.name}
-                        </span>
-                      </div>
-                    </Link>
-                  );
-                })}
+              })}
         </div>
       </div>
 
@@ -378,6 +450,39 @@ const Main = () => {
             ))}
         </div>
       </div>
+      {/* <div className="container mt-5">
+        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+          <div className="px-3">
+            <div className="card">
+              <h1>게임</h1>
+            </div>
+          </div>
+        </div>
+      </div> */}
+      <div className="container mt-5 fixed-chatbot-button">
+        <button
+          className="btn btn-primary rounded-circle overflow-hidden bg-transparent border-0"
+          style={{ width: '120px', height: '120px' }}
+          onClick={() => { toggleChatbot(); scrollToBottom(); }}
+        >
+          <img
+            src="https://img.freepik.com/premium-vector/robot-icon-bot-sign-design-chatbot-symbol-concept-voice-support-service-bot-online-support-bot-vector-stock-illustration_100456-34.jpg"
+            alt="챗봇"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+          />
+        </button>
+      </div>
+
+      {/* Chatbot 추가 */}
+      {showChatbot && (
+        <ChatBot
+          steps={steps}
+          headerTitle="챗봇"
+          opened={showChatbot}
+          toggleFloating={() => setShowChatbot(!showChatbot)}
+          style={{ bottom: "70px", left: "1000px" }}
+        />
+      )}
       <Footer />
     </>
   );

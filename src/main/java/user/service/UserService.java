@@ -13,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.servlet.http.HttpServletResponse;
 import jpa.bean.BoardDTO;
 import jpa.bean.CommentDTO;
+import jpa.bean.CouponDTO;
 import jpa.bean.HotelCategoryDTO;
 import jpa.bean.HotelDTO;
 import jpa.bean.HotelSearchDTO;
+import jpa.bean.IssuedCouponDTO;
 import jpa.bean.LikedDTO;
 import jpa.bean.ReceiptDTO;
 import jpa.bean.ReservationDTO;
@@ -117,6 +119,16 @@ public interface UserService {
 
 	public String saveReceipt(ReceiptDTO receiptDTO);
 
+	public List<HotelDTO> searchHotelByLowPrice(HotelSearchDTO hotelDTO);
+
+	public List<HotelDTO> searchHotelByHighPrice(HotelSearchDTO hotelDTO);
+
+	//public List<IssuedCouponDTO> getCouponInfo(String email);
+
+	//public List<CouponDTO> getUserCoupons();
+
+	//public List<CouponDTO> getCoupons();
+	
 	public Map<String, Object> getEventList();
 
 	public Map<String, Object> getReservationList(Pageable pageable, String email);
@@ -136,7 +148,9 @@ public interface UserService {
 	public List<HotelDTO> getLikedHotel(String email);
 
 	public String getCoupon(String email, int seqCoupon);
-	
+
+	public boolean updateUserNaverStatus(String userEmail, boolean b);
+
 
 
 }

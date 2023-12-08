@@ -35,3 +35,24 @@ a.hotelCategoryList:hover span.hotelCategoryListName{
     font-weight: bold;
     border-bottom: 1px solid #9A4444;
 }
+.fixed-chatbot-button {
+    position: fixed;
+    bottom: 20px; 
+    left: 91%; 
+    z-index: 1001; 
+  }
+  .fixed-chatbot-button button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+ .react-simple-chatbot-container {
+  position: fixed;
+  bottom: 250px; 
+  left: 1350px;
+  z-index: 1000;
+}
