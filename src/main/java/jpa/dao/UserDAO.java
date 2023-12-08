@@ -30,5 +30,9 @@ public interface UserDAO extends JpaRepository<UserDTO, String> {
     void delete(UserDTO userDTO);
     
     UserDTO findByNameAndPassword(String name, String password);
+    
+    boolean existsByEmailAndIskakao(String email, boolean iskakao);
+    
+    
 
 }

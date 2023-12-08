@@ -70,7 +70,6 @@ const SignIn = ({ userInfo }) => {
   const initializeNaverLogin = () => {
     const naverLogin = new naver.LoginWithNaverId({
       clientId: '6ttVxktIhMD96aZLn_iu',
-<<<<<<< HEAD
       callbackUrl: 'http://localhost:3000/SignIn',
       // 팝업창으로 로그인을 진행할 것인지?
       isPopup: false,
@@ -250,168 +249,6 @@ const SignIn = ({ userInfo }) => {
     let access_token;
     let regresh_token;
     let domain = 'naver';
-=======
-      callbackUrl: 'http://localhost:3000/login',
-      // 팝업창으로 로그인을 진행할 것인지?
-      isPopup: false,
-      // 버튼 타입 ( 색상, 타입, 크기 변경 가능 )
-      loginButton: { color: 'green', type: 3, height: 73 },
-      callbackHandle: true,
-    });
-    naverLogin.init();
-
-    naverLogin.getLoginStatus(async function (status) {
-      if (status) {
-        // 아래처럼 선택하여 추출이 가능하고,
-        const userid = naverLogin.user.getEmail();
-        const username = naverLogin.user.getName();
-        const usernickname = naverLogin.user.getNickName();
-
-      
-        try {
-          const checkUserResponse = await axios.get(`/user/userid?email=${userid}`);
-          
-          // userid 라는 이름으로 email 정보 가져오는 요청
-          if (checkUserResponse.data) {
-            // 가져온 데이터를 기준으로 if 절
-            const existingUser = checkUserResponse.data;
-
-            window.localStorage.setItem('user', JSON.stringify(existingUser));
-            // 가져온 데이터의 이름을 existingUser 라고 지칭함
-            const iskakao = existingUser.iskakao; // 기존 사용자가 카카오로 가입한 경우 플래그
-            const isnaver = existingUser.isnaver; // 기존 사용자가 네이버로 가입한 경우 플래그
-
-
-            
-            if(isnaver) { // 네이버연동이 되어있는 아이디 라면
-              try{ 
-                // 이미 연동된 데이터기 때문에 isnaver를 true로 한번 더 바꿀 필요가 없음
-                window.sessionStorage.setItem("user", JSON.stringify(existingUser));
-
-                window.localStorage.removeItem('user')
-                window.localStorage.removeItem('com.naver.nid.oauth.state_token')
-                window.localStorage.removeItem('com.naver.nid.access_token')
-                navigate("/");
-                }
-                catch (error) { // try 의 catch
-                  console.error('에러 발생:', error);
-                  // 에러 처리 로직 추가
-                }
-            
-            } else { // 네이버연동이 되어있는 아이디가 아니라면
-              
-              const isKakaoLinked = existingUser.iskakao; // 기존 사용자가 카카오로 연동된 여부
-
-              setIsKakao(isKakaoLinked); // 카카오 아이디 연동 여부를 상태에 설정
-              
-              if (iskakao) { // 카카오 연동이 되어있는 아이디 라면
-               
-                Swal.fire({
-                  title: '네이버 아이디와 카카오 아이디 통합',
-                  text: '네이버 아이디와 카카오 아이디를 통합하시겠습니까?',
-                  showCancelButton: true,
-                  confirmButtonText: '예',
-                  cancelButtonText: '아니오',
-                  icon: 'question'
-                }).then(async (result) => {
-                    if (result.isConfirmed) { // 통합을 한다면 
-                
-                      try {
-                        // post로 백엔드에 요청 (isnaver 값을 true로 바꾸는 것)
-                        axios
-                          .get(`/user/updateNaverStatus?userEmail=${userid}`)
-                          .then((res) => {
-                          window.sessionStorage.setItem('user', JSON.stringify(existingUser));
-                            Swal.fire({
-                                      title: "로그인 성공",
-                                      imageUrl:
-                                        "https://item.kakaocdn.net/do/a7884a879ae30614290a1c20325e05e59cbcbe2de7f4969efc79ab353e0c19e8",
-                                      imageWidth: 300,
-                                      imageHeight: 200,
-                                      imageAlt: "루피",
-                                     });
-                                     window.localStorage.removeItem('user')
-                                     window.localStorage.removeItem('com.naver.nid.oauth.state_token')
-                                     window.localStorage.removeItem('com.naver.nid.access_token')
-                                      navigate("/");
-                                    })
-                          .catch((error) => {
-                                  //axios 의 catch
-                                  console.log(error);
-                                });
-                      } catch (error) {
-                        // try에 대한 catch
-                        console.error("로그인 요청 에러:", error);
-                        alert("로그인 요청 중 에러가 발생했습니다.");
-                      }
-    
-                 
-                    } else { // 통합을 하지 않는다고 하면 로그인에 실패했습니다. 라는 알람과 함께 로그인 페이지로 이동
-                      Swal.fire({
-                        title: "로그인에 실패하였습니다.",
-                        imageUrl:
-                          "https://item.kakaocdn.net/do/58119590d6204ebd70e97763ca933baf82f3bd8c9735553d03f6f982e10ebe70",
-                        imageWidth: 300,
-                        imageHeight: 200,
-                        imageAlt: "루피",
-                      });
-                      window.localStorage.removeItem('user')
-                      window.localStorage.removeItem('com.naver.nid.oauth.state_token')
-                      window.localStorage.removeItem('com.naver.nid.access_token')
-                      navigate('/login')
-                      }
-                        });  
-                        } else { // 네이버와 카카오 모두 연동이 되어있는 아이디가 아니라면 네이버에서 email, name, nickname 정보를 받아와서 로컬 스토리지에 저장
-                          try{ // post로 백엔드에 요청 (isnaver 값을 true로 바꾸는 것)
-                            axios .get(`/user/updateNaverStatus?userEmail=${userid}`)
-                                  .then(res => {
-                                    window.sessionStorage.setItem('user', JSON.stringify(existingUser));
-                                    Swal.fire({
-                                      title: '로그인 완료.',
-                                      imageUrl: 'https://item.kakaocdn.net/do/d640911d600b52c55d356740537ae9569f5287469802eca457586a25a096fd31',
-                                      imageWidth: 300,
-                                      imageHeight: 200,
-                                      imageAlt: '구데타마'
-                                    })
-                                    window.localStorage.removeItem('user')
-                                    window.localStorage.removeItem('com.naver.nid.oauth.state_token')
-                                    window.localStorage.removeItem('com.naver.nid.access_token')
-                                    navigate('/') 
-                                  })
-                                  .catch(error => { // axios 에 대한 catch
-                                    console.log(error);
-                                  })
-                          } catch (error) { // try에 대한 catch
-                            console.error('로그인 요청 에러:', error);
-                            alert('로그인 요청 중 에러가 발생했습니다.');
-                          }
-                        }
-          }}else  {
-            //가져온 데이터가 없다면
-            const existingUser = checkUserResponse.data;
-
-            window.localStorage.setItem('user', JSON.stringify(existingUser));
-            window.localStorage.removeItem('com.naver.nid.oauth.state_token')
-            window.localStorage.removeItem('com.naver.nid.access_token')
-            navigate('/signin')
-          }
-      
-        }
-        catch (error) {  // userid 라는 이름으로 email 정보 가져오는 요청 했던 try 문에 대한 catch
-          console.error('에러 발생:', error);
-          // 에러 처리 로직 추가
-        }
-       
-    }
-  });
-};
-    let access_token;
-    let regresh_token;
-    let domain = 'naver';
-
-   
-
->>>>>>> refs/remotes/origin/user
   useEffect(() => {
     initializeNaverLogin();
   }, []);
@@ -432,7 +269,6 @@ const SignIn = ({ userInfo }) => {
 
   //소셜로그인(네이버 소셜로그인) 유저정보의 속성 값들 불러오기
   useEffect(() => {
-    console.log(window.localStorage.getItem("user"))
     if (userInfo) {
       // userInfo가 존재하면(소셜 로그인이 발생했으면) 실행
       const userEmail = naverUserInfoRef.current.email;
@@ -489,30 +325,6 @@ const SignIn = ({ userInfo }) => {
   }, [userInfo]);
 
   
-<<<<<<< HEAD
-=======
-      // userEmail이 존재하면 해당 값을 userDTO.email에 할당하고, 그렇지 않으면 빈 문자열로 설정합니다.
-      setUserDTO({
-        ...userDTO,
-        email: userEmail || '', // 이메일이 없으면 빈 문자열로 설정합니다.
-        nickname: userInfo.properties.nickname,
-      });
-    }
-  }, [userInfo]); 
-
-
-
-
-  const NAVER_CLIENT_ID ="ojl3HmuVcwz9uJHJPQr0";
-    const REDIRECT_URI1 = "http://localhost:3000/NaverRedirect";
-    const STATE = "false";
-    const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NAVER_CLIENT_ID}&state=${STATE}&redirect_uri=${REDIRECT_URI1}`;
-
-    // const NaverLogin = () =>{
-    //     window.location.href = NAVER_AUTH_URL;
-    // };
-
->>>>>>> refs/remotes/origin/user
   //비밀번호 정규식 유효성 검사
   const [passwordValidationError, setPasswordValidationError] = useState(''); // 비밀번호 유효성 에러 메시지
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d|.*[!@#$%^&*()_+])(?!.*(abc|def|ghi|jkl|mno|pqr|stu|vwx|yz|123|234|345|456|567|678|789|890)).{8,30}$/;
@@ -652,7 +464,6 @@ const SignIn = ({ userInfo }) => {
     <>
       <div className="WriteBox">
         <h2 className="h2Title">회 원 가 입</h2>
-<<<<<<< HEAD
 
           <div className='socialLogin'>
 
@@ -664,22 +475,6 @@ const SignIn = ({ userInfo }) => {
             </div>
             
           </div>
-=======
-       
-          {/* <div className={`d-flex flex-column align-items-center ${styles.loginButtons}`}>
-            <p id="naverIdLogin"  className={`${styles.naverLoginBtn} my-2`}>
-              네이버 로그인
-            </p>
-          </div>
-          <div className={`d-flex flex-column align-items-center ${styles.loginButtons}`}>
-            <div style={{width: "17rem"}}>
-              <p className={`${styles.kakaoLoginBtn} my-2`} onClick={loginHandler}>
-                카카오로 로그인
-              </p>
-            </div>
-          </div> */}
-
->>>>>>> refs/remotes/origin/user
         <p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
           또는
         </p>

@@ -61,11 +61,12 @@ public class UserController {
 	private ObjectStorageService ncpService;
 	@Autowired
 	private ReservationDAO reservationDAO;
-	
+
 	@Autowired
 	private ReceiptDAO receiptDAO;
 	
 	private String bucketName = "spacesharpbucket";
+
 
 	@GetMapping("/getHotelName")
     public String getHotelName(@RequestParam int seqHotel) {
@@ -185,7 +186,19 @@ public class UserController {
 	        return "네이버 성공";
 	    }
 	    return "네이버 실패";
-  }
+	}
+
+	@PostMapping(value="login")
+	@ResponseBody
+	public UserDTO login(@ModelAttribute UserDTO userDTO) {
+		Optional<UserDTO> DTO = userService.login(userDTO);
+		
+		if(DTO.isPresent() && DTO.get().getPassword().equals(userDTO.getPassword())) {
+			return DTO.get();
+		}else {
+			return null;
+		}	
+	}
 	
 	@PostMapping(value="write")
 	@ResponseBody
@@ -240,13 +253,6 @@ public class UserController {
 	
     }
 	
-	
-	@PostMapping("/existsByIsKakao")
-    public ResponseEntity<Boolean> existsByIsKakao(@RequestParam String email) {
-        boolean exists = userService.existsByEmail(email);
-        return ResponseEntity.ok(exists);
-    }
-
     @PostMapping("/updateNickname")
     public ResponseEntity<String> updateNickname(@RequestBody Map<String, String> data) {
         String email = data.get("email");
@@ -256,7 +262,7 @@ public class UserController {
 
         return ResponseEntity.ok("회원님의 닉네임이 수정되었습니다.");
     }
-
+    
     @PostMapping("/updateTel")
     public ResponseEntity<String> updateTel(@RequestBody Map<String, String> data) {
         String email = data.get("email");
@@ -277,6 +283,17 @@ public class UserController {
         return ResponseEntity.ok("회원님의 비밀번호가 수정되었습니다.");
     }
     
+    @PostMapping("updateIsKakao")
+    public ResponseEntity<String> updateIsKakao(
+    		@RequestParam String email,
+    		@RequestParam boolean iskakao) {
+    	try {
+    		userService.updateIsKakao(email, iskakao);
+    		return ResponseEntity.ok("업데이트 성공");
+    	} catch (Exception e) {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("업데이트 실패");
+    	}
+    }
     
     @PostMapping("updateIsNaver")
     public ResponseEntity<String> updateIsNaver(
@@ -301,7 +318,7 @@ public class UserController {
     }
     
     
-    @PostMapping(value = "mainPage")
+	@PostMapping(value = "mainPage")
 	@ResponseBody
 	public Map<String, Object> mainPage(){
 		return userService.mainPage();
@@ -350,10 +367,9 @@ public class UserController {
 	public String goNotice() {
 		
 		return "redirect:http://127.0.0.1:3000/login";
-	}    
-
-  
-  @GetMapping(value="hotelReserve")
+	}
+	
+	@GetMapping(value="hotelReserve")
 	public Map<String,Object> hotelReserve(int seqRoom) {
 		return userService.hotelReserve(seqRoom);
 	}
@@ -406,4 +422,5 @@ public class UserController {
 		}
 		return imgValue;
 	}
+	
 }
