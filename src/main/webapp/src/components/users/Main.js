@@ -5,7 +5,7 @@ import ChatBot from "react-simple-chatbot";
 import OwlCarousel from "react-owl-carousel";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
-
+import chatbotImage from "../../img/bot.png"; 
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { options } from "@fullcalendar/core/preact";
@@ -48,45 +48,115 @@ const Main = () => {
           label: "문의하기",
           trigger: "other",
         },
+        {
+          value: 4,
+          label: "봇에게 물어보기",
+          trigger: "askQuestion",
+        },
       ],
     },
     {
       id: "hotelInfo",
+      message: "랜덤 공간을 추천해 드릴게요!",
+      trigger: "showRandomHotel",
+    },
+    {
+      id: "showRandomHotel",
       component: (
         <Link
           to={`/detail/${randomHotelId}`}
-          style={{ textDecoration: "none" }}
-          onClick={() => window.scrollTo(0, 0)}
+          style={{ textDecoration: "none", color: "blue" }}
         >
-          공간 추천받기
+          랜덤 공간 확인하기
         </Link>
       ),
       end: true,
     },
     {
       id: "reservation",
+      message: "찾는 공간을 선택하셨습니다. 공간 검색 페이지로 이동할게요.",
+      trigger: "showHotelList",
+    },
+    {
+      id: "showHotelList",
       component: (
         <Link
           to="/hotelList/1"
-          style={{ textDecoration: "none" }}
-          onClick={() => window.scrollTo(0, 0)}
+          style={{ textDecoration: "none", color: "blue" }}
         >
-          검색하기
+          공간 검색 페이지로 이동
         </Link>
       ),
       end: true,
     },
     {
       id: "other",
+      message: "1:1 문의 페이지로 이동할게요.",
+      trigger: "showInquiryPage",
+    },
+    {
+      id: "showInquiryPage",
       component: (
         <Link
           to="/boardList/0"
-          style={{ textDecoration: "none" }}
-          onClick={() => window.scrollTo(0, 0)}
+          style={{ textDecoration: "none", color: "blue" }}
         >
-          1:1 문의 이용하기
+          1:1 문의 페이지로 이동
         </Link>
       ),
+      end: true,
+    },
+    {
+      id: "askQuestion",
+      message: "무엇에 대해 물어보고 싶으세요?",
+      trigger: "getUserInput",
+    },
+    {
+      id: "getUserInput",
+      user: true,
+      trigger: ({ value }) => {
+        const userInput = value.toLowerCase();
+        if (userInput.includes("추천")) {
+          return "hotelInfo";
+        } else if (userInput.includes("이벤트")) {
+          return "showEventPage";
+        } else {
+          return "other";
+        }
+      },
+    },
+    {
+      id: "showEventPage",
+      message: "이벤트 페이지로 이동할게요.",
+      trigger: "redirectToEventPage",
+    },
+    {
+      id: "redirectToEventPage",
+      component: (
+        <Link
+          to="/NavEvent"  // Update this with the correct URL for your event page
+          style={{ textDecoration: "none", color: "blue" }}
+        >
+          이벤트 페이지로 이동
+        </Link>
+      ),
+      end: true,
+    },
+    {
+      id: "showRandomHotel",
+      component: (
+        <Link
+          to={`/detail/${randomHotelId}`}
+          style={{ textDecoration: "none", color: "blue" }}
+        >
+          랜덤 공간 확인하기
+        </Link>
+      ),
+      end: true,
+    },
+    {
+      id: "showAnswer",
+      message: "저에게 물어주셔서 감사합니다. 다음에 또 도와드릴 수 있으면 좋겠어요!",
       end: true,
     },
   ];
@@ -462,11 +532,11 @@ const Main = () => {
       <div className="container mt-5 fixed-chatbot-button">
         <button
           className="btn btn-primary rounded-circle overflow-hidden bg-transparent border-0"
-          style={{ width: '120px', height: '120px' }}
+          style={{ width: '120px', height: '120px', background: 'transparent' }}
           onClick={() => { toggleChatbot(); scrollToBottom(); }}
         >
           <img
-            src="https://img.freepik.com/premium-vector/robot-icon-bot-sign-design-chatbot-symbol-concept-voice-support-service-bot-online-support-bot-vector-stock-illustration_100456-34.jpg"
+            src={chatbotImage}  // Use the imported image
             alt="챗봇"
             style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
           />
