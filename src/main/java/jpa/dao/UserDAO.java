@@ -31,4 +31,7 @@ public interface UserDAO extends JpaRepository<UserDTO, String> {
 	List<UserDTO> findAllByEmail(String memberemail);
 
 	UserDTO findByEmail(String email);
+	
+    boolean existsByEmailAndIskakao(String email, boolean iskakao);
+    
 }

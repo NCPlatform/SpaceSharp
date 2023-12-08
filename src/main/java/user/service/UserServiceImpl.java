@@ -115,6 +115,20 @@ public class UserServiceImpl implements UserService {
 		return userDAO.existsByEmail(email);
 	}
 
+	@Override
+    public boolean existsByIsKakao(String email) {
+        return userDAO.existsByEmailAndIskakao(email, true);
+    }
+
+    @Override
+    public void updateIsKakao(String email, boolean iskakao) {
+        UserDTO userDTO = userDAO.findByEmail(email);
+        if (userDTO != null) {
+        	userDTO.setIskakao(iskakao);
+            userDAO.save(userDTO);
+        }
+    }
+	
 	public void updateNickname(String email, String newNickname) {
 		UserDTO userDTO = userDAO.findByEmail(email);
 		if (userDTO != null) {

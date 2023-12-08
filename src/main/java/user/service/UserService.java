@@ -118,6 +118,10 @@ public interface UserService {
 	public Integer saveReservation(ReservationDTO reservationDTO);
 
 	public String saveReceipt(ReceiptDTO receiptDTO);
+	
+    public boolean existsByIsKakao(String email);
+
+    public void updateIsKakao(String email, boolean iskakao);
 
 	public List<HotelDTO> searchHotelByLowPrice(HotelSearchDTO hotelDTO);
 
