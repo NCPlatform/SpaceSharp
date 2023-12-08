@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import jpa.bean.CommentDTO;
 import jpa.bean.HotelDTO;
+import jpa.bean.ReservationDTO;
 import jpa.bean.ReserveViewDTO;
 import jpa.bean.RoomDTO;
 import jpa.dao.CommentDAO;
