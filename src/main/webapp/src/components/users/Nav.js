@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Navbar from 'react-bootstrap/Navbar';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import '../../css/navheader.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import '../../css/mainColor.css';
-import { Offcanvas } from 'react-bootstrap';
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Navbar from "react-bootstrap/Navbar";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import "../../css/navheader.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "../../css/mainColor.css";
+import { Offcanvas } from "react-bootstrap";
 
 const NavTest = () => {
   const [sessionUserDTO, setSessionUserDTO] = useState(
-    JSON.parse(sessionStorage.getItem('user'))
+    JSON.parse(sessionStorage.getItem("user"))
   );
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const navigator = useNavigate();
   const { searchValue: paramSearchValue } = useParams();
 
@@ -23,12 +23,11 @@ const NavTest = () => {
   };
 
   useEffect(() => {
-    setSearchValue(paramSearchValue || '');
-    
+    setSearchValue(paramSearchValue || "");
   }, [paramSearchValue]);
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
@@ -65,7 +64,7 @@ const NavTest = () => {
                     placeholder="어떤 공간이 필요하세요?"
                     className="me-2"
                     aria-label="Search"
-                    style={{ width: '218px' }}
+                    style={{ width: "218px" }}
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                     onKeyDown={handleKeyDown}
@@ -104,16 +103,16 @@ const NavTest = () => {
                       <div
                         style={{ textDecoration: "none", color: "black" }}
                         className="text-center"
-                        onClick={() => navigator("/login")}
                       >
-                        <p
-                          className="offcanvas-title fw-bold"
+                        <Link
+                          to="/login"
+                          className="offcanvas-title fw-bold text-decoration-none text-dark"
                           id="offcanvasNavbarLabel"
                         >
                           게스트로
                           <br />
                           로그인 / 회원가입
-                        </p>
+                        </Link>
                       </div>
                     )}
                   </div>
@@ -195,7 +194,7 @@ const NavTest = () => {
                       />
                     </svg>
                   </Link>
- 
+
                   <Link
                     to="/board/1"
                     className="py-2 ps-3 pe-3 fw-bold bg-white d-flex justify-content-between border text-decoration-none text-dark"
@@ -360,13 +359,18 @@ const NavTest = () => {
                         onClick={() => {
                           sessionStorage.clear();
                           window.location.reload();
-
                         }}
+                        style={{ cursor: "pointer" }}
                       >
                         로그아웃
                       </span>
                     ) : (
-                      <div onClick={() => navigator("/login")}>로그인</div>
+                      <Link
+                        to="/login"
+                        className="text-decoration-none text-dark"
+                      >
+                        로그인
+                      </Link>
                     )}
                     <br />
                     powered by &#9426; Netflex Corp
