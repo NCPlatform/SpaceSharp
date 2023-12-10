@@ -87,13 +87,7 @@ const AdminSignIn = () => {
   };
 
   const handleAddData = (data) => {
-    // 주소 선택 후의 로직을 여기에 구현
-    console.log('Selected Address:', data);
-  
-    // Destructure the data to get address and postalCode
     const { fullAddress, postalCode } = data;
-    // 주소 선택 후의 로직을 여기에 구현
-    console.log('Selected Address:', data);
     setUserDTO({
       ...userDTO,
       //우편번호 addr: `${postalCode}`, 
@@ -180,10 +174,10 @@ const AdminSignIn = () => {
         <h2 className="h2Title">사업자 회원 가입</h2>
         <br/><br/><br/>
 
-        <input type="text" className="WriteInputBox" value={userDTO.business_registration_number} name="business_registration_number" onChange={(e) => onChange(e)} placeholder="사업자 번호를 입력하세요." />
+        <input type="text" className="WriteInputBox" value={userDTO.business_registration_number} name="business_registration_number" onChange={(e) => onChange(e)} placeholder="사업자등록번호를 입력하세요(-를 제외하고 입력하세요.)" />
         <input type="email" className="WriteInputBox" value={userDTO.email} name="email" onChange={(e) => onChange(e)} onBlur={ onFocusEmail } placeholder="이메일( @를 포함한 이메일 형식으로 입력하세요 )" />
         <br />
-        <input type="text" className="WriteInputBox" name="name" onChange={(e) => onChange(e)} placeholder="이름 " />
+        <input type="text" className="WriteInputBox" name="name" onChange={(e) => onChange(e)} placeholder="사업자명 " />
         <input type="text" className="WriteInputBox" value={userDTO.nickname} name="nickname" onChange={(e) => onChange(e)} placeholder="닉네임" />
         <br />
         <input type="password" className="WriteInputBox" value={userDTO.password} name="password" id="pwd1" onChange={(e) => onChange(e)} placeholder="비밀번호" />
