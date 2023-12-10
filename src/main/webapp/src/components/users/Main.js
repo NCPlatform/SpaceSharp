@@ -7,6 +7,10 @@ import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import HotelCategoryIcon from "../data/HotelCategoryIcon.json";
 import chatbotImage from "../../img/bot.png"; 
+import caro1 from "../../img/carousel1.png";
+import caro2 from "../../img/carousel2.png";
+import caro3 from "../../img/carousel3.png";
+import caro4 from "../../img/carousel4.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { options } from "@fullcalendar/core/preact";
@@ -24,6 +28,9 @@ const Main = () => {
   const randomHotelId = Math.floor(Math.random() * 100) + 1;
   const scrollToBottom = () => {
     window.scrollTo(0, document.body.scrollHeight);
+  };
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
   };
   const steps = [
     {
@@ -67,8 +74,9 @@ const Main = () => {
         <Link
           to={`/detail/${randomHotelId}`}
           style={{ textDecoration: "none", color: "blue" }}
+          onClick={scrollToTop}
         >
-          랜덤 공간 확인하기
+          추천 공간 확인하기
         </Link>
       ),
       end: true,
@@ -84,6 +92,7 @@ const Main = () => {
         <Link
           to="/hotelList/1"
           style={{ textDecoration: "none", color: "blue" }}
+          onClick={scrollToTop}
         >
           공간 검색 페이지로 이동
         </Link>
@@ -101,6 +110,7 @@ const Main = () => {
         <Link
           to="/boardList/0"
           style={{ textDecoration: "none", color: "blue" }}
+          onClick={scrollToTop}
         >
           1:1 문의 페이지로 이동
         </Link>
@@ -135,8 +145,9 @@ const Main = () => {
       id: "redirectToEventPage",
       component: (
         <Link
-          to="/NavEvent"  // Update this with the correct URL for your event page
+          to="/NavEvent"  
           style={{ textDecoration: "none", color: "blue" }}
+          onClick={scrollToTop}
         >
           이벤트 페이지로 이동
         </Link>
@@ -150,7 +161,7 @@ const Main = () => {
           to={`/detail/${randomHotelId}`}
           style={{ textDecoration: "none", color: "blue" }}
         >
-          랜덤 공간 확인하기
+          추천 공간 확인하기
         </Link>
       ),
       end: true,
@@ -214,7 +225,7 @@ const Main = () => {
           <div className="carousel-inner rounded">
             <div className="carousel-item active">
               <img
-                src="https://tourimage.interpark.com/BBS/Tour/FckUpload/202011/6374206851388933880.jpg"
+                src={caro1}
                 className="d-block w-100"
                 style={{ height: "15vw", objectFit: "cover" }}
                 alt=""
@@ -222,7 +233,7 @@ const Main = () => {
             </div>
             <div className="carousel-item">
               <img
-                src="https://joyparty.co.kr//data/goods/20/09/38/1000068206/1000068205_detail_048.jpg"
+                src={caro2}
                 className="d-block w-100"
                 style={{ height: "15vw", objectFit: "cover" }}
                 alt=""
@@ -230,7 +241,15 @@ const Main = () => {
             </div>
             <div className="carousel-item">
               <img
-                src="https://t1.daumcdn.net/cfile/tistory/99CCBB455C46B97235"
+                src={caro3}
+                className="d-block w-100"
+                style={{ height: "15vw", objectFit: "cover" }}
+                alt=""
+              />
+            </div>
+            <div className="carousel-item">
+              <img
+                src={caro4}
                 className="d-block w-100"
                 style={{ height: "15vw", objectFit: "cover" }}
                 alt=""
@@ -503,15 +522,28 @@ const Main = () => {
             ))}
         </div>
       </div>
-      {/* <div className="container mt-5">
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+      <div className="container my-5">
+        <h5 className="fw-bold">게임으로 포인트 얻기</h5>
+        <div className="row row-cols-1 row-cols-md-1 row-cols-lg-2 row-cols-xl-3">
           <div className="px-3">
             <div className="card">
-              <h1>게임</h1>
+              <div className="card-body">
+                <p className="card-title fw-bold fs-5 text-truncate mt-2 mb-0">
+                  숫자야구
+                </p>
+                <div className="d-flex justify-content-end">
+                  <Link
+                    to="/baseball"
+                    className="bg-secondary-subtle text-decoration-none text-dark rounded px-2"
+                  >
+                    게임 하러가기
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
       <div className="container mt-5 fixed-chatbot-button">
         <button
           className="btn btn-primary rounded-circle overflow-hidden bg-transparent border-0"

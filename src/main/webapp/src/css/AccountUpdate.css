@@ -90,13 +90,13 @@
     .profileSetBtn{
     float: right;
     }
-    
+    /*생략예정(중복)
     ul.list-group.list-group-flush{ 
-      background-color:  #f5d682;
+       background-color:  #f5d682; 
       border-radius: 7px 7px 7px 7px;
       padding: 0 0 0 40px;
       
-    }
+    }*/
   
     div.profileCard{
       background-color: #f5d682;
