@@ -59,6 +59,7 @@ import NavEvent from "./components/users/NavEvent";
 import Board from "./components/users/Board";
 import LikedHotelList from "./components/users/LikedHotelList";
 import AuthRequest from "./components/users/AuthRequest";
+import BaseBall from "./components/users/game/BaseBall";
 
 function App() {
   return (
@@ -150,6 +151,8 @@ function App() {
             {/* Nav */}
             <Route path="NavEvent" element={<NavEvent />} />
             <Route path="likedHotelList" element={<LikedHotelList />} />
+            {/* Game */}
+            <Route path="baseball" element={<BaseBall />} />
           </Route>
           <Route path="/manager">
             <Route index element={<ManagerDashBoard />} />
