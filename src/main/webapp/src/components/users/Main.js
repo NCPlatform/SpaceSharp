@@ -378,6 +378,28 @@ const Main = () => {
             ))}
         </div>
       </div>
+      <div className="container my-5">
+        <h5 className="fw-bold">게임으로 포인트 얻기</h5>
+        <div className="row row-cols-1 row-cols-md-1 row-cols-lg-2 row-cols-xl-3">
+          <div className="px-3">
+            <div className="card">
+              <div className="card-body">
+                <p className="card-title fw-bold fs-5 text-truncate mt-2 mb-0">
+                  숫자야구
+                </p>
+                <div className="d-flex justify-content-end">
+                  <Link
+                    to="/baseball"
+                    className="bg-secondary-subtle text-decoration-none text-dark rounded px-2"
+                  >
+                    게임 하러가기
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <Footer />
     </>
   );
