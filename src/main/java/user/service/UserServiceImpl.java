@@ -762,25 +762,31 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public String getCoupon(String email, int seqCoupon) {
 		
+		int cnt = couponDAO.findById(seqCoupon).get().getCnt();
+		IssuedCouponDTO newCoupon = new IssuedCouponDTO();
+		newCoupon.setEmail(email);
+		newCoupon.setSeqCoupon(seqCoupon);
+		
+		if(cnt == 0) {
+			issuedCouponDAO.save(newCoupon);
+			return "success";
+		}
 		Optional<IssuedCouponDTO> coupon = issuedCouponDAO.findByEmailAndSeqCoupon(email, seqCoupon);
 		
 		if(coupon.isPresent()) {
 			return "have";
 			
 		}else {
-			int cnt = couponDAO.findById(seqCoupon).get().getCnt();
 			List<IssuedCouponDTO> couponList = issuedCouponDAO.findAllBySeqCoupon(seqCoupon);
 			
 			if(couponList.size() < cnt) {
-				IssuedCouponDTO newCoupon = new IssuedCouponDTO();
-				newCoupon.setEmail(email);
-				newCoupon.setSeqCoupon(seqCoupon);
 				issuedCouponDAO.save(newCoupon);
 				return "success";
 			}else {
 				return "fail";
 			}
 		}
+			
 	}
 
 	@Override
