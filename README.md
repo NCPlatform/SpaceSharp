@@ -9,7 +9,7 @@ KDT FINAL PROJECT > SPACE SHARING PLATFORM
 
 <div align="center">
 
-<b> :bookmark: Platform & Languages :bookmark: </b>
+<b>Platform & Languages</b>
 
 <div>
 <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat&logo=SpringBoot&logoColor=white"/>
@@ -27,7 +27,7 @@ KDT FINAL PROJECT > SPACE SHARING PLATFORM
 <img src="https://img.shields.io/badge/visualstudio%20code-007ACC?style=flat&logo=visualstudiocode&logoColor=white"/>
 </div>
 
-<b> :wrench: Tools :wrench: </b>
+<b>Tools</b>
 
 <div>
 <img src="https://img.shields.io/badge/STS4-6DB33F?style=flat&logo=spring&logoColor=white"/>
