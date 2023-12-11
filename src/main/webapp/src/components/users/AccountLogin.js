@@ -111,7 +111,7 @@ const Login = () => {
     
     const naverLogin = new naver.LoginWithNaverId({
       clientId: '6ttVxktIhMD96aZLn_iu',
-      callbackUrl: 'http://localhost:3000/login',
+      callbackUrl: 'http://223.130.136.57:8080/login',
       // 팝업창으로 로그인을 진행할 것인지?
       isPopup: false,
       // 버튼 타입 ( 색상, 타입, 크기 변경 가능 )
