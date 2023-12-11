@@ -34,15 +34,15 @@ const PopupPostCode = (props) => {
     left: '50%',
     transform: 'translate(-50%,-50%)',
     width: '650px',
-    height: '1250px',
+    height: '30rem',
     padding: '7px',
     border: '2px solid #666',
+    backgroundColor: 'white',
   };
 
   return (
     <div>
       <DaumPostcode style={postCodeStyle} onComplete={handlePostCode} />
-
     </div>
   );
 };
