@@ -531,6 +531,7 @@ const SignIn = ({ userInfo }) => {
       />
     )}
     <Footer/>
+    
     </>
   );
 };
