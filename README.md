@@ -1,4 +1,4 @@
-<img src="https://capsule-render.vercel.app/api?type=waving&color=DC8686&height=200&section=header&text=NetFlex&fontSize=90" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=DC8686&height=200&section=header&text=SPACESHARP&fontSize=90" />
 
 ## NaverCloudPlatform
 KDT FINAL PROJECT > SPACE SHARING PLATFORM
