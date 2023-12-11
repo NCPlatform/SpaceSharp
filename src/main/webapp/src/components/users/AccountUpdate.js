@@ -10,6 +10,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Nav from './Nav.js'
+import Footer from './Footer.js';
 
 
 const AccountUpdate = ({ userInfo }) => {
@@ -455,7 +456,7 @@ const AccountUpdate = ({ userInfo }) => {
         <div>
           <Nav/>
             <div className='headerPtag' ><br /><p className='profileInfo'>프로필 관리 / 회원정보 수정</p></div>
-            <Container fluid="md">
+            <Container fluid="md" className='mb-5'>
               <Row>
                   <Col>
                     <div className='profilebox2'>
@@ -721,6 +722,8 @@ const AccountUpdate = ({ userInfo }) => {
                   </Col>
               </Row>
             </Container>
+            <Footer/>
+            
         </div>
     );
     
