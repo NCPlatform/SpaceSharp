@@ -6,6 +6,9 @@ import PopupPostCode from './PopupPostCode';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import styles from '../../css/Login.module.css';
+import Nav from "./Nav";
+import Footer from "./Footer";
+
 
 const dataList = [  //약관데이터리스트
   { id: 1, name: 'chk1', text: '연령(만 14세 이상) 확인(필수)', isChk: false, isnecessary: true },
@@ -170,6 +173,7 @@ const AdminSignIn = () => {
 
   return (
     <>
+      <Nav/>
       <div className="WriteBox">
         <h2 className="h2Title">사업자 회원 가입</h2>
         <br/><br/><br/>
@@ -223,7 +227,7 @@ const AdminSignIn = () => {
         // ... (다른 필요한 속성이나 구성)
       />
     )}
-
+      <Footer/>
     </>
   );
 };
